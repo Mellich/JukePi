@@ -7,7 +7,13 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
+import server.MusicTrack.TrackType;
 
+/**static class that provides functions for uniform input and output
+ * 
+ * @author Mellich
+ *
+ */
 public class IO {
 
 	static public void printlnDebug(Object speaker, String input){
@@ -25,8 +31,9 @@ public class IO {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
+			String[] splitted = url.split(";");
 			while (url != null){
-				MusicTrack yURL = new MusicTrack(MessageType.YOUTUBE,"Standard-Track",url);
+				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],splitted[2]);
 				gapList.add(yURL);
 				url = reader.readLine();
 			}

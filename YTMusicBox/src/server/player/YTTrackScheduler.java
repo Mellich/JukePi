@@ -3,11 +3,9 @@ package server.player;
 import java.util.LinkedList;
 
 import server.IO;
-import server.MessageType;
 import server.MusicTrack;
 
-//TODO: dieser player muss eigentlich der track-auswähler sein. darunter neue 
-// klasse, die bindungsklasse "player" zischen dieser und dem processcomm. ist.
+
 public class YTTrackScheduler extends Thread {
 	
 	private LinkedList<MusicTrack> wishList;
@@ -70,7 +68,7 @@ public class YTTrackScheduler extends Thread {
 				}
 				IO.printlnDebug(this,"Playing next track: "+next.getTitle());
 				switch (next.getMusicType()){
-				case MessageType.SENDEDFILE: player = new SendedFilePlayer();
+				case SENDED: player = new SendedFilePlayer();
 					break;
 				default: player = new YoutubePlayer();
 				}

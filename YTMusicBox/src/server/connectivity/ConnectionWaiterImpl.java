@@ -9,6 +9,11 @@ import server.IO;
 import server.MusicTrack;
 import server.player.YTTrackScheduler;
 
+/**listens on a port through a given server socket and accepts incoming connections
+ * 
+ * @author Mellich
+ *
+ */
 public class ConnectionWaiterImpl extends Thread {
 	
 	private ServerSocket server;
