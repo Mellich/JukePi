@@ -14,7 +14,7 @@ public class TextFieldClickListener implements MouseListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e){
-		if(tf.getText().contains("Insert a YouTube Link"))
+		if(tf.getText().contains("Insert a YouTube Link") || tf.getText().contains("Couldn't add the Link"))
 			tf.setText("");
 	}
 	@Override

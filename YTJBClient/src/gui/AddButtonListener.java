@@ -30,6 +30,9 @@ public class AddButtonListener implements ActionListener{
 				WishListCounter.setText(""+tc.sr.getWishListSize());
 				tf.setText("Insert a YouTube Link here...");
 			}
+			else {
+				tf.setText("Couldn't add the Link to the Wishlist.");
+			}
 		}
 	}
 

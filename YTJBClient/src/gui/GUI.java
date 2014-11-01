@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import exampleResponses.TestClass;
 import javax.swing.JTextField;
 import java.awt.Font;
+import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
 
 public class GUI {
 	
@@ -103,6 +105,11 @@ public class GUI {
 		lblSongNext.setBounds(87, 164, 415, 14);
 		jContentPane.add(lblSongNext);
 		
+		JButton btnFullList = new JButton("show all");
+		btnFullList.setBounds(186, 160, 89, 23);
+		btnFullList.setToolTipText("Click here to show the complete Playlist");
+		jContentPane.add(btnFullList);
+		
 		/**
 		 * Adding the Action Listener to each Button and TextField.
 		 */
@@ -110,6 +117,7 @@ public class GUI {
 		btAdd.addActionListener(new AddButtonListener(txtUrlField, tc, lblNoWL));
 		txtUrlField.addMouseListener(new TextFieldClickListener(txtUrlField));
 		btPlayPause.addActionListener(new PPButtonListener(btPlayPause));
+		btnFullList.addActionListener(new ShowActionListener(tc));
 		
 		return jContentPane;
 	}
