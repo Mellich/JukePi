@@ -56,4 +56,9 @@ public class MessageType {
 	 */
 	public static final int DELETEFROMGAPLIST = 10;
 	
+	/**
+	 * asks the server if it is ready to receive data
+	 */
+	public static final int ISREADY = 11;
+	
 }

@@ -14,6 +14,7 @@ import server.connectivity.handler.DeleteFromListCommandHandler;
 import server.connectivity.handler.GetListCommandHandler;
 import server.connectivity.handler.PauseResumeCommandHandler;
 import server.connectivity.handler.SaveGapListCommandHandler;
+import server.connectivity.handler.UnknownCommandHandler;
 import server.connectivity.handler.YoutubeCommandHandler;
 import server.player.YTTrackScheduler;
 
@@ -48,8 +49,6 @@ public class ConnectionHandlerImpl extends Thread {
 			int prompt = Integer.parseInt(args[0]);
 			IO.printlnDebug(this, "Parsing input...");
 			switch (prompt){
-			case MessageType.SENDEDFILE:
-				break;
 			case MessageType.PAUSERESUME: new PauseResumeCommandHandler(socket,trackScheduler).handle();
 				break;
 			case MessageType.SKIP: new SkipCommandHandler(socket,trackScheduler).handle();
@@ -64,7 +63,9 @@ public class ConnectionHandlerImpl extends Thread {
 				break;
 			case MessageType.GETWISHLIST: new GetListCommandHandler(socket, urlList).handle();
 				break;
-			default:  new YoutubeCommandHandler(socket,urlList,args[1]).handle();
+			case MessageType.YOUTUBE:  new YoutubeCommandHandler(socket,urlList,args[1]).handle();
+				break;
+			default: new UnknownCommandHandler(socket,message).handle();
 			}
 			socket.close();
 		} catch (IOException e) {

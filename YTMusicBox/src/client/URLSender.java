@@ -19,13 +19,17 @@ public class URLSender {
 			Socket socket = new Socket("192.168.178.34",12345);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			if (url.equals("s"))
-				writer.write("10;\t;0");
+				writer.write("8");
 			else
 				writer.write("5;\t;"+url);
 			writer.newLine();
 			writer.flush();
 			BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			System.out.println(r.readLine());
+			String line = r.readLine();
+			while (line != null){
+				System.out.println(line);
+				line = r.readLine();
+			}
 			r.close();
 			writer.close();
 			socket.close();
