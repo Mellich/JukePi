@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import server.IO;
+import utilities.IO;
 
 /**handles a specific command
  * 
@@ -24,6 +24,10 @@ public abstract class CommandHandler {
 	 */
 	public CommandHandler(Socket s){
 		socket = s;
+	}
+	
+	public Socket getSocket(){
+		return socket;
 	}
 	
 	/**sends a string to the client

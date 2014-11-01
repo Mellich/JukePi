@@ -16,9 +16,11 @@ public class GetListCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		for (int i = 0; i < list.size(); i++){
-			sendMessage(i+". "+list.get(i).getTitle());
+		StringBuilder message = new StringBuilder();
+		for (MusicTrack m : list){
+			message.append(m.getTitle()+";\t;");
 		}
+		sendMessage(message.toString());
 		return true;
 	}
 

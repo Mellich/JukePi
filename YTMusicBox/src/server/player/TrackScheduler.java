@@ -1,11 +1,13 @@
 package server.player;
 
+import java.io.File;
 import java.util.LinkedList;
 
 import network.MessageType;
-import server.IO;
 import server.MusicTrack;
+import server.MusicTrack.TrackType;
 import server.YTJBServer;
+import utilities.IO;
 
 
 public class TrackScheduler extends Thread {
@@ -54,6 +56,13 @@ public class TrackScheduler extends Thread {
 			player.pauseResume();
 	}
 	
+	public boolean isPlaying(){
+		if (player != null)
+			return player.isPlaying();	
+		else return false;
+	}
+
+	
 	public MusicTrack getCurrentTrack(){
 		return current;
 	}
@@ -74,12 +83,14 @@ public class TrackScheduler extends Thread {
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
-				switch (current.getMusicType()){
-				case SENDED: player = new SendedFilePlayer();
-					break;
-				default: player = new YoutubePlayer();
-				}
+				player = new OMXPlayer();
 				player.play(current);
+				if (current.getMusicType() == TrackType.SENDED && wishList.contains(current)){
+					File musicfile = new File(current.getURL());
+					if (musicfile.exists()){
+						musicfile.delete();
+					}
+				}
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");

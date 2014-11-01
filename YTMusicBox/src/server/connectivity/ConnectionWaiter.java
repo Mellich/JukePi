@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import server.IO;
 import server.YTJBServer;
+import utilities.IO;
 
 /**listens on a port through a given server socket and accepts incoming connections
  * 

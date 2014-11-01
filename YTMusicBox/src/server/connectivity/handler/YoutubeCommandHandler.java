@@ -5,11 +5,11 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 import network.MessageType;
-import server.IO;
 import server.MusicTrack;
-import server.ProcessCommunicator;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
+import utilities.IO;
+import utilities.ProcessCommunicator;
 
 /**handles youtube link commands
  * 
@@ -38,7 +38,7 @@ public class YoutubeCommandHandler extends CommandHandler {
 			MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL);
 			int position = addToList(yURL);
 			server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-			sendMessage(position+". "+yURL.getTitle());
+			sendMessage(""+position);
 			return true;
 		} catch (IOException e) {
 			IO.printlnDebug(this, "could not handle command");

@@ -2,7 +2,7 @@ package server.connectivity.handler;
 
 import java.net.Socket;
 
-import server.IO;
+import utilities.IO;
 
 public class UnknownCommandHandler extends CommandHandler {
 

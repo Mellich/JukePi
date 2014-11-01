@@ -8,10 +8,10 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import network.MessageType;
-import server.IO;
 import server.SkipCommandHandler;
 import server.YTJBServer;
 import server.connectivity.handler.*;
+import utilities.IO;
 
 /**handles incomming connections
  * 
@@ -21,6 +21,7 @@ import server.connectivity.handler.*;
 public class ConnectionHandler extends Thread {
 	
 	public static final String SEPERATOR = ";\t;";
+	public static final String FILESAVELOCATION = "files/";
 	
 	private Socket socket;
 	private YTJBServer server;
@@ -63,6 +64,9 @@ public class ConnectionHandler extends Thread {
 					break;
 				case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommandHandler(socket,server.getScheduler()).handle();
 					break;
+				case MessageType.SENDEDFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getWishList()).handle();
+					break;
+				case MessageType.GAPSENDEDFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getGapList()).handle();
 				default: new UnknownCommandHandler(socket,message).handle();
 				}
 			}

@@ -3,9 +3,9 @@ package server.connectivity.handler;
 import java.net.Socket;
 import java.util.LinkedList;
 
-import server.IO;
 import server.MusicTrack;
 import server.YTJBServer;
+import utilities.IO;
 
 public class SaveGapListCommandHandler extends CommandHandler {
 

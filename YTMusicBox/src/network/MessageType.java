@@ -76,6 +76,16 @@ public class MessageType {
 	 */
 	public static final int LISTSUPDATEDNOTIFY = 14;
 	
+	/**
+	 * gets the current status of the playback
+	 */
+	public static final int GETCURRENTPLAYBACKSTATUS = 16;
+	
+	/**
+	 * ready to receive the file
+	 */
+	public static final int READYFORRECEIVENOTIFY = 17;
+	
 	
 	
 }
