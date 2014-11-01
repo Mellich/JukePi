@@ -3,13 +3,13 @@ package server;
 import java.net.Socket;
 
 import server.connectivity.handler.CommandHandler;
-import server.player.YTTrackScheduler;
+import server.player.TrackScheduler;
 
 public class SkipCommandHandler extends CommandHandler {
 
-	private YTTrackScheduler trackScheduler;
+	private TrackScheduler trackScheduler;
 	
-	public SkipCommandHandler(Socket s, YTTrackScheduler scheduler) {
+	public SkipCommandHandler(Socket s, TrackScheduler scheduler) {
 		super(s);
 		trackScheduler = scheduler;
 	}

@@ -33,6 +33,7 @@ public class YoutubePlayer implements MusicPlayer {
 		try {
 			out.write("q");
 			out.flush();
+			IO.printlnDebug(this, "Skipped track successfully");
 		} catch (IOException e) {
 			IO.printlnDebug(this, "could not skip track successfully");
 		}

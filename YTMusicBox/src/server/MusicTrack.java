@@ -1,5 +1,7 @@
 package server;
 
+import network.MessageType;
+
 /**a music track that can be played by the server
  * 
  * @author Mellich

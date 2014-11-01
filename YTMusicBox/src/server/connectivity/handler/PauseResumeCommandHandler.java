@@ -3,13 +3,13 @@ package server.connectivity.handler;
 import java.net.Socket;
 
 import server.IO;
-import server.player.YTTrackScheduler;
+import server.player.TrackScheduler;
 
 public class PauseResumeCommandHandler extends CommandHandler {
 	
-	private YTTrackScheduler trackScheduler;
+	private TrackScheduler trackScheduler;
 
-	public PauseResumeCommandHandler(Socket s, YTTrackScheduler scheduler) {
+	public PauseResumeCommandHandler(Socket s, TrackScheduler scheduler) {
 		super(s);
 		trackScheduler = scheduler;
 	}

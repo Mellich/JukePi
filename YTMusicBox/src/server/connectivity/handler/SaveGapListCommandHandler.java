@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import server.IO;
 import server.MusicTrack;
-import server.YTJBServerImpl;
+import server.YTJBServer;
 
 public class SaveGapListCommandHandler extends CommandHandler {
 
@@ -18,7 +18,7 @@ public class SaveGapListCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		IO.saveGapListToFile(gapList, YTJBServerImpl.GAPLISTFILENAME);
+		IO.saveGapListToFile(gapList, YTJBServer.GAPLISTFILENAME);
 		IO.printlnDebug(this, "saved list successfully");
 		return true;
 	}
