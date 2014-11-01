@@ -66,4 +66,16 @@ public class MessageType {
 	 */
 	public static final int GETCURRENTTRACK = 12;
 	
+	/**
+	 * next track will be played
+	 */
+	public static final int NEXTTRACKNOTIFY = 13;
+	
+	/**
+	 * a track was added to the wish or the gap list
+	 */
+	public static final int LISTSUPDATEDNOTIFY = 14;
+	
+	
+	
 }

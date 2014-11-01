@@ -14,24 +14,26 @@ public class URLSender {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Gib den Link hier ein: ");
 		try {
-			String url = reader.readLine();
-			reader.close();
 			Socket socket = new Socket("192.168.178.34",12345);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			if (url.equals("s"))
-				writer.write("4");
-			else
-				writer.write("5;\t;"+url);
-			writer.newLine();
-			writer.flush();
-			BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String line = r.readLine();
-			while (line != null){
-				System.out.println(line);
-				line = r.readLine();
+			boolean running = true;
+			while (running){
+				String input = reader.readLine();
+				switch (input.charAt(0)){
+				case 'q': running = false;
+					break;
+				case ' ': writer.write("4");
+					break;
+				case 's': writer.write("3");
+					break;
+				default: writer.write("5;\t;"+input);
+				}
+				writer.newLine();
+				writer.flush();
+				BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				System.out.println(r.readLine());
 			}
-			r.close();
-			writer.close();
+			reader.close();
 			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

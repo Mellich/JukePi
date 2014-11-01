@@ -2,21 +2,25 @@ package server.player;
 
 import java.util.LinkedList;
 
+import network.MessageType;
 import server.IO;
 import server.MusicTrack;
+import server.YTJBServer;
 
 
 public class TrackScheduler extends Thread {
 	
 	private LinkedList<MusicTrack> wishList;
 	private LinkedList<MusicTrack> gapList;
+	private YTJBServer server;
 	private boolean running;
 	private MusicPlayer player;
 	private MusicTrack current;
 	
-	public TrackScheduler(LinkedList<MusicTrack> wishList, LinkedList<MusicTrack> gapList) {
-		this.wishList = wishList;
-		this.gapList = gapList;
+	public TrackScheduler(YTJBServer server) {
+		this.wishList = server.getWishList();
+		this.gapList = server.getGapList();
+		this.server = server;
 		running = true;
 	}
 
@@ -69,6 +73,7 @@ public class TrackScheduler extends Thread {
 					current = chooseNext();
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
+				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				switch (current.getMusicType()){
 				case SENDED: player = new SendedFilePlayer();
 					break;

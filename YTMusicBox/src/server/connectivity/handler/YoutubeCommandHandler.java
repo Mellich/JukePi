@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import network.MessageType;
 import server.IO;
 import server.MusicTrack;
 import server.ProcessCommunicator;
 import server.MusicTrack.TrackType;
+import server.YTJBServer;
 
 /**handles youtube link commands
  * 
@@ -18,11 +20,13 @@ public class YoutubeCommandHandler extends CommandHandler {
 
 	private LinkedList<MusicTrack> list;
 	private String url;
+	private YTJBServer server;
 	
-	public YoutubeCommandHandler(Socket s, LinkedList<MusicTrack> list,String url) {
+	public YoutubeCommandHandler(Socket s,YTJBServer server, LinkedList<MusicTrack> list,String url) {
 		super(s);
 		this.list = list;
 		this.url = url;
+		this.server = server;
 	}
 
 	@Override
@@ -33,6 +37,7 @@ public class YoutubeCommandHandler extends CommandHandler {
 			String title = ProcessCommunicator.parseTitle(url);
 			MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL);
 			int position = addToList(yURL);
+			server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 			sendMessage(position+". "+yURL.getTitle());
 			return true;
 		} catch (IOException e) {

@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
+import server.connectivity.ConnectionHandler;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 
@@ -51,6 +53,11 @@ public class YTJBServer {
 	private LinkedList<MusicTrack> gapList;
 	
 	/**
+	 * list of clients connected to the server
+	 */
+	private ArrayList<ConnectionHandler> clients;
+	
+	/**
 	 * starts the server and makes him ready for work
 	 */
 	public void start(){
@@ -90,6 +97,22 @@ public class YTJBServer {
 		return server;
 	}
 	
+	public synchronized void registerClient(ConnectionHandler c){
+		clients.add(c);
+		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	}
+	
+	public synchronized void removeClient(ConnectionHandler c){
+		clients.remove(c);
+		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	}
+	
+	public void notifyClients(int messageType){
+		for (ConnectionHandler h: clients){
+			h.notify(messageType);
+		}
+	}
+	
 	
 	/**
 	 * creates new instance of a server
@@ -99,9 +122,10 @@ public class YTJBServer {
 	public YTJBServer(int port) {
 			try {
 				wishList = new LinkedList<MusicTrack>();
+				clients = new ArrayList<ConnectionHandler>();
 				gapList = IO.loadGapListFromFile(GAPLISTFILENAME);
 				server = new ServerSocket(port);
-				scheduler = new TrackScheduler(wishList, gapList);
+				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
 				IO.printlnDebug(this, "New server opened on adress "+ InetAddress.getLocalHost()+" port "+port);
 			} catch (IOException e) {
