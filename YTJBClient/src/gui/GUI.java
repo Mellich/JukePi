@@ -14,15 +14,21 @@ import javax.swing.JLabel;
 import exampleResponses.TestClass;
 import javax.swing.JTextField;
 import java.awt.Font;
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
 
+/**
+ * The Class, that will build up the GUI.
+ * @author Haeldeus
+ *
+ */
 public class GUI {
 	
+	/**
+	 * A Class for testing reasons with it's own responses.
+	 */
 	private TestClass tc = new TestClass();
 	
 	/**
-	 * This method initializes jFrame	
+	 * This method initializes jFrame.
 	 * 	
 	 * @return javax.swing.JFrame	
 	 */
@@ -31,12 +37,13 @@ public class GUI {
 		jFrame.setSize(new Dimension(528, 376));
 		jFrame.setTitle("JukePi");
 		jFrame.setContentPane(getJContentPane());
+		jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
 		return jFrame;
 	}
 
 	
 	/**
-	 * This method initializes jContentPane	
+	 * This method initializes jContentPane.
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
@@ -106,7 +113,7 @@ public class GUI {
 		jContentPane.add(lblSongNext);
 		
 		JButton btnFullList = new JButton("show all");
-		btnFullList.setBounds(186, 160, 89, 23);
+		btnFullList.setBounds(15, 189, 77, 23);
 		btnFullList.setToolTipText("Click here to show the complete Playlist");
 		jContentPane.add(btnFullList);
 		
@@ -117,14 +124,14 @@ public class GUI {
 		btAdd.addActionListener(new AddButtonListener(txtUrlField, tc, lblNoWL));
 		txtUrlField.addMouseListener(new TextFieldClickListener(txtUrlField));
 		btPlayPause.addActionListener(new PPButtonListener(btPlayPause));
-		btnFullList.addActionListener(new ShowActionListener(tc));
+		btnFullList.addActionListener(new ShowListener(tc));
 		
 		return jContentPane;
 	}
 
 
 	/**
-	 * This Method starts the GUI
+	 * This Method starts the GUI, so it can be displayed.
 	 * 
 	 * @param args Just a stub
 	 */
