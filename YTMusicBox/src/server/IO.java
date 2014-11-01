@@ -31,8 +31,8 @@ public class IO {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
-			String[] splitted = url.split(";");
 			while (url != null){
+				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],splitted[2]);
 				gapList.add(yURL);
 				url = reader.readLine();

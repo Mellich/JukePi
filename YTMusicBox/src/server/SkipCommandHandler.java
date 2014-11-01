@@ -1,8 +1,8 @@
-package server.connectivity;
+package server;
 
 import java.net.Socket;
 
-import server.IO;
+import server.connectivity.handler.CommandHandler;
 import server.player.YTTrackScheduler;
 
 public class SkipCommandHandler extends CommandHandler {

@@ -9,6 +9,12 @@ import java.util.LinkedList;
 import server.IO;
 import server.MessageType;
 import server.MusicTrack;
+import server.SkipCommandHandler;
+import server.connectivity.handler.DeleteFromListCommandHandler;
+import server.connectivity.handler.GetListCommandHandler;
+import server.connectivity.handler.PauseResumeCommandHandler;
+import server.connectivity.handler.SaveGapListCommandHandler;
+import server.connectivity.handler.YoutubeCommandHandler;
 import server.player.YTTrackScheduler;
 
 /**handles incomming connections
@@ -49,6 +55,14 @@ public class ConnectionHandlerImpl extends Thread {
 			case MessageType.SKIP: new SkipCommandHandler(socket,trackScheduler).handle();
 				break;
 			case MessageType.GAPYOUTUBE: new YoutubeCommandHandler(socket,gapList,args[1]).handle();
+				break;
+			case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommandHandler(socket,gapList).handle();
+				break;
+			case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommandHandler(socket,gapList,Integer.parseInt(args[1])).handle();
+				break;
+			case MessageType.GETGAPLIST: new GetListCommandHandler(socket, gapList).handle();
+				break;
+			case MessageType.GETWISHLIST: new GetListCommandHandler(socket, urlList).handle();
 				break;
 			default:  new YoutubeCommandHandler(socket,urlList,args[1]).handle();
 			}

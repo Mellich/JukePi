@@ -23,6 +23,8 @@ public class YTJBServerImpl {
 	 */
 	public static final int PORT = 12345;
 	
+	public static final String GAPLISTFILENAME = "gaplist.jb";
+	
 	/**
 	 * the server socket to handle connections to the server
 	 */
@@ -57,6 +59,7 @@ public class YTJBServerImpl {
 			scheduler.start();
 			BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 			r.readLine(); 																//giving a input will shut down the server
+			IO.saveGapListToFile(gapList, GAPLISTFILENAME);
 			scheduler.setRunning(false);
 			scheduler.interrupt();
 			waiter.setRunning(false);
@@ -79,7 +82,7 @@ public class YTJBServerImpl {
 	public YTJBServerImpl(int port) {
 			try {
 				wishList = new LinkedList<MusicTrack>();
-				gapList = new LinkedList<MusicTrack>();
+				gapList = IO.loadGapListFromFile(GAPLISTFILENAME);
 				server = new ServerSocket(port);
 				scheduler = new YTTrackScheduler(wishList, gapList);
 				waiter = new ConnectionWaiterImpl(server, wishList, gapList,scheduler);

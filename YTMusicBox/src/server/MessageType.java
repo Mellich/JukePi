@@ -35,4 +35,25 @@ public class MessageType {
 	 * a path to a sended file that should be inserted to the gaplist
 	 */
 	public static final int GAPSENDEDFILE = 6;
+	
+	/**
+	 * save the current gap list into a file
+	 */
+	public static final int GAPLISTSAVETOFILE = 7;
+	
+	/**
+	 * send the gaplist to the client
+	 */
+	public static final int GETGAPLIST = 8;
+	
+	/**
+	 * send the wish list to the client
+	 */
+	public static final int GETWISHLIST = 9;
+	
+	/**
+	 * delete one music track from the gap list
+	 */
+	public static final int DELETEFROMGAPLIST = 10;
+	
 }
