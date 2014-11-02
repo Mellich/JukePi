@@ -29,6 +29,7 @@ public class BeginSentFileCommandHandler extends CommandHandler {
 			MusicTrack m = new MusicTrack(TrackType.SENDED,filename, filename);
 			addToList(m);
 			response(""+true);
+			server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 			return true;
 		}
 		response(""+false);

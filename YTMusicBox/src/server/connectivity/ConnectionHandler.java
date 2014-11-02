@@ -43,7 +43,7 @@ public class ConnectionHandler extends Thread {
 				int prompt = Integer.parseInt(args[0]);
 				IO.printlnDebug(this, "Parsing input...");
 				switch (prompt){
-				case MessageType.PAUSERESUME: new PauseResumeCommandHandler(socket,server.getScheduler()).handle();
+				case MessageType.PAUSERESUME: new PauseResumeCommandHandler(socket,server).handle();
 					break;
 				case MessageType.SKIP: new SkipCommandHandler(socket,server.getScheduler()).handle();
 					break;
