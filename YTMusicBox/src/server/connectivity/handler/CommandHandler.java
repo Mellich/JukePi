@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import network.MessageType;
 import utilities.IO;
 
 /**handles a specific command
@@ -30,11 +31,27 @@ public abstract class CommandHandler {
 		return socket;
 	}
 	
+	/**response for a request
+	 * 
+	 * @param s the response
+	 */
+	protected void response(String s){
+		sendMessage(MessageType.RESPONSENOTIFY+MessageType.SEPERATOR+s);
+	}
+	
+	/**notify the client 
+	 * 
+	 * @param notify the type of the notification
+	 */
+	protected void notify(int notify){
+		sendMessage(""+notify);
+	}
+	
 	/**sends a string to the client
 	 * 
 	 * @param s the string that should be sended
 	 */
-	protected void sendMessage(String s){
+	private void sendMessage(String s){
 		try{
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			IO.printlnDebug(this, "Sending Message: "+s);

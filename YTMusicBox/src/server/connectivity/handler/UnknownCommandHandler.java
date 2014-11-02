@@ -2,6 +2,7 @@ package server.connectivity.handler;
 
 import java.net.Socket;
 
+import network.MessageType;
 import utilities.IO;
 
 public class UnknownCommandHandler extends CommandHandler {
@@ -15,7 +16,7 @@ public class UnknownCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		sendMessage("ERROR: Unknown or not yet implemented command");
+		notify(MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY);
 		IO.printlnDebug(this, "ERROR: Sended command could not be handled! "+command);
 		return false;
 	}

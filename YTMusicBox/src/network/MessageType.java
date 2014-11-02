@@ -86,6 +86,16 @@ public class MessageType {
 	 */
 	public static final int READYFORRECEIVENOTIFY = 17;
 	
+	/**
+	 * the response of the server for a request
+	 */
+	public static final int RESPONSENOTIFY = 18;
 	
+	public static final int NOTIMPLEMENTEDCOMMANDNOTIFY = 19;
+	
+	/**
+	 * the seerator for the arguments of a command
+	 */
+	public static final String SEPERATOR = ";\t;";
 	
 }

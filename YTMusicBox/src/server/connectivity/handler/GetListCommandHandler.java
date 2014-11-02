@@ -3,6 +3,7 @@ package server.connectivity.handler;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import network.MessageType;
 import server.MusicTrack;
 
 public class GetListCommandHandler extends CommandHandler {
@@ -18,9 +19,9 @@ public class GetListCommandHandler extends CommandHandler {
 	public boolean handle() {
 		StringBuilder message = new StringBuilder();
 		for (MusicTrack m : list){
-			message.append(m.getTitle()+";\t;");
+			message.append(m.getTitle()+MessageType.SEPERATOR);
 		}
-		sendMessage(message.toString());
+		response(message.toString());
 		return true;
 	}
 

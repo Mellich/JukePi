@@ -10,7 +10,7 @@ public class CheckIfReadyCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		sendMessage("READY");
+		response(""+true);
 		return true;
 	}
 

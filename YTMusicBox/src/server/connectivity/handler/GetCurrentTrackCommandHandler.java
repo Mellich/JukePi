@@ -18,10 +18,10 @@ public class GetCurrentTrackCommandHandler extends CommandHandler {
 	public boolean handle() {
 		MusicTrack current = scheduler.getCurrentTrack();
 		if (current != null){
-			sendMessage(current.getTitle());
+			response(current.getTitle());
 		}
 		else{
-			sendMessage("NOTHING");
+			response("NOTHING");
 		}
 		return true;
 	}

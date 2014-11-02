@@ -75,7 +75,7 @@ public class YTJBServer {
 			server.close();
 			scheduler.join();
 			waiter.join();
-			IO.printlnDebug(this, "Server erfolgreich runtergefahren");
+			IO.printlnDebug(this, "Server was shut down");
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -22,7 +22,7 @@ public class SendedFileCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		sendMessage(""+MessageType.READYFORRECEIVENOTIFY);
+		response(""+MessageType.READYFORRECEIVENOTIFY);
 		if (IO.receiveAndSaveFile(getSocket(), filename)){
 			MusicTrack m = new MusicTrack(TrackType.SENDED,filename, filename);
 			addToList(m);

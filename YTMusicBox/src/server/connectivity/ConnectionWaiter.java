@@ -36,9 +36,9 @@ public class ConnectionWaiter extends Thread {
 				handler.start();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			IO.printlnDebug(this, "Waiter closed forecefully");
 		}
-		IO.printlnDebug(this, "Waiter was shut down");
+		IO.printlnDebug(this, "Waiter says goodbye");
 	}
 	
 	public synchronized void setRunning(boolean r){

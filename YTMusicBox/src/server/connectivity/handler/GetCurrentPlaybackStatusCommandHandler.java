@@ -15,7 +15,7 @@ public class GetCurrentPlaybackStatusCommandHandler extends CommandHandler {
 
 	@Override
 	public boolean handle() {
-		sendMessage(""+scheduler.isPlaying());
+		response(""+scheduler.isPlaying());
 		return true;
 	}
 

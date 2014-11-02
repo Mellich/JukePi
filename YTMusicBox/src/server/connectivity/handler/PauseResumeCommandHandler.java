@@ -18,7 +18,7 @@ public class PauseResumeCommandHandler extends CommandHandler {
 	public boolean handle() {
 		IO.printlnDebug(this, "pause/resume current playback");
 		trackScheduler.pauseResume();
-		sendMessage("Track wurde pausiert/angehalten");
+		response(""+true);
 		return true;
 	}
 

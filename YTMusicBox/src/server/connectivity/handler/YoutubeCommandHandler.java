@@ -38,7 +38,7 @@ public class YoutubeCommandHandler extends CommandHandler {
 			MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL);
 			int position = addToList(yURL);
 			server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-			sendMessage(""+position);
+			response(""+position);
 			return true;
 		} catch (IOException e) {
 			IO.printlnDebug(this, "could not handle command");

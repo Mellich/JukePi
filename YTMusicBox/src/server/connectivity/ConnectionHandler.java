@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import network.MessageType;
-import server.SkipCommandHandler;
 import server.YTJBServer;
 import server.connectivity.handler.*;
 import utilities.IO;
@@ -20,7 +19,6 @@ import utilities.IO;
  */
 public class ConnectionHandler extends Thread {
 	
-	public static final String SEPERATOR = ";\t;";
 	public static final String FILESAVELOCATION = "files/";
 	public static final String TEMPDIRECTORY = "/tmp/";
 	
@@ -41,7 +39,7 @@ public class ConnectionHandler extends Thread {
 		try {
 			while (running){
 				String message = receiveMessage();
-				String[] args = message.split(SEPERATOR);
+				String[] args = message.split(MessageType.SEPERATOR);
 				int prompt = Integer.parseInt(args[0]);
 				IO.printlnDebug(this, "Parsing input...");
 				switch (prompt){
@@ -84,15 +82,7 @@ public class ConnectionHandler extends Thread {
 	}
 	
 	public void notify(int messageType){
-		try{
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			out.write(messageType);
-			out.newLine();
-			out.flush();
-		}
-		catch (IOException e){
-			IO.printlnDebug(this, "ERROR could not notify client");
-		}
+		new NotifyClientCommandHandler(socket,messageType).handle();
 	}
 
 

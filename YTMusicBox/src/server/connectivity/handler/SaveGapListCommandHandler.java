@@ -20,6 +20,7 @@ public class SaveGapListCommandHandler extends CommandHandler {
 	public boolean handle() {
 		IO.saveGapListToFile(gapList, YTJBServer.GAPLISTFILENAME);
 		IO.printlnDebug(this, "saved list successfully");
+		response(""+true);
 		return true;
 	}
 
