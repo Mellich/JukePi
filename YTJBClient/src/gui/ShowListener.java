@@ -10,9 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import exampleResponses.TestClass;
 import javax.swing.JButton;
+
+import connection.Collector;
 
 /**
  * The Class, that will perform the actions, made by the Button that shows the 
@@ -23,16 +23,17 @@ import javax.swing.JButton;
 public class ShowListener implements ActionListener{
 
 	/**
-	 * The Testclass reference, which is needed for all lists.
+	 * The Collector with all Information about the lists and the Methods to 
+	 * communicate with the Server.
 	 */
-	private TestClass tc;
+	private Collector c;
 	
 	/**
 	 * The Constructor for the Listener.
-	 * @param tc	The Testclass reference, where the Tracklist is saved.
+	 * @param c	The Collector reference, where the Tracklist is saved.
 	 */
-	public ShowListener(TestClass tc) {
-		this.tc = tc;
+	public ShowListener(Collector c) {
+		this.c = c;
 	}
 	
 	/**
@@ -63,7 +64,7 @@ public class ShowListener implements ActionListener{
 		
 		
 		DefaultListModel<String> listGap = new DefaultListModel<String>();
-		for (String i : tc.sr.getGapList()) {
+		for (String i : c.getGapList()) {
 			listGap.addElement(i);
 		}
 		JList<String> tpGaplist = new JList<String>(listGap);
@@ -72,7 +73,7 @@ public class ShowListener implements ActionListener{
 		jContentPane.add(spScrollGL);
 		
 		DefaultListModel<String> listWish = new DefaultListModel<String>();
-		for (String i : tc.sr.getWishList()) {
+		for (String i : c.getWishList()) {
 			listWish.addElement(i);
 		}
 		JList<String> tpWishlist = new JList<String>(listWish);
@@ -83,10 +84,10 @@ public class ShowListener implements ActionListener{
 		
 		
 		DefaultListModel<String> listTrack = new DefaultListModel<String>();
-		listTrack.addElement(""+tc.sr.getPlayingFile()+"\n");
-		for (String i : tc.sr.getWishList())
+		listTrack.addElement(""+c.getPlayingFile()+"\n");
+		for (String i : c.getWishList())
 			listTrack.addElement(i);
-		for (String i : tc.sr.getGapList())
+		for (String i : c.getGapList())
 			listTrack.addElement(i);
 		JList<String> tpTracklist = new JList<String>(listTrack);
 		
@@ -142,6 +143,13 @@ public class ShowListener implements ActionListener{
 		JButton btnDown3 = new JButton("Down");
 		btnDown3.setBounds(748, 351, 77, 23);
 		jContentPane.add(btnDown3);
+		
+		
+		/**
+		 * Adding the Listeners
+		 */
+		btnDelete.addActionListener(new DeleteButtonListener(tpGaplist, 1, c, listGap, listWish, listTrack));
+		btnDelete2.addActionListener(new DeleteButtonListener(tpWishlist, 2, c, listGap, listWish, listTrack));
 		
 		return jContentPane;
 	}

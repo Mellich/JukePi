@@ -11,8 +11,10 @@ import javax.swing.JButton;
 import java.awt.Rectangle;
 import javax.swing.JLabel;
 
-import exampleResponses.TestClass;
 import javax.swing.JTextField;
+
+import connection.Collector;
+
 import java.awt.Font;
 
 /**
@@ -23,9 +25,10 @@ import java.awt.Font;
 public class GUI {
 	
 	/**
-	 * A Class for testing reasons with it's own responses.
+	 * The Collector, that saves all Informations about the Lists and prevents the 
+	 * Methods to communicate to the Server.
 	 */
-	private TestClass tc = new TestClass();
+	private Collector c = new Collector();
 	
 	/**
 	 * This method initializes jFrame.
@@ -52,7 +55,7 @@ public class GUI {
 		JPanel jContentPane = new JPanel();
 		jContentPane.setLayout(null);
 		
-		JLabel lblGapList = new JLabel(""+tc.sr.getGapListSize());
+		JLabel lblGapList = new JLabel(""+c.getGapListSize());
 		lblGapList.setBounds(new Rectangle(221, 18, 28, 29));
 		jContentPane.add(lblGapList, null);
 		
@@ -78,7 +81,7 @@ public class GUI {
 		
 		JLabel lblNoWL = new JLabel("");
 		lblNoWL.setBounds(221, 58, 46, 14);
-		lblNoWL.setText(""+tc.sr.getWishListSize());
+		lblNoWL.setText(""+c.getWishListSize());
 		jContentPane.add(lblNoWL);
 		
 		JTextField txtUrlField = new JTextField();
@@ -97,7 +100,7 @@ public class GUI {
 		lblNowPlaying.setBounds(15, 139, 62, 14);
 		jContentPane.add(lblNowPlaying);
 		
-		JLabel lblPlayingFile = new JLabel(""+tc.sr.getPlayingFile());
+		JLabel lblPlayingFile = new JLabel(""+c.getPlayingFile());
 		lblPlayingFile.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblPlayingFile.setBounds(87, 139, 415, 14);
 		jContentPane.add(lblPlayingFile);
@@ -107,24 +110,23 @@ public class GUI {
 		lblNextSong.setBounds(15, 164, 62, 14);
 		jContentPane.add(lblNextSong);
 		
-		JLabel lblSongNext = new JLabel(""+tc.sr.getNextSong());
+		JLabel lblSongNext = new JLabel(""+c.getNextSong());
 		lblSongNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblSongNext.setBounds(87, 164, 415, 14);
 		jContentPane.add(lblSongNext);
 		
-		JButton btnFullList = new JButton("show all");
-		btnFullList.setBounds(15, 189, 77, 23);
+		JButton btnFullList = new JButton("Edit Tracks");
+		btnFullList.setBounds(15, 189, 117, 23);
 		btnFullList.setToolTipText("Click here to show the complete Playlist");
 		jContentPane.add(btnFullList);
 		
-		/**
-		 * Adding the Action Listener to each Button and TextField.
-		 */
-		btSkip.addActionListener(new SkipButtonListener(tc, lblPlayingFile, lblSongNext));
-		btAdd.addActionListener(new AddButtonListener(txtUrlField, tc, lblNoWL));
+		
+		//Adding the Action Listener to each Button and TextField.
+		btSkip.addActionListener(new SkipButtonListener(c, lblPlayingFile, lblSongNext));
+		btAdd.addActionListener(new AddButtonListener(txtUrlField, c, lblNoWL));
 		txtUrlField.addMouseListener(new TextFieldClickListener(txtUrlField));
-		btPlayPause.addActionListener(new PPButtonListener(btPlayPause));
-		btnFullList.addActionListener(new ShowListener(tc));
+		btPlayPause.addActionListener(new PPButtonListener(btPlayPause,c));
+		btnFullList.addActionListener(new ShowListener(c));
 		
 		return jContentPane;
 	}

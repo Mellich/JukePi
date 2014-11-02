@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import connection.Collector;
+
 public class PPButtonListener implements ActionListener{
 
 	/**
@@ -17,8 +19,11 @@ public class PPButtonListener implements ActionListener{
 	 */
 	private JButton bt;
 	
-	public PPButtonListener(JButton button) {
+	private Collector c;
+	
+	public PPButtonListener(JButton button, Collector c) {
 		bt = button;
+		this.c = c;
 	}
 	
 	@Override

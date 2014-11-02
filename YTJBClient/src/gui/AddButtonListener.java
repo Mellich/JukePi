@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import exampleResponses.TestClass;
+import connection.Collector;
+
 
 /**
  * The Listener, that will handle the Actions for the Add-Button
@@ -22,9 +23,9 @@ public class AddButtonListener implements ActionListener{
 	private JTextField tf;
 	
 	/**
-	 * The Testclass, where the track will be added to.
+	 * The Collector, where the Lists are saved in.
 	 */
-	private TestClass tc;
+	private Collector c;
 	
 	/**
 	 * The Label, that counts the Number of Tracks in the Wishlist.
@@ -38,9 +39,9 @@ public class AddButtonListener implements ActionListener{
 	 * @param WishListCounter	The Label, that counts the Number of Tracks in the 
 	 * 							Wishlist.
 	 */
-	public AddButtonListener(JTextField tf, TestClass tc, JLabel WishListCounter) {
+	public AddButtonListener(JTextField tf, Collector c, JLabel WishListCounter) {
 		this.tf = tf;
-		this.tc = tc;
+		this.c = c;
 		this.WishListCounter = WishListCounter;
 	}
 	
@@ -53,8 +54,8 @@ public class AddButtonListener implements ActionListener{
 		String txt = tf.getText();
 		if (!txt.equals("")) {
 			if (txt.contains("www.youtube.") && txt.contains("/watch")) {
-				tc.sr.addToWishList(txt);
-				WishListCounter.setText(""+tc.sr.getWishListSize());
+				c.addToWishList(txt);
+				WishListCounter.setText(""+c.getWishListSize());
 				tf.setText("Track added!");
 			}
 			else 

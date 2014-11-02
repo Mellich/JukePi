@@ -2,33 +2,49 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
-import connection.MessageType;
-import connection.Sender;
+import connection.Collector;
 
 public class DeleteButtonListener implements ActionListener{
 
-	Sender s = new Sender();
+	Collector c;
 	JList<String> list;
 	int buttonNo;
+	DefaultListModel<String> gaplistmodel;
+	DefaultListModel<String> wishlistmodel;
+	DefaultListModel<String> tracklistmodel;
 	
-	public DeleteButtonListener(JList<String> list, int buttonNo) {
+	public DeleteButtonListener(JList<String> list, int buttonNo, Collector c, DefaultListModel<String> gaplist, DefaultListModel<String> wishlist, DefaultListModel<String> tracklist) {
 		this.list = list;
 		this.buttonNo = buttonNo;
+		this.c = c;
+		this.gaplistmodel = gaplist;
+		this.wishlistmodel = wishlist;
+		this.tracklistmodel = tracklist;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (buttonNo == 1)
-			s.sendMessage(MessageType.DELETEFROMGAPLIST, ""+list.getSelectedIndex());
-		else if (buttonNo == 2)
+		System.out.println("...");
+		if (buttonNo == 1) {
+			if (list.getSelectedIndex() >= 0) {
+				c.deleteFromGapList(list.getSelectedIndex(), gaplistmodel, tracklistmodel);
+			}
+		}
+		else if (buttonNo == 2) {
 			//DELETEFROMWISHLIST needed
-			s.sendMessage(1,""+list.getSelectedIndex());
-		else
-			//have to talk about what happens, if you press up on the tracklist column
+			if (list.getSelectedIndex() >= 0) {
+				c.deleteFromWishList(list.getSelectedIndex(), wishlistmodel, tracklistmodel);
+			}
+		}
+		else {
+			//have to talk about what happens, if you press delete on the tracklist column
 			return;
+		}
 	}
 
 }

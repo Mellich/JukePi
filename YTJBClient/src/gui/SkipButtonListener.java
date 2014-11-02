@@ -5,25 +5,26 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 
-import exampleResponses.TestClass;
+import connection.Collector;
+
 
 public class SkipButtonListener implements ActionListener{
 
-	private TestClass tc;
+	private Collector c;
 	private JLabel pf;
 	private JLabel ns;
 	
-	public SkipButtonListener(TestClass tc, JLabel playingFile, JLabel nextSong) {
-		this.tc = tc;
+	public SkipButtonListener(Collector c, JLabel playingFile, JLabel nextSong) {
+		this.c = c;
 		this.pf = playingFile;
 		this.ns = nextSong;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		tc.sr.skip();
-		pf.setText(""+tc.sr.getPlayingFile());
-		ns.setText(""+tc.sr.getNextSong());
+		c.skip();
+		pf.setText(""+c.getPlayingFile());
+		ns.setText(""+c.getNextSong());
 	}
 
 }
