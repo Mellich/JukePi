@@ -22,6 +22,7 @@ public class ConnectionHandler extends Thread {
 	
 	public static final String SEPERATOR = ";\t;";
 	public static final String FILESAVELOCATION = "files/";
+	public static final String TEMPDIRECTORY = "/tmp/";
 	
 	private Socket socket;
 	private YTJBServer server;
@@ -64,9 +65,12 @@ public class ConnectionHandler extends Thread {
 					break;
 				case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommandHandler(socket,server.getScheduler()).handle();
 					break;
-				case MessageType.SENDEDFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getWishList()).handle();
+				case MessageType.SENDEDFILE: new SendedFileCommandHandler(socket,TEMPDIRECTORY+args[1],server.getWishList()).handle();
 					break;
 				case MessageType.GAPSENDEDFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getGapList()).handle();
+					break;
+				case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommandHandler(socket,server.getScheduler()).handle();
+					break;
 				default: new UnknownCommandHandler(socket,message).handle();
 				}
 			}
