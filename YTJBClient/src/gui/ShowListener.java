@@ -62,11 +62,8 @@ public class ShowListener implements ActionListener{
 		JPanel jContentPane = new JPanel();
 		jContentPane.setLayout(null);
 		
-		
 		DefaultListModel<String> listGap = new DefaultListModel<String>();
-		for (String i : c.getGapList()) {
-			listGap.addElement(i);
-		}
+		c.fillGapList(listGap);
 		JList<String> tpGaplist = new JList<String>(listGap);
 		JScrollPane spScrollGL = new JScrollPane(tpGaplist);
 		spScrollGL.setBounds(25, 40, 250, 300);	
@@ -87,9 +84,9 @@ public class ShowListener implements ActionListener{
 		listTrack.addElement(""+c.getPlayingFile()+"\n");
 		for (String i : c.getWishList())
 			listTrack.addElement(i);
-		for (String i : c.getGapList())
+	/*	for (String i : c.getGapList())
 			listTrack.addElement(i);
-		JList<String> tpTracklist = new JList<String>(listTrack);
+	*/	JList<String> tpTracklist = new JList<String>(listTrack);
 		
 		JScrollPane spScrollTL = new JScrollPane(tpTracklist);
 		spScrollTL.setBounds(575,40,250,300);
