@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import exampleResponses.TestClass;
 import javax.swing.JButton;
@@ -109,7 +108,7 @@ public class ShowListener implements ActionListener{
 		
 		JButton btnUp = new JButton("Up");
 		btnUp.setBounds(25, 351, 77, 23);
-		btnUp.addActionListener(new UpButtonListener(tpGaplist.getSelectedIndex()));
+		btnUp.addActionListener(new UpButtonListener(tpGaplist,1));
 		jContentPane.add(btnUp);
 		
 		JButton btnDelete = new JButton("Delete");
