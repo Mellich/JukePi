@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -37,9 +38,10 @@ public class IO {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
-			while (url != null){
+			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],splitted[2]);
+				IO.printlnDebug(null, url);
 				gapList.add(yURL);
 				url = reader.readLine();
 			}
@@ -52,13 +54,13 @@ public class IO {
 	
 	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
 		try {
-			FileWriter fw = new FileWriter(filename);
-			fw.write("");
+			BufferedWriter writer = new BufferedWriter( new FileWriter(filename));
+			writer.write("");
 			for (MusicTrack url : urls){
-				fw.write(url.getMusicType()+";"+url.getTitle()+";"+url.getURL()+"/n");
+				writer.write(url.getMusicType()+";"+url.getTitle()+";"+url.getURL());
+				writer.newLine();
 			}
-			fw.flush();
-			fw.close();
+			writer.close();
 			return true;
 		} catch (IOException e) {
 			IO.printlnDebug(null, "Error while saving the gaplist!");

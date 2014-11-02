@@ -6,27 +6,22 @@ import java.util.LinkedList;
 
 import network.MessageType;
 import server.MusicTrack;
-import server.MusicTrack.TrackType;
 import server.YTJBServer;
+import server.MusicTrack.TrackType;
 import utilities.IO;
 import utilities.ProcessCommunicator;
 
-/**handles youtube link commands
- * 
- * @author Mellich
- *
- */
-public class YoutubeCommandHandler extends CommandHandler {
+public class BeginYoutubeCommandHandler extends CommandHandler {
 
 	private LinkedList<MusicTrack> list;
-	private String url;
 	private YTJBServer server;
+	private String url;
 	
-	public YoutubeCommandHandler(Socket s,YTJBServer server, LinkedList<MusicTrack> list,String url) {
+	public BeginYoutubeCommandHandler(Socket s,YTJBServer server, LinkedList<MusicTrack> list,String url) {
 		super(s);
 		this.list = list;
-		this.url = url;
 		this.server = server;
+		this.url = url;
 	}
 
 	@Override
@@ -37,9 +32,9 @@ public class YoutubeCommandHandler extends CommandHandler {
 			if (parsedURL != null){
 				String title = ProcessCommunicator.parseTitle(url);
 				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL);
-				int position = addToList(yURL);
+				addToList(yURL);
 				server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-				response(""+position);
+				response(""+true);
 				return true;
 			}else response(""+false);
 		} catch (IOException e) {
@@ -48,11 +43,10 @@ public class YoutubeCommandHandler extends CommandHandler {
 		return false;
 	}
 	
-	private int addToList(MusicTrack track){
+	private void addToList(MusicTrack track){
 		IO.printlnDebug(this, "adding parsed input to list");
 		synchronized(list){
-			list.add(track);
-			return list.size();
+			list.addFirst(track);
 		}
 	}
 

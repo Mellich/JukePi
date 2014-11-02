@@ -1,10 +1,8 @@
 package server.connectivity;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import network.MessageType;
@@ -25,6 +23,7 @@ public class ConnectionHandler extends Thread {
 	private Socket socket;
 	private YTJBServer server;
 	private boolean running = true;
+	private boolean notifiable = false;
 	
 	public ConnectionHandler(Socket s,YTJBServer server) {
 		socket = s;
@@ -39,6 +38,7 @@ public class ConnectionHandler extends Thread {
 		try {
 			while (running){
 				String message = receiveMessage();
+				IO.printlnDebug(this, "Received message: "+message);
 				String[] args = message.split(MessageType.SEPERATOR);
 				int prompt = Integer.parseInt(args[0]);
 				IO.printlnDebug(this, "Parsing input...");
@@ -65,9 +65,19 @@ public class ConnectionHandler extends Thread {
 					break;
 				case MessageType.SENDEDFILE: new SendedFileCommandHandler(socket,TEMPDIRECTORY+args[1],server.getWishList()).handle();
 					break;
-				case MessageType.GAPSENDEDFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getGapList()).handle();
+				case MessageType.GAPSENTFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getGapList()).handle();
 					break;
 				case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommandHandler(socket,server.getScheduler()).handle();
+					break;
+				case MessageType.BEGINNINGYOUTUBE: new BeginYoutubeCommandHandler(socket,server,server.getWishList(),args[1]).handle();
+					break;
+				case MessageType.GAPBEGINNINGYOUTUBE: new BeginYoutubeCommandHandler(socket,server,server.getGapList(),args[1]).handle();
+					break;
+				case MessageType.BEGINNINGSENTFILE: new BeginSentFileCommandHandler(socket,server,server.getWishList(),args[1]).handle();
+					break;
+				case MessageType.GAPBEGINNINGSENTFILE: new BeginSentFileCommandHandler(socket,server,server.getGapList(),args[1]).handle();
+					break;
+				case MessageType.DECLAREMEASNOTIFY: notifiable = true;
 					break;
 				default: new UnknownCommandHandler(socket,message).handle();
 				}
@@ -77,12 +87,15 @@ public class ConnectionHandler extends Thread {
 			IO.printlnDebug(this, "Error while handling client connection");
 		}
 		finally{
-			server.removeClient(this);
+			synchronized(server){
+				server.removeClient(this);
+			}
 		}
 	}
 	
 	public void notify(int messageType){
-		new NotifyClientCommandHandler(socket,messageType).handle();
+		if (notifiable)
+			new NotifyClientCommandHandler(socket,messageType).handle();
 	}
 
 
@@ -90,7 +103,12 @@ public class ConnectionHandler extends Thread {
 		BufferedReader networkInput;
 		networkInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		IO.printlnDebug(this, "Waiting for input...");
-		return networkInput.readLine();
+		while (true){
+			String newline = networkInput.readLine();
+			if (!newline.equals("")){
+				return newline;
+			}
+		}
 	}
 
 }

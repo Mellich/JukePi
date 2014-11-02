@@ -34,7 +34,7 @@ public class MessageType {
 	/**
 	 * a path to a sended file that should be inserted to the gaplist
 	 */
-	public static final int GAPSENDEDFILE = 6;
+	public static final int GAPSENTFILE = 6;
 	
 	/**
 	 * save the current gap list into a file
@@ -91,7 +91,35 @@ public class MessageType {
 	 */
 	public static final int RESPONSENOTIFY = 18;
 	
+	/**
+	 * declare the client as notify listener
+	 */
+	public static final int DECLAREMEASNOTIFY = 20;
+	
+	/**
+	 * the shit you sent is not implemented, stupid bitch!
+	 */
 	public static final int NOTIMPLEMENTEDCOMMANDNOTIFY = 19;
+	
+	/**
+	 * add the sent file at the beginning of the list
+	 */
+	public static final int GAPBEGINNINGSENTFILE = 21;
+
+	/**
+	 * add the youtube link at the beginning of the list
+	 */
+	public static final int GAPBEGINNINGYOUTUBE = 22;
+	
+	/**
+	 * add the sent file at the beginning of the list
+	 */
+	public static final int BEGINNINGSENTFILE = 23;
+	
+	/**
+	 * add the youtube link at the beginning of the list
+	 */
+	public static final int BEGINNINGYOUTUBE = 24;
 	
 	/**
 	 * the seerator for the arguments of a command

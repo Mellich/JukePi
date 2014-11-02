@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import utilities.IO;
-import network.MessageType;
-
 
 public class URLSender {
 	
@@ -17,7 +14,7 @@ public class URLSender {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Gib den Link hier ein: ");
 		try {
-			Socket socket = new Socket("localhost",12345);//"192.168.178.34"
+			Socket socket = new Socket("192.168.178.34",12345);//"192.168.178.34"
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			boolean running = true;
 			while (running){
@@ -29,13 +26,14 @@ public class URLSender {
 					break;
 				case 's': writer.write("3");
 					break;
-				default: writer.write("5;\t;"+input);
+				default: for (int i = 0; i < 10;i++)
+							writer.write(input);
 				}*/
-				writer.write(""+MessageType.GETCURRENTPLAYBACKSTATUS);
-				writer.newLine();
-				writer.flush();
-				BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				System.out.println(r.readLine());
+					writer.write(input);
+					writer.newLine();
+					writer.flush();
+					BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					System.out.println(r.readLine());
 				/*
 				if (r.readLine().equals(""+MessageType.READYFORRECEIVENOTIFY)){
 					System.out.println("Sende Datei...");
