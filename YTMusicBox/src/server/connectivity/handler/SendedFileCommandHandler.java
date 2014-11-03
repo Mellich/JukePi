@@ -24,7 +24,7 @@ public class SendedFileCommandHandler extends CommandHandler {
 	public boolean handle() {
 		response(""+MessageType.READYFORRECEIVENOTIFY);
 		if (IO.receiveAndSaveFile(getSocket(), filename)){
-			MusicTrack m = new MusicTrack(TrackType.SENDED,filename, filename);
+			MusicTrack m = new MusicTrack(TrackType.SENDED,filename, filename,filename);
 			addToList(m);
 			return true;
 		}

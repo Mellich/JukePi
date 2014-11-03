@@ -31,6 +31,14 @@ public class ConnectionHandler extends Thread {
 		server.registerClient(this);
 	}
 	
+	private synchronized boolean getNotifiable(){
+		return notifiable;
+	}
+	
+	private synchronized void setNotifiable(boolean b){
+		notifiable = b;
+	}
+	
 		
 	@Override
 	public void run() {
@@ -51,7 +59,7 @@ public class ConnectionHandler extends Thread {
 					break;
 				case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommandHandler(socket,server.getGapList()).handle();
 					break;
-				case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommandHandler(socket,server.getGapList(),Integer.parseInt(args[1])).handle();
+				case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommandHandler(socket,server,server.getGapList(),Integer.parseInt(args[1])).handle();
 					break;
 				case MessageType.GETGAPLIST: new GetListCommandHandler(socket, server.getGapList()).handle();
 					break;
@@ -77,7 +85,7 @@ public class ConnectionHandler extends Thread {
 					break;
 				case MessageType.GAPBEGINNINGSENTFILE: new BeginSentFileCommandHandler(socket,server,server.getGapList(),args[1]).handle();
 					break;
-				case MessageType.DECLAREMEASNOTIFY: notifiable = true;
+				case MessageType.DECLAREMEASNOTIFY: this.setNotifiable(true);
 					break;
 				default: new UnknownCommandHandler(socket,message).handle();
 				}
@@ -94,7 +102,7 @@ public class ConnectionHandler extends Thread {
 	}
 	
 	public void notify(int messageType){
-		if (notifiable)
+		if (getNotifiable())
 			new NotifyClientCommandHandler(socket,messageType).handle();
 	}
 

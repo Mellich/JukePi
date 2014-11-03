@@ -36,7 +36,7 @@ public class YoutubeCommandHandler extends CommandHandler {
 			parsedURL = ProcessCommunicator.parseStandardURL(url);
 			if (parsedURL != null){
 				String title = ProcessCommunicator.parseTitle(url);
-				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL);
+				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL,url);
 				int position = addToList(yURL);
 				server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 				response(""+position);

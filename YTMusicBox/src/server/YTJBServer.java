@@ -124,7 +124,9 @@ public class YTJBServer {
 			try {
 				wishList = new LinkedList<MusicTrack>();
 				clients = new ArrayList<ConnectionHandler>();
-				gapList = IO.loadGapListFromFile(GAPLISTFILENAME);
+				gapList = new LinkedList<MusicTrack>();
+				GapListLoader listLoader = new GapListLoader(GAPLISTFILENAME, gapList);
+				listLoader.start();
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);

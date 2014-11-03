@@ -31,7 +31,7 @@ public class TrackScheduler extends Thread {
 		running = r;
 	}
 	
-	private MusicTrack chooseNext(){
+	private synchronized MusicTrack chooseNext(){
 		if (!wishList.isEmpty()){
 			return wishList.removeFirst();
 		}
@@ -86,7 +86,7 @@ public class TrackScheduler extends Thread {
 				player = new OMXPlayer();
 				player.play(current);
 				if (current.getMusicType() == TrackType.SENDED && wishList.contains(current)){
-					File musicfile = new File(current.getURL());
+					File musicfile = new File(current.getVideoURL());
 					if (musicfile.exists()){
 						musicfile.delete();
 					}

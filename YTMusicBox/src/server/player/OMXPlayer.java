@@ -15,7 +15,7 @@ public class OMXPlayer implements MusicPlayer {
 
 	@Override
 	public void play(MusicTrack track) {
-		playerProcess = ProcessCommunicator.getExternPlayerProcessk(track.getURL());
+		playerProcess = ProcessCommunicator.getExternPlayerProcessk(track.getVideoURL());
 		if (playerProcess != null){
 			try {
 				playerProcess.waitFor();

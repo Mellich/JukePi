@@ -21,8 +21,9 @@ public class MusicTrack {
 	}
 	
 	
+	private String shortURL;
 	private String title;
-	private String url;
+	private String videoURL;
 	private TrackType type;
 	
 	/**creates a new music track
@@ -31,10 +32,11 @@ public class MusicTrack {
 	 * @param name the title of the track
 	 * @param videoURL the url to the track (or the path)
 	 */
-	public MusicTrack(TrackType t,String name, String videoURL) {
+	public MusicTrack(TrackType t,String name, String videoURL,String shortURL) {
 		this.title = name;
-		url = videoURL;
+		this.videoURL = videoURL;
 		type = t;
+		this.shortURL = shortURL;
 	}
 	
 	public static TrackType messageTypeToTrackType(int messageType){
@@ -53,9 +55,12 @@ public class MusicTrack {
 		return type;
 	}
 	
+	public String getShortURL(){
+		return shortURL;
+	}
 	
-	public String getURL(){
-		return url;
+	public String getVideoURL(){
+		return videoURL;
 	}
 
 }

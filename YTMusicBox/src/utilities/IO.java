@@ -30,26 +30,26 @@ public class IO {
 		else name = "STATIC";
 		long n = Thread.currentThread().getId();
 		Timestamp t = new Timestamp(System.currentTimeMillis());
-		System.out.println(t.toString()+" Tread-"+n+"="+name+": "+input);
+		System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
 	}
 	
-	public static LinkedList<MusicTrack> loadGapListFromFile(String filename){
-		LinkedList<MusicTrack> gapList = new LinkedList<MusicTrack>();
+	public static void loadGapListFromFile(String filename, LinkedList<MusicTrack> gapList){
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
-				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],splitted[2]);
-				IO.printlnDebug(null, url);
-				gapList.add(yURL);
+				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseStandardURL(splitted[2]),splitted[2]);
+				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
+				synchronized(gapList){
+					gapList.add(yURL);
+				}
 				url = reader.readLine();
 			}
 			reader.close();
 		} catch (IOException e) {
-			IO.printlnDebug(null, "Could not open file "+filename);
+			IO.printlnDebug(null, "ERROR while opening file: "+filename);
 		}
-		return gapList;
 	}
 	
 	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
@@ -57,7 +57,7 @@ public class IO {
 			BufferedWriter writer = new BufferedWriter( new FileWriter(filename));
 			writer.write("");
 			for (MusicTrack url : urls){
-				writer.write(url.getMusicType()+";"+url.getTitle()+";"+url.getURL());
+				writer.write(url.getMusicType()+";"+url.getTitle()+";"+url.getShortURL());
 				writer.newLine();
 			}
 			writer.close();
