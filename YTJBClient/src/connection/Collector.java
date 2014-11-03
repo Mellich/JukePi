@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
 
 /**
  * A Class to collect all informations about Gaplist, Wishlist, etc.
@@ -22,18 +23,16 @@ public class Collector {
 	BufferedWriter senderWriter;
 	BufferedReader notifierReader;
 	BufferedReader senderReader;
-	private ReaderThread a;
-	private ReaderThread b;
+	private SenderReaderThread srt;
+	private NotifierReaderThread nrt;
 	
-	private LinkedList<String> gaplist;
-	private LinkedList<String> wishlist;
-//	private LinkedList<String> tracklist;
+	private DefaultListModel<String> gaplist;
+	private DefaultListModel<String> wishlist;
+	private DefaultListModel<String> tracklist;
+	private JLabel currentSong;
 	private Sender s;
 	
 	public Collector() {
-		gaplist = new LinkedList<String>();
-		wishlist = new LinkedList<String>();
-	//	tracklist = new LinkedList<String>();
 		s = new Sender();
 		try {
 			notifier = new Socket("192.168.178.34",12345);
@@ -54,123 +53,64 @@ public class Collector {
 		catch (Exception e) {
 			System.out.println("Noob");
 		}
-		a = new ReaderThread(senderReader, false, this);
-		a.start();
-		b = new ReaderThread(notifierReader, true, this);
-		b.start();
-		
-		getGapList();
-	/*	addToGapList("Bonobo - Black Sands");
-		addToGapList("Bonobo - Kiara");
-		addToGapList("Charlie Boulala - Sonnenkind");
-		
-		addToWishList("Monkey Safari - Jorg - Original Mix");
-		addToWishList("Jay Z, Alicia Keys - Empire State Of Mind");
-		addToWishList("Yelle - Ce Jeu - Tepr Remix");
-		addToWishList("Tiesto - Say Something");
-		addToWishList("The Avener - Fade Out Lines");
-		addToWishList("Dimitri Vegas, Like Mike, Sander van Doom - Project T - Original Mix"); */
-	}
+		srt = new SenderReaderThread(senderReader, this);
+		srt.start();
+		nrt = new NotifierReaderThread(notifierReader, this);
+		nrt.start();
+		}
 	
 	public void addToGapList(String link) {
-		gaplist.add(link);
 		s.sendMessage(MessageType.GAPYOUTUBE, link, senderWriter);
 	}
 	
 	public void addToWishList(String link) {
-		wishlist.add(link);
 		s.sendMessage(MessageType.YOUTUBE, link, senderWriter);
+		srt.addCatcher();
 	}
 	
-	public void deleteFromGapList(int index, DefaultListModel<String> gaplistmodel, DefaultListModel<String> tracklist) {
-		gaplist.remove(index);
-		gaplistmodel.clear();
-		tracklist.clear();
-		tracklist.addElement(getPlayingFile());
-		for (String i : wishlist)
-			tracklist.addElement(i);
-		for (String i : gaplist) {
-			gaplistmodel.addElement(i);
-			tracklist.addElement(i);
-		}	
+	public void deleteFromGapList(int index, DefaultListModel<String> gaplistmodel, DefaultListModel<String> tracklist) {	
 		s.sendMessage(MessageType.DELETEFROMGAPLIST, ""+index, senderWriter);
 	}
 	
 	public int getWishListSize() {
-		return wishlist.size();
+		//TODO
+		return 4;
 	}
 	
 	public int getGapListSize() {
-		return gaplist.size();
+		//TODO
+		return 4;
 	}
 	
 	public void deleteFromWishList(int index, DefaultListModel<String> wishlistmodel, DefaultListModel<String> tracklist) {
-		wishlist.remove(index);
-		wishlistmodel.clear();
-		tracklist.clear();
-		tracklist.addElement(getPlayingFile());
-		for (String i : wishlist) {
-			wishlistmodel.addElement(i);
-			tracklist.addElement(i);
-		}
-		for (String i : gaplist) {
-			tracklist.addElement(i);
-		}
 		//Need to be implemented on Server-Side
 	//	s.sendMessage(MessageType.DELETEFROMWISHLIST, ""+index);
 	}
 	
 	public LinkedList<String> getGapList() {
 		s.sendMessage(MessageType.GETGAPLIST, "", senderWriter);
-		return gaplist;
+		return srt.updateList();
 	} 
 	
 	public LinkedList<String> getWishList() {
-	//	s.sendMessage(MessageType.GETWISHLIST, null, senderWriter);
-		return wishlist;
+		s.sendMessage(MessageType.GETWISHLIST, null, senderWriter);
+		//TODO
+		return null;
 	}
 	
 	public String getPlayingFile() {
-	//	s.sendMessage(MessageType.GETCURRENTTRACK, null, senderWriter);
-		if (!gaplist.isEmpty())
-			return gaplist.getFirst();
-		else
-			return null;
+		s.sendMessage(MessageType.GETCURRENTTRACK, null, senderWriter);
+		return srt.getPlayingFile();
 	}
 	
 	public boolean skip() {
 		s.sendMessage(MessageType.SKIP, null, senderWriter);
-		//TODO
+		srt.skipCatcher();
 		return true;
 	}
 	
 	public String getNextSong() {
-		if (wishlist.isEmpty()) {
-			if (!gaplist.isEmpty()) {
-				if (gaplist.getFirst().equals(getPlayingFile())) {
-					return gaplist.get(1);
-				}
-				else {
-					return gaplist.getFirst();
-				}
-			}
-			else {
-				return null;
-			}
-		}
-		else {
-			if (!wishlist.isEmpty()) {
-				if (wishlist.getFirst().equals(getPlayingFile())) {
-					return wishlist.get(1);
-				}
-				else {
-					return wishlist.getFirst();
-				}
-			}
-			else {
-				return null;
-			}
-		}
+		return "Deine Mutter";
 	}
 	
 	public LinkedList<String> getTrackList() {
@@ -200,11 +140,31 @@ public class Collector {
 	}
 	
 	public void updateLists() {
-		b.updateGapList(gaplist);
-		System.out.println(gaplist.get(0));
+	//	a.updateGapList(gaplist);
+	//	System.out.println(gaplist.get(0));
 	}
 	
 	public void updatePlayingFile() {
 		
+	}
+	
+	public void fillModels(DefaultListModel<String> gaplist,DefaultListModel<String> wishlist,DefaultListModel<String> tracklist) {
+		s.sendMessage(MessageType.GETGAPLIST, "",senderWriter);
+		LinkedList<String> gl = srt.updateList();
+		for (String i : gl) {
+			gaplist.addElement(i);
+			System.out.println(i);
+		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		s.sendMessage(MessageType.GETWISHLIST, "", senderWriter);
+		LinkedList<String> wl = srt.updateList();
+		for (String i : wl) {
+			wishlist.addElement(i);
+			System.out.println(i);
+		}
 	}
 }

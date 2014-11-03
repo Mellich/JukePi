@@ -63,33 +63,23 @@ public class ShowListener implements ActionListener{
 		jContentPane.setLayout(null);
 		
 		DefaultListModel<String> listGap = new DefaultListModel<String>();
-		for (String i : c.getGapList())
-			listGap.addElement(i);
+		DefaultListModel<String> listWish = new DefaultListModel<String>();
+		DefaultListModel<String> listTrack = new DefaultListModel<String>();
+		c.fillModels(listGap, listWish, listTrack);
 		
 		JList<String> tpGaplist = new JList<String>(listGap);
 		JScrollPane spScrollGL = new JScrollPane(tpGaplist);
 		spScrollGL.setBounds(25, 40, 250, 300);	
 		jContentPane.add(spScrollGL);
 		
-		DefaultListModel<String> listWish = new DefaultListModel<String>();
-		for (String i : c.getWishList()) {
-			listWish.addElement(i);
-		}
-		JList<String> tpWishlist = new JList<String>(listWish);
 		
+		JList<String> tpWishlist = new JList<String>(listWish);
 		JScrollPane spScrollWL = new JScrollPane(tpWishlist);
 		spScrollWL.setBounds(300, 40, 250, 300);
 		jContentPane.add(spScrollWL);
 		
 		
-		DefaultListModel<String> listTrack = new DefaultListModel<String>();
-		listTrack.addElement(""+c.getPlayingFile()+"\n");
-		for (String i : c.getWishList())
-			listTrack.addElement(i);
-	/*	for (String i : c.getGapList())
-			listTrack.addElement(i);
-	*/	JList<String> tpTracklist = new JList<String>(listTrack);
-		
+		JList<String> tpTracklist = new JList<String>(listTrack);
 		JScrollPane spScrollTL = new JScrollPane(tpTracklist);
 		spScrollTL.setBounds(575,40,250,300);
 		jContentPane.add(spScrollTL);

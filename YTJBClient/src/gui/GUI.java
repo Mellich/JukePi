@@ -22,7 +22,7 @@ import java.awt.Font;
  * @author Haeldeus
  *
  */
-public class GUI {
+public class GUI extends Thread{
 	
 	/**
 	 * The Collector, that saves all Informations about the Lists and prevents the 
@@ -122,7 +122,7 @@ public class GUI {
 		
 		
 		//Adding the Action Listener to each Button and TextField.
-		btSkip.addActionListener(new SkipButtonListener(c, lblPlayingFile, lblSongNext));
+		btSkip.addActionListener(new SkipButtonListener(c));
 		btAdd.addActionListener(new AddButtonListener(txtUrlField, c, lblNoWL));
 		txtUrlField.addMouseListener(new TextFieldClickListener(txtUrlField));
 		btPlayPause.addActionListener(new PPButtonListener(btPlayPause,c));
@@ -137,7 +137,8 @@ public class GUI {
 	 * 
 	 * @param args Just a stub
 	 */
-	public static void main(String[] args) {
+	@Override
+	public void run() {
 		SwingUtilities.invokeLater(new Runnable() {;
 			@Override
 			public void run() {
