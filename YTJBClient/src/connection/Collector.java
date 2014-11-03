@@ -22,6 +22,8 @@ public class Collector {
 	BufferedWriter senderWriter;
 	BufferedReader notifierReader;
 	BufferedReader senderReader;
+	private ReaderThread a;
+	private ReaderThread b;
 	
 	private LinkedList<String> gaplist;
 	private LinkedList<String> wishlist;
@@ -52,9 +54,9 @@ public class Collector {
 		catch (Exception e) {
 			System.out.println("Noob");
 		}
-		ReaderThread a = new ReaderThread(senderReader);
+		a = new ReaderThread(senderReader, false, this);
 		a.start();
-		ReaderThread b = new ReaderThread(notifierReader);
+		b = new ReaderThread(notifierReader, true, this);
 		b.start();
 		
 		getGapList();
@@ -197,17 +199,12 @@ public class Collector {
 		s.sendMessage(MessageType.PAUSERESUME, null, senderWriter);
 	}
 	
-	public void notifyGUILists() {
-		
+	public void updateLists() {
+		b.updateGapList(gaplist);
+		System.out.println(gaplist.get(0));
 	}
 	
 	public void updatePlayingFile() {
 		
-	}
-	
-	public DefaultListModel<String> fillGapList(DefaultListModel<String> list) {
-		for (String i : getGapList())
-			list.addElement(i);
-		return list;
 	}
 }

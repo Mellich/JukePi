@@ -1,8 +1,6 @@
 package connection;
 
 import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
 /**
  * A Class to send the commands to the Server.
  * @author Haeldeus
@@ -25,7 +23,7 @@ public class Sender {
 				case MessageType.SKIP: writer.write(""+MessageType.SKIP);break;
 				case MessageType.PAUSERESUME: writer.write(""+MessageType.PAUSERESUME);break;
 				case MessageType.GAPYOUTUBE: writer.write(""+MessageType.GAPYOUTUBE+MessageType.SEPERATOR+message);break;
-				case MessageType.GAPSENDEDFILE: writer.write(""+MessageType.GAPSENDEDFILE+MessageType.SEPERATOR+message);break;
+				case MessageType.GAPSENTFILE: writer.write(""+MessageType.GAPSENTFILE+MessageType.SEPERATOR+message);break;
 				case MessageType.GAPLISTSAVETOFILE: writer.write(""+MessageType.GAPLISTSAVETOFILE);break;
 				case MessageType.GETGAPLIST: writer.write(""+MessageType.GETGAPLIST);break;
 		/**/	case MessageType.GETWISHLIST: writer.write(""+MessageType.GETWISHLIST);writer.newLine();writer.flush();break;

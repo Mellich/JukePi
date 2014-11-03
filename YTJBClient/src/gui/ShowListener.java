@@ -63,7 +63,9 @@ public class ShowListener implements ActionListener{
 		jContentPane.setLayout(null);
 		
 		DefaultListModel<String> listGap = new DefaultListModel<String>();
-		c.fillGapList(listGap);
+		for (String i : c.getGapList())
+			listGap.addElement(i);
+		
 		JList<String> tpGaplist = new JList<String>(listGap);
 		JScrollPane spScrollGL = new JScrollPane(tpGaplist);
 		spScrollGL.setBounds(25, 40, 250, 300);	
