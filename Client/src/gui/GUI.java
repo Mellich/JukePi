@@ -8,10 +8,8 @@ import javax.swing.JLabel;
 
 import connection.Collector;
 
-import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
 
 public class GUI {
 
@@ -24,16 +22,19 @@ public class GUI {
 		jFrame.setSize(new Dimension(528, 376));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jFrame.setResizable(false);
 		jFrame.getContentPane().setLayout(null);
 		
 		txtIp = new JTextField();
-		txtIp.setText("IP");
+//TODO	txtIp.setText("IP");
+		txtIp.setText("192.168.178.34");
 		txtIp.setBounds(151, 110, 186, 20);
 		jFrame.getContentPane().add(txtIp);
 		txtIp.setColumns(10);
 		
 		txtPort = new JTextField();
-		txtPort.setText("Port");
+//TODO	txtPort.setText("Port");
+		txtPort.setText("12345");
 		txtPort.setBounds(151, 184, 45, 20);
 		jFrame.getContentPane().add(txtPort);
 		txtPort.setColumns(10);
