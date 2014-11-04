@@ -2,7 +2,6 @@ package server.connectivity.handler;
 
 import java.io.File;
 import java.net.Socket;
-import java.util.LinkedList;
 
 import network.MessageType;
 import server.MusicTrack;
@@ -12,13 +11,13 @@ import utilities.IO;
 
 public class DeleteFromListCommandHandler extends CommandHandler {
 
-	private LinkedList<MusicTrack> list;
+	private boolean fromWishList;
 	private int trackIndex;
 	private YTJBServer server;
 	
-	public DeleteFromListCommandHandler(Socket s,YTJBServer server, LinkedList<MusicTrack> list,int trackIndex) {
+	public DeleteFromListCommandHandler(Socket s,YTJBServer server, boolean fromWishList,int trackIndex) {
 		super(s);
-		this.list = list;
+		this.fromWishList = fromWishList;
 		this.trackIndex = trackIndex;
 		this.server = server;
 	}
@@ -26,10 +25,7 @@ public class DeleteFromListCommandHandler extends CommandHandler {
 	@Override
 	public boolean handle() {
 		try{
-			MusicTrack track = null;
-			synchronized (list){
-				track = list.remove(trackIndex);
-			}
+			MusicTrack track = server.deleteFromList(fromWishList, trackIndex);
 			if (track.getMusicType() == TrackType.SENDED){
 				File musicFile = new File(track.getShortURL());
 				if (musicFile.exists()){

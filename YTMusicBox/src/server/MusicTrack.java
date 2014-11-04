@@ -1,6 +1,5 @@
 package server;
 
-import network.MessageType;
 
 /**a music track that can be played by the server
  * 
@@ -37,14 +36,6 @@ public class MusicTrack {
 		this.videoURL = videoURL;
 		type = t;
 		this.shortURL = shortURL;
-	}
-	
-	public static TrackType messageTypeToTrackType(int messageType){
-		switch (messageType){
-		case MessageType.YOUTUBE: return TrackType.YOUTUBE;
-		case MessageType.SENDEDFILE: return TrackType.SENDED;
-		default: return TrackType.UNKNOWN;
-		}
 	}
 	
 	public String getTitle(){

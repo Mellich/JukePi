@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import network.MessageType;
 import server.connectivity.ConnectionHandler;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
@@ -82,12 +83,88 @@ public class YTJBServer {
 		}
 	}
 	
-	public LinkedList<MusicTrack> getGapList(){
-		return gapList;
+	/**adds a MusicTrack to a list
+	 * 
+	 * @param track the track to be added
+	 * @param toWishList if true, track will be added to wish list
+	 * @param atFirst if true, track will be added at the beginning of the list and at the and, if the value is false
+	 */
+	public synchronized void addToList(MusicTrack track,boolean toWishList, boolean atFirst){
+		boolean isFirstTrack = false;		//are the lists empty before this track is added?
+		if (gapList.isEmpty() && wishList.isEmpty())
+			isFirstTrack = true;
+		if (toWishList){
+			if (atFirst)
+				wishList.addFirst(track);
+			else wishList.add(track);
+		}
+		else{
+			if (atFirst)
+				gapList.addFirst(track);
+			else gapList.add(track);
+		}
+		if (isFirstTrack){     //if so, notify waiting scheduler
+			scheduler.notify();
+		}
 	}
 	
-	public LinkedList<MusicTrack> getWishList(){
-		return wishList;
+	/**
+	 * deletes a track from a list
+	 * 
+	 * @param fromWishList if true, the track will be deleted from the wish list, else from the gap list
+	 * @param index the index of the track in the list
+	 * @return the deleted track or null if the track does not exist
+	 */
+	public synchronized MusicTrack deleteFromList(boolean fromWishList,int index){
+		try{
+			if (fromWishList){
+				return wishList.remove(index);
+			}
+			else{
+				return gapList.remove(index);
+			}
+		}
+		catch (IndexOutOfBoundsException e){
+			IO.printlnDebug(this, "ERROR: Could not delete track from list: Index out of bounds!");
+		}
+		return null;
+	}
+	
+	/**
+	 * returns the titles of all tracks in a list 
+	 * 
+	 * @param fromWishList if true, use the wish list else the gap list
+	 * @return a string with all the titles seperated through the standard seperator command
+	 */
+	public String getTitle(boolean fromWishList){
+		StringBuilder response = new StringBuilder();
+		if (fromWishList)
+			for (MusicTrack m: gapList){
+				response.append(m.getTitle()+MessageType.SEPERATOR);
+			}
+		else
+			for (MusicTrack m: wishList){
+				response.append(m.getTitle()+MessageType.SEPERATOR);
+			}
+		return response.toString();
+	}
+	
+	public synchronized MusicTrack chooseNextTrack(){
+		if (!wishList.isEmpty()){
+			return wishList.removeFirst();
+		}
+		else {
+			if (!gapList.isEmpty()){
+				MusicTrack nextURL = gapList.removeFirst();
+				gapList.add(nextURL);
+				return nextURL;
+			}
+		}
+		return null;
+	}
+	
+	public boolean saveGapListToFile(){
+		return IO.saveGapListToFile(gapList, GAPLISTFILENAME);
 	}
 	
 	public TrackScheduler getScheduler(){

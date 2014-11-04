@@ -1,27 +1,19 @@
 package server.player;
 
-import java.io.File;
-import java.util.LinkedList;
-
 import network.MessageType;
 import server.MusicTrack;
-import server.MusicTrack.TrackType;
 import server.YTJBServer;
 import utilities.IO;
 
 
 public class TrackScheduler extends Thread {
 	
-	private LinkedList<MusicTrack> wishList;
-	private LinkedList<MusicTrack> gapList;
 	private YTJBServer server;
 	private boolean running;
 	private MusicPlayer player;
 	private MusicTrack current;
 	
 	public TrackScheduler(YTJBServer server) {
-		this.wishList = server.getWishList();
-		this.gapList = server.getGapList();
 		this.server = server;
 		running = true;
 	}
@@ -30,21 +22,6 @@ public class TrackScheduler extends Thread {
 	public synchronized void setRunning(boolean r){
 		running = r;
 	}
-	
-	private synchronized MusicTrack chooseNext(){
-		if (!wishList.isEmpty()){
-			return wishList.removeFirst();
-		}
-		else {
-			if (!gapList.isEmpty()){
-				MusicTrack nextURL = gapList.removeFirst();
-				gapList.add(nextURL);
-				return nextURL;
-			}
-		}
-		return null;
-	}
-	
 	
 	public void skip(){
 		if (player != null)
@@ -75,22 +52,23 @@ public class TrackScheduler extends Thread {
 			while (running){
 				IO.printlnDebug(this, "getting next track in the list");
 				player = null;
-				current = chooseNext();
+				current = server.chooseNextTrack();
 				while (current == null){
-					//Output.printlnDebug(this, "all lists are empty. waiting for new tracks to come...");
-					Thread.sleep(1000);
-					current = chooseNext();
+					IO.printlnDebug(this, "waiting for a track added to a list...");
+					this.wait();
+					current = server.chooseNextTrack();
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
+				server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 				player = new OMXPlayer();
 				player.play(current);
-				if (current.getMusicType() == TrackType.SENDED && wishList.contains(current)){
+				/*if (current.getMusicType() == TrackType.SENDED && wishList.contains(current)){
 					File musicfile = new File(current.getVideoURL());
 					if (musicfile.exists()){
 						musicfile.delete();
 					}
-				}
+				}*/
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");

@@ -39,6 +39,50 @@ public class ConnectionHandler extends Thread {
 		notifiable = b;
 	}
 	
+	private void handleCommand(String[] args){
+		int prompt = Integer.parseInt(args[0]);
+		IO.printlnDebug(this, "Parsing input...");
+		switch (prompt){
+		case MessageType.PAUSERESUME: new PauseResumeCommandHandler(socket,server).handle();
+			break;
+		case MessageType.SKIP: new SkipCommandHandler(socket,server.getScheduler()).handle();
+			break;
+		case MessageType.GAPYOUTUBE: new YoutubeCommandHandler(socket,server,false,false,args[1]).handle();
+			break;
+		case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommandHandler(socket,server).handle();
+			break;
+		case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommandHandler(socket,server,false,Integer.parseInt(args[1])).handle();
+			break;
+		case MessageType.GETGAPLIST: new GetListCommandHandler(socket, server,false).handle();
+			break;
+		case MessageType.GETWISHLIST: new GetListCommandHandler(socket, server,true).handle();
+			break;
+		case MessageType.YOUTUBE:  new YoutubeCommandHandler(socket,server,true,false,args[1]).handle();
+			break;
+		case MessageType.ISREADY: new CheckIfReadyCommandHandler(socket).handle();
+			break;
+		case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommandHandler(socket,server.getScheduler()).handle();
+			break;
+		/*case MessageType.SENDEDFILE: new SentFileCommandHandler(socket,TEMPDIRECTORY+args[1],server,true,false).handle();
+			break;
+		case MessageType.GAPSENTFILE: new SentFileCommandHandler(socket,FILESAVELOCATION+args[1],server,false,false).handle();
+			break;*/
+		case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommandHandler(socket,server.getScheduler()).handle();
+			break;
+		case MessageType.BEGINNINGYOUTUBE: new YoutubeCommandHandler(socket,server,true,true,args[1]).handle();
+			break;
+		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommandHandler(socket,server,false,true,args[1]).handle();
+			break;
+		/*case MessageType.BEGINNINGSENTFILE: new SentFileCommandHandler(socket,FILESAVELOCATION+args[1],server,true,true).handle();
+			break;
+		case MessageType.GAPBEGINNINGSENTFILE: new SentFileCommandHandler(socket,FILESAVELOCATION+args[1],server,false,true).handle();
+			break;*/
+		case MessageType.DECLAREMEASNOTIFY: this.setNotifiable(true);
+			break;
+		default: new UnknownCommandHandler(socket,""+prompt).handle();
+		}		
+	}
+	
 		
 	@Override
 	public void run() {
@@ -48,56 +92,20 @@ public class ConnectionHandler extends Thread {
 				String message = receiveMessage();
 				IO.printlnDebug(this, "Received message: "+message);
 				String[] args = message.split(MessageType.SEPERATOR);
-				int prompt = Integer.parseInt(args[0]);
-				IO.printlnDebug(this, "Parsing input...");
-				switch (prompt){
-				case MessageType.PAUSERESUME: new PauseResumeCommandHandler(socket,server).handle();
-					break;
-				case MessageType.SKIP: new SkipCommandHandler(socket,server.getScheduler()).handle();
-					break;
-				case MessageType.GAPYOUTUBE: new YoutubeCommandHandler(socket,server,server.getGapList(),args[1]).handle();
-					break;
-				case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommandHandler(socket,server.getGapList()).handle();
-					break;
-				case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommandHandler(socket,server,server.getGapList(),Integer.parseInt(args[1])).handle();
-					break;
-				case MessageType.GETGAPLIST: new GetListCommandHandler(socket, server.getGapList()).handle();
-					break;
-				case MessageType.GETWISHLIST: new GetListCommandHandler(socket, server.getWishList()).handle();
-					break;
-				case MessageType.YOUTUBE:  new YoutubeCommandHandler(socket,server,server.getWishList(),args[1]).handle();
-					break;
-				case MessageType.ISREADY: new CheckIfReadyCommandHandler(socket).handle();
-					break;
-				case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommandHandler(socket,server.getScheduler()).handle();
-					break;
-				case MessageType.SENDEDFILE: new SendedFileCommandHandler(socket,TEMPDIRECTORY+args[1],server.getWishList()).handle();
-					break;
-				case MessageType.GAPSENTFILE: new SendedFileCommandHandler(socket,FILESAVELOCATION+args[1],server.getGapList()).handle();
-					break;
-				case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommandHandler(socket,server.getScheduler()).handle();
-					break;
-				case MessageType.BEGINNINGYOUTUBE: new BeginYoutubeCommandHandler(socket,server,server.getWishList(),args[1]).handle();
-					break;
-				case MessageType.GAPBEGINNINGYOUTUBE: new BeginYoutubeCommandHandler(socket,server,server.getGapList(),args[1]).handle();
-					break;
-				case MessageType.BEGINNINGSENTFILE: new BeginSentFileCommandHandler(socket,server,server.getWishList(),args[1]).handle();
-					break;
-				case MessageType.GAPBEGINNINGSENTFILE: new BeginSentFileCommandHandler(socket,server,server.getGapList(),args[1]).handle();
-					break;
-				case MessageType.DECLAREMEASNOTIFY: this.setNotifiable(true);
-					break;
-				default: new UnknownCommandHandler(socket,message).handle();
+				try{
+					handleCommand(args);
+				}
+				catch (NumberFormatException | IndexOutOfBoundsException e){
+					IO.printlnDebug(this, "Wrong command format was sendet by client:"+message);
+					new UnknownCommandHandler(socket,""+message).handle();
 				}
 			}
 			socket.close();
-		} catch (IOException e) {
-			IO.printlnDebug(this, "Error while handling client connection");
+		} catch (IOException | NullPointerException e) {
+			IO.printlnDebug(this, "ERROR: lost client connection!");
 		}
 		finally{
-			synchronized(server){
-				server.removeClient(this);
-			}
+			server.removeClient(this);
 		}
 	}
 	
@@ -111,12 +119,7 @@ public class ConnectionHandler extends Thread {
 		BufferedReader networkInput;
 		networkInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		IO.printlnDebug(this, "Waiting for input...");
-		while (true){
-			String newline = networkInput.readLine();
-			if (!newline.equals("")){
-				return newline;
-			}
-		}
+		return networkInput.readLine();
 	}
 
 }

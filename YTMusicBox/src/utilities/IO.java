@@ -42,7 +42,7 @@ public class IO {
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseStandardURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
 				synchronized(gapList){
-					gapList.add(yURL);
+					gapList.addFirst(yURL);
 				}
 				url = reader.readLine();
 			}
