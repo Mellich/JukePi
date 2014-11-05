@@ -104,7 +104,8 @@ public class YTJBServer {
 			else gapList.add(track);
 		}
 		if (isFirstTrack){     //if so, notify waiting scheduler
-			scheduler.notify();
+			scheduler.playableTrack.release();
+			IO.printlnDebug(this, "First element in the lists");
 		}
 	}
 	
@@ -139,11 +140,11 @@ public class YTJBServer {
 	public String getTitle(boolean fromWishList){
 		StringBuilder response = new StringBuilder();
 		if (fromWishList)
-			for (MusicTrack m: gapList){
+			for (MusicTrack m: wishList){
 				response.append(m.getTitle()+MessageType.SEPERATOR);
 			}
 		else
-			for (MusicTrack m: wishList){
+			for (MusicTrack m: gapList){
 				response.append(m.getTitle()+MessageType.SEPERATOR);
 			}
 		return response.toString();
@@ -161,6 +162,10 @@ public class YTJBServer {
 			}
 		}
 		return null;
+	}
+	
+	public void loadGapListFromFile(){
+		IO.loadGapListFromFile(GAPLISTFILENAME, this);		
 	}
 	
 	public boolean saveGapListToFile(){
@@ -202,7 +207,7 @@ public class YTJBServer {
 				wishList = new LinkedList<MusicTrack>();
 				clients = new ArrayList<ConnectionHandler>();
 				gapList = new LinkedList<MusicTrack>();
-				GapListLoader listLoader = new GapListLoader(GAPLISTFILENAME, gapList);
+				GapListLoader listLoader = new GapListLoader(this);
 				listLoader.start();
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);

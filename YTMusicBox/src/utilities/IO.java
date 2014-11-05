@@ -15,6 +15,7 @@ import java.util.LinkedList;
 
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
+import server.YTJBServer;
 
 /**static class that provides functions for uniform input and output
  * 
@@ -33,7 +34,7 @@ public class IO {
 		System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
 	}
 	
-	public static void loadGapListFromFile(String filename, LinkedList<MusicTrack> gapList){
+	public static void loadGapListFromFile(String filename, YTJBServer server){
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
@@ -41,9 +42,7 @@ public class IO {
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseStandardURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
-				synchronized(gapList){
-					gapList.addFirst(yURL);
-				}
+				server.addToList(yURL, false, true);
 				url = reader.readLine();
 			}
 			reader.close();

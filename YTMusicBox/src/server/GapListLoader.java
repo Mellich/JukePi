@@ -1,23 +1,18 @@
 package server;
 
-import java.util.LinkedList;
-
-import utilities.IO;
 
 public class GapListLoader extends Thread {
 	
 	
-	private String filename;
-	private LinkedList<MusicTrack> gapList;
+	private YTJBServer server;
 	
-	public GapListLoader(String filename, LinkedList<MusicTrack> gapList) {
-		this.filename = filename;
-		this.gapList = gapList;
+	public GapListLoader( YTJBServer server) {
+		this.server = server;
 	}
 	
 	@Override
 	public void run() {
 		super.run();
-		IO.loadGapListFromFile(filename, gapList);
+		server.loadGapListFromFile();
 	}
 }

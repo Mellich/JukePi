@@ -1,5 +1,7 @@
 package server.player;
 
+import java.util.concurrent.Semaphore;
+
 import network.MessageType;
 import server.MusicTrack;
 import server.YTJBServer;
@@ -12,6 +14,7 @@ public class TrackScheduler extends Thread {
 	private boolean running;
 	private MusicPlayer player;
 	private MusicTrack current;
+	public Semaphore playableTrack = new Semaphore(0);
 	
 	public TrackScheduler(YTJBServer server) {
 		this.server = server;
@@ -55,7 +58,7 @@ public class TrackScheduler extends Thread {
 				current = server.chooseNextTrack();
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a track added to a list...");
-					this.wait();
+					playableTrack.acquire();
 					current = server.chooseNextTrack();
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
