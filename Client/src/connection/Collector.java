@@ -19,7 +19,7 @@ import threads.StabilityThread;
 public class Collector {
 
 	private JLabel gaplistlabel;
-	private JLabel wishlistLabel;
+	private JLabel wishlistlabel;
 	private JRadioButton wishlistRB;
 	private JRadioButton gaplistRB;
 	private Socket notifier;
@@ -49,7 +49,7 @@ public class Collector {
 	}
 	
 	public void addWishlistLabel(JLabel label) {
-		this.wishlistLabel = label;
+		this.wishlistlabel = label;
 	}
 	
 	public void addWishlistRB(JRadioButton wishlistRB) {
@@ -189,6 +189,7 @@ public class Collector {
 		try {
 			String answer = senderReader.readLine();
 			String[] answerparts = answer.split(MessageType.SEPERATOR);
+			gaplist.clear();
 			for (int i = 1; i < answerparts.length; i++) {
 				gaplist.add(answerparts[i]);
 			}
@@ -196,6 +197,19 @@ public class Collector {
 			e.printStackTrace();
 		}
 		gaplistlabel.setText(""+gaplist.size());
+		
+		s.sendMessage(MessageType.GETWISHLIST, "", senderWriter);
+		try {
+			String answer = senderReader.readLine();
+			String answerparts[] = answer.split(MessageType.SEPERATOR);
+			wishlist.clear();
+			for (int i = 1; i < answerparts.length; i++) {
+				wishlist.add(answerparts[i]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		wishlistlabel.setText(""+wishlist.size());
 	}
 	
 	public void updateStatus() {
