@@ -189,8 +189,9 @@ public class Collector {
 		try {
 			String answer = senderReader.readLine();
 			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			for (int i = 1; 1 < answerparts.length; i++)
+			for (int i = 1; i < answerparts.length; i++) {
 				gaplist.add(answerparts[i]);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
