@@ -3,16 +3,19 @@ package threads;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import connection.Collector;
 import connection.MessageType;
 
 public class NotifierReaderThread extends Thread{
 
 	private BufferedReader reader;
 	private boolean running;
+	private Collector c;
 	
-	public NotifierReaderThread(BufferedReader reader) {
+	public NotifierReaderThread(BufferedReader reader, Collector c) {
 		this.reader = reader;
 		this.running = true;
+		this.c = c;
 	}
 	
 	public void pause() {
@@ -32,8 +35,14 @@ public class NotifierReaderThread extends Thread{
 				e.printStackTrace();
 			}
 			
+			int notify = Integer.parseInt(line);
 			
-			
+			switch (notify) {
+			case MessageType.NEXTTRACKNOTIFY: c.nextTrack();break;
+			case MessageType.LISTSUPDATEDNOTIFY: c.updateLists();break;
+			case MessageType.PAUSERESUMENOTIFY: c.updateStatus();break;
+			default: System.out.println("Command not implemented");
+			}
 		}
 	}
 }

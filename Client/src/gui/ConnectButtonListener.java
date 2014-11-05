@@ -85,6 +85,7 @@ public class ConnectButtonListener implements ActionListener{
 		lblNoWishlist.setBounds(143, 36, 46, 14);
 		jFrame.getContentPane().add(lblNoWishlist);
 		c.addWishlistLabel(lblNoWishlist);
+		c.updateLists();
 		
 		txtYoutubelink = new JTextField();
 		txtYoutubelink.setBounds(10, 60, 250, 20);
@@ -106,9 +107,6 @@ public class ConnectButtonListener implements ActionListener{
 		jFrame.getContentPane().add(rdbtnGaplist);
 		c.addGaplistRB(rdbtnGaplist);
 		
-		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
-		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		
 		JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblNowPlaying.setBounds(10, 111, 68, 14);
@@ -124,6 +122,7 @@ public class ConnectButtonListener implements ActionListener{
 		lblPlayingTrack.setBounds(88, 111, 244, 14);
 		c.addNowPlayingLabel(lblPlayingTrack);
 		jFrame.getContentPane().add(lblPlayingTrack);
+		c.nextTrack();
 		
 		JLabel lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -138,6 +137,8 @@ public class ConnectButtonListener implements ActionListener{
 		JButton btnPlayPause = new JButton("Play");
 		btnPlayPause.setBounds(123, 229, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
+		c.addPlayButton(btnPlayPause);
+		c.updateStatus();
 		
 		JButton btnSkip = new JButton("Skip");
 		btnSkip.setBounds(270, 229, 89, 45);
@@ -147,9 +148,12 @@ public class ConnectButtonListener implements ActionListener{
 		btnDisconnect.setBounds(123, 303, 236, 23);
 		jFrame.getContentPane().add(btnDisconnect);
 		
+		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
+		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
 		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd));
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
+		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
 		
 		jFrame.repaint();
 		
