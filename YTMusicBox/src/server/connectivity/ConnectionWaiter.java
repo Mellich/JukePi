@@ -31,7 +31,7 @@ public class ConnectionWaiter extends Thread {
 		try {
 			while (running){
 				Socket s = serverSocket.accept();
-				ConnectionHandler handler = new ConnectionHandler(s,server);
+				Connection handler = new Connection(s,server);
 				IO.printlnDebug(this, "New Connection established");
 				handler.start();
 			}

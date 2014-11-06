@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import network.MessageType;
-import server.connectivity.ConnectionHandler;
+import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 import utilities.IO;
@@ -57,7 +57,7 @@ public class YTJBServer {
 	/**
 	 * list of clients connected to the server
 	 */
-	private ArrayList<ConnectionHandler> clients;
+	private ArrayList<Connection> clients;
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -180,18 +180,18 @@ public class YTJBServer {
 		return server;
 	}
 	
-	public synchronized void registerClient(ConnectionHandler c){
+	public synchronized void registerClient(Connection c){
 		clients.add(c);
 		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
 	}
 	
-	public synchronized void removeClient(ConnectionHandler c){
+	public synchronized void removeClient(Connection c){
 		clients.remove(c);
 		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
 	}
 	
 	public void notifyClients(int messageType){
-		for (ConnectionHandler h: clients){
+		for (Connection h: clients){
 			h.notify(messageType);
 		}
 	}
@@ -205,7 +205,7 @@ public class YTJBServer {
 	public YTJBServer(int port) {
 			try {
 				wishList = new LinkedList<MusicTrack>();
-				clients = new ArrayList<ConnectionHandler>();
+				clients = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
 				GapListLoader listLoader = new GapListLoader(this);
 				listLoader.start();
