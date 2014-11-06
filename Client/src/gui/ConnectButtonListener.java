@@ -90,6 +90,8 @@ public class ConnectButtonListener implements ActionListener{
 		txtYoutubelink = new JTextField();
 		txtYoutubelink.setBounds(10, 60, 250, 20);
 		jFrame.getContentPane().add(txtYoutubelink);
+		txtYoutubelink.setText("Insert a Youtube-Link here.");
+		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added"}, txtYoutubelink));
 		txtYoutubelink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
@@ -117,18 +119,18 @@ public class ConnectButtonListener implements ActionListener{
 		lblNextTrack.setBounds(10, 136, 68, 14);
 		jFrame.getContentPane().add(lblNextTrack);
 		
+		JLabel lblTrackNext = new JLabel("");
+		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblTrackNext.setBounds(88, 136, 244, 14);
+		c.addNextTrackLabel(lblTrackNext);
+		jFrame.getContentPane().add(lblTrackNext);
+		
 		JLabel lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblPlayingTrack.setBounds(88, 111, 244, 14);
 		c.addNowPlayingLabel(lblPlayingTrack);
 		jFrame.getContentPane().add(lblPlayingTrack);
 		c.nextTrack();
-		
-		JLabel lblTrackNext = new JLabel("");
-		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblTrackNext.setBounds(88, 136, 244, 14);
-		c.addNextTrackLabel(lblTrackNext);
-		jFrame.getContentPane().add(lblTrackNext);
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
 		btnEditTracks.setBounds(10, 161, 100, 23);

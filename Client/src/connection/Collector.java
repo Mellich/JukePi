@@ -94,6 +94,7 @@ public class Collector {
 	
 	public void disconnect() {
 		try {
+			nrt.interrupt();
 			notifier.close();
 			sender.close();
 			st.interrupt();
@@ -180,7 +181,21 @@ public class Collector {
 			e.printStackTrace();
 		}
 		
-		//TODO next track label
+		System.out.println("nextTrack Label will be set");
+		
+		if (wishlist.isEmpty())
+			if (gaplist.isEmpty())
+				nextTrack.setText("No tracks in the lists");
+			else
+				if (gaplist.size() == 1)
+					nextTrack.setText(gaplist.get(0));
+				else
+					nextTrack.setText(gaplist.get(1));
+		else
+			if (wishlist.size() == 1)
+				nextTrack.setText(wishlist.get(0));
+			else
+				nextTrack.setText(wishlist.get(1));
 	}
 	
 	public void updateLists() {

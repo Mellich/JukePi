@@ -32,16 +32,20 @@ public class NotifierReaderThread extends Thread{
 			try {
 				line = reader.readLine();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//Socket was closed due to disconnect
 			}
+			int notify = 0;
 			
-			int notify = Integer.parseInt(line);
+			try {notify = Integer.parseInt(line);}
+			catch (NumberFormatException e) { //Socket was closed due to disconnect
+				notify = 0;
+			}
 			
 			switch (notify) {
 			case MessageType.NEXTTRACKNOTIFY: c.nextTrack();break;
 			case MessageType.LISTSUPDATEDNOTIFY: c.updateLists();break;
 			case MessageType.PAUSERESUMENOTIFY: c.updateStatus();break;
-			default: System.out.println("Command not implemented");
+			default: break;
 			}
 		}
 	}
