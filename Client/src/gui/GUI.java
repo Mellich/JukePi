@@ -19,7 +19,7 @@ public class GUI {
 	
 	public JFrame getFrame() {
 		JFrame jFrame = new JFrame();
-		jFrame.setSize(new Dimension(528, 376));
+		jFrame.setSize(new Dimension(528, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.setResizable(false);

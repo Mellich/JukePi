@@ -14,6 +14,12 @@ import javax.swing.JTextField;
 import threads.ConnectedThread;
 
 import connection.Collector;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ConnectButtonListener implements ActionListener{
 
@@ -35,7 +41,7 @@ public class ConnectButtonListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (!c.connect(ip.getText(), port.getText()))
+		if (!(c.connect(ip.getText(), port.getText())))
 			fail.setText("Failed to connect to the Server. Please check for correct spelling.");
 		else {
 			fail.setText("Connected to "+ip.getText());
@@ -57,12 +63,12 @@ public class ConnectButtonListener implements ActionListener{
 	 */
 	public JFrame getJFrame() {
 		// TODO Delete when Design is completed	
-/*		JFrame jFrame = new JFrame();
-		jFrame.setSize(new Dimension(528, 376));
+		JFrame jFrame = new JFrame();
+		jFrame.setSize(new Dimension(528, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.getContentPane().setLayout(null);
-*/		/*Delete till here*/		
+		/*Delete till here*/		
 		
 		JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -102,7 +108,6 @@ public class ConnectButtonListener implements ActionListener{
 		rdbtnWishlist.setBounds(338, 59, 75, 23);
 		jFrame.getContentPane().add(rdbtnWishlist);
 		rdbtnWishlist.setSelected(true);
-		c.addWishlistRB(rdbtnWishlist);
 		
 		JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
 		rdbtnGaplist.setBounds(415, 59, 75, 23);
@@ -134,6 +139,7 @@ public class ConnectButtonListener implements ActionListener{
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
 		btnEditTracks.setBounds(10, 161, 100, 23);
+		btnEditTracks.addActionListener(new EditTrackListener(c));
 		jFrame.getContentPane().add(btnEditTracks);
 		
 		JButton btnPlayPause = new JButton("Play");
@@ -157,8 +163,36 @@ public class ConnectButtonListener implements ActionListener{
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
 		
+		JMenuBar menuBar = new JMenuBar();
+		jFrame.setJMenuBar(menuBar);
+		
+		JMenu mnFunctions = new JMenu("Functions");
+		menuBar.add(mnFunctions);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(mnFunctions, popupMenu);
+		
+		
 		jFrame.repaint();
 		
 		return jFrame;
+	}
+	
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }

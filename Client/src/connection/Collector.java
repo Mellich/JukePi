@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,7 +21,6 @@ public class Collector {
 
 	private JLabel gaplistlabel;
 	private JLabel wishlistlabel;
-	private JRadioButton wishlistRB;
 	private JRadioButton gaplistRB;
 	private Socket notifier;
 	private Socket sender;
@@ -37,11 +37,15 @@ public class Collector {
 	private LinkedList<String> wishlist;
 //	private SenderReaderThread srt;
 	private NotifierReaderThread nrt;
+	private DefaultListModel<String> gaplistModel;
+	private DefaultListModel<String> wishlistModel;
 	
 	public Collector() {
 		s = new Sender();
 		gaplist = new LinkedList<String>();
 		wishlist = new LinkedList<String>();
+		gaplistModel = new DefaultListModel<String>();
+		wishlistModel = new DefaultListModel<String>();
 	}
 	
 	public void addGaplistLabel(JLabel label) {
@@ -50,10 +54,6 @@ public class Collector {
 	
 	public void addWishlistLabel(JLabel label) {
 		this.wishlistlabel = label;
-	}
-	
-	public void addWishlistRB(JRadioButton wishlistRB) {
-		this.wishlistRB = wishlistRB;
 	}
 	
 	public void addGaplistRB(JRadioButton gaplistRB) {
@@ -70,6 +70,14 @@ public class Collector {
 	
 	public void addPlayButton(JButton play) {
 		this.play = play;
+	}
+	
+	public void addGaplistModel(DefaultListModel<String> gaplistModel) {
+		this.gaplistModel = gaplistModel;
+	}
+	
+	public void addWishlistModel(DefaultListModel<String> wishlistModel) {
+		this.wishlistModel = wishlistModel;
 	}
 	
 	public boolean connect(String IP, String port) {
@@ -225,6 +233,7 @@ public class Collector {
 			e.printStackTrace();
 		}
 		wishlistlabel.setText(""+wishlist.size());
+		fillModels();
 	}
 	
 	public void updateStatus() {
@@ -258,6 +267,15 @@ public class Collector {
 			}
 		} catch (Exception e) {
 			return false;
+		}
+	}
+	
+	public void fillModels() {
+		for (String i : gaplist) {
+			gaplistModel.addElement(i);
+		}
+		for (String i : wishlist) {
+			wishlistModel.addElement(i);
 		}
 	}
 }
