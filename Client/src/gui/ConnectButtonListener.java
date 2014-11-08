@@ -14,12 +14,6 @@ import javax.swing.JTextField;
 import threads.ConnectedThread;
 
 import connection.Collector;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ConnectButtonListener implements ActionListener{
 
@@ -102,6 +96,7 @@ public class ConnectButtonListener implements ActionListener{
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(270, 60, 62, 20);
+		btnAdd.setToolTipText("Adds the YouTube-Link on the left either to the Gaplist or the Wishlist, whatever is selected on the right.");
 		jFrame.getContentPane().add(btnAdd);
 		
 		JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
@@ -139,21 +134,23 @@ public class ConnectButtonListener implements ActionListener{
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
 		btnEditTracks.setBounds(10, 161, 100, 23);
-		btnEditTracks.addActionListener(new EditTrackListener(c));
+		btnEditTracks.setToolTipText("Click here to edit the tracks in the lists.");
 		jFrame.getContentPane().add(btnEditTracks);
 		
 		JButton btnPlayPause = new JButton("Play");
-		btnPlayPause.setBounds(123, 229, 89, 45);
+		btnPlayPause.setBounds(10, 305, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
 		c.addPlayButton(btnPlayPause);
 		c.updateStatus();
 		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(270, 229, 89, 45);
+		btnSkip.setBounds(171, 305, 89, 45);
+		btnSkip.setToolTipText("Click here to skip the current track.");
 		jFrame.getContentPane().add(btnSkip);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.setBounds(123, 303, 236, 23);
+		btnDisconnect.setBounds(388, 327, 114, 23);
+		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
 		jFrame.getContentPane().add(btnDisconnect);
 		
 		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
@@ -162,37 +159,10 @@ public class ConnectButtonListener implements ActionListener{
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
-		
-		JMenuBar menuBar = new JMenuBar();
-		jFrame.setJMenuBar(menuBar);
-		
-		JMenu mnFunctions = new JMenu("Functions");
-		menuBar.add(mnFunctions);
-		
-		JPopupMenu popupMenu = new JPopupMenu();
-		addPopup(mnFunctions, popupMenu);
-		
+		btnEditTracks.addActionListener(new EditTrackListener(c));
 		
 		jFrame.repaint();
 		
 		return jFrame;
-	}
-	
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 }

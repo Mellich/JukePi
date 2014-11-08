@@ -35,10 +35,10 @@ public class Collector {
 	private StabilityThread st;
 	private LinkedList<String> gaplist;
 	private LinkedList<String> wishlist;
-//	private SenderReaderThread srt;
 	private NotifierReaderThread nrt;
 	private DefaultListModel<String> gaplistModel;
 	private DefaultListModel<String> wishlistModel;
+	private JFrame secondFrame;
 	
 	public Collector() {
 		s = new Sender();
@@ -78,6 +78,10 @@ public class Collector {
 	
 	public void addWishlistModel(DefaultListModel<String> wishlistModel) {
 		this.wishlistModel = wishlistModel;
+	}
+	
+	public void addSecondFrame(JFrame frame) {
+		this.secondFrame = frame;
 	}
 	
 	public boolean connect(String IP, String port) {
@@ -189,8 +193,6 @@ public class Collector {
 			e.printStackTrace();
 		}
 		
-		System.out.println("nextTrack Label will be set");
-		
 		if (wishlist.isEmpty())
 			if (gaplist.isEmpty())
 				nextTrack.setText("No tracks in the lists");
@@ -234,6 +236,9 @@ public class Collector {
 		}
 		wishlistlabel.setText(""+wishlist.size());
 		fillModels();
+		if (secondFrame != null) {
+			secondFrame.repaint();
+		}
 	}
 	
 	public void updateStatus() {
@@ -271,11 +276,37 @@ public class Collector {
 	}
 	
 	public void fillModels() {
+		gaplistModel.clear();
+		wishlistModel.clear();
 		for (String i : gaplist) {
 			gaplistModel.addElement(i);
 		}
 		for (String i : wishlist) {
 			wishlistModel.addElement(i);
+		}
+	}
+	
+	public boolean deleteTrack(int index) {
+		s.sendMessage(MessageType.DELETEFROMGAPLIST, ""+index, senderWriter);
+		try {
+			String[] answer = senderReader.readLine().split(MessageType.SEPERATOR);
+			System.out.println(answer[1]);
+			if (answer[1].equals("true"))
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void saveGaplist() {
+		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
+		try {
+			senderReader.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

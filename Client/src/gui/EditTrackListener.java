@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import connection.Collector;
+import javax.swing.JLabel;
+import javax.swing.JButton;
 
 public class EditTrackListener implements ActionListener{
 
@@ -31,6 +33,7 @@ public class EditTrackListener implements ActionListener{
 		frame.setTitle("Track Edit");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setContentPane(fillContent());
+		frame.setVisible(true);
 	}
 
 	private JPanel fillContent() {
@@ -42,6 +45,7 @@ public class EditTrackListener implements ActionListener{
 		c.addGaplistModel(gaplist);
 		DefaultListModel<String> wishlist = new DefaultListModel<String>();
 		c.addWishlistModel(wishlist);
+		c.addSecondFrame(frame);
 		c.fillModels();
 		
 		JList<String> gaplistList = new JList<String>(gaplist);
@@ -55,7 +59,26 @@ public class EditTrackListener implements ActionListener{
 		contentPane.add(gaplistPane);
 		contentPane.add(wishlistPane);
 		
+		JLabel lblGaplist = new JLabel("Gaplist");
+		lblGaplist.setBounds(124, 15, 67, 14);
+		contentPane.add(lblGaplist);
+		
+		JLabel lblWishlist = new JLabel("Wishlist");
+		lblWishlist.setBounds(401, 15, 46, 14);
+		contentPane.add(lblWishlist);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(102, 303, 89, 23);
+		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
+		contentPane.add(btnDelete);
+		
+		JButton btnSave = new JButton("Save");
+		btnSave.setBounds(381, 301, 89, 23);
+		contentPane.add(btnSave);
+		
+		btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList));
+		btnSave.addActionListener(new SaveButtonListener(c));
+		
 		return contentPane;
 	}
-
 }
