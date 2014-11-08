@@ -12,12 +12,14 @@ public class OMXPlayer implements MusicPlayer {
 	
 	private Process playerProcess;
 	private boolean playing = true;
+	private BufferedWriter out;
 
 	@Override
 	public void play(MusicTrack track) {
 		playerProcess = ProcessCommunicator.getExternPlayerProcess(track.getVideoURL());
 		if (playerProcess != null){
 			try {
+				out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 				playerProcess.waitFor();
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
@@ -30,7 +32,6 @@ public class OMXPlayer implements MusicPlayer {
 
 	@Override
 	public void skip() {
-		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 		try {
 			out.write("q");
 			out.flush();
@@ -43,7 +44,6 @@ public class OMXPlayer implements MusicPlayer {
 
 	@Override
 	public void pauseResume() {
-		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 		try {
 			out.write(' ');
 			out.flush();

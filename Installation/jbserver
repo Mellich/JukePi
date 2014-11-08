@@ -1,0 +1,5 @@
+#!/bin/bash
+#starts the jukebox server
+setterm -cursor off
+clear
+java -jar -Dcom.sun.javafx.transparentFramebuffer=true /home/pi/.jbserver/server.jar $1

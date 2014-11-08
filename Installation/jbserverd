@@ -1,0 +1,31 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:             YTJBServer
+# Required-Start:
+# Required-Stop:
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Jukebox Server
+# Description:          A Jukebox server providing functions to stream content
+#                       from Youtube etc on a TV
+### END INIT INFO
+
+# ACTIONS
+case "$1" in
+   start)
+        setterm -cursor off
+        clear
+        nohup /usr/local/bin/server
+        ;;
+   stop)
+        kill -TERM $(ps -eo pid,comm | awk '/java$/ {print $1; exit}')
+		kill -TERM $(ps -eo pid,comm | awk '/omxplayer.bin$/ {print $1; exit}')
+        ;;
+   restart)
+        kill -TERM $(ps -eo pid,comm | awk '/java$/ {print $1; exit}')
+		kill -TERM $(ps -eo pid,comm | awk '/omxplayer.bin$/ {print $1; exit}')
+        nohup /usr/local/bin/server
+        ;;
+esac
+
+exit 0

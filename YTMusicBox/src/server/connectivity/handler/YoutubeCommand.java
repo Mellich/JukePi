@@ -3,7 +3,6 @@ package server.connectivity.handler;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-import network.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -32,15 +31,13 @@ public class YoutubeCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		String parsedURL;
+		String[] parsedURL;
 		try {
-			parsedURL = ProcessCommunicator.parseStandardURL(url);
-			if (parsedURL != null){
+			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url);
+			if (parsedURL[0] != null){
 				response(""+true);
-				String title = ProcessCommunicator.parseTitle(url);
-				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,title,parsedURL,url);
+				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,parsedURL[0],parsedURL[1],url);
 				addToList(yURL);
-				server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 				return true;
 			}else response(""+false);
 		} catch (IOException e) {

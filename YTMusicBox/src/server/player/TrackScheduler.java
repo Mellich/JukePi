@@ -56,14 +56,15 @@ public class TrackScheduler extends Thread {
 				IO.printlnDebug(this, "getting next track in the list");
 				player = null;
 				current = server.chooseNextTrack();
+				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a track added to a list...");
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
+					server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				}
 				server.showLogo(false);
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				player = new OMXPlayer();
 				player.play(current);
 				server.showLogo(true);

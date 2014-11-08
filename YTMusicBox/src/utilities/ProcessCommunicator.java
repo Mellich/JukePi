@@ -15,34 +15,36 @@ public class ProcessCommunicator {
 	/**parses the direct video url of the link with youtube-dl
 	 * 
 	 * @param url the link to parse
-	 * @return the direct video url
+	 * @return the title of the video and the direct video url in an array
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
-	static public String parseStandardURL(String url) throws IOException{
+	static public String[] parseShortURLToVideoURLAndTitle(String url) throws IOException{
 		IO.printlnDebug(null, "waiting for output url...");
-		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-g", url).start();
+		String[] result = new String[2];
+		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-e","-g", url).start();
 		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
-		String parsedURL = parseInput.readLine();
+		result[0] = parseInput.readLine();
+		result[1] = parseInput.readLine();
 		parseInput.close();
-		IO.printlnDebug(null, ""+parsedURL.length());
-		IO.printlnDebug(null, parsedURL);
-		return parsedURL;
+		return result;
 	}
 	
-	/**parses the title of the video given by a link with youtube-dl
+	/**parses the direct video url of the link with youtube-dl
 	 * 
-	 * @param url the link to the video
-	 * @return the title of the video
+	 * @param url the link to parse
+	 * @return  the direct video url in a string
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
-	public static String parseTitle(String url) throws IOException{
-		Process parseProcess = new ProcessBuilder("youtube-dl","-e", url).start();
+	static public String parseShortURLToVideoURL(String url) throws IOException{
+		IO.printlnDebug(null, "waiting for output url...");
+		String result = null;
+		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-g", url).start();
 		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
-		IO.printlnDebug(null, "waiting for output title...");
-		String parsedURL = parseInput.readLine();
+		result = parseInput.readLine();
 		parseInput.close();
-		return parsedURL;		
+		return result;
 	}
+
 	
 	/**
 	 * plays the video of the given parsed url and returns, when done
@@ -52,7 +54,7 @@ public class ProcessCommunicator {
 	 */
 	static public Process getExternPlayerProcess(String parsedURL){
 		try {
-			return  new ProcessBuilder("omxplayer","-o","both",parsedURL).start();
+			return  new ProcessBuilder("omxplayer",parsedURL).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

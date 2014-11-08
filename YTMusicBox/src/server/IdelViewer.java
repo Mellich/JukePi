@@ -20,9 +20,10 @@ public class IdelViewer {
 		this.stage = stage;
 		Group root = new Group();
 		Scene scene = new Scene(root,1920,1080,Color.BLACK);
-		imgView = new ImageView(new Image("file:logo.jpg"));
+		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
 		ipAddress = new Text(50,50,"Lade Server...");
 		ipAddress.setFont(new Font(30));
+		ipAddress.setFill(Color.WHITE);
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
 		stage.setScene(scene);

@@ -32,7 +32,7 @@ public class YTJBServer extends Thread {
 	 */
 	public static final int PORT = 12345;
 	
-	public static final String GAPLISTFILENAME = "gaplist.jb";
+	public static final String GAPLISTFILENAME = "/home/pi/gaplist.jb";
 	
 	/**
 	 * the server socket to handle connections to the server
@@ -111,6 +111,7 @@ public class YTJBServer extends Thread {
 				gapList.addFirst(track);
 			else gapList.add(track);
 		}
+		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		if (isFirstTrack){     //if so, notify waiting scheduler
 			scheduler.playableTrack.release();
 			IO.printlnDebug(this, "First element in the lists");

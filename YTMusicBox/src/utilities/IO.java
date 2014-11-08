@@ -23,15 +23,19 @@ import server.YTJBServer;
  *
  */
 public class IO {
+	
+	public static boolean debugMode = false;
 
 	static public void printlnDebug(Object speaker, String input){
-		String name ;
-		if (speaker != null)
-			name = speaker.getClass().getName();
-		else name = "STATIC";
-		long n = Thread.currentThread().getId();
-		Timestamp t = new Timestamp(System.currentTimeMillis());
-		System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
+		if (debugMode){
+			String name ;
+			if (speaker != null)
+				name = speaker.getClass().getName();
+			else name = "STATIC";
+			long n = Thread.currentThread().getId();
+			Timestamp t = new Timestamp(System.currentTimeMillis());
+			System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
+		}
 	}
 	
 	public static void loadGapListFromFile(String filename, YTJBServer server){
@@ -40,7 +44,7 @@ public class IO {
 			String url = reader.readLine();
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
-				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseStandardURL(splitted[2]),splitted[2]);
+				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
 				server.addToList(yURL, false, true);
 				url = reader.readLine();
