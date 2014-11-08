@@ -127,7 +127,7 @@ public class MessageType {
 	public static final int PAUSERESUMENOTIFY = 25;
 	
 	/**
-	 * the seerator for the arguments of a command
+	 * the seperator for the arguments of a command
 	 */
 	public static final String SEPERATOR = ";\t;";
 	
