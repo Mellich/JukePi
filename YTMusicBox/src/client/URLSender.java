@@ -14,7 +14,7 @@ public class URLSender {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Gib den Link hier ein: ");
 		try {
-			Socket socket = new Socket("192.168.178.34",12345);//"192.168.178.34"
+			Socket socket = new Socket("192.168.178.35",12345);//"192.168.178.34"
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			boolean running = true;
 			while (running){
@@ -25,7 +25,7 @@ public class URLSender {
 				case ' ': writer.write("4");
 					break;
 				case 's': writer.write("3");
-					break;
+			1;	;		break;
 				default: for (int i = 0; i < 10;i++)
 							writer.write(input);
 				}*/

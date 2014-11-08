@@ -61,17 +61,12 @@ public class TrackScheduler extends Thread {
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
 				}
+				server.showLogo(false);
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
-				server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 				player = new OMXPlayer();
 				player.play(current);
-				/*if (current.getMusicType() == TrackType.SENDED && wishList.contains(current)){
-					File musicfile = new File(current.getVideoURL());
-					if (musicfile.exists()){
-						musicfile.delete();
-					}
-				}*/
+				server.showLogo(true);
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");

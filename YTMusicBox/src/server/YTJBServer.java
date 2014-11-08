@@ -3,11 +3,16 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
+import javafx.application.Platform;
 import network.MessageType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
@@ -20,7 +25,7 @@ import utilities.IO;
  * @author Mellich
  *
  */
-public class YTJBServer {
+public class YTJBServer extends Thread {
 	
 	/**
 	 * the standard port will be used, when no other port is given
@@ -58,11 +63,13 @@ public class YTJBServer {
 	 * list of clients connected to the server
 	 */
 	private ArrayList<Connection> clients;
+
+	private IdelViewer idelViewer;
 	
 	/**
 	 * starts the server and makes him ready for work
 	 */
-	public void start(){
+	public void startUp(){
 		try {
 			waiter.start();
 			scheduler.start();
@@ -76,6 +83,7 @@ public class YTJBServer {
 			server.close();
 			scheduler.join();
 			waiter.join();
+			this.showLogo(false);
 			IO.printlnDebug(this, "Server was shut down");
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block
@@ -151,17 +159,19 @@ public class YTJBServer {
 	}
 	
 	public synchronized MusicTrack chooseNextTrack(){
+		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
-			return wishList.removeFirst();
+			temp =  wishList.removeFirst();
+			notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		}
 		else {
 			if (!gapList.isEmpty()){
-				MusicTrack nextURL = gapList.removeFirst();
-				gapList.add(nextURL);
-				return nextURL;
+				temp = gapList.removeFirst();
+				gapList.add(temp);
+				notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 			}
 		}
-		return null;
+		return temp;
 	}
 	
 	public void loadGapListFromFile(){
@@ -196,14 +206,19 @@ public class YTJBServer {
 		}
 	}
 	
+	public void showLogo(boolean show){
+		Platform.runLater(() -> idelViewer.showLogo(show));
+	}
+	
 	
 	/**
 	 * creates new instance of a server
 	 * 
 	 * @param port the port used for the server socket
 	 */
-	public YTJBServer(int port) {
+	public YTJBServer(int port,IdelViewer idelViewer) {
 			try {
+				this.idelViewer = idelViewer;
 				wishList = new LinkedList<MusicTrack>();
 				clients = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
@@ -212,26 +227,39 @@ public class YTJBServer {
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
-				IO.printlnDebug(this, "New server opened on adress "+ InetAddress.getLocalHost()+" port "+port);
+				String ip = getIpAddress();
+				Platform.runLater(() -> idelViewer.editConnectionDetails(ip, port));
+				IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
 	
-	/**starts the whole programm
-	 * 
-	 * @param args if given, it will be interpreted as a port
-	 */
-	public static void main(String[] args) {
-		YTJBServer s;
-		if (args.length == 1){
-			int port = Integer.parseInt(args[0]);
-			s = new YTJBServer(port);
-		} else {
-			s = new YTJBServer(PORT);
-		}
-		s.start();
+	public String getIpAddress() { 
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()&&inetAddress instanceof Inet4Address) {
+                        String ipAddress=inetAddress.getHostAddress().toString();
+                        return ipAddress;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+        	IO.printlnDebug(this, "Could not find out ip address");
+        }
+        return null; 
+}
+	
+	@Override
+	public void run() {
+		super.run();
+		this.startUp();
 	}
+	
+
 	
 }

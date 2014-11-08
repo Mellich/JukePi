@@ -19,11 +19,13 @@ public class ProcessCommunicator {
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
 	static public String parseStandardURL(String url) throws IOException{
-		Process parseProcess = new ProcessBuilder("youtube-dl","-g", url).start();
-		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 		IO.printlnDebug(null, "waiting for output url...");
+		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-g", url).start();
+		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 		String parsedURL = parseInput.readLine();
 		parseInput.close();
+		IO.printlnDebug(null, ""+parsedURL.length());
+		IO.printlnDebug(null, parsedURL);
 		return parsedURL;
 	}
 	
@@ -48,9 +50,9 @@ public class ProcessCommunicator {
 	 * @param parsedURL the parsed youtube url that has to be played
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
-	static public Process getExternPlayerProcessk(String parsedURL){
+	static public Process getExternPlayerProcess(String parsedURL){
 		try {
-			return  new ProcessBuilder("omxplayer",parsedURL).start();
+			return  new ProcessBuilder("omxplayer","-o","both",parsedURL).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

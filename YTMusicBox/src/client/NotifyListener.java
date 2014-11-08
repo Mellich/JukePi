@@ -14,11 +14,13 @@ public class NotifyListener {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Gib den Link hier ein: ");
 		try {
-			Socket socket = new Socket("192.168.178.34",12345);//"192.168.178.34"
+			Socket socket = new Socket("192.168.178.35",12345);//"192.168.178.34"
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			boolean running = true;
 			writer.write(""+MessageType.DECLAREMEASNOTIFY);
 			writer.newLine();
+			writer.write(""+MessageType.GETGAPLIST);
+			writer.newLine();			
 			writer.flush();
 			BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running){
