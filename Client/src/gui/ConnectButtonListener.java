@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import threads.ConnectedThread;
 
 import connection.Collector;
+import javax.swing.JCheckBox;
 
 public class ConnectButtonListener implements ActionListener{
 
@@ -88,52 +89,52 @@ public class ConnectButtonListener implements ActionListener{
 		c.updateLists();
 		
 		txtYoutubelink = new JTextField();
-		txtYoutubelink.setBounds(10, 60, 250, 20);
+		txtYoutubelink.setBounds(10, 60, 362, 20);
 		jFrame.getContentPane().add(txtYoutubelink);
 		txtYoutubelink.setText("Insert a Youtube-Link here.");
 		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added"}, txtYoutubelink));
 		txtYoutubelink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
-		btnAdd.setBounds(270, 60, 62, 20);
+		btnAdd.setBounds(10, 91, 62, 20);
 		btnAdd.setToolTipText("Adds the YouTube-Link on the left either to the Gaplist or the Wishlist, whatever is selected on the right.");
 		jFrame.getContentPane().add(btnAdd);
 		
 		JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
-		rdbtnWishlist.setBounds(338, 59, 75, 23);
+		rdbtnWishlist.setBounds(78, 90, 75, 23);
 		jFrame.getContentPane().add(rdbtnWishlist);
 		rdbtnWishlist.setSelected(true);
 		
 		JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
-		rdbtnGaplist.setBounds(415, 59, 75, 23);
+		rdbtnGaplist.setBounds(155, 90, 75, 23);
 		jFrame.getContentPane().add(rdbtnGaplist);
 		c.addGaplistRB(rdbtnGaplist);
 		
 		JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNowPlaying.setBounds(10, 111, 68, 14);
+		lblNowPlaying.setBounds(10, 144, 68, 14);
 		jFrame.getContentPane().add(lblNowPlaying);
 		
 		JLabel lblNextTrack = new JLabel("Next Track:");
 		lblNextTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNextTrack.setBounds(10, 136, 68, 14);
+		lblNextTrack.setBounds(10, 169, 68, 14);
 		jFrame.getContentPane().add(lblNextTrack);
 		
 		JLabel lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblTrackNext.setBounds(88, 136, 244, 14);
+		lblTrackNext.setBounds(88, 169, 244, 14);
 		c.addNextTrackLabel(lblTrackNext);
 		jFrame.getContentPane().add(lblTrackNext);
 		
 		JLabel lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblPlayingTrack.setBounds(88, 111, 244, 14);
+		lblPlayingTrack.setBounds(88, 144, 244, 14);
 		c.addNowPlayingLabel(lblPlayingTrack);
 		jFrame.getContentPane().add(lblPlayingTrack);
 		c.nextTrack();
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
-		btnEditTracks.setBounds(10, 161, 100, 23);
+		btnEditTracks.setBounds(10, 194, 100, 23);
 		btnEditTracks.setToolTipText("Click here to edit the tracks in the lists.");
 		jFrame.getContentPane().add(btnEditTracks);
 		
@@ -144,7 +145,7 @@ public class ConnectButtonListener implements ActionListener{
 		c.updateStatus();
 		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(171, 305, 89, 45);
+		btnSkip.setBounds(122, 305, 89, 45);
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		jFrame.getContentPane().add(btnSkip);
 		
@@ -153,9 +154,14 @@ public class ConnectButtonListener implements ActionListener{
 		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
 		jFrame.getContentPane().add(btnDisconnect);
 		
+		JCheckBox chckbxInfront = new JCheckBox("Add in Front");
+		chckbxInfront.setBounds(232, 90, 97, 23);
+		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
+		jFrame.getContentPane().add(chckbxInfront);
+
 		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
 		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd));
+		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront));
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));

@@ -24,6 +24,8 @@ public class Sender {
 			case MessageType.ISREADY: writer.write(""+MessageType.ISREADY);break;
 			case MessageType.GETCURRENTTRACK: writer.write(""+MessageType.GETCURRENTTRACK);break;
 			case MessageType.GETCURRENTPLAYBACKSTATUS: writer.write(""+MessageType.GETCURRENTPLAYBACKSTATUS);break;
+			case MessageType.GAPBEGINNINGYOUTUBE: writer.write(""+MessageType.GAPBEGINNINGYOUTUBE+MessageType.SEPERATOR+message);break;
+			case MessageType.BEGINNINGYOUTUBE: writer.write(""+MessageType.BEGINNINGYOUTUBE+MessageType.SEPERATOR+message);break;
 			default: return false;
 			}
 			writer.newLine();

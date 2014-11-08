@@ -120,36 +120,33 @@ public class Collector {
 	//	st.start();
 	}
 	
-	public boolean addToList(String link) {
-		if (gaplistRB.isSelected()) {
-			s.sendMessage(MessageType.GAPYOUTUBE, link, senderWriter);
-			try {
-				String answer = senderReader.readLine();
-				String pos[] = answer.split(MessageType.SEPERATOR);
-				if (pos[1].equals("false")) {
-					return false;
-				} else {
-					return true;
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+	public boolean addToList(String link, boolean inFront) {
+		if (gaplistRB.isSelected())
+			if (!inFront)
+				s.sendMessage(MessageType.GAPYOUTUBE, link, senderWriter);
+			else 
+				s.sendMessage(MessageType.GAPBEGINNINGYOUTUBE, link, senderWriter);
+		else
+			if (!inFront)
+				s.sendMessage(MessageType.YOUTUBE, link, senderWriter);
+			else
+				s.sendMessage(MessageType.BEGINNINGYOUTUBE, link, senderWriter);
+		
+		if (secondFrame != null) {
+			secondFrame.repaint();
 		}
-		else {
-			s.sendMessage(MessageType.YOUTUBE, link, senderWriter);
-			try {
-				String answer = senderReader.readLine();
-				String pos[] = answer.split(MessageType.SEPERATOR);
-				if (pos[1].equals("false")) {
-					return false;
-				} else {
-					return true;
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+		
+		try {
+			String answer = senderReader.readLine();
+			String pos[] = answer.split(MessageType.SEPERATOR);
+			if (pos[1].equals("false")) {
 				return false;
+			} else {
+				return true;
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
