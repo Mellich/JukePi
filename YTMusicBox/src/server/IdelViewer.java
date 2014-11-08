@@ -21,12 +21,14 @@ public class IdelViewer {
 		Group root = new Group();
 		Scene scene = new Scene(root,1920,1080,Color.BLACK);
 		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
-		ipAddress = new Text(50,50,"Lade Server...");
+		ipAddress = new Text(100,100,"Lade Server...");
 		ipAddress.setFont(new Font(30));
 		ipAddress.setFill(Color.WHITE);
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
 		stage.setScene(scene);
+		stage.setX(60);
+		stage.setY(30);
 		stage.show();
 	}
 	
