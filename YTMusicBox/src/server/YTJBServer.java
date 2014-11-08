@@ -32,7 +32,7 @@ public class YTJBServer extends Thread {
 	 */
 	public static final int PORT = 12345;
 	
-	public static final String GAPLISTFILENAME = "/home/pi/gaplist.jb";
+	public static final String GAPLISTFILENAME = "/home/pi/.jbserver/gaplist.jb";
 	
 	/**
 	 * the server socket to handle connections to the server

@@ -13,8 +13,6 @@
 # ACTIONS
 case "$1" in
    start)
-        setterm -cursor off
-        clear
         nohup /usr/local/bin/server
         ;;
    stop)
