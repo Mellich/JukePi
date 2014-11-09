@@ -24,7 +24,7 @@ import server.YTJBServer;
  */
 public class IO {
 	
-	public static boolean debugMode = false;
+	public static boolean debugMode = true;
 
 	static public void printlnDebug(Object speaker, String input){
 		if (debugMode){

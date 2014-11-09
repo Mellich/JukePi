@@ -33,6 +33,8 @@ public class Connection extends Thread {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running){
 				String message = receiveMessage();
+				if (message == null)		//if connection is lost, close connection. if not handled here
+					break;					//it would cause a NumberFormatException in the CommandHandler and the connection wouldn't close
 				IO.printlnDebug(this, "Received message: "+message);
 				try{
 					CommandHandler newCommand = new CommandHandler(out,server,this,message);

@@ -126,18 +126,21 @@ public class YTJBServer extends Thread {
 	 * @return the deleted track or null if the track does not exist
 	 */
 	public synchronized MusicTrack deleteFromList(boolean fromWishList,int index){
+		MusicTrack temp = null;
 		try{
 			if (fromWishList){
-				return wishList.remove(index);
+				temp = wishList.remove(index);
+				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 			}
 			else{
-				return gapList.remove(index);
+				temp = gapList.remove(index);
+				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 			}
 		}
 		catch (IndexOutOfBoundsException e){
 			IO.printlnDebug(this, "ERROR: Could not delete track from list: Index out of bounds!");
 		}
-		return null;
+		return temp;
 	}
 	
 	/**
@@ -223,7 +226,7 @@ public class YTJBServer extends Thread {
 				wishList = new LinkedList<MusicTrack>();
 				clients = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
-				GapListLoader listLoader = new GapListLoader(this);
+				GapListLoader listLoader = new GapListLoader(this,idelViewer);
 				listLoader.start();
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);

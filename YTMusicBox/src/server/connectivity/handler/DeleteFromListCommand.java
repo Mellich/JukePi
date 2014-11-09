@@ -3,7 +3,6 @@ package server.connectivity.handler;
 import java.io.BufferedWriter;
 import java.io.File;
 
-import network.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -35,7 +34,6 @@ public class DeleteFromListCommand extends Command {
 				else IO.printlnDebug(this, "Could not delete music file: file does not exist");
 			}
 			response(""+true);
-			server.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		}catch (IndexOutOfBoundsException e){
 			response(""+false);
 		}
