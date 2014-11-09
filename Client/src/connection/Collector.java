@@ -19,12 +19,41 @@ import threads.StabilityThread;
 
 public class Collector {
 
+	/**
+	 * The Label that shows the amount of tracks in the Tracklist.
+	 */
 	private JLabel gaplistlabel;
+	
+	/**
+	 * The Label that shows the amount of tracks in the Wishlist.
+	 */
 	private JLabel wishlistlabel;
+	
+	/**
+	 * The RadioButton, that indicates, whether the track should be added to 
+	 * the Gaplist or the Wishlist.
+	 */
 	private JRadioButton gaplistRB;
+	
+	/**
+	 * The Socket, that receives all notifier from the server.
+	 */
 	private Socket notifier;
+	
+	/**
+	 * The Socket that sends Commands to the Server and receives the answers to these 
+	 * commands.
+	 */
 	private Socket sender;
+	
+	/**
+	 * The BufferedWriter for the notifer-Socket.
+	 */
 	private BufferedWriter notifierWriter;
+	
+	/**
+	 * The BufferedWriter for the sender-Socket.
+	 */
 	private BufferedWriter senderWriter;
 	private BufferedReader notifierReader;
 	private BufferedReader senderReader;
@@ -194,15 +223,9 @@ public class Collector {
 			if (gaplist.isEmpty())
 				nextTrack.setText("No tracks in the lists");
 			else
-				if (gaplist.size() == 1)
-					nextTrack.setText(gaplist.get(0));
-				else
-					nextTrack.setText(gaplist.get(1));
+				nextTrack.setText(gaplist.get(0));
 		else
-			if (wishlist.size() == 1)
-				nextTrack.setText(wishlist.get(0));
-			else
-				nextTrack.setText(wishlist.get(1));
+			nextTrack.setText(wishlist.get(0));
 	}
 	
 	public void updateLists() {
@@ -233,6 +256,16 @@ public class Collector {
 		}
 		wishlistlabel.setText(""+wishlist.size());
 		fillModels();
+		
+		if (nextTrack != null)
+			if (wishlist.isEmpty())
+				if (gaplist.isEmpty())
+					nextTrack.setText("No tracks in the lists");
+				else
+					nextTrack.setText(gaplist.get(0));
+			else
+				nextTrack.setText(wishlist.get(0));
+		
 		if (secondFrame != null) {
 			secondFrame.repaint();
 		}
