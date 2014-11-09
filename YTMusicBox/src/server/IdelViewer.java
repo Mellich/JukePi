@@ -1,6 +1,7 @@
 package server;
 
 
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -43,12 +44,20 @@ public class IdelViewer {
 		stage.show();
 	}
 	
-	public void gaplistReadOut(boolean isProgressing){
-		if (isProgressing){
-			info.setText("Wünsch dir was! Gaplist wird eingelesen...");
+	public void gaplistStatus(int current,int max){
+		Platform.runLater(() -> this.gaplistReadOutStatus(current, max));
+	}
+	
+	private void gaplistReadOutStatus(int currentCount,int maxCount){
+		if (currentCount < maxCount){
+			if (currentCount == 0)
+				info.setText("Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
+			else info.setText("Wiedergabe pausiert! Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
 		}
 		else{
-			info.setText("Wünsch dir was! Die Gaplist ist leider leer!");
+			if (maxCount == 0)
+				info.setText("Wiedergabe pausiert! Gaplist ist leer!");
+			else info.setText("Wiedergabe pausiert! Gaplist vollständig geladen!");
 		}
 	}
 	

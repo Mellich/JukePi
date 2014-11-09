@@ -1,7 +1,5 @@
 package server;
 
-import javafx.application.Platform;
-
 
 public class GapListLoader extends Thread {
 	
@@ -17,7 +15,6 @@ public class GapListLoader extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		server.loadGapListFromFile();
-		Platform.runLater(() -> viewer.gaplistReadOut(false));
+		server.loadGapListFromFile(viewer);
 	}
 }

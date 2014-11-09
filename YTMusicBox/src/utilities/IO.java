@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
+import server.IdelViewer;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -38,21 +39,32 @@ public class IO {
 		}
 	}
 	
-	public static void loadGapListFromFile(String filename, YTJBServer server){
+	public static void loadGapListFromFile(String filename, YTJBServer server, IdelViewer viewer){
 		try {
+			IO.printlnDebug(null, "Start to load gap list...");
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			long max = reader.lines().count();
+			reader.close();
+			reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
+			int current = 0;
+			viewer.gaplistStatus(current, (int)max);
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
 				server.addToList(yURL, false, true);
+				current++;
+				viewer.gaplistStatus(current, (int) max);
 				url = reader.readLine();
 			}
 			reader.close();
+			viewer.gaplistStatus(current, (int) max);
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
+			viewer.gaplistStatus(0, 0);
 		}
+		IO.printlnDebug(null, "finished loading gap list!");
 	}
 	
 	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
