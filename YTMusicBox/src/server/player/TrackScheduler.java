@@ -32,8 +32,10 @@ public class TrackScheduler extends Thread {
 	}
 	
 	public void pauseResume(){
-		if (player != null)
+		if (player != null){
 			player.pauseResume();
+			server.notifyClients(MessageType.PAUSERESUMENOTIFY);
+		}
 	}
 	
 	public boolean isPlaying(){
@@ -62,6 +64,7 @@ public class TrackScheduler extends Thread {
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
 					server.notifyClients(MessageType.NEXTTRACKNOTIFY);
+					server.notifyClients(MessageType.PAUSERESUMENOTIFY);
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				player = new OMXPlayer(server);

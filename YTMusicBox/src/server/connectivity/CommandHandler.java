@@ -62,6 +62,16 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.DECLAREMEASNOTIFY: server.registerClient(parent);;
 			break;
+		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,server,Integer.parseInt(args[1])).handle();
+			break;
+		case MessageType.GAPLISTTRACKDOWN: new GapListTrackUpCommand(out,server,Integer.parseInt(args[1]) + 1).handle();
+			break;	
+		case MessageType.GETAVAILABLEGAPLISTS: new GetGapListsCommand(out,server).handle();
+			break;
+		case MessageType.LOADGAPLIST: new ChangeGapListCommand(out,server,args[1]).handle();
+			break;
+		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,server).handle();
+			break;
 		default: new UnknownCommand(out,""+prompt).handle();
 		}		
 	}

@@ -31,7 +31,7 @@ public class YTJBServer extends Thread {
 	 */
 	public static final int PORT = 12345;
 	
-	public static final String GAPLISTFILENAME = "/home/pi/.jbserver/gaplist.jb";
+	public static final String GAPLISTDIRECTORY = "/home/pi/.jbserver/";
 	
 	/**
 	 * the server socket to handle connections to the server
@@ -65,7 +65,16 @@ public class YTJBServer extends Thread {
 
 	private IdelViewer idelViewer;
 	
+	private InitFileCommunicator initFile;
+	
+	private String currentGapList;
+	
+	private String[] gapLists;
+	
+	private GapListLoader gapListLoader;
+	
 	private Semaphore closePrompt = new Semaphore(0);
+	
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -77,7 +86,7 @@ public class YTJBServer extends Thread {
 			//BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 			//r.readLine(); //giving a input will shut down the server
 			closePrompt.acquire();
-			IO.saveGapListToFile(gapList, GAPLISTFILENAME);
+			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 			scheduler.setRunning(false);
 			scheduler.interrupt();
 			waiter.setRunning(false);
@@ -180,12 +189,19 @@ public class YTJBServer extends Thread {
 		return temp;
 	}
 	
-	public void loadGapListFromFile(IdelViewer viewer){
-		IO.loadGapListFromFile(GAPLISTFILENAME, this, viewer);		
+	public void loadGapListFromFile(){
+		gapList.clear();
+		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
+	}
+	
+	public void loadGapListFromFile(String filename){
+		gapList.clear();
+		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
 	}
 	
 	public boolean saveGapListToFile(){
-		return IO.saveGapListToFile(gapList, GAPLISTFILENAME);
+		return IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 	}
 	
 	public TrackScheduler getScheduler(){
@@ -194,6 +210,39 @@ public class YTJBServer extends Thread {
 	
 	public ServerSocket getServerSocket(){
 		return server;
+	}
+	
+	public String[] getGapLists(){
+		return gapLists;
+	}
+	
+	public String getCurrentGapListName(){
+		return currentGapList;
+	}
+	
+	public boolean setGapList(String filename){
+		IO.printlnDebug(this, "Setting as new gap list");//TODO check if filename ends with .jb
+		currentGapList = filename;
+		initFile.setStartUpGapList(currentGapList);
+		IO.printlnDebug(this, "Start loading new gaplist");
+		if (gapListLoader.isAlive()){
+			gapListLoader.interrupt(); //TODO: destroy old loading thread if necessary
+		}
+		gapListLoader = new GapListLoader(this);
+		gapListLoader.start();
+		return true;
+	}
+	
+	public synchronized boolean switchWithUpper(int index){
+		if (index > 0){
+			MusicTrack upper = gapList.get(index - 1);
+			gapList.set(index - 1, gapList.get(index));
+			gapList.set(index, upper);
+			IO.printlnDebug(this, "notify clients");
+			this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+			return true;
+		}
+		else return false;
 	}
 	
 	public synchronized void registerClient(Connection c){
@@ -228,8 +277,11 @@ public class YTJBServer extends Thread {
 				wishList = new LinkedList<MusicTrack>();
 				clients = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
-				GapListLoader listLoader = new GapListLoader(this,idelViewer);
-				listLoader.start();
+				initFile = new InitFileCommunicator(GAPLISTDIRECTORY);
+				currentGapList = initFile.getStartUpGapList();
+				searchGapLists();
+				gapListLoader = new GapListLoader(this);
+				gapListLoader.start();
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
@@ -240,6 +292,10 @@ public class YTJBServer extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+	
+	private void searchGapLists(){
+		gapLists = IO.getGapLists(GAPLISTDIRECTORY);
 	}
 	
 	public String getIpAddress() { 

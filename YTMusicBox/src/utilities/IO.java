@@ -2,7 +2,9 @@ package utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -39,10 +41,43 @@ public class IO {
 		}
 	}
 	
+	public static BufferedReader getFileOutput(String filename){
+		try {
+			return new BufferedReader(new FileReader(filename));
+		} catch (FileNotFoundException e) {
+			IO.printlnDebug(null, "File could not be loaded: "+filename);
+		}
+		return null;
+	}
+	
+	public static BufferedWriter getFileInput(String filename){
+		try {
+			return new BufferedWriter(new FileWriter(filename));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String[] getGapLists(String directory){
+		IO.printlnDebug(null, "getting gap lists...");
+		String[] result = null;
+		File dir = new File(directory);
+		File[] gaplists = dir.listFiles((File f,String s) -> {if (s.contains(".jb")) return true; else return false;});
+		if (gaplists != null){
+			result = new String[gaplists.length];
+			for (int i = 0; i < result.length; i++){
+				result[i] = (gaplists[i].getName());
+			}
+		}
+		return result;
+	}
+	
 	public static void loadGapListFromFile(String filename, YTJBServer server, IdelViewer viewer){
 		try {
-			IO.printlnDebug(null, "Start to load gap list...");
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			IO.printlnDebug(null, "Start to load gap list "+filename);
+			BufferedReader reader = getFileOutput(filename);
 			long max = reader.lines().count();
 			reader.close();
 			reader = new BufferedReader(new FileReader(filename));

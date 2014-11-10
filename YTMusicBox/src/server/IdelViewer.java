@@ -25,7 +25,7 @@ public class IdelViewer {
 		Group root = new Group();
 		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 		Scene scene = new Scene(root,screenBounds.getWidth(),screenBounds.getHeight(),Color.BLACK);
-		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.png")));
+		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
 		ipAddress = new Text(500,700,"Lade Server...");
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
