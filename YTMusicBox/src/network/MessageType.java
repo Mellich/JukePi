@@ -126,6 +126,14 @@ public class MessageType {
 	 */
 	public static final int PAUSERESUMENOTIFY = 25;
 	
+	public static final int GETAVAILABLEGAPLISTS = 26;
+	
+	public static final int LOADGAPLIST = 27;
+	
+	public static final int GAPLISTTRACKUP = 28;
+	
+	public static final int GAPLISTTRACKDOWN = 29;
+	
 	/**
 	 * the seerator for the arguments of a command
 	 */
