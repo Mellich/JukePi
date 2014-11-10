@@ -184,12 +184,19 @@ public class Collector {
 		try {
 			String answer = senderReader.readLine();
 			String[] answerparts = answer.split(MessageType.SEPERATOR);
+			
+			if (secondFrame != null) 
+				secondFrame.repaint();
+			
 			if (answerparts[1].equals("true"))
 				return true;
 			else
 				return false;
 		} catch (IOException e) {
 			e.printStackTrace();
+			
+			if (secondFrame != null)
+				secondFrame.repaint();
 			return false;
 		}
 	}
@@ -255,7 +262,6 @@ public class Collector {
 			e.printStackTrace();
 		}
 		wishlistlabel.setText(""+wishlist.size());
-		fillModels();
 		
 		if (nextTrack != null)
 			if (wishlist.isEmpty())
@@ -314,21 +320,30 @@ public class Collector {
 		for (String i : wishlist) {
 			wishlistModel.addElement(i);
 		}
+		System.out.println(gaplistModel.toString());
+		secondFrame.repaint();
 	}
 	
 	public boolean deleteTrack(int index) {
 		s.sendMessage(MessageType.DELETEFROMGAPLIST, ""+index, senderWriter);
 		try {
 			String[] answer = senderReader.readLine().split(MessageType.SEPERATOR);
-			System.out.println(answer[1]);
+			
+			if (secondFrame != null)
+				secondFrame.repaint();
+			
 			if (answer[1].equals("true"))
 				return true;
 			else
 				return false;
 		} catch (Exception e) {
 			e.printStackTrace();
+			if (secondFrame != null)
+				secondFrame.repaint();
 			return false;
 		}
+		
+
 	}
 	
 	public void saveGaplist() {

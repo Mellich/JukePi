@@ -34,6 +34,7 @@ public class EditTrackListener implements ActionListener{
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setContentPane(fillContent());
 		frame.setVisible(true);
+		frame.setResizable(false);
 	}
 
 	private JPanel fillContent() {

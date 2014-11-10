@@ -57,13 +57,13 @@ public class ConnectButtonListener implements ActionListener{
 	 * @wbp.parser.entryPoint
 	 */
 	public JFrame getJFrame() {
-		// TODO Delete when Design is completed	
+	/*	// TODO Delete when Design is completed	
 		JFrame jFrame = new JFrame();
 		jFrame.setSize(new Dimension(528, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.getContentPane().setLayout(null);
-		/*Delete till here*/		
+*/		/*Delete till here*/		
 		
 		JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
