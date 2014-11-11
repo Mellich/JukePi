@@ -126,6 +126,7 @@ public class IO {
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
 			viewer.gaplistStatus(0, 0);
+			IO.saveGapListToFile(null, filename);
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
 	}

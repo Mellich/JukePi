@@ -13,7 +13,10 @@
 # ACTIONS
 case "$1" in
    start)
-        nohup /usr/local/bin/server
+		sleep(7)
+		clear
+		setterm -cursor off
+        nohup /usr/local/bin/jbserver
         ;;
    stop)
         kill -TERM $(ps -eo pid,comm | awk '/java$/ {print $1; exit}')
@@ -22,7 +25,9 @@ case "$1" in
    restart)
         kill -TERM $(ps -eo pid,comm | awk '/java$/ {print $1; exit}')
 		kill -TERM $(ps -eo pid,comm | awk '/omxplayer.bin$/ {print $1; exit}')
-        nohup /usr/local/bin/server
+		clear
+		setterm -cursor off
+        nohup /usr/local/bin/jbserver
         ;;
 esac
 

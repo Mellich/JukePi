@@ -31,6 +31,9 @@ public class IdleViewer {
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
+		Text version = new Text(5,25,"Build version 0.6.2 (Full Feature support untested!)");
+		version.setFont(new Font(20));
+		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
 		currentGapList.setFont(new Font(30));
 		currentGapList.setFill(Color.WHITE);
@@ -40,12 +43,11 @@ public class IdleViewer {
 		root.getChildren().add(ipAddress);
 		root.getChildren().add(info);
 		root.getChildren().add(currentGapList);
+		root.getChildren().add(version);
 		stage.centerOnScreen();
 		stage.setFullScreenExitHint("");
 		stage.setScene(scene);
 		stage.setFullScreen(true);
-		//stage.setX(60);
-		//stage.setY(30);
 		stage.show();
 	}
 	

@@ -15,5 +15,6 @@ public class GapListLoader extends Thread {
 	public void run() {
 		super.run();
 		server.loadGapListFromFile();
+		server.searchGapLists();
 	}
 }

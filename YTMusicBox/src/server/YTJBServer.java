@@ -222,12 +222,13 @@ public class YTJBServer extends Thread {
 	}
 	
 	public boolean setGapList(String filename){
-		IO.printlnDebug(this, "Setting as new gap list");//TODO check if filename ends with .jb
+		IO.printlnDebug(this, "Setting as new gap list");
+		filename = filename+".jb";
 		currentGapList = filename;
 		initFile.setStartUpGapList(currentGapList);
 		IO.printlnDebug(this, "Start loading new gaplist");
 		if (gapListLoader.isAlive()){
-			gapListLoader.interrupt(); //TODO: destroy old loading thread if necessary
+			gapListLoader.interrupt(); 
 			try {
 				gapListLoader.join();
 			} catch (InterruptedException e) {
@@ -305,11 +306,12 @@ public class YTJBServer extends Thread {
 			}
 	}
 	
-	private void searchGapLists(){
+	
+	public void searchGapLists(){
 		gapLists = IO.getGapLists(GAPLISTDIRECTORY);
 	}
 	
-	public String getIpAddress() { 
+	private String getIpAddress() { 
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();

@@ -6,7 +6,7 @@ sudo cp jbserverd /etc/init.d/jbserverd
 
 mkdir /home/pi/.jbserver
 
-cp server.jar /home/pi/.jbserver
+cp server.jar /home/pi/.jbserver/server.jar
 
 sudo chmod +x /etc/init.d/jbserverd
 

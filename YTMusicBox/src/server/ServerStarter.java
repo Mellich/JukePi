@@ -18,8 +18,8 @@ public class ServerStarter extends Application {
 		} else {
 			s = new YTJBServer(YTJBServer.PORT,viewer);
 		}
-		s.start();
 		viewer.showLogo(true);
+		s.start();
 	}
 	
 	public static void main(String[] args) {
