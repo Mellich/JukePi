@@ -14,7 +14,7 @@ public class MessageType {
 	/**
 	 * a path to a sended file
 	 */
-	public static final int SENDEDFILE = 2;
+	public static final int SENTFILE = 2;
 	
 	/**
 	 * command to skip the current track
@@ -127,7 +127,31 @@ public class MessageType {
 	public static final int PAUSERESUMENOTIFY = 25;
 	
 	/**
-	 * the seperator for the arguments of a command
+	 * Returns all saved Gaplists
+	 */
+	public static final int GETAVAILABLEGAPLISTS = 26;
+	
+	/**
+	 * Load a specific Gaplist
+	 */
+	public static final int LOADGAPLIST = 27;
+	
+	/**
+	 * Moves a track a position up in the current Gaplist
+	 */
+	public static final int GAPLISTTRACKUP = 28;
+	
+	/**
+	 * Moves a track a position down in the current Gaplist
+	 */
+	public static final int GAPLISTTRACKDOWN = 29;
+	
+	/**
+	 * Returns the Name of the current Gaplist
+	 */
+	public static final int GETCURRENTGAPLISTNAME = 30;
+	/**
+	 * the seerator for the arguments of a command
 	 */
 	public static final String SEPERATOR = ";\t;";
 	

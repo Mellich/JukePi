@@ -60,6 +60,7 @@ public class Collector {
 	private JButton play;
 	private JLabel nowPlaying;
 	private JLabel nextTrack;
+	private JLabel gaplistName;
 	private Sender s;
 	private StabilityThread st;
 	private LinkedList<String> gaplist;
@@ -67,6 +68,8 @@ public class Collector {
 	private NotifierReaderThread nrt;
 	private DefaultListModel<String> gaplistModel;
 	private DefaultListModel<String> wishlistModel;
+	private DefaultListModel<String> gaplistCollectionModel;
+	private DefaultListModel<String> contentModel;
 	private JFrame secondFrame;
 	
 	public Collector() {
@@ -109,8 +112,20 @@ public class Collector {
 		this.wishlistModel = wishlistModel;
 	}
 	
+	public void addGaplistCollectionModel(DefaultListModel<String> gaplistCollectionModel) {
+		this.gaplistCollectionModel = gaplistCollectionModel;
+	}
+	
+	public void addContentModel(DefaultListModel<String> contentModel) {
+		this.contentModel = contentModel;
+	}
+	
 	public void addSecondFrame(JFrame frame) {
 		this.secondFrame = frame;
+	}
+	
+	public void addGaplistNameLabel(JLabel gaplistName) {
+		this.gaplistName = gaplistName;
 	}
 	
 	public boolean connect(String IP, String port) {
@@ -161,9 +176,7 @@ public class Collector {
 			else
 				s.sendMessage(MessageType.BEGINNINGYOUTUBE, link, senderWriter);
 		
-		if (secondFrame != null) {
-			secondFrame.repaint();
-		}
+		repaint();
 		
 		try {
 			String answer = senderReader.readLine();
@@ -184,19 +197,14 @@ public class Collector {
 		try {
 			String answer = senderReader.readLine();
 			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			
-			if (secondFrame != null) 
-				secondFrame.repaint();
-			
+			repaint();
 			if (answerparts[1].equals("true"))
 				return true;
 			else
 				return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			
-			if (secondFrame != null)
-				secondFrame.repaint();
+			repaint();
 			return false;
 		}
 	}
@@ -236,7 +244,6 @@ public class Collector {
 	}
 	
 	public void updateLists() {
-		//TODO
 		s.sendMessage(MessageType.GETGAPLIST, "", senderWriter);
 		try {
 			String answer = senderReader.readLine();
@@ -271,10 +278,7 @@ public class Collector {
 					nextTrack.setText(gaplist.get(0));
 			else
 				nextTrack.setText(wishlist.get(0));
-		
-		if (secondFrame != null) {
-			secondFrame.repaint();
-		}
+		repaint();
 	}
 	
 	public void updateStatus() {
@@ -320,8 +324,7 @@ public class Collector {
 		for (String i : wishlist) {
 			wishlistModel.addElement(i);
 		}
-		System.out.println(gaplistModel.toString());
-		secondFrame.repaint();
+		repaint();
 	}
 	
 	public boolean deleteTrack(int index) {
@@ -329,21 +332,19 @@ public class Collector {
 		try {
 			String[] answer = senderReader.readLine().split(MessageType.SEPERATOR);
 			
-			if (secondFrame != null)
-				secondFrame.repaint();
-			
-			if (answer[1].equals("true"))
+			if (answer[1].equals("true")) {
+				repaint();
 				return true;
-			else
+			}
+			else {
+				repaint();
 				return false;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (secondFrame != null)
-				secondFrame.repaint();
+			repaint();
 			return false;
 		}
-		
-
 	}
 	
 	public void saveGaplist() {
@@ -353,5 +354,72 @@ public class Collector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void moveTrackDown(int index) {
+		s.sendMessage(MessageType.GAPLISTTRACKDOWN, ""+index, senderWriter);
+		try {
+			senderReader.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void moveTrackUp(int index) {
+		s.sendMessage(MessageType.GAPLISTTRACKUP, ""+index, senderWriter);
+		try {
+			senderReader.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateGaplistName() {
+		//TODO What happens when a new Gaplist is loaded? UpdateListsNotify or another new notify?
+		s.sendMessage(MessageType.GETCURRENTGAPLISTNAME, "", senderWriter);
+		try {
+			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
+			if (gaplistName != null) {
+				gaplistName.setText("Gaplist - "+answerparts[1]);
+				gaplistName.setHorizontalAlignment(JLabel.CENTER);
+				gaplistName.setVerticalAlignment(JLabel.CENTER);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void repaint() {
+		if (secondFrame != null) {
+			secondFrame.repaint();
+		}
+	}
+	
+	public void fillGaplistModel() {
+		s.sendMessage(MessageType.GETAVAILABLEGAPLISTS, "", senderWriter);
+		try {
+			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
+			gaplistCollectionModel.clear();
+			for (int i = 1; i < answerparts.length; i++) {
+				gaplistCollectionModel.addElement(answerparts[i]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		repaint();
+	}
+	
+	public void fillContentModel(int index) {
+		//TODO When implemented serversided
+		contentModel.clear();
+		if (index == 0) 
+			for (int i = 0; i < 10; i++) {
+				contentModel.addElement("Schinken");
+			}
+		else
+			for (int i = 0; i < 5; i++) {
+				contentModel.addElement("Käse");
+			}
+		System.out.println(contentModel.toString());
 	}
 }

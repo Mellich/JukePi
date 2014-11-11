@@ -29,8 +29,12 @@ public class AddButtonListener implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
-		AddThread at = new AddThread(link, button, tf, c, this, inFront);
-		at.start();
+		if (link.contains("youtube.") && link.contains("/watch")) {
+			AddThread at = new AddThread(link, button, tf, c, this, inFront);
+			at.start();
+		}
+		else
+			tf.setText("No valid Link");
 	}
 
 }
