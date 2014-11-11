@@ -19,6 +19,7 @@ import javax.swing.JCheckBox;
 public class ConnectButtonListener implements ActionListener{
 
 	private JFrame jFrame;
+	private JFrame editTrackWindow;
 	private Collector c;
 	private JTextField txtYoutubelink;
 	private JTextField ip;
@@ -31,6 +32,7 @@ public class ConnectButtonListener implements ActionListener{
 		this.ip = ipfield;
 		this.port = portfield;
 		this.fail = fail;
+		this.editTrackWindow = new JFrame();
 	}
 	
 
@@ -92,12 +94,12 @@ public class ConnectButtonListener implements ActionListener{
 		txtYoutubelink.setBounds(10, 60, 362, 20);
 		jFrame.getContentPane().add(txtYoutubelink);
 		txtYoutubelink.setText("Insert a Youtube-Link here.");
-		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added"}, txtYoutubelink));
+		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
 		txtYoutubelink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(10, 91, 62, 20);
-		btnAdd.setToolTipText("Adds the YouTube-Link on the left either to the Gaplist or the Wishlist, whatever is selected on the right.");
+		btnAdd.setToolTipText("Adds the YouTube-Link in the upper Textfield either to the Gaplist or the Wishlist, whatever is selected on the right.");
 		jFrame.getContentPane().add(btnAdd);
 		
 		JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
@@ -165,7 +167,7 @@ public class ConnectButtonListener implements ActionListener{
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
-		btnEditTracks.addActionListener(new EditTrackListener(c));
+		btnEditTracks.addActionListener(new EditTrackListener(editTrackWindow, c));
 		
 		jFrame.repaint();
 		
