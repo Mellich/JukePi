@@ -63,7 +63,7 @@ public class YTJBServer extends Thread {
 	 */
 	private ArrayList<Connection> clients;
 
-	private IdelViewer idelViewer;
+	private IdleViewer idelViewer;
 	
 	private InitFileCommunicator initFile;
 	
@@ -191,6 +191,7 @@ public class YTJBServer extends Thread {
 	
 	public void loadGapListFromFile(){
 		gapList.clear();
+		idelViewer.currentGaplist(currentGapList);
 		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
 	}
@@ -239,6 +240,7 @@ public class YTJBServer extends Thread {
 	}
 	
 	public String[] readOutGapList(String filename){
+		IO.printlnDebug(this, "Reading out gap list");
 		return IO.readOutGapList(GAPLISTDIRECTORY+filename);
 	}
 	
@@ -280,7 +282,7 @@ public class YTJBServer extends Thread {
 	 * 
 	 * @param port the port used for the server socket
 	 */
-	public YTJBServer(int port,IdelViewer idelViewer) {
+	public YTJBServer(int port,IdleViewer idelViewer) {
 			try {
 				this.idelViewer = idelViewer;
 				wishList = new LinkedList<MusicTrack>();

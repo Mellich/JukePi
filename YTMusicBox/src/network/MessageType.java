@@ -14,7 +14,7 @@ public class MessageType {
 	/**
 	 * a path to a sended file
 	 */
-	public static final int SENDEDFILE = 2;
+	public static final int SENTFILE = 2;
 	
 	/**
 	 * command to skip the current track

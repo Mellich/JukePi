@@ -9,7 +9,7 @@ public class ServerStarter extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		IdelViewer viewer = new IdelViewer(primaryStage);
+		IdleViewer viewer = new IdleViewer(primaryStage);
 		List<String> args = this.getParameters().getRaw();
 		YTJBServer s;
 		if (args.size() == 1){

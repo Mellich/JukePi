@@ -15,7 +15,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
-import server.IdelViewer;
+import server.IdleViewer;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -80,16 +80,18 @@ public class IO {
 			long max = reader.lines().count();
 			reader.close();
 			String[] title = new String[(int)max];
+			IO.printlnDebug(null, "Titles to output: "+max);
 			reader = getFileOutput(filename);
 			int current = 0;
 			String url = reader.readLine();
-			while (url != null || url != ""){
+			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				title[current] = splitted[1];
 				current++;
 				url = reader.readLine();
 			}
 			reader.close();
+			IO.printlnDebug(null, "Finished sucessfully");
 			return title;
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR: Could not read out title of the gaplist "+filename);
@@ -98,7 +100,7 @@ public class IO {
 		
 	}
 	
-	public static void loadGapListFromFile(String filename, YTJBServer server, IdelViewer viewer){
+	public static void loadGapListFromFile(String filename, YTJBServer server, IdleViewer viewer){
 		try {
 			IO.printlnDebug(null, "Start to load gap list "+filename);
 			BufferedReader reader = getFileOutput(filename);
@@ -108,7 +110,7 @@ public class IO {
 			String url = reader.readLine();
 			int current = 0;
 			viewer.gaplistStatus(current, (int)max);
-			while (url != null || url != ""){
+			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
