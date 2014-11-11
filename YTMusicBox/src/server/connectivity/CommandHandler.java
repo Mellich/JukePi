@@ -72,6 +72,8 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,server).handle();
 			break;
+		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,server,args[1]).handle();
+			break;
 		default: new UnknownCommand(out,""+prompt).handle();
 		}		
 	}

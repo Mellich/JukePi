@@ -135,6 +135,8 @@ public class MessageType {
 	public static final int GAPLISTTRACKDOWN = 29;
 	
 	public static final int GETCURRENTGAPLISTNAME = 30;
+	
+	public static final int GETTITLEFROMGAPLIST = 31;
 	/**
 	 * the seerator for the arguments of a command
 	 */

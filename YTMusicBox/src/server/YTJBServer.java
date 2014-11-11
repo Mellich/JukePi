@@ -227,10 +227,19 @@ public class YTJBServer extends Thread {
 		IO.printlnDebug(this, "Start loading new gaplist");
 		if (gapListLoader.isAlive()){
 			gapListLoader.interrupt(); //TODO: destroy old loading thread if necessary
+			try {
+				gapListLoader.join();
+			} catch (InterruptedException e) {
+				IO.printlnDebug(this, "ERROR: Exception thrown while waiting for gap list loader to stop");
+			}
 		}
 		gapListLoader = new GapListLoader(this);
 		gapListLoader.start();
 		return true;
+	}
+	
+	public String[] readOutGapList(String filename){
+		return IO.readOutGapList(GAPLISTDIRECTORY+filename);
 	}
 	
 	public synchronized boolean switchWithUpper(int index){

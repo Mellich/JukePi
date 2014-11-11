@@ -74,6 +74,30 @@ public class IO {
 		return result;
 	}
 	
+	public static String[] readOutGapList(String filename){
+		BufferedReader reader = getFileOutput(filename);
+		try {
+			long max = reader.lines().count();
+			reader.close();
+			String[] title = new String[(int)max];
+			reader = getFileOutput(filename);
+			int current = 0;
+			String url = reader.readLine();
+			while (url != null || url != ""){
+				String[] splitted = url.split(";");
+				title[current] = splitted[1];
+				current++;
+				url = reader.readLine();
+			}
+			reader.close();
+			return title;
+		} catch (IOException e) {
+			IO.printlnDebug(null, "ERROR: Could not read out title of the gaplist "+filename);
+		}
+		return null;
+		
+	}
+	
 	public static void loadGapListFromFile(String filename, YTJBServer server, IdelViewer viewer){
 		try {
 			IO.printlnDebug(null, "Start to load gap list "+filename);
@@ -84,10 +108,12 @@ public class IO {
 			String url = reader.readLine();
 			int current = 0;
 			viewer.gaplistStatus(current, (int)max);
-			while (url != null || url == ""){
+			while (url != null || url != ""){
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
+				if (Thread.interrupted())
+					break;
 				server.addToList(yURL, false, true);
 				current++;
 				viewer.gaplistStatus(current, (int) max);
