@@ -411,15 +411,16 @@ public class Collector {
 	
 	public void fillContentModel(int index) {
 		//TODO When implemented serversided
-		contentModel.clear();
-		if (index == 0) 
-			for (int i = 0; i < 10; i++) {
-				contentModel.addElement("Schinken");
+		s.sendMessage(MessageType.GETTITLEFROMGAPLIST, gaplistCollectionModel.get(index), senderWriter);
+		try {
+			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
+			contentModel.clear();
+			for (int i = 1; i < answerparts.length; i++) {
+				contentModel.addElement(answerparts[i]);
 			}
-		else
-			for (int i = 0; i < 5; i++) {
-				contentModel.addElement("Käse");
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println(contentModel.toString());
 	}
 }

@@ -150,6 +150,12 @@ public class MessageType {
 	 * Returns the Name of the current Gaplist
 	 */
 	public static final int GETCURRENTGAPLISTNAME = 30;
+	
+	/**
+	 * Returns the titles from the Gaplist specified by the following parameter
+	 */
+	public static final int GETTITLEFROMGAPLIST = 31;
+	
 	/**
 	 * the seerator for the arguments of a command
 	 */

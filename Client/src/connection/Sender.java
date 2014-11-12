@@ -31,6 +31,7 @@ public class Sender {
 			case MessageType.GAPLISTTRACKUP: writer.write(""+MessageType.GAPLISTTRACKUP+MessageType.SEPERATOR+message);break;
 			case MessageType.GAPLISTTRACKDOWN: writer.write(""+MessageType.GAPLISTTRACKDOWN+MessageType.SEPERATOR+message);break;
 			case MessageType.GETCURRENTGAPLISTNAME: writer.write(""+MessageType.GETCURRENTGAPLISTNAME);break;
+			case MessageType.GETTITLEFROMGAPLIST: writer.write(""+MessageType.GETTITLEFROMGAPLIST+MessageType.SEPERATOR+message);break;
 			default: return false;
 			}
 			writer.newLine();
