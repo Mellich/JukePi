@@ -26,16 +26,19 @@ public class TrackScheduler extends Thread {
 		running = r;
 	}
 	
-	public void skip(){
+	public boolean skip(){
 		if (player != null)
-			player.skip();
+			return player.skip();
+		else return false;
 	}
 	
-	public void pauseResume(){
+	public boolean pauseResume(){
 		if (player != null){
-			player.pauseResume();
+			boolean result = player.pauseResume();
 			server.notifyClients(MessageType.PAUSERESUMENOTIFY);
+			return result;
 		}
+		return false;
 	}
 	
 	public boolean isPlaying(){

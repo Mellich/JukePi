@@ -16,6 +16,7 @@ import network.MessageType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
+import server.visuals.IdleViewer;
 import utilities.IO;
 
 /**A server, that includes classes to stream videos from youtube or audio files given

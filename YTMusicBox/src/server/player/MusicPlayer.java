@@ -4,7 +4,7 @@ import server.MusicTrack;
 
 public interface MusicPlayer{
 	public void play(MusicTrack track);
-	public void skip();
-	public void pauseResume();
+	public boolean skip();
+	public boolean pauseResume();
 	public boolean isPlaying();
 }

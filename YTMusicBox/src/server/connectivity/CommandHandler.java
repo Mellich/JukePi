@@ -3,9 +3,10 @@ package server.connectivity;
 import java.io.BufferedWriter;
 
 
+
 import network.MessageType;
 import server.YTJBServer;
-import server.connectivity.handler.*;
+import server.connectivity.commands.*;
 import utilities.IO;
 
 /**handles incomming connections

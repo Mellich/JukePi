@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import server.YTJBServer;
-import server.connectivity.handler.NotifyClientCommand;
-import server.connectivity.handler.UnknownCommand;
+import server.connectivity.commands.NotifyClientCommand;
+import server.connectivity.commands.UnknownCommand;
 import utilities.IO;
 
 public class Connection extends Thread {

@@ -42,19 +42,20 @@ public class OMXPlayer implements MusicPlayer {
 	}
 
 	@Override
-	public void skip() {
+	public boolean skip() {
 		try {
 			out.write("q");
 			out.flush();
 			IO.printlnDebug(this, "Skipped track successfully");
-		} catch (IOException e) {
+			return true;
+		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(this, "could not skip track successfully");
 		}
-		
+		return false;
 	}
 
 	@Override
-	public void pauseResume() {
+	public boolean pauseResume() {
 		try {
 			out.write(' ');
 			out.flush();
@@ -62,10 +63,11 @@ public class OMXPlayer implements MusicPlayer {
 			if (showLogoOnPause){
 				server.showLogo(!playing);
 			}
-		} catch (IOException e) {
+			return true;
+		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(this, "could not pause/resume player successfully");
 		}
-
+		return false;
 	}
 
 	@Override

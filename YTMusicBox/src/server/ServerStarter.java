@@ -2,6 +2,7 @@ package server;
 
 import java.util.List;
 
+import server.visuals.IdleViewer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

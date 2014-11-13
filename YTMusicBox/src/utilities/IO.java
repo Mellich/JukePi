@@ -15,9 +15,9 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
-import server.IdleViewer;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
+import server.visuals.IdleViewer;
 import server.YTJBServer;
 
 /**static class that provides functions for uniform input and output
@@ -68,7 +68,7 @@ public class IO {
 		if (gaplists != null){
 			result = new String[gaplists.length];
 			for (int i = 0; i < result.length; i++){
-				result[i] = (gaplists[i].getName());
+				result[i] = (gaplists[i].getName().substring(0,gaplists[i].getName().length() - 4));
 			}
 		}
 		return result;
