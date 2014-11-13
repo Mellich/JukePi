@@ -375,7 +375,6 @@ public class Collector {
 	}
 	
 	public void updateGaplistName() {
-		//TODO What happens when a new Gaplist is loaded? UpdateListsNotify or another new notify?
 		s.sendMessage(MessageType.GETCURRENTGAPLISTNAME, "", senderWriter);
 		try {
 			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
@@ -392,6 +391,7 @@ public class Collector {
 	public void repaint() {
 		if (secondFrame != null) {
 			secondFrame.repaint();
+			secondFrame.getContentPane().repaint();
 		}
 	}
 	
@@ -410,7 +410,6 @@ public class Collector {
 	}
 	
 	public void fillContentModel(int index) {
-		//TODO When implemented serversided
 		s.sendMessage(MessageType.GETTITLEFROMGAPLIST, gaplistCollectionModel.get(index), senderWriter);
 		try {
 			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
@@ -421,6 +420,10 @@ public class Collector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(contentModel.toString());
+	}
+	
+	public void loadGaplist(String gaplist) {
+		s.sendMessage(MessageType.LOADGAPLIST, gaplist, senderWriter);
+		try {senderReader.readLine();} catch(Exception e) {}
 	}
 }

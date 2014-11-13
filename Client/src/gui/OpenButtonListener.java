@@ -58,7 +58,7 @@ public class OpenButtonListener implements ActionListener{
 		
 		JList<String> gaplistList = new JList<String>(savedGaplists);
 		JList<String> contentList = new JList<String>(contents);
-		UpdateThread ut = new UpdateThread(gaplistList, contentList, c);
+		UpdateThread ut = new UpdateThread(gaplistList, contentList, c, frame);
 		ut.start();
 		
 		JScrollPane gaplistScrollPane = new JScrollPane(gaplistList);
@@ -83,6 +83,7 @@ public class OpenButtonListener implements ActionListener{
 		
 		JButton btnLoad = new JButton("Load");
 		btnLoad.setBounds(25, 301, 89, 23);
+		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList));
 		contentPane.add(btnLoad);
 		
 		JButton btnBack = new JButton("Back");
@@ -90,6 +91,8 @@ public class OpenButtonListener implements ActionListener{
 		btnBack.addActionListener(new BackButtonListener(listener, ut));
 		contentPane.add(btnBack);
 		
+		
+		ut.addContentPane(contentPane);
 		return contentPane;
 	}
 }
