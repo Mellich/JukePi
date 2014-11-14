@@ -15,12 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 
 import threads.UpdateThread;
+import javax.swing.JTextField;
 
 public class OpenButtonListener implements ActionListener{
 
 	private JFrame frame;
 	private EditTrackListener listener;
 	private Collector c;
+	private JTextField textField;
 	
 	public OpenButtonListener(JFrame frame, EditTrackListener listener, Collector c) {
 		this.frame = frame;
@@ -93,6 +95,15 @@ public class OpenButtonListener implements ActionListener{
 		
 		
 		ut.addContentPane(contentPane);
+		
+		JButton btnCreate = new JButton("Create");
+		btnCreate.setBounds(124, 301, 89, 23);
+		contentPane.add(btnCreate);
+		
+		textField = new JTextField();
+		textField.setBounds(223, 301, 136, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
 		return contentPane;
 	}
 }

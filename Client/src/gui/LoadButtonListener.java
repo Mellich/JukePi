@@ -19,7 +19,7 @@ public class LoadButtonListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		c.loadGaplist(gaplists.getSelectedValue().substring(0, gaplists.getSelectedValue().length()-3));
+		c.loadGaplist(gaplists.getSelectedValue());
 	}
 
 }

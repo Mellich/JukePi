@@ -414,6 +414,7 @@ public class Collector {
 		try {
 			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
 			contentModel.clear();
+			repaint();
 			for (int i = 1; i < answerparts.length; i++) {
 				contentModel.addElement(answerparts[i]);
 			}
@@ -425,5 +426,12 @@ public class Collector {
 	public void loadGaplist(String gaplist) {
 		s.sendMessage(MessageType.LOADGAPLIST, gaplist, senderWriter);
 		try {senderReader.readLine();} catch(Exception e) {}
+	}
+	
+	public void createNewList(String text) {
+		s.sendMessage(MessageType.LOADGAPLIST, text, senderWriter);
+		try {senderReader.readLine();} catch (Exception e) {}
+		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
+		try {senderReader.readLine();} catch (Exception e) {}
 	}
 }

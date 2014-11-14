@@ -42,7 +42,6 @@ public class UpdateThread extends Thread{
 					if (index != -1) {
 						lastindex = index;
 						c.fillContentModel(index);
-						content.repaint();
 					}
 				}
 			}
