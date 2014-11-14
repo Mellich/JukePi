@@ -68,7 +68,7 @@ public class IO {
 		if (gaplists != null){
 			result = new String[gaplists.length];
 			for (int i = 0; i < result.length; i++){
-				result[i] = (gaplists[i].getName().substring(0,gaplists[i].getName().length() - 4));
+				result[i] = (gaplists[i].getName().substring(0,gaplists[i].getName().length() - 3));
 			}
 		}
 		return result;
