@@ -4,8 +4,7 @@ package server.connectivity.commands;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-
-import network.MessageType;
+import messages.MessageType;
 import utilities.IO;
 
 /**handles a specific command

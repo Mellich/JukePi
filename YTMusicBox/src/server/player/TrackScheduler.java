@@ -2,7 +2,7 @@ package server.player;
 
 import java.util.concurrent.Semaphore;
 
-import network.MessageType;
+import messages.MessageType;
 import server.MusicTrack;
 import server.YTJBServer;
 import utilities.IO;
@@ -70,7 +70,7 @@ public class TrackScheduler extends Thread {
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY);
 				}
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-				player = new OMXPlayer(server);
+				player = new ClientPlayer(server);
 				player.play(current);
 			}
 		} catch (InterruptedException e) {

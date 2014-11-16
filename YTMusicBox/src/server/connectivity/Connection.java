@@ -50,7 +50,8 @@ public class Connection extends Thread {
 			IO.printlnDebug(this, "ERROR: lost client connection!");
 		}
 		finally{
-			server.removeClient(this);
+			server.removeNotifiable(this);
+			server.removePlayer(this);
 		}
 	}
 	

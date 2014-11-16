@@ -11,12 +11,10 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-import javafx.application.Platform;
-import network.MessageType;
+import messages.MessageType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
-import server.visuals.IdleViewer;
 import utilities.IO;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
@@ -62,9 +60,9 @@ public class YTJBServer extends Thread {
 	/**
 	 * list of clients connected to the server
 	 */
-	private ArrayList<Connection> clients;
-
-	private IdleViewer idelViewer;
+	private ArrayList<Connection> notifiables;
+	
+	private ArrayList<Connection> player;
 	
 	private InitFileCommunicator initFile;
 	
@@ -76,6 +74,8 @@ public class YTJBServer extends Thread {
 	
 	private Semaphore closePrompt = new Semaphore(0);
 	
+	private Semaphore playerFinished = new Semaphore(0);
+	
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -84,8 +84,6 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			//BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-			//r.readLine(); //giving a input will shut down the server
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 			scheduler.setRunning(false);
@@ -95,7 +93,6 @@ public class YTJBServer extends Thread {
 			server.close();
 			scheduler.join();
 			waiter.join();
-			this.showLogo(false);
 			IO.printlnDebug(this, "Server was shut down");
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block
@@ -174,6 +171,10 @@ public class YTJBServer extends Thread {
 		return response.toString();
 	}
 	
+	/**chooses the next track for play back
+	 * 
+	 * @return the musictrack to play back
+	 */
 	public synchronized MusicTrack chooseNextTrack(){
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
@@ -190,18 +191,19 @@ public class YTJBServer extends Thread {
 		return temp;
 	}
 	
+	/**
+	 * loads current gap list from a file
+	 */
 	public void loadGapListFromFile(){
 		gapList.clear();
-		idelViewer.currentGaplist(currentGapList);
 		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
+		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this);		
 	}
 	
-	public void loadGapListFromFile(String filename){
-		gapList.clear();
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
-	}
-	
+	/**saves the gap list to a file
+	 * 
+	 * @return true, when no error occurred
+	 */
 	public boolean saveGapListToFile(){
 		return IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 	}
@@ -214,7 +216,7 @@ public class YTJBServer extends Thread {
 		return server;
 	}
 	
-	public String[] getGapLists(){
+	public String[] getGapListNames(){
 		return gapLists;
 	}
 	
@@ -258,37 +260,63 @@ public class YTJBServer extends Thread {
 		else return false;
 	}
 	
-	public synchronized void registerClient(Connection c){
-		clients.add(c);
-		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	public synchronized void registerNotifiable(Connection c){
+		notifiables.add(c);
+		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
-	public synchronized void removeClient(Connection c){
-		clients.remove(c);
-		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	public synchronized void registerPlayer(Connection c){
+		player.add(c);
+		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
 	}
 	
-	public void notifyClients(int messageType){
-		for (Connection h: clients){
-			h.notify(messageType);
+	public synchronized void removePlayer(Connection c){
+		player.remove(c);
+		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
+	}
+	
+	public synchronized void removeNotifiable(Connection c){
+		notifiables.remove(c);
+		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
+	}
+	
+	public void playerHasFinished(){
+		playerFinished.release();
+	}
+	
+	public void waitForPlayerToFinish(){
+		try {
+			for (@SuppressWarnings("unused") Connection c: player){
+					playerFinished.acquire();
+			}
+		} catch (InterruptedException e) {
+			IO.printlnDebug(this, "ERROR: Interrupted while waiting for players to finish");
 		}
 	}
 	
-	public void showLogo(boolean show){
-		Platform.runLater(() -> idelViewer.showLogo(show));
-	}
+	public void notifyClients(int messageType){
+		notifyPlayers(messageType);
+		for (Connection h: notifiables){
+			h.notify(messageType);
+		}
+	}	
 	
+	public void notifyPlayers(int messageType){
+		for (Connection c : player){
+			c.notify(messageType);
+		}
+	}
 	
 	/**
 	 * creates new instance of a server
 	 * 
 	 * @param port the port used for the server socket
 	 */
-	public YTJBServer(int port,IdleViewer idelViewer) {
+	public YTJBServer(int port) {
 			try {
-				this.idelViewer = idelViewer;
 				wishList = new LinkedList<MusicTrack>();
-				clients = new ArrayList<Connection>();
+				notifiables = new ArrayList<Connection>();
+				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
 				initFile = new InitFileCommunicator(GAPLISTDIRECTORY);
 				currentGapList = initFile.getStartUpGapList();
@@ -298,8 +326,6 @@ public class YTJBServer extends Thread {
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
-				String ip = getIpAddress();
-				Platform.runLater(() -> idelViewer.editConnectionDetails(ip, port));
 				IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -17,7 +17,6 @@ import java.util.LinkedList;
 
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
-import server.visuals.IdleViewer;
 import server.YTJBServer;
 
 /**static class that provides functions for uniform input and output
@@ -100,16 +99,11 @@ public class IO {
 		
 	}
 	
-	public static void loadGapListFromFile(String filename, YTJBServer server, IdleViewer viewer){
+	public static void loadGapListFromFile(String filename, YTJBServer server){
 		try {
 			IO.printlnDebug(null, "Start to load gap list "+filename);
 			BufferedReader reader = getFileOutput(filename);
-			long max = reader.lines().count();
-			reader.close();
-			reader = new BufferedReader(new FileReader(filename));
 			String url = reader.readLine();
-			int current = 0;
-			viewer.gaplistStatus(current, (int)max);
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
@@ -117,15 +111,11 @@ public class IO {
 				if (Thread.interrupted())
 					break;
 				server.addToList(yURL, false, true);
-				current++;
-				viewer.gaplistStatus(current, (int) max);
 				url = reader.readLine();
 			}
 			reader.close();
-			viewer.gaplistStatus(current, (int) max);
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
-			viewer.gaplistStatus(0, 0);
 			IO.saveGapListToFile(null, filename);
 		}
 		IO.printlnDebug(null, "finished loading gap list!");

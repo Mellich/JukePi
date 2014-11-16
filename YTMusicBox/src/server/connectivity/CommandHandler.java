@@ -4,7 +4,10 @@ import java.io.BufferedWriter;
 
 
 
-import network.MessageType;
+
+
+
+import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
 import utilities.IO;
@@ -61,7 +64,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommand(out,server,false,true,args[1]).handle();
 			break;
-		case MessageType.DECLAREMEASNOTIFY: server.registerClient(parent);;
+		case MessageType.DECLAREMEASNOTIFY: server.registerNotifiable(parent);;
 			break;
 		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,server,Integer.parseInt(args[1])).handle();
 			break;
@@ -74,6 +77,12 @@ public class CommandHandler extends Thread {
 		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,server).handle();
 			break;
 		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,server,args[1]).handle();
+			break;
+		case MessageType.SETMEASPLAYER: server.registerPlayer(parent);
+			break;
+		case MessageType.GETNEXTVIDEOURL: new GetNextVideoURLCommand(out, server.getScheduler()).handle();
+			break;
+		case MessageType.PLAYERFINISHED: new PlayerFinishedCommand(out, server).handle();
 			break;
 		default: new UnknownCommand(out,""+prompt).handle();
 		}		

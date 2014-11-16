@@ -2,7 +2,7 @@ package server.connectivity.commands;
 
 import java.io.BufferedWriter;
 
-import network.MessageType;
+import messages.MessageType;
 import utilities.IO;
 
 public class UnknownCommand extends Command {

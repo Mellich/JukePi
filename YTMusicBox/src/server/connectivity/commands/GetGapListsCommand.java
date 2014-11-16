@@ -2,7 +2,7 @@ package server.connectivity.commands;
 
 import java.io.BufferedWriter;
 
-import network.MessageType;
+import messages.MessageType;
 import server.YTJBServer;
 
 public class GetGapListsCommand extends Command {
@@ -16,7 +16,7 @@ public class GetGapListsCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		String[] gaplists = server.getGapLists();
+		String[] gaplists = server.getGapListNames();
 		StringBuilder message = new StringBuilder();
 		for (String name : gaplists){
 			message.append(name+MessageType.SEPERATOR);
