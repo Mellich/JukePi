@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 
 
 
+
 import network.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
@@ -74,6 +75,8 @@ public class CommandHandler extends Thread {
 		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,server).handle();
 			break;
 		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,server,args[1]).handle();
+			break;
+		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, server, args[1]).handle();
 			break;
 		default: new UnknownCommand(out,""+prompt).handle();
 		}		

@@ -76,6 +76,8 @@ public class MessageType {
 	 */
 	public static final int LISTSUPDATEDNOTIFY = 14;
 	
+	public static final int GAPLISTCOUNTCHANGEDNOTIFY = 15;
+	
 	/**
 	 * gets the current status of the playback
 	 */
@@ -137,6 +139,9 @@ public class MessageType {
 	public static final int GETCURRENTGAPLISTNAME = 30;
 	
 	public static final int GETTITLEFROMGAPLIST = 31;
+	
+	public static final int DELETEGAPLIST = 32;
+	
 	/**
 	 * the seerator for the arguments of a command
 	 */

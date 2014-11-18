@@ -50,6 +50,10 @@ public class IO {
 		return null;
 	}
 	
+	public static boolean deleteGapList(String filename){
+		return new File(filename).delete();
+	}
+	
 	public static BufferedWriter getFileInput(String filename){
 		try {
 			return new BufferedWriter(new FileWriter(filename));

@@ -197,13 +197,23 @@ public class YTJBServer extends Thread {
 		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
 	}
 	
-	public void loadGapListFromFile(String filename){
-		gapList.clear();
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
+	public boolean saveGapListToFile(){
+		boolean savedCorrectly = IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+		if (savedCorrectly){
+			searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+		}
+		return savedCorrectly;
 	}
 	
-	public boolean saveGapListToFile(){
-		return IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+	public boolean deleteGapList(String filename){
+		filename = filename +".jb";
+		boolean deletedCorrectly = IO.deleteGapList(GAPLISTDIRECTORY+filename);
+		if (deletedCorrectly){
+			this.searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+		}
+		return deletedCorrectly;
 	}
 	
 	public TrackScheduler getScheduler(){
