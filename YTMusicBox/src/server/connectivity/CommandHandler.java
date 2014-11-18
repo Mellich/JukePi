@@ -1,12 +1,6 @@
 package server.connectivity;
 
 import java.io.BufferedWriter;
-
-
-
-
-
-
 import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
@@ -83,6 +77,8 @@ public class CommandHandler extends Thread {
 		case MessageType.GETNEXTVIDEOURL: new GetNextVideoURLCommand(out, server.getScheduler()).handle();
 			break;
 		case MessageType.PLAYERFINISHED: new PlayerFinishedCommand(out, server).handle();
+			break;
+		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, server, args[1]).handle();
 			break;
 		default: new UnknownCommand(out,""+prompt).handle();
 		}		

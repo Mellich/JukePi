@@ -203,9 +203,24 @@ public class YTJBServer extends Thread {
 	/**saves the gap list to a file
 	 * 
 	 * @return true, when no error occurred
-	 */
+	 */	
 	public boolean saveGapListToFile(){
-		return IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+		boolean savedCorrectly = IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+		if (savedCorrectly){
+			searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+		}
+		return savedCorrectly;
+	}
+	
+	public boolean deleteGapList(String filename){
+		filename = filename +".jb";
+		boolean deletedCorrectly = IO.deleteGapList(GAPLISTDIRECTORY+filename);
+		if (deletedCorrectly){
+			this.searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+		}
+		return deletedCorrectly;
 	}
 	
 	public TrackScheduler getScheduler(){

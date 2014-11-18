@@ -76,6 +76,8 @@ public class MessageType {
 	 */
 	public static final int LISTSUPDATEDNOTIFY = 14;
 	
+	public static final int GAPLISTCOUNTCHANGEDNOTIFY = 15;
+	
 	/**
 	 * gets the current status of the playback
 	 */
@@ -143,6 +145,9 @@ public class MessageType {
 	public static final int GETNEXTVIDEOURL = 33;
 	
 	public static final int PLAYERFINISHED = 34;
+
+	public static final int DELETEGAPLIST = 35;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */
