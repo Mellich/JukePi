@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 
 public class CheckIfReadyCommand extends Command {
 
-	public CheckIfReadyCommand(BufferedWriter out) {
-		super(out);
+	public CheckIfReadyCommand(BufferedWriter out,int messageType) {
+		super(out, messageType);
 	}
 
 	@Override

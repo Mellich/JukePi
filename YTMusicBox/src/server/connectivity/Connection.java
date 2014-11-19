@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.NotifyClientCommand;
 import server.connectivity.commands.UnknownCommand;
@@ -42,7 +43,7 @@ public class Connection extends Thread {
 				}
 				catch (NumberFormatException | IndexOutOfBoundsException e){
 					IO.printlnDebug(this, "Wrong command format was sendet by client:"+message);
-					new UnknownCommand(out,""+message).handle();
+					new UnknownCommand(out,MessageType.NOCOMMAND,""+message).handle();
 				}
 			}
 			socket.close();
@@ -56,7 +57,7 @@ public class Connection extends Thread {
 	}
 	
 	public void notify(int messageType){
-			new NotifyClientCommand(out,messageType).handle();
+			new NotifyClientCommand(out,MessageType.NOCOMMAND,messageType).handle();
 	}
 
 

@@ -9,8 +9,8 @@ public class GetListCommand extends Command {
 	private boolean fromWishList;
 	private YTJBServer server;
 	
-	public GetListCommand(BufferedWriter out,YTJBServer server, boolean fromWishList) {
-		super(out);
+	public GetListCommand(BufferedWriter out,int messageType,YTJBServer server, boolean fromWishList) {
+		super(out, messageType);
 		this.fromWishList = fromWishList;
 		this.server = server;
 	}

@@ -9,8 +9,8 @@ public class UnknownCommand extends Command {
 
 	private String command;
 	
-	public UnknownCommand(BufferedWriter out,String command) {
-		super(out);
+	public UnknownCommand(BufferedWriter out,int messageType,String command) {
+		super(out, messageType);
 		this.command = command;
 	}
 

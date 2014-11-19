@@ -15,13 +15,16 @@ import utilities.IO;
 public abstract class Command {
 
 	private BufferedWriter out;
+	private int messageType;
 	
 	/**creates a new command handler
 	 * 
-	 * @param s the socket of the connection, that should be handled
+	 * @param out the buffered writer for the socket to response to
+	 * @param messageType the message type of the received message
 	 */
-	public Command(BufferedWriter out){
+	public Command(BufferedWriter out,int messageType){
 		this.out = out;
+		this.messageType = messageType;
 	}
 	
 	
@@ -30,7 +33,7 @@ public abstract class Command {
 	 * @param s the response
 	 */
 	protected void response(String s){
-		sendMessage(MessageType.RESPONSENOTIFY+MessageType.SEPERATOR+s);
+		sendMessage(MessageType.RESPONSENOTIFY+MessageType.SEPERATOR+messageType+MessageType.SEPERATOR+s);
 	}
 	
 	/**notify the client 

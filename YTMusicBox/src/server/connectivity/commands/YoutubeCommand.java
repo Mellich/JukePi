@@ -21,8 +21,8 @@ public class YoutubeCommand extends Command {
 	private boolean toWishList;
 	private boolean atFirst;
 	
-	public YoutubeCommand(BufferedWriter out,YTJBServer server, boolean toWishList,boolean atFirst,String url) {
-		super(out);
+	public YoutubeCommand(BufferedWriter out,int messageType,YTJBServer server, boolean toWishList,boolean atFirst,String url) {
+		super(out, messageType);
 		this.url = url;
 		this.server = server;
 		this.toWishList = toWishList;

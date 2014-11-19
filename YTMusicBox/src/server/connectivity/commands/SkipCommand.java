@@ -9,8 +9,8 @@ public class SkipCommand extends Command {
 
 	private TrackScheduler trackScheduler;
 	
-	public SkipCommand(BufferedWriter out, TrackScheduler scheduler) {
-		super(out);
+	public SkipCommand(BufferedWriter out,int messageType, TrackScheduler scheduler) {
+		super(out, messageType);
 		trackScheduler = scheduler;
 	}
 

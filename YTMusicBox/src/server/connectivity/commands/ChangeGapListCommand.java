@@ -9,8 +9,8 @@ public class ChangeGapListCommand extends Command {
 	private String filename;
 	private YTJBServer server;
 	
-	public ChangeGapListCommand(BufferedWriter out,YTJBServer server,String filename) {
-		super(out);
+	public ChangeGapListCommand(BufferedWriter out,int messageType, YTJBServer server,String filename) {
+		super(out, messageType);
 		this.filename = filename;
 		this.server = server;
 	}

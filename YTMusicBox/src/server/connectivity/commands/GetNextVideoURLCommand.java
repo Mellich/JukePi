@@ -8,8 +8,8 @@ public class GetNextVideoURLCommand extends Command {
 
 	private TrackScheduler scheduler;
 
-	public GetNextVideoURLCommand(BufferedWriter out,TrackScheduler scheduler) {
-		super(out);
+	public GetNextVideoURLCommand(BufferedWriter out,int messageType,TrackScheduler scheduler) {
+		super(out, messageType);
 		this.scheduler = scheduler;
 	}
 

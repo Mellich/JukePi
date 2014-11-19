@@ -14,8 +14,8 @@ public class DeleteFromListCommand extends Command {
 	private int trackIndex;
 	private YTJBServer server;
 	
-	public DeleteFromListCommand(BufferedWriter out,YTJBServer server, boolean fromWishList,int trackIndex) {
-		super(out);
+	public DeleteFromListCommand(BufferedWriter out,int messageType,YTJBServer server, boolean fromWishList,int trackIndex) {
+		super(out, trackIndex);
 		this.fromWishList = fromWishList;
 		this.trackIndex = trackIndex;
 		this.server = server;

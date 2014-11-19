@@ -6,8 +6,8 @@ public class NotifyClientCommand extends Command {
 
 	private int notification;
 	
-	public NotifyClientCommand(BufferedWriter out,int notification) {
-		super(out);
+	public NotifyClientCommand(BufferedWriter out,int messageType,int notification) {
+		super(out, notification);
 		this.notification = notification;
 	}
 

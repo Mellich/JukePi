@@ -9,8 +9,8 @@ public class GetGapListsCommand extends Command {
 
 	private YTJBServer server;
 	
-	public GetGapListsCommand(BufferedWriter out,YTJBServer server) {
-		super(out);
+	public GetGapListsCommand(BufferedWriter out,int messageType,YTJBServer server) {
+		super(out, messageType);
 		this.server = server;
 	}
 

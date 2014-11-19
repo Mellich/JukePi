@@ -8,8 +8,8 @@ public class PlayerFinishedCommand extends Command {
 
 	private YTJBServer server;
 
-	public PlayerFinishedCommand(BufferedWriter out,YTJBServer server) {
-		super(out);
+	public PlayerFinishedCommand(BufferedWriter out,int messageType,YTJBServer server) {
+		super(out, messageType);
 		this.server = server;
 	}
 
