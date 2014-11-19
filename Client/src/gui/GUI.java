@@ -69,7 +69,7 @@ public class GUI {
 	}
 	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {;
+		SwingUtilities.invokeLater(new Runnable() {;	//TODO: Just why? the main thread has nothing to do then... unnecessary thread
 		@Override
 		public void run() {
 			GUI g = new GUI();
