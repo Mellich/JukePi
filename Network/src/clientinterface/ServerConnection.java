@@ -5,11 +5,9 @@ import clientinterface.listener.ResponseListener;
 
 public interface ServerConnection {
 	public void addNotifyListener(NotifyListener listener);
-	public void addResponseListener(ResponseListener listener);
-	public boolean removeNotifyListener(NotifyListener listener);
-	public boolean removeResponseListener(ResponseListener listener);
+	public void removeNotifyListener(NotifyListener listener);
 	public boolean connect();
-	public void close();
-	public void sendMessage(int messageType);
-	public void sendMessage(int messageType,String messageArgument);
+	public boolean close();
+	public void sendMessage(ResponseListener listener,int messageType);
+	public void sendMessage(ResponseListener listener,int messageType,String messageArgument);
 }
