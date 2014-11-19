@@ -49,7 +49,7 @@ public class Collector {
 	/**
 	 * The BufferedWriter for the notifer-Socket.
 	 */
-	private BufferedWriter notifierWriter;
+	private BufferedWriter notifierWriter;	//TODO: Why do you store that?
 	
 	/**
 	 * The BufferedWriter for the sender-Socket.
@@ -425,7 +425,7 @@ public class Collector {
 	
 	public void loadGaplist(String gaplist) {
 		s.sendMessage(MessageType.LOADGAPLIST, gaplist, senderWriter);
-		try {senderReader.readLine();} catch(Exception e) {}
+		try {senderReader.readLine();} catch(Exception e) {}		//TODO: aha, thats why nothing happens when trying to load a gaplist
 	}
 	
 	public void createNewList(String text) {

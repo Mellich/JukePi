@@ -28,7 +28,6 @@ public class AddThread extends Thread{
 	@Override
 	public void run() {
 		txt.setText("Sending URL to Server");
-		add.removeActionListener(al);
 		if (c.addToList(link, inFront)) {
 			txt.setText("Track added");
 		} else {

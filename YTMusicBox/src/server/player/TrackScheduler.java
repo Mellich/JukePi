@@ -72,6 +72,7 @@ public class TrackScheduler extends Thread {
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				player = new OMXPlayer(server);
 				player.play(current);
+				server.notifyClients(MessageType.PAUSERESUMENOTIFY);
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");
