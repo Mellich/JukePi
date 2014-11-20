@@ -18,7 +18,7 @@ public class GetTitleOfGapListCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		String[] title = server.readOutGapList(filename);
+		String[] title = server.readOutGapList(filename+".jb");
 		StringBuilder result = new StringBuilder();
 		for (String t: title){
 			result.append(t+MessageType.SEPERATOR);
