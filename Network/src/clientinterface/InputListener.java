@@ -2,23 +2,22 @@ package clientinterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
 
 import messages.MessageType;
 import clientinterface.handler.NotificationHandler;
 import clientinterface.handler.ResponseHandler;
-import clientinterface.listener.NotifyListener;
+import clientwrapper.ClientNotifyWrapper;
 
 public class InputListener implements Runnable {
 
 	private boolean running = true;
 	private BufferedReader input;
-	private List<NotifyListener> notifyListener;
+	private ClientNotifyWrapper notifyWrapper;
 	private ResponseController responses;
 	
-	public InputListener(BufferedReader input, List<NotifyListener> notifyListener,ResponseController responses) {
+	public InputListener(BufferedReader input, ClientNotifyWrapper notifyWrapper,ResponseController responses) {
 		this.input = input;
-		this.notifyListener = notifyListener;
+		this.notifyWrapper = notifyWrapper;
 		this.responses = responses;
 	}
 	
@@ -33,7 +32,7 @@ public class InputListener implements Runnable {
 					Thread t = new Thread(new ResponseHandler(responses,params));
 					t.start();
 				}else{
-					Thread t = new Thread(new NotificationHandler(notifyListener,messageType));
+					Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType));
 					t.start();					
 				}
 			}

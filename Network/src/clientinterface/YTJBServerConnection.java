@@ -5,15 +5,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import messages.MessageType;
-import clientinterface.listener.NotifyListener;
 import clientinterface.listener.ResponseListener;
+import clientwrapper.ClientNotifyWrapper;
 
 public class YTJBServerConnection implements ServerConnection {
 	
-	private ArrayList<NotifyListener> notifyListener;
+	private ClientNotifyWrapper notifyWrapper;
 	private Socket socket;
 	private String ipAddress;
 	private int port;
@@ -21,29 +20,18 @@ public class YTJBServerConnection implements ServerConnection {
 	private Thread inputListener;
 	private BufferedWriter output;
 	
-	public YTJBServerConnection(String ip, int port) {
+	public YTJBServerConnection(ClientNotifyWrapper notifyWrapper,String ip, int port) {
 		this.port = port;
 		this.ipAddress = ip;
-		this.notifyListener = new ArrayList<NotifyListener>();
+		this.notifyWrapper = notifyWrapper;
 		responses = new ResponseControllerImpl();
-	}
-
-	@Override
-	public void addNotifyListener(NotifyListener listener) {
-		notifyListener.add(listener);
-
-	}
-
-	@Override
-	public void removeNotifyListener(NotifyListener listener) {
-		notifyListener.remove(listener);
 	}
 
 	@Override
 	public boolean connect() {
 		try {
 			socket = new Socket(ipAddress,port);
-			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream())),notifyListener,responses));
+			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream())),notifyWrapper,responses));
 			inputListener.start();
 			return true;
 		} catch (IOException e) {
