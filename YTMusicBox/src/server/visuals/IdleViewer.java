@@ -45,7 +45,7 @@ public class IdleViewer {
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.6.4 (Gap list deletion added!)");
+		Text version = new Text(5,25,"Build version 0.6.4 (Fixed Gap Title Bug)");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
