@@ -42,11 +42,13 @@ public class UpdateThread extends Thread{
 					if (index != -1) {
 						lastindex = index;
 						c.fillContentModel(index);
+						c.addSecondFrame(frame);
+						c.repaint();
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		//	e.printStackTrace();
 		}
 	}
 }

@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 
 import connection.Collector;
@@ -69,12 +68,7 @@ public class GUI {
 	}
 	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {;	//TODO: Just why? the main thread has nothing to do then... unnecessary thread
-		@Override
-		public void run() {
-			GUI g = new GUI();
-			g.getFrame().setVisible(true);
-		}
-	});
+		GUI g = new GUI();
+		g.getFrame().setVisible(true);
 	}
 }

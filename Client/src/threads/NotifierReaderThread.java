@@ -45,6 +45,7 @@ public class NotifierReaderThread extends Thread{
 			case MessageType.NEXTTRACKNOTIFY: c.nextTrack();break;
 			case MessageType.LISTSUPDATEDNOTIFY: c.updateLists();c.fillModels();c.updateGaplistName();break;
 			case MessageType.PAUSERESUMENOTIFY: c.updateStatus();break;
+			case MessageType.GAPLISTCOUNTCHANGEDNOTIFY: c.fillGaplistModel();break;
 			default: break;
 			}
 		}

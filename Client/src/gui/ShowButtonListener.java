@@ -5,24 +5,23 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JList;
 
-import threads.LoadThread;
-
 import connection.Collector;
 
-public class LoadButtonListener implements ActionListener{
-	
+public class ShowButtonListener implements ActionListener{
+
 	private Collector c;
 	private JList<String> gaplists;
 	
-	public LoadButtonListener(Collector c, JList<String> gaplists) {
+	public ShowButtonListener(Collector c, JList<String> gaplists) {
 		this.c = c;
 		this.gaplists = gaplists;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		LoadThread lt = new LoadThread(c, gaplists);
-		lt.start();
+		if (gaplists.getSelectedIndex() > -1) {
+			c.fillContentModel(gaplists.getSelectedIndex());
+			c.repaint();
+		}
 	}
-
 }

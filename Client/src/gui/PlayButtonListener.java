@@ -24,7 +24,6 @@ public class PlayButtonListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		frame.getContentPane().add(fail);
 		PlayPauseThread ppt = new PlayPauseThread(c, fail, frame);
 		ppt.start();
 		frame.repaint();

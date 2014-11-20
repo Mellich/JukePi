@@ -93,8 +93,8 @@ public class ConnectButtonListener implements ActionListener{
 		txtYoutubelink = new JTextField();
 		txtYoutubelink.setBounds(10, 60, 362, 20);
 		jFrame.getContentPane().add(txtYoutubelink);
-		txtYoutubelink.setText("Insert a Youtube-Link here.");
-		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
+		txtYoutubelink.setText("Insert a YouTube Link here.");
+		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a YouTube Link here.", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
 		txtYoutubelink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
@@ -163,7 +163,7 @@ public class ConnectButtonListener implements ActionListener{
 
 		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
 		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront));
+		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront, fail));
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));

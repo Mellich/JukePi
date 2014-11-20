@@ -20,7 +20,7 @@ public class ConnectedThread extends Thread{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		frame.getContentPane().remove(fail);
+		fail.setVisible(false);
 		frame.repaint();
 	}
 }

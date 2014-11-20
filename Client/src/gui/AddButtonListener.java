@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import threads.AddThread;
@@ -17,12 +18,14 @@ public class AddButtonListener implements ActionListener{
 	private Collector c;
 	private JButton button;
 	private JCheckBox checkBox;
+	private JLabel fail;
 	
-	public AddButtonListener(JTextField field, Collector c, JButton button, JCheckBox checkBox) {
+	public AddButtonListener(JTextField field, Collector c, JButton button, JCheckBox checkBox, JLabel fail) {
 		this.tf = field;
 		this.c = c;
 		this.button = button;
 		this.checkBox = checkBox;
+		this.fail = fail;
 	}
 	
 	@Override
@@ -31,7 +34,7 @@ public class AddButtonListener implements ActionListener{
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
 		if (link.contains("youtube.") && link.contains("/watch")) {
-			AddThread at = new AddThread(link, button, tf, c, this, inFront);
+			AddThread at = new AddThread(link, button, tf, c, this, inFront, fail);
 			at.start();
 		}
 		else

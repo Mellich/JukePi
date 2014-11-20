@@ -14,7 +14,6 @@ import connection.Collector;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
-import threads.UpdateThread;
 import javax.swing.JTextField;
 
 public class OpenButtonListener implements ActionListener{
@@ -38,7 +37,7 @@ public class OpenButtonListener implements ActionListener{
 		//TODO Delete
 	//	JFrame frame = new JFrame();
 		//Till here
-		frame.setSize(new Dimension(575, 376));
+		frame.setSize(new Dimension(575, 400));
 		frame.setTitle("Saved Gaplists");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setContentPane(fillContent());
@@ -60,13 +59,11 @@ public class OpenButtonListener implements ActionListener{
 		
 		JList<String> gaplistList = new JList<String>(savedGaplists);
 		JList<String> contentList = new JList<String>(contents);
-		UpdateThread ut = new UpdateThread(gaplistList, contentList, c, frame);
-		ut.start();
 		
 		JScrollPane gaplistScrollPane = new JScrollPane(gaplistList);
-		gaplistScrollPane.setBounds(25, 40, 250, 250);	
+		gaplistScrollPane.setBounds(25, 40, 225, 250);	
 		JScrollPane contentScrollPane = new JScrollPane(contentList);
-		contentScrollPane.setBounds(300, 40, 250, 250);
+		contentScrollPane.setBounds(325, 40, 225, 250);
 		
 		contentPane.add(gaplistScrollPane);
 		contentPane.add(contentScrollPane);
@@ -89,21 +86,30 @@ public class OpenButtonListener implements ActionListener{
 		contentPane.add(btnLoad);
 		
 		JButton btnBack = new JButton("Back");
-		btnBack.setBounds(461, 301, 89, 23);
-		btnBack.addActionListener(new BackButtonListener(listener, ut));
+		btnBack.setBounds(461, 337, 89, 23);
+		btnBack.addActionListener(new BackButtonListener(listener));
 		contentPane.add(btnBack);
 		
-		
-		ut.addContentPane(contentPane);
-		
 		JButton btnCreate = new JButton("Create");
-		btnCreate.setBounds(124, 301, 89, 23);
+		btnCreate.setBounds(25, 337, 89, 23);
 		contentPane.add(btnCreate);
 		
 		textField = new JTextField();
-		textField.setBounds(223, 301, 136, 20);
+		textField.setBounds(124, 338, 136, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
+		
+		JButton btnShow = new JButton("Show");
+		btnShow.setBounds(124, 301, 89, 23);
+		btnShow.addActionListener(new ShowButtonListener(c, gaplistList));
+		contentPane.add(btnShow);
+		
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.setBounds(223, 301, 89, 23);
+		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList));
+		contentPane.add(btnRemove);
+		
+		btnCreate.addActionListener(new CreateButtonListener(c, textField));
 		return contentPane;
 	}
 }

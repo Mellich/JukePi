@@ -404,7 +404,7 @@ public class Collector {
 				gaplistCollectionModel.addElement(answerparts[i]);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// Disconnected or window for gaplists wasn't open yet
 		}
 		repaint();
 	}
@@ -414,7 +414,6 @@ public class Collector {
 		try {
 			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
 			contentModel.clear();
-			repaint();
 			for (int i = 1; i < answerparts.length; i++) {
 				contentModel.addElement(answerparts[i]);
 			}
@@ -432,6 +431,11 @@ public class Collector {
 		s.sendMessage(MessageType.LOADGAPLIST, text, senderWriter);
 		try {senderReader.readLine();} catch (Exception e) {}
 		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
+		try {senderReader.readLine();} catch (Exception e) {}
+	}
+	
+	public void removeGaplist(String text) {
+		s.sendMessage(MessageType.DELETEGAPLIST, text, senderWriter);
 		try {senderReader.readLine();} catch (Exception e) {}
 	}
 }

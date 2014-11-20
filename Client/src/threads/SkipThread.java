@@ -20,12 +20,11 @@ public class SkipThread extends Thread{
 	public void run() {
 		if (c.skip()) {
 			fail.setText("Skipped Track.");
-			fail.setVisible(true);
 		}
 		else {
 			fail.setText("Couldn't Skip Track");
-			fail.setVisible(true);
 		}
+		fail.setVisible(true);
 		try {Thread.sleep(2000);} catch (Exception e) {e.printStackTrace();}
 		fail.setVisible(false);
 		frame.repaint();

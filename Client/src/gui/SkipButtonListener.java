@@ -24,7 +24,7 @@ public class SkipButtonListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		frame.getContentPane().add(fail);
+		frame.repaint();
 		SkipThread st = new SkipThread(c, fail, frame);
 		st.start();
 		frame.repaint();
