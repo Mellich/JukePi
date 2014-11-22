@@ -37,7 +37,7 @@ public class OpenButtonListener implements ActionListener{
 		//TODO Delete
 	//	JFrame frame = new JFrame();
 		//Till here
-		frame.setSize(new Dimension(575, 400));
+		frame.setSize(new Dimension(575, 450));
 		frame.setTitle("Saved Gaplists");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setContentPane(fillContent());
@@ -61,9 +61,9 @@ public class OpenButtonListener implements ActionListener{
 		JList<String> contentList = new JList<String>(contents);
 		
 		JScrollPane gaplistScrollPane = new JScrollPane(gaplistList);
-		gaplistScrollPane.setBounds(25, 40, 225, 250);	
+		gaplistScrollPane.setBounds(25, 40, 250, 250);	
 		JScrollPane contentScrollPane = new JScrollPane(contentList);
-		contentScrollPane.setBounds(325, 40, 225, 250);
+		contentScrollPane.setBounds(300, 40, 250, 250);
 		
 		contentPane.add(gaplistScrollPane);
 		contentPane.add(contentScrollPane);
@@ -78,38 +78,44 @@ public class OpenButtonListener implements ActionListener{
 		lblContent.setBounds(300, 15, 250, 14);
 		lblContent.setHorizontalAlignment(JLabel.CENTER);
 		lblContent.setVerticalAlignment(JLabel.CENTER);
+		c.addContentLabel(lblContent);
 		contentPane.add(lblContent);
 		
 		JButton btnLoad = new JButton("Load");
-		btnLoad.setBounds(25, 301, 89, 23);
-		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList));
+		btnLoad.setBounds(25, 301, 76, 23);
 		contentPane.add(btnLoad);
 		
 		JButton btnBack = new JButton("Back");
-		btnBack.setBounds(461, 337, 89, 23);
-		btnBack.addActionListener(new BackButtonListener(listener));
+		btnBack.setBounds(461, 388, 89, 23);
 		contentPane.add(btnBack);
 		
 		JButton btnCreate = new JButton("Create");
-		btnCreate.setBounds(25, 337, 89, 23);
+		btnCreate.setBounds(25, 388, 89, 23);
 		contentPane.add(btnCreate);
 		
 		textField = new JTextField();
-		textField.setBounds(124, 338, 136, 20);
+		textField.setBounds(124, 389, 188, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnShow = new JButton("Show");
-		btnShow.setBounds(124, 301, 89, 23);
-		btnShow.addActionListener(new ShowButtonListener(c, gaplistList));
+		btnShow.setBounds(110, 301, 76, 23);
 		contentPane.add(btnShow);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(223, 301, 89, 23);
-		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList));
+		btnRemove.setBounds(195, 301, 80, 23);
 		contentPane.add(btnRemove);
 		
-		btnCreate.addActionListener(new CreateButtonListener(c, textField));
+		JLabel lblFail = new JLabel("");
+		lblFail.setBounds(25, 355, 525, 14);
+		contentPane.add(lblFail);
+		
+		btnCreate.addActionListener(new CreateButtonListener(c, textField, lblFail));
+		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList, lblFail));
+		btnShow.addActionListener(new ShowButtonListener(c, gaplistList, lblFail));
+		btnBack.addActionListener(new BackButtonListener(listener));
+		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList, lblFail));
+		
 		return contentPane;
 	}
 }

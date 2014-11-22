@@ -5,13 +5,13 @@ import javax.swing.JList;
 
 import connection.Collector;
 
-public class LoadThread extends Thread{
+public class RemoveThread extends Thread{
 
 	private Collector c;
 	private JList<String> gaplists;
 	private JLabel fail;
 	
-	public LoadThread(Collector c, JList<String> gaplists, JLabel fail) {
+	public RemoveThread(Collector c, JList<String> gaplists, JLabel fail) {
 		this.c = c;
 		this.gaplists = gaplists;
 		this.fail = fail;
@@ -19,19 +19,14 @@ public class LoadThread extends Thread{
 	
 	@Override
 	public void run() {
-		
 		fail.setText("Pending Server");
-		fail.setHorizontalAlignment(JLabel.CENTER);
 		fail.setVerticalAlignment(JLabel.CENTER);
+		fail.setHorizontalAlignment(JLabel.CENTER);
 		fail.setVisible(true);
-		
-		if (gaplists.getSelectedValue() != null)
-			if (c.loadGaplist(gaplists.getSelectedValue()))
-				fail.setText("Gaplist " + gaplists.getSelectedValue() + ".jb loaded successfully");
-			else
-				fail.setText("Loading Gaplist "+ gaplists.getSelectedValue() + ".jb failed");
+		if (c.removeGaplist(gaplists.getSelectedValue()))
+			fail.setText("Removed the Gaplist");
 		else
-			fail.setText("Please select a Gaplist");
+			fail.setText("Failed to remove the Gaplist");
 		
 		fail.setVerticalAlignment(JLabel.CENTER);
 		fail.setHorizontalAlignment(JLabel.CENTER);

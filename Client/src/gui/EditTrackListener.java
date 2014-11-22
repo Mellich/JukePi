@@ -30,13 +30,9 @@ public class EditTrackListener implements ActionListener{
 	 */	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	/*	//TODO Delete
-		JFrame frame = new JFrame();
-		frame.setSize(new Dimension(528, 400));
-		frame.setTitle("JukePi");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-	*/	//Till here
+		//TODO Delete
+	//	JFrame frame = new JFrame();
+		//Till here
 		frame.setSize(new Dimension(575, 376));
 		frame.setTitle("Track Edit");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

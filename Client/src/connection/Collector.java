@@ -61,6 +61,7 @@ public class Collector {
 	private JLabel nowPlaying;
 	private JLabel nextTrack;
 	private JLabel gaplistName;
+	private JLabel contentLabel;
 	private Sender s;
 	private StabilityThread st;
 	private LinkedList<String> gaplist;
@@ -126,6 +127,10 @@ public class Collector {
 	
 	public void addGaplistNameLabel(JLabel gaplistName) {
 		this.gaplistName = gaplistName;
+	}
+	
+	public void addContentLabel(JLabel contentLabel) {
+		this.contentLabel = contentLabel;
 	}
 	
 	public boolean connect(String IP, String port) {
@@ -409,7 +414,7 @@ public class Collector {
 		repaint();
 	}
 	
-	public void fillContentModel(int index) {
+	public boolean fillContentModel(int index) {
 		s.sendMessage(MessageType.GETTITLEFROMGAPLIST, gaplistCollectionModel.get(index), senderWriter);
 		try {
 			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
@@ -417,25 +422,33 @@ public class Collector {
 			for (int i = 1; i < answerparts.length; i++) {
 				contentModel.addElement(answerparts[i]);
 			}
+			contentLabel.setText("Content - " + gaplistCollectionModel.get(index) + ".jb");
+			contentLabel.setHorizontalAlignment(JLabel.CENTER);
+			contentLabel.setVerticalAlignment(JLabel.CENTER);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return false;
 		}
+		repaint();
+		return true;
 	}
 	
-	public void loadGaplist(String gaplist) {
+	public boolean loadGaplist(String gaplist) {
 		s.sendMessage(MessageType.LOADGAPLIST, gaplist, senderWriter);
-		try {senderReader.readLine();} catch(Exception e) {}		//TODO: aha, thats why nothing happens when trying to load a gaplist
+		try {senderReader.readLine();} catch(Exception e) {return false;}
+		return true;
 	}
 	
-	public void createNewList(String text) {
+	public boolean createNewList(String text) {
 		s.sendMessage(MessageType.LOADGAPLIST, text, senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {}
+		try {senderReader.readLine();} catch (Exception e) {return false;}
 		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {}
+		try {senderReader.readLine();} catch (Exception e) {return false;}
+		return true;
 	}
 	
-	public void removeGaplist(String text) {
+	public boolean removeGaplist(String text) {
 		s.sendMessage(MessageType.DELETEGAPLIST, text, senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {}
+		try {senderReader.readLine();} catch (Exception e) {return false;}
+		return true;
 	}
 }
