@@ -52,11 +52,6 @@ public class Collector {
 	private Socket sender;
 	
 	/**
-	 * The BufferedWriter for the Notifier-Socket.
-	 */
-	private BufferedWriter notifierWriter;	//TODO: Why do you store that?
-	
-	/**
 	 * The BufferedWriter for the Sender-Socket.
 	 */
 	private BufferedWriter senderWriter;
@@ -269,7 +264,7 @@ public class Collector {
 			int iport = Integer.parseInt(port);
 			notifier = new Socket(IP, iport);
 			sender = new Socket(IP, iport);
-			notifierWriter = new BufferedWriter(new OutputStreamWriter(notifier.getOutputStream()));
+			BufferedWriter notifierWriter = new BufferedWriter(new OutputStreamWriter(notifier.getOutputStream()));
 			senderWriter = new BufferedWriter(new OutputStreamWriter(sender.getOutputStream()));
 			notifierReader = new BufferedReader(new InputStreamReader(notifier.getInputStream()));
 			senderReader = new BufferedReader(new InputStreamReader(sender.getInputStream()));

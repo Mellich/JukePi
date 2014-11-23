@@ -29,7 +29,7 @@ public class OpenButtonListener implements ActionListener{
 	private JFrame frame;
 	
 	/**
-	 * The Listener for the EditTrack.
+	 * The Listener for the EditTrackButton.
 	 */
 	private EditTrackListener listener;
 	

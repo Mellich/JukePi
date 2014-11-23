@@ -56,7 +56,7 @@ public class PlayPauseThread extends Thread{
 				fail.setText("Couldn't pause the track");
 		}
 		fail.setVisible(true);
-		try {Thread.sleep(2000);} catch (Exception e) {e.printStackTrace();}
+		try {Thread.sleep(2000);} catch (Exception e) {}
 		fail.setVisible(false);
 		frame.repaint();
 	}
