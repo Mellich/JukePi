@@ -15,20 +15,38 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
 
+/**
+ * The ActionListener for the EditTrackButton.
+ * @author Haeldeus
+ *
+ */
 public class EditTrackListener implements ActionListener{
 
+	/**
+	 * The Frame, that will be created.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The Collector, that will send the Messages.
+	 */
 	private Collector c;
 	
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param frame	The Frame, that will be changed.
+	 * @param c	The Collector, that will send the Messages.
+	 */
 	public EditTrackListener(JFrame frame, Collector c) {
 		this.frame = frame;
 		this.c = c;
 	}
 	
 	/**
+	 * Performs the Action.
 	 * @wbp.parser.entryPoint
-	 */	
-	@Override
+	 * @param arg0 Just a stub.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		//TODO Delete
 	//	JFrame frame = new JFrame();
@@ -41,6 +59,10 @@ public class EditTrackListener implements ActionListener{
 		frame.setResizable(false);
 	}
 
+	/**
+	 * Fills the Content of the Frame.
+	 * @return	The ContentPane.
+	 */
 	private JPanel fillContent() {
 		
 		JPanel contentPane = new JPanel();

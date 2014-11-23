@@ -5,10 +5,26 @@ import javax.swing.JList;
 
 import connection.Collector;
 
+/**
+ * The Thread to remove a Track from the Gaplist.
+ * @author Haeldeus
+ *
+ */
 public class RemoveThread extends Thread{
 
+	/**
+	 * The Collector that will send the Messages.
+	 */
 	private Collector c;
+	
+	/**
+	 * The Gaplists as a selectable list.
+	 */
 	private JList<String> gaplists;
+	
+	/**
+	 * The Label that will display possible Messages.
+	 */
 	private JLabel fail;
 	
 	public RemoveThread(Collector c, JList<String> gaplists, JLabel fail) {
@@ -17,7 +33,9 @@ public class RemoveThread extends Thread{
 		this.fail = fail;
 	}
 	
-	@Override
+	/**
+	 * Executes the Command.
+	 */
 	public void run() {
 		fail.setText("Pending Server");
 		fail.setVerticalAlignment(JLabel.CENTER);

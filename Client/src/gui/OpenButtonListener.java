@@ -16,13 +16,39 @@ import javax.swing.JButton;
 
 import javax.swing.JTextField;
 
+/**
+ * The ActionListener for the OpenButton
+ * @author Frederic
+ *
+ */
 public class OpenButtonListener implements ActionListener{
 
+	/**
+	 * The Frame, that will be displayed.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The Listener for the EditTrack.
+	 */
 	private EditTrackListener listener;
+	
+	/**
+	 * The Collector, that will send the Messages.
+	 */
 	private Collector c;
+	
+	/**
+	 * The TextField to name a new Gaplist.
+	 */
 	private JTextField textField;
 	
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param frame The Frame that will be displayed.
+	 * @param listener	The EditTrackListener.
+	 * @param c	The Collector, that will send the Messages.
+	 */
 	public OpenButtonListener(JFrame frame, EditTrackListener listener, Collector c) {
 		this.frame = frame;
 		this.listener = listener;
@@ -30,9 +56,10 @@ public class OpenButtonListener implements ActionListener{
 	}
 	
 	/**
+	 * Performs the Action.
 	 * @wbp.parser.entryPoint
+	 * @param arg0 Just a stub.
 	 */
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		//TODO Delete
 	//	JFrame frame = new JFrame();
@@ -46,6 +73,10 @@ public class OpenButtonListener implements ActionListener{
 	}
 
 	
+	/**
+	 * Fills the Content of the Frame.
+	 * @return	The ContentPane.
+	 */
 	private JPanel fillContent() {
 		
 		JPanel contentPane = new JPanel();

@@ -7,22 +7,52 @@ import javax.swing.JFrame;
 
 import connection.Collector;
 
+/**
+ * The ActionListener for the DisconnectButton
+ * @author Haeldeus
+ *
+ */
 public class DisconnectButtonListener implements ActionListener{
 
+	/**
+	 * The Frame, that will be changed.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The Collector, that will send the Messages.
+	 */
 	private Collector c;
 	
-	public DisconnectButtonListener(JFrame frame, Collector c) {
+	/**
+	 * The Frame, that could be open (Edit Tracks or Edit Gaplists).
+	 */
+	private JFrame secondFrame;
+	
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param frame	The Frame, that will be changed.
+	 * @param c	The Collector, that will send the Messages.
+	 * @param secondFrame	The second Frame that can be open.
+	 */
+	public DisconnectButtonListener(JFrame frame, Collector c, JFrame secondFrame) {
 		this.frame = frame;
 		this.c = c;
 	}
-
-	@Override
+	
+	/**
+	 * Performs the Action.
+	 * @param arg0 Just a stub.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		c.disconnect();
 		frame.getContentPane().removeAll();
 		frame.setEnabled(false);
 		frame.setVisible(false);
+		if (secondFrame != null) {
+			secondFrame.setEnabled(false);
+			secondFrame.setVisible(false);
+		}
 		GUI.main(null);
 	}
 }

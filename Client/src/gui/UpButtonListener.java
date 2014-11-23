@@ -9,17 +9,37 @@ import connection.Collector;
 
 import threads.UpThread;
 
+/**
+ * The ActionListener for the Up-Button.
+ * @author Haeldeus
+ *
+ */
 public class UpButtonListener implements ActionListener{
 
+	/**
+	 * The Gaplist as a selectable List.
+	 */
 	private JList<String> gaplist;
+	
+	/**
+	 * The Collector that will send the Message.
+	 */
 	private Collector c;
 	
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param gaplist	The Gaplist as a selectable List.
+	 * @param c	The Collector, that will send the Message.
+	 */
 	public UpButtonListener(JList<String> gaplist, Collector c) {
 		this.gaplist = gaplist;
 		this.c = c;
 	}
 	
-	@Override
+	/**
+	 * Performs the Action
+	 * @param arg0 Just a stub.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		UpThread ut = new UpThread(gaplist, c);
 		ut.start();

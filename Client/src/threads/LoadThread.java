@@ -5,19 +5,43 @@ import javax.swing.JList;
 
 import connection.Collector;
 
+/**
+ * The Thread to load a specified Gaplist.
+ * @author Haeldeus
+ *
+ */
 public class LoadThread extends Thread{
 
+	/**
+	 * The Collector that will send the Messages.
+	 */
 	private Collector c;
+	
+	/**
+	 * The Gaplists as a selectable List.
+	 */
 	private JList<String> gaplists;
+	
+	/**
+	 * The Label, that will display possible Messages.
+	 */
 	private JLabel fail;
 	
+	/**
+	 * The Constructor for the Thread.
+	 * @param c	The Collector that will send the Messages.
+	 * @param gaplists	The Gaplists as a selectable List.
+	 * @param fail	The Label, that will display possible Messages.
+	 */
 	public LoadThread(Collector c, JList<String> gaplists, JLabel fail) {
 		this.c = c;
 		this.gaplists = gaplists;
 		this.fail = fail;
 	}
 	
-	@Override
+	/**
+	 * Executes the Command.
+	 */
 	public void run() {
 		
 		fail.setText("Pending Server");

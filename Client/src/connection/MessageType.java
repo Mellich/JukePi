@@ -1,18 +1,19 @@
 package connection;
 
-/**includes integers that specify message types
+/**
+ * Includes integers that specify message types.
  * 
  * @author Mellich
  *
  */
 public class MessageType {
 	/**
-	 * a link to a youtube video
+	 * a link to a YouTube video
 	 */
 	public static final int YOUTUBE = 1;
 	
 	/**
-	 * a path to a sended file
+	 * a path to a sent file
 	 */
 	public static final int SENTFILE = 2;
 	
@@ -76,10 +77,13 @@ public class MessageType {
 	 */
 	public static final int LISTSUPDATEDNOTIFY = 14;
 	
+	/**
+	 * The Count of Gaplists was changed.
+	 */
 	public static final int GAPLISTCOUNTCHANGEDNOTIFY = 15;
 	
 	/**
-	 * gets the current status of the playback
+	 * gets the current status of the Playback
 	 */
 	public static final int GETCURRENTPLAYBACKSTATUS = 16;
 	
@@ -158,10 +162,13 @@ public class MessageType {
 	 */
 	public static final int GETTITLEFROMGAPLIST = 31;
 	
+	/**
+	 * Deletes a Gaplist.
+	 */
 	public static final int DELETEGAPLIST = 32;
 	
 	/**
-	 * the seerator for the arguments of a command
+	 * the seperator for the arguments of a command
 	 */
 	public static final String SEPERATOR = ";\t;";
 	
