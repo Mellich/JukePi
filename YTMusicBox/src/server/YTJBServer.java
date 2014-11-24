@@ -91,7 +91,7 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			ProcessCommunicator.startPlayer(port);
+			ProcessCommunicator.startPlayer(port,GAPLISTDIRECTORY+"clientplayer.jar");
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 			scheduler.setRunning(false);

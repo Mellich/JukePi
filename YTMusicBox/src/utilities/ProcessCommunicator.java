@@ -38,7 +38,7 @@ public class ProcessCommunicator {
 	static public String parseShortURLToVideoURL(String url) throws IOException{
 		IO.printlnDebug(null, "waiting for output url...");
 		String result = null;
-		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-g", url).start();
+		Process parseProcess = new ProcessBuilder("youtube-dl","-g", url).start();
 		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 		result = parseInput.readLine();
 		parseInput.close();
@@ -62,9 +62,9 @@ public class ProcessCommunicator {
 		return null;
 	}
 	
-	static public Process startPlayer(int port){
+	static public Process startPlayer(int port,String file){
 		try {
-			return new ProcessBuilder("java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true","clientplayer.jar","localhost",""+port).start();
+			return new ProcessBuilder("java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true",file,"localhost",""+port).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
