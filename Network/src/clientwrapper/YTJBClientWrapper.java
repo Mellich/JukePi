@@ -30,6 +30,8 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 			break;
 		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListCountChangedNotify();
 			break;
+		case MessageType.GAPLISTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListChangedNotify();
+			break;
 		case MessageType.NOCOMMAND: for(NotificationListener l: notificationListener) l.onDisconnect();
 		}
 
@@ -163,6 +165,11 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	@Override
 	public boolean connect() {
 		return serverConnection.connect();
+	}
+
+	@Override
+	public void getLoadGapListStatus(ResponseListener response) {
+		this.serverConnection.sendMessage(response,MessageType.GETLOADGAPLISTSTATUS);
 	}
 
 }

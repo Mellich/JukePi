@@ -150,6 +150,10 @@ public class MessageType {
 
 	public static final int DELETEGAPLIST = 35;
 	
+	public static final int GAPLISTCHANGEDNOTIFY = 36;
+	
+	public static final int GETLOADGAPLISTSTATUS = 37;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */

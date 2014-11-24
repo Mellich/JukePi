@@ -1,6 +1,7 @@
 package server.connectivity;
 
 import java.io.BufferedWriter;
+
 import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
@@ -79,6 +80,8 @@ public class CommandHandler extends Thread {
 		case MessageType.PLAYERFINISHED: new PlayerFinishedCommand(out,prompt, server).handle();
 			break;
 		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, prompt,server, args[1]).handle();
+			break;
+		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
 			break;
 		default: new UnknownCommand(out,MessageType.NOCOMMAND,""+prompt).handle();
 		}		

@@ -38,6 +38,8 @@ public class YTJBServer extends Thread {
 	 */
 	private ServerSocket server;
 	
+	private int port;
+	
 	/**
 	 * the connection waiter of the server
 	 */
@@ -77,6 +79,10 @@ public class YTJBServer extends Thread {
 	
 	private Semaphore playerFinished = new Semaphore(0);
 	
+	private int currentLoadedGapListTracks = 0;
+	
+	private int maxGapListTracks = 0;
+	
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -85,7 +91,7 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			ProcessCommunicator.startPlayer();
+			ProcessCommunicator.startPlayer(port);
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 			scheduler.setRunning(false);
@@ -202,8 +208,9 @@ public class YTJBServer extends Thread {
 	 */
 	public void loadGapListFromFile(){
 		gapList.clear();
+		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY);
 		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this);		
+		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this);	
 	}
 	
 	/**saves the gap list to a file
@@ -217,6 +224,19 @@ public class YTJBServer extends Thread {
 			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
 		}
 		return savedCorrectly;
+	}
+	
+	public int getCurrentLoadedGapListTracksCount(){
+		return this.currentLoadedGapListTracks;
+	}
+	
+	public int getMaxLoadedGapListTracksCount(){
+		return this.maxGapListTracks;
+	}
+	
+	public void setGapListTrackCount(int current, int max){
+		this.currentLoadedGapListTracks = current;
+		this.maxGapListTracks = max;
 	}
 	
 	public boolean deleteGapList(String filename){
@@ -294,15 +314,16 @@ public class YTJBServer extends Thread {
 	}
 	
 	public synchronized void removePlayer(Connection c){
-		if(player.remove(c)){
+		if(player.contains(c)){
+			player.remove(c);
 			playerFinished.release();
-			IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
 		}
+		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
 	}
 	
 	public synchronized void removeNotifiable(Connection c){
-		if (notifiables.remove(c))
-			IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
+		notifiables.remove(c);
+		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
 	public void playerHasFinished(){
@@ -340,6 +361,7 @@ public class YTJBServer extends Thread {
 	 */
 	public YTJBServer(int port) {
 			try {
+				this.port = port;
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
 				player = new ArrayList<Connection>();
