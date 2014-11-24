@@ -20,6 +20,7 @@ public class ResponseControllerImpl implements ResponseController {
 		else{
 			ArrayDeque<ResponseListener> temp = new ArrayDeque<ResponseListener>();
 			temp.addLast(responseListener);
+			data.put(messageType, temp);
 		}
 	}
 

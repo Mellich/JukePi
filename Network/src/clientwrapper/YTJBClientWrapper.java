@@ -16,7 +16,6 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	
 	public YTJBClientWrapper(String ipAddress,int port) {
 		serverConnection = new YTJBServerConnection(this,ipAddress,port);
-		serverConnection.connect();
 		notificationListener = new ArrayList<NotificationListener>();
 	}
 
@@ -30,6 +29,8 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 		case MessageType.LISTSUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onListUpdatedNotify();
 			break;
 		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListCountChangedNotify();
+			break;
+		case MessageType.NOCOMMAND: for(NotificationListener l: notificationListener) l.onDisconnect();
 		}
 
 	}
@@ -147,6 +148,21 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	@Override
 	public void notifyPlayerFinished(ResponseListener response) {
 		this.serverConnection.sendMessage(response, MessageType.PLAYERFINISHED);
+	}
+
+	@Override
+	public void close() {
+		this.serverConnection.close();
+	}
+
+	@Override
+	public void setMeAsPlayer() {
+		this.serverConnection.sendMessage(MessageType.SETMEASPLAYER);
+	}
+
+	@Override
+	public boolean connect() {
+		return serverConnection.connect();
 	}
 
 }

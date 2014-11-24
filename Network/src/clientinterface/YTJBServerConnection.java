@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import messages.MessageType;
@@ -31,10 +32,12 @@ public class YTJBServerConnection implements ServerConnection {
 	public boolean connect() {
 		try {
 			socket = new Socket(ipAddress,port);
+			output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream())),notifyWrapper,responses));
 			inputListener.start();
+			this.sendMessage(MessageType.DECLAREMEASNOTIFY);
 			return true;
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			return false;
 		}
 	}
@@ -53,28 +56,31 @@ public class YTJBServerConnection implements ServerConnection {
 
 	@Override
 	public void sendMessage(ResponseListener listener, int messageType) {
-		try {
-			responses.addReponseListener(messageType, listener);
-			output.write(""+messageType);
-			output.newLine();
-			output.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		responses.addReponseListener(messageType, listener);
+		this.sendMessage(messageType, "");
 	}
 
 	@Override
 	public void sendMessage(ResponseListener listener, int messageType,
-			String messageArgument) {
+		String messageArgument) {
+		responses.addReponseListener(messageType, listener);
+		this.sendMessage(messageType, messageArgument);
+	}
+
+	@Override
+	public void sendMessage(int messageType) {
+		this.sendMessage(messageType, "");
+	}
+
+	@Override
+	public void sendMessage(int messageType, String messageArgument) {
 		try {
-			responses.addReponseListener(messageType, listener);
 			output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
 			output.newLine();
 			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

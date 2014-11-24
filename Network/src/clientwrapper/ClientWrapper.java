@@ -24,4 +24,7 @@ public interface ClientWrapper {
 	public void setGapListTrackDown(ResponseListener response,int index);
 	public void getNextVideoURL(ResponseListener response);
 	public void notifyPlayerFinished(ResponseListener response);
+	public void setMeAsPlayer();
+	public boolean connect();
+	public void close();
 }

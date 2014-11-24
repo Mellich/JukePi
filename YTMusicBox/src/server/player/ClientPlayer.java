@@ -6,11 +6,13 @@ import server.YTJBServer;
 public class ClientPlayer implements MusicPlayer {
 	
 	private YTJBServer server;
+	private TrackScheduler scheduler;
 	private boolean playing;
 	
-	public ClientPlayer(YTJBServer server) {
+	public ClientPlayer(YTJBServer server,TrackScheduler scheduler) {
 		this.server = server;
 		this.playing = false;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -21,6 +23,7 @@ public class ClientPlayer implements MusicPlayer {
 
 	@Override
 	public boolean skip() {
+		scheduler.interrupt();
 		return true;
 	}
 

@@ -5,4 +5,5 @@ public interface NotificationListener {
 	public void onGapListCountChangedNotify();
 	public void onListUpdatedNotify();
 	public void onNextTrackNotify();
+	public void onDisconnect();
 }

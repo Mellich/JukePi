@@ -2,6 +2,7 @@ package server.connectivity.commands;
 
 import java.io.BufferedWriter;
 
+import server.MusicTrack;
 import server.player.TrackScheduler;
 
 public class GetNextVideoURLCommand extends Command {
@@ -15,7 +16,10 @@ public class GetNextVideoURLCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		response(scheduler.getCurrentTrack().getVideoURL());
+		MusicTrack m = scheduler.getCurrentTrack();
+		if (m != null)
+			response(m.getVideoURL());
+		else response("");
 		return true;
 	}
 

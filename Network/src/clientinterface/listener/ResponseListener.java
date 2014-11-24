@@ -1,5 +1,11 @@
 package clientinterface.listener;
 
+/**
+ * 
+ * @author Marius Meyer
+ *
+ *Handles a response sent by the server
+ */
 public interface ResponseListener {
-	public void handleResponse(String[] response);
+	public void onResponse(String[] response);
 }

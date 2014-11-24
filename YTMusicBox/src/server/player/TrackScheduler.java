@@ -14,11 +14,20 @@ public class TrackScheduler extends Thread {
 	private boolean running;
 	private MusicPlayer player;
 	private MusicTrack current;
-	public Semaphore playableTrack = new Semaphore(0);
+	private Semaphore playableTrack = new Semaphore(0);
+	private Semaphore playerAvailable = new Semaphore(0);
 	
 	public TrackScheduler(YTJBServer server) {
 		this.server = server;
 		running = true;
+	}
+	
+	public void notifyPlayableTrack(){
+		playableTrack.release();
+	}
+	
+	public void notifyPlayerAvailable(){
+		playerAvailable.release();
 	}
 
 	
@@ -57,21 +66,25 @@ public class TrackScheduler extends Thread {
 		super.run();
 		IO.printlnDebug(this, "Player is ready to play your music...");
 		try {
+			player = null;
 			while (running){
 				IO.printlnDebug(this, "getting next track in the list");
-				player = null;
 				current = server.chooseNextTrack();
-				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a track added to a list...");
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
-					server.notifyClients(MessageType.NEXTTRACKNOTIFY);
-					server.notifyClients(MessageType.PAUSERESUMENOTIFY);
 				}
+				if (server.getPlayerCount() == 0){
+					IO.printlnDebug(this, "Waiting for available player...");
+					playerAvailable.acquire();
+				}
+				server.notifyClients(MessageType.PAUSERESUMENOTIFY);
+				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-				player = new ClientPlayer(server);
+				player = new ClientPlayer(server,this);
 				player.play(current);
+				player = null;
 				server.notifyClients(MessageType.PAUSERESUMENOTIFY);
 			}
 		} catch (InterruptedException e) {

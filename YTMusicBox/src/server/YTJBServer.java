@@ -16,6 +16,7 @@ import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 import utilities.IO;
+import utilities.ProcessCommunicator;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
  * by a client 
@@ -84,6 +85,7 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
+			ProcessCommunicator.startPlayer();
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
 			scheduler.setRunning(false);
@@ -122,9 +124,13 @@ public class YTJBServer extends Thread {
 		}
 		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		if (isFirstTrack){     //if so, notify waiting scheduler
-			scheduler.playableTrack.release();
+			scheduler.notifyPlayableTrack();
 			IO.printlnDebug(this, "First element in the lists");
 		}
+	}
+	
+	public int getPlayerCount(){
+		return player.size();
 	}
 	
 	/**
@@ -282,17 +288,21 @@ public class YTJBServer extends Thread {
 	
 	public synchronized void registerPlayer(Connection c){
 		player.add(c);
+		if (player.size() == 1)
+			scheduler.notifyPlayerAvailable();
 		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
 	}
 	
 	public synchronized void removePlayer(Connection c){
-		player.remove(c);
-		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
+		if(player.remove(c)){
+			playerFinished.release();
+			IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
+		}
 	}
 	
 	public synchronized void removeNotifiable(Connection c){
-		notifiables.remove(c);
-		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
+		if (notifiables.remove(c))
+			IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
 	public void playerHasFinished(){
@@ -301,8 +311,10 @@ public class YTJBServer extends Thread {
 	
 	public void waitForPlayerToFinish(){
 		try {
-			for (@SuppressWarnings("unused") Connection c: player){
+			int finishedCount = 0;
+			while (finishedCount < player.size()){
 					playerFinished.acquire();
+					finishedCount++;
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "ERROR: Interrupted while waiting for players to finish");
@@ -310,7 +322,6 @@ public class YTJBServer extends Thread {
 	}
 	
 	public void notifyClients(int messageType){
-		notifyPlayers(messageType);
 		for (Connection h: notifiables){
 			h.notify(messageType);
 		}
@@ -375,6 +386,11 @@ public class YTJBServer extends Thread {
 	public void run() {
 		super.run();
 		this.startUp();
+	}
+	
+	public static void main(String[] args) {
+		YTJBServer server = new YTJBServer(22222);
+		server.startUp();
 	}
 	
 

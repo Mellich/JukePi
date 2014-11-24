@@ -36,8 +36,8 @@ public class InputListener implements Runnable {
 					t.start();					
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException | NullPointerException e) {
+			notifyWrapper.onNotify(MessageType.NOCOMMAND);
 		}
 	}
 

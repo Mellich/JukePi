@@ -62,14 +62,4 @@ public class ProcessCommunicator {
 		return null;
 	}
 	
-	static public Process startPlayer(){
-		try {
-			return new ProcessBuilder("java","-jar","clientplayer.jar","localhost","22222").start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 }
