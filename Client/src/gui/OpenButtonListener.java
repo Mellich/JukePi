@@ -114,14 +114,17 @@ public class OpenButtonListener implements ActionListener{
 		
 		JButton btnLoad = new JButton("Load");
 		btnLoad.setBounds(25, 301, 76, 23);
+		btnLoad.setToolTipText("Loads the selected Gaplist");
 		contentPane.add(btnLoad);
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.setBounds(461, 388, 89, 23);
+		btnBack.setToolTipText("Back to the Edit Tracks Screen");
 		contentPane.add(btnBack);
 		
 		JButton btnCreate = new JButton("Create");
 		btnCreate.setBounds(25, 388, 89, 23);
+		btnCreate.setToolTipText("Creates a Gaplist with the given Name in the Textfield on the Right");
 		contentPane.add(btnCreate);
 		
 		textField = new JTextField();
@@ -131,10 +134,12 @@ public class OpenButtonListener implements ActionListener{
 		
 		JButton btnShow = new JButton("Show");
 		btnShow.setBounds(110, 301, 76, 23);
+		btnShow.setToolTipText("Displays the content of the selected Gaplist");
 		contentPane.add(btnShow);
 		
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.setBounds(195, 301, 80, 23);
+		btnRemove.setToolTipText("Removes the selected Gaplist");
 		contentPane.add(btnRemove);
 		
 		JLabel lblFail = new JLabel("");
