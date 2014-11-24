@@ -16,19 +16,71 @@ import connection.Collector;
 import connection.MessageType;
 import connection.Sender;
 
+/**
+ * A Thread that will check the Connection.
+ * @author Haeldeus
+ *
+ */
 public class StabilityThread extends Thread{
 	
+	/**
+	 * The IP of the Server as a String
+	 */
 	private String ip;
+	
+	/**
+	 * The Port of the Server
+	 */
 	private int port;
+	
+	/**
+	 * The Frame that will be changed, when the Connection is lost.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The Socket to the Server.
+	 */
 	private Socket s;
+	
+	/**
+	 * The BufferedReader, that will read the answers of the Server.
+	 */
 	private BufferedReader reader;
+	
+	/**
+	 * The BufferedWriter, that will send the Messages to the Server.
+	 */
 	private BufferedWriter writer;
+	
+	/**
+	 * This variable will determine, if the Thread is running or not.
+	 */
 	private boolean running;
+	
+	/**
+	 * The Label, that will display possible Messages.
+	 */
 	private JLabel fail;
+	
+	/**
+	 * The Sender, that will send the Messages.
+	 */
 	private Sender sender;
+	
+	/**
+	 * The Collector, that provides necessary Methods.
+	 */
 	private Collector c;
 	
+	/**
+	 * The Constructor for the Thread.
+	 * @param ip	The IP of the Server as a String.
+	 * @param port	The Port of the Server.
+	 * @param frame	The Frame, that will be changed, if the Connection is lost.
+	 * @param fail	The Label, that will display possible Messages.
+	 * @param c	The Collector, that provides necessary Methods.
+	 */
 	public StabilityThread(String ip, int port, JFrame frame, JLabel fail, Collector c) {
 		this.ip = ip;
 		this.port = port;
@@ -39,7 +91,9 @@ public class StabilityThread extends Thread{
 		this.sender = new Sender();
 	}
 	
-	@Override
+	/**
+	 * Executes the Test.
+	 */
 	public void run() {
 		try {
 			s = new Socket(ip, port);

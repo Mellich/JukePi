@@ -16,16 +16,56 @@ import threads.ConnectedThread;
 import connection.Collector;
 import javax.swing.JCheckBox;
 
+/**
+ * The ActionListener for the ConnectButton.
+ * @author Haeldeus
+ *
+ */
 public class ConnectButtonListener implements ActionListener{
 
+	/**
+	 * The Frame, this Listener will create
+	 */
 	private JFrame jFrame;
+	
+	/**
+	 * The Edit Track Window.
+	 */
 	private JFrame editTrackWindow;
+	
+	/**
+	 * The Collector that will send the Messages.
+	 */
 	private Collector c;
+	
+	/**
+	 * The TextField that contains the YouTube-Link.
+	 */
 	private JTextField txtYoutubelink;
+	
+	/**
+	 * The TextField that contains the IP.
+	 */
 	private JTextField ip;
+	
+	/**
+	 * The TextField that contains the Port.
+	 */
 	private JTextField port;
+	
+	/**
+	 * The Label that displays possible Messages.
+	 */
 	private JLabel fail;
 
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param frame	The Frame, that will be created.
+	 * @param c	The Collector that will send the Messages.
+	 * @param ipfield	The TextField that contains the IP.
+	 * @param portfield	The TextField that contains the Port.
+	 * @param fail	The Label, that displays possible Messages.
+	 */
 	public ConnectButtonListener(JFrame frame, Collector c, JTextField ipfield, JTextField portfield, JLabel fail) {
 		this.jFrame = frame;
 		this.c = c;
@@ -36,7 +76,10 @@ public class ConnectButtonListener implements ActionListener{
 	}
 	
 
-	@Override
+	/**
+	 * Performs the Action.
+	 * @param e Just a stub.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (!(c.connect(ip.getText(), port.getText())))
 			fail.setText("Failed to connect to the Server. Please check for correct spelling.");
@@ -56,7 +99,9 @@ public class ConnectButtonListener implements ActionListener{
 	}
 	
 	/**
+	 * Creates a new Frame.
 	 * @wbp.parser.entryPoint
+	 * @return The created Frame.
 	 */
 	public JFrame getJFrame() {
 	/*	// TODO Delete when Design is completed	
@@ -93,8 +138,8 @@ public class ConnectButtonListener implements ActionListener{
 		txtYoutubelink = new JTextField();
 		txtYoutubelink.setBounds(10, 60, 362, 20);
 		jFrame.getContentPane().add(txtYoutubelink);
-		txtYoutubelink.setText("Insert a Youtube-Link here.");
-		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a Youtube-Link here", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
+		txtYoutubelink.setText("Insert a YouTube Link here.");
+		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a YouTube Link here.", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
 		txtYoutubelink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
@@ -163,8 +208,8 @@ public class ConnectButtonListener implements ActionListener{
 
 		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
 		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront));
-		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c));
+		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront, fail));
+		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c, editTrackWindow));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
 		btnEditTracks.addActionListener(new EditTrackListener(editTrackWindow, c));

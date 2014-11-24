@@ -3,21 +3,31 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import threads.UpdateThread;
-
+/**
+ * The ActionListener for the Back-Button
+ * @author Haeldeus
+ *
+ */
 public class BackButtonListener implements ActionListener{
 
+	/**
+	 * The Listener, that has the Method, to disconnect from the Server.
+	 */
 	private EditTrackListener listener;
-	private UpdateThread ut;
 	
-	public BackButtonListener(EditTrackListener listener, UpdateThread ut) {
+	/**
+	 * The Constructor for the Listener.
+	 * @param listener	The Disconnect-ActionListener.
+	 */
+	public BackButtonListener(EditTrackListener listener) {
 		this.listener = listener;
-		this.ut = ut;
 	}
 	
-	@Override
+	/**
+	 * Performs the Action.
+	 * @param arg0 Just a stub.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
-		ut.pause();
 		listener.actionPerformed(arg0);
 	}
 

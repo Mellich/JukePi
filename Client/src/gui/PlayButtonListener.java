@@ -10,21 +10,45 @@ import threads.PlayPauseThread;
 
 import connection.Collector;
 
+/**
+ * The ActionListener for the PlayButton.
+ * @author Haeldeus
+ *
+ */
 public class PlayButtonListener implements ActionListener{
 
+	/**
+	 * The Collector that will send the Messages.
+	 */
 	private Collector c;
+	
+	/**
+	 * The Label, that will display possible Messages.
+	 */
 	private JLabel fail;
+	
+	/**
+	 * The Frame, that contains the PlayButton.
+	 */
 	private JFrame frame;
 	
+	/**
+	 * The Constructor for the ActionListener.
+	 * @param c	The Collector, that will send the Messages.
+	 * @param fail	The Label, that will display possible Messages.
+	 * @param frame	The Frame, that contains the PlayButton.
+	 */
 	public PlayButtonListener(Collector c, JLabel fail, JFrame frame) {
 		this.c = c;
 		this.fail = fail;
 		this.frame = frame;
 	}
 	
-	@Override
+	/**
+	 * Performs the Action.
+	 * @param arg0 Just a stub.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
-		frame.getContentPane().add(fail);
 		PlayPauseThread ppt = new PlayPauseThread(c, fail, frame);
 		ppt.start();
 		frame.repaint();

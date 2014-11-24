@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 
 import connection.Collector;
@@ -11,12 +10,32 @@ import connection.Collector;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+/**
+ * The Class, that will initiate the GUI.
+ * @author Haeldeus
+ *
+ */
 public class GUI {
 
+	/**
+	 * The Collector that will send the Messages.
+	 */
 	Collector c;
+	
+	/**
+	 * The TextField, where the User can insert the IP.
+	 */
 	private JTextField txtIp;
+	
+	/**
+	 * The TextField, where the User can insert the Port.
+	 */
 	private JTextField txtPort;
 	
+	/**
+	 * Constructs the Frame.
+	 * @return	The Frame with it's content.
+	 */
 	public JFrame getFrame() {
 		JFrame jFrame = new JFrame();
 		jFrame.setSize(new Dimension(528, 400));
@@ -68,13 +87,12 @@ public class GUI {
 		return jFrame;
 	}
 	
+	/**
+	 * Initiates the GUI.
+	 * @param args	Just a stub.
+	 */
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {;	//TODO: Just why? the main thread has nothing to do then... unnecessary thread
-		@Override
-		public void run() {
-			GUI g = new GUI();
-			g.getFrame().setVisible(true);
-		}
-	});
+		GUI g = new GUI();
+		g.getFrame().setVisible(true);
 	}
 }
