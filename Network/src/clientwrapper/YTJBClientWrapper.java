@@ -26,7 +26,9 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 			break;
 		case MessageType.NEXTTRACKNOTIFY:for(NotificationListener l: notificationListener) l.onNextTrackNotify();
 			break;
-		case MessageType.LISTSUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onListUpdatedNotify();
+		case MessageType.GAPLISTUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListUpdatedNotify();
+			break;
+		case MessageType.WISHLISTUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onWishListUpdatedNotify();
 			break;
 		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListCountChangedNotify();
 			break;

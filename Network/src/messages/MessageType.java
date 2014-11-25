@@ -76,7 +76,7 @@ public class MessageType {
 	/**
 	 * a track was added to the wish or the gap list
 	 */
-	public static final int LISTSUPDATEDNOTIFY = 14;
+	public static final int GAPLISTUPDATEDNOTIFY = 14;
 	
 	public static final int GAPLISTCOUNTCHANGEDNOTIFY = 15;
 	
@@ -153,6 +153,8 @@ public class MessageType {
 	public static final int GAPLISTCHANGEDNOTIFY = 36;
 	
 	public static final int GETLOADGAPLISTSTATUS = 37;
+	
+	public static final int WISHLISTUPDATEDNOTIFY = 38;
 	
 	/**
 	 * the seperator for the arguments of a command

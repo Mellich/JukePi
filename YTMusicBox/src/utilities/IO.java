@@ -106,18 +106,15 @@ public class IO {
 	public static void loadGapListFromFile(String filename, YTJBServer server){
 		try {
 			BufferedReader reader = getFileOutput(filename);
-			int max = (int) reader.lines().count();
-			reader.close();
+			server.setMaxGapListTrackCount((int) reader.lines().count());
+			reader.close();		
 			IO.printlnDebug(null, "Start to load gap list "+filename);
 			reader = getFileOutput(filename);
-			int current = 0;
 			String url = reader.readLine();
 			while (url != null || url == ""){
-				server.setGapListTrackCount(current, max);
 				String[] splitted = url.split(";");
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
-				current++;
 				if (Thread.interrupted())
 					break;
 				server.addToList(yURL, false, true);

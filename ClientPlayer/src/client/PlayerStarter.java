@@ -49,16 +49,12 @@ public class PlayerStarter extends Application implements NotificationListener {
 	}
 
 	@Override
-	public void onListUpdatedNotify() {
-		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
-		
-	}
-
-	@Override
 	public void onNextTrackNotify() {
 		if (player != null)
-			player.skip();
-		server.getNextVideoURL((String[] s) -> {player = new OMXPlayer(server,viewer); player.play(s[0]);});	
+			synchronized(player){
+				player.skip();
+			}
+		server.getNextVideoURL((String[] s) -> {synchronized(player){player = new OMXPlayer(server,viewer); player.play(s[0]);}});	
 	}
 
 	@Override
@@ -71,6 +67,18 @@ public class PlayerStarter extends Application implements NotificationListener {
 	public void onGapListChangedNotify() {
 		server.getCurrentGapListName((String[] s) -> viewer.currentGaplist(s[0]));
 		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+	}
+
+	@Override
+	public void onGapListUpdatedNotify() {
+		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+		
+	}
+
+	@Override
+	public void onWishListUpdatedNotify() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

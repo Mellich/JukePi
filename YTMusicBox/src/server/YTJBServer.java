@@ -122,17 +122,19 @@ public class YTJBServer extends Thread {
 			if (atFirst)
 				wishList.addFirst(track);
 			else wishList.add(track);
+			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
 		}
 		else{
 			if (atFirst)
 				gapList.addFirst(track);
 			else gapList.add(track);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
 		}
-		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		if (isFirstTrack){     //if so, notify waiting scheduler
 			scheduler.notifyPlayableTrack();
 			IO.printlnDebug(this, "First element in the lists");
 		}
+		this.maxGapListTracks++;
 	}
 	
 	public int getPlayerCount(){
@@ -151,16 +153,17 @@ public class YTJBServer extends Thread {
 		try{
 			if (fromWishList){
 				temp = wishList.remove(index);
-				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
 			}
 			else{
 				temp = gapList.remove(index);
-				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
 			}
 		}
 		catch (IndexOutOfBoundsException e){
 			IO.printlnDebug(this, "ERROR: Could not delete track from list: Index out of bounds!");
 		}
+		this.maxGapListTracks--;
 		return temp;
 	}
 	
@@ -191,13 +194,13 @@ public class YTJBServer extends Thread {
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
 			temp =  wishList.removeFirst();
-			notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
 		}
 		else {
 			if (!gapList.isEmpty()){
 				temp = gapList.removeFirst();
 				gapList.add(temp);
-				notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
 			}
 		}
 		return temp;
@@ -209,7 +212,7 @@ public class YTJBServer extends Thread {
 	public void loadGapListFromFile(){
 		gapList.clear();
 		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY);
-		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
 		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this);	
 	}
 	
@@ -227,15 +230,14 @@ public class YTJBServer extends Thread {
 	}
 	
 	public int getCurrentLoadedGapListTracksCount(){
-		return this.currentLoadedGapListTracks;
+		return this.gapList.size();
 	}
 	
 	public int getMaxLoadedGapListTracksCount(){
 		return this.maxGapListTracks;
 	}
 	
-	public void setGapListTrackCount(int current, int max){
-		this.currentLoadedGapListTracks = current;
+	public void setMaxGapListTrackCount(int max){
 		this.maxGapListTracks = max;
 	}
 	
@@ -295,7 +297,7 @@ public class YTJBServer extends Thread {
 			gapList.set(index - 1, gapList.get(index));
 			gapList.set(index, upper);
 			IO.printlnDebug(this, "notify clients");
-			this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
 			return true;
 		}
 		else return false;
