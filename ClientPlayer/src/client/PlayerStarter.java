@@ -51,10 +51,8 @@ public class PlayerStarter extends Application implements NotificationListener {
 	@Override
 	public void onNextTrackNotify() {
 		if (player != null)
-			synchronized(player){
 				player.skip();
-			}
-		server.getNextVideoURL((String[] s) -> {synchronized(player){player = new OMXPlayer(server,viewer); player.play(s[0]);}});	
+		server.getNextVideoURL((String[] s) -> {player = new OMXPlayer(server,viewer); player.play(s[0]);});	
 	}
 
 	@Override

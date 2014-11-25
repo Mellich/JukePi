@@ -79,8 +79,6 @@ public class YTJBServer extends Thread {
 	
 	private Semaphore playerFinished = new Semaphore(0);
 	
-	private int currentLoadedGapListTracks = 0;
-	
 	private int maxGapListTracks = 0;
 	
 	
@@ -134,7 +132,6 @@ public class YTJBServer extends Thread {
 			scheduler.notifyPlayableTrack();
 			IO.printlnDebug(this, "First element in the lists");
 		}
-		this.maxGapListTracks++;
 	}
 	
 	public int getPlayerCount(){
@@ -163,7 +160,6 @@ public class YTJBServer extends Thread {
 		catch (IndexOutOfBoundsException e){
 			IO.printlnDebug(this, "ERROR: Could not delete track from list: Index out of bounds!");
 		}
-		this.maxGapListTracks--;
 		return temp;
 	}
 	
