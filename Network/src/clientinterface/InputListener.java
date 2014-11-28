@@ -26,6 +26,8 @@ public class InputListener implements Runnable {
 		try {
 			while (running){
 				String line = input.readLine();
+				if (Thread.interrupted())
+					break;
 				String[] params = line.split(MessageType.SEPERATOR);
 				int messageType = Integer.parseInt(params[0]);
 				if (messageType == MessageType.RESPONSENOTIFY){

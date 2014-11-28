@@ -17,9 +17,9 @@ public class PlayerStarter extends Application implements NotificationListener {
 	private IdleViewer viewer;
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public synchronized void start(Stage primaryStage) throws Exception {
 		viewer = new IdleViewer(primaryStage);
-		viewer.showLogo(true);
+		viewer.showLogoSync(true);
 		List<String> args = this.getParameters().getRaw();
 		String ip = args.get(0);
 		int port = Integer.parseInt(args.get(1));
@@ -28,7 +28,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 		if (server.connect())
 			IO.printlnDebug(this, "Connected!");
 		server.setMeAsPlayer();
-		server.getCurrentGapListName((String[] s) -> viewer.currentGaplist(s[0]));
+		server.getCurrentGapListName((String[] s) -> viewer.currentGaplistSync(s[0]));
 		viewer.editConnectionDetails(ip, port);
 	}
 	
@@ -37,9 +37,10 @@ public class PlayerStarter extends Application implements NotificationListener {
 	}
 
 	@Override
-	public void onPauseResumeNotify(boolean isPlaying) {
+	public synchronized void onPauseResumeNotify(boolean isPlaying) {
 		if (player != null)
-			player.pauseResume();		
+			player.pauseResume();
+		viewer.showLogoSync(!isPlaying);
 	}
 
 	@Override
@@ -50,10 +51,12 @@ public class PlayerStarter extends Application implements NotificationListener {
 
 	@Override
 	public synchronized void onNextTrackNotify(String title, String videoURL) {
+		viewer.showLogoSync(true);
 		if (player != null)
 				player.skip();
-		player = new OMXPlayer(server,viewer);
+		player = new OMXPlayer(server);
 		player.play(videoURL);
+		viewer.showLogoSync(false);
 	}
 
 	@Override
@@ -64,13 +67,13 @@ public class PlayerStarter extends Application implements NotificationListener {
 
 	@Override
 	public void onGapListChangedNotify(String name) {
-		viewer.currentGaplist(name);
-		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+		viewer.currentGaplistSync(name);
+		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatusSync(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
 	}
 
 	@Override
 	public void onGapListUpdatedNotify(String[] title) {
-		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatusSync(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
 		
 	}
 

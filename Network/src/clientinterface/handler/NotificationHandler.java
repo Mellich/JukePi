@@ -1,6 +1,5 @@
 package clientinterface.handler;
 
-import messages.MessageType;
 import clientwrapper.ClientNotifyWrapper;
 
 

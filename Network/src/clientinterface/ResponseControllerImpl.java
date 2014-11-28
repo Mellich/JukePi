@@ -11,8 +11,10 @@ public class ResponseControllerImpl implements ResponseController {
 	private HashMap<Integer,Deque<ResponseListener>> data = new HashMap<Integer,Deque<ResponseListener>>();
 
 	@Override
-	public void addReponseListener(int messageType,
+	public synchronized void addReponseListener(int messageType,
 			ResponseListener responseListener) {
+		if (responseListener == null)
+			responseListener = (String[] s) -> {};
 		if (data.containsKey(messageType)){
 			Deque<ResponseListener> temp = data.get(messageType);
 			temp.addLast(responseListener);
@@ -25,7 +27,7 @@ public class ResponseControllerImpl implements ResponseController {
 	}
 
 	@Override
-	public ResponseListener getResponseListener(int messageType) {
+	public synchronized ResponseListener getResponseListener(int messageType) {
 		if (data.containsKey(messageType)){
 			Deque<ResponseListener> temp = data.get(messageType);
 			if (!temp.isEmpty())

@@ -46,10 +46,10 @@ public class YTJBServerConnection implements ServerConnection {
 	public boolean close() {
 		try {
 			inputListener.interrupt();
-			//TODO: auf alle threads warten
 			socket.close();
+			inputListener.join();
 			return true;
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			return false;
 		}
 	}

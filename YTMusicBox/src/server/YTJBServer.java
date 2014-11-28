@@ -89,7 +89,7 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			ProcessCommunicator.startPlayer(port,workingDirectory+"clientplayer.jar");
+			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
 			scheduler.setRunning(false);
@@ -370,7 +370,7 @@ public class YTJBServer extends Thread {
 	public YTJBServer(int port) {
 			try {
 				this.port = port;
-				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().toString();
+				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath().replace("server.jar", "");
 				System.out.println(this.workingDirectory);
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();

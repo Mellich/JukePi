@@ -92,6 +92,7 @@ public class TrackScheduler extends Thread {
 				player = new ClientPlayer(server,this);
 				player.play(current);
 				player = null;
+				args[0] = ""+false;
 				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 			}
 		} catch (InterruptedException e) {

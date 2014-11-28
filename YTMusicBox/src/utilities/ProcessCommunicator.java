@@ -62,9 +62,9 @@ public class ProcessCommunicator {
 		return null;
 	}
 	
-	static public Process startPlayer(int port,String file){
+	static public Process startPlayer(String ownIPAddress,int port,String file){
 		try {
-			return new ProcessBuilder("java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true",file,"localhost",""+port).start();
+			return new ProcessBuilder("java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true",file,ownIPAddress,""+port).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -99,7 +99,7 @@ public class IO {
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR: Could not read out title of the gaplist "+filename);
 		}
-		return null;
+		return new String[0];
 		
 	}
 	

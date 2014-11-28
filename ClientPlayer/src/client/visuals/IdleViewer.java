@@ -45,7 +45,7 @@ public class IdleViewer {
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.6.9 (Client-Server Structure added!)");
+		Text version = new Text(5,25,"Build version 0.7 (Should work properly now!)");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -80,11 +80,11 @@ public class IdleViewer {
 	    infoNextTrack = new Scene(vbox,screenBounds.getWidth(),vbox.getHeight(),Color.BLACK);
 	}
 	
-	public void gaplistStatus(int current,int max){
+	public void gaplistStatusSync(int current,int max){
 		Platform.runLater(() -> this.gaplistReadOutStatus(current, max));
 	}
 	
-	public void currentGaplist(String name){
+	public void currentGaplistSync(String name){
 		Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+name)); 
 	}
 	
@@ -105,7 +105,8 @@ public class IdleViewer {
 		ipAddress.setText("Die Jukebox IP-Addresse: "+ip+" und Port: "+port);
 	}
 	
-	public void showLogo(boolean show){
+	public void showLogoSync(boolean show){
+		Platform.runLater(() -> {
 		if (show){
 			stage.setOpacity(1);
 			imgView.setOpacity(1);
@@ -113,6 +114,7 @@ public class IdleViewer {
 			stage.setOpacity(0);
 			imgView.setOpacity(0);
 		}
+		});
 	}
 
 }
