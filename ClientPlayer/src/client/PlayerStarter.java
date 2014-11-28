@@ -37,22 +37,23 @@ public class PlayerStarter extends Application implements NotificationListener {
 	}
 
 	@Override
-	public void onPauseResumeNotify() {
+	public void onPauseResumeNotify(boolean isPlaying) {
 		if (player != null)
 			player.pauseResume();		
 	}
 
 	@Override
-	public void onGapListCountChangedNotify() {
+	public void onGapListCountChangedNotify(String[] gapLists) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onNextTrackNotify() {
+	public synchronized void onNextTrackNotify(String title, String videoURL) {
 		if (player != null)
 				player.skip();
-		server.getNextVideoURL((String[] s) -> {player = new OMXPlayer(server,viewer); player.play(s[0]);});	
+		player = new OMXPlayer(server,viewer);
+		player.play(videoURL);
 	}
 
 	@Override
@@ -62,19 +63,19 @@ public class PlayerStarter extends Application implements NotificationListener {
 	}
 
 	@Override
-	public void onGapListChangedNotify() {
-		server.getCurrentGapListName((String[] s) -> viewer.currentGaplist(s[0]));
+	public void onGapListChangedNotify(String name) {
+		viewer.currentGaplist(name);
 		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
 	}
 
 	@Override
-	public void onGapListUpdatedNotify() {
+	public void onGapListUpdatedNotify(String[] title) {
 		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
 		
 	}
 
 	@Override
-	public void onWishListUpdatedNotify() {
+	public void onWishListUpdatedNotify(String[] title) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -43,7 +43,7 @@ public class Connection extends Thread {
 				}
 				catch (NumberFormatException | IndexOutOfBoundsException e){
 					IO.printlnDebug(this, "Wrong command format was sendet by client:"+message);
-					new UnknownCommand(out,MessageType.NOCOMMAND,""+message).handle();
+					new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+message).handle();
 				}
 			}
 			socket.close();
@@ -56,8 +56,8 @@ public class Connection extends Thread {
 		}
 	}
 	
-	public void notify(int messageType){
-			new NotifyClientCommand(out,MessageType.NOCOMMAND,messageType).handle();
+	public void notify(int messageType,String[] args){
+			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args).handle();
 	}
 
 

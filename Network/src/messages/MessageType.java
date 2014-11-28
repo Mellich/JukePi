@@ -7,7 +7,7 @@ package messages;
  */
 public class MessageType {
 	
-	public static final int NOCOMMAND = 0;
+	public static final int DISCONNECT = 0;
 	/**
 	 * a link to a youtube video
 	 */

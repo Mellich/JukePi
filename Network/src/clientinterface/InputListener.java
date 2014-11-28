@@ -32,12 +32,12 @@ public class InputListener implements Runnable {
 					Thread t = new Thread(new ResponseHandler(responses,params));
 					t.start();
 				}else{
-					Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType));
+					Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType,params));
 					t.start();					
 				}
 			}
 		} catch (IOException | NullPointerException e) {
-			notifyWrapper.onNotify(MessageType.NOCOMMAND);
+			notifyWrapper.onNotify(MessageType.DISCONNECT,null);
 		}
 	}
 

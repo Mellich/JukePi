@@ -21,7 +21,7 @@ public class ProcessCommunicator {
 	static public String[] parseShortURLToVideoURLAndTitle(String url) throws IOException{
 		IO.printlnDebug(null, "waiting for output url...");
 		String[] result = new String[2];
-		Process parseProcess = new ProcessBuilder("youtube-dl","--max-quality","22","-e","-g", url).start();
+		Process parseProcess = new ProcessBuilder("youtube-dl","-e","-g", url).start();
 		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 		result[0] = parseInput.readLine();
 		result[1] = parseInput.readLine();

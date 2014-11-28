@@ -40,8 +40,8 @@ public abstract class Command {
 	 * 
 	 * @param notify the type of the notification
 	 */
-	protected void notify(int notify){
-		sendMessage(""+notify);
+	protected void notify(int notify,String arguments){
+		sendMessage(""+notify+arguments);
 	}
 	
 	/**sends a string to the client

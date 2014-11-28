@@ -83,7 +83,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
 			break;
-		default: new UnknownCommand(out,MessageType.NOCOMMAND,""+prompt).handle();
+		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}
 	

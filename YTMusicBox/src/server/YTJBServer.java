@@ -31,7 +31,7 @@ public class YTJBServer extends Thread {
 	 */
 	public static final int PORT = 12345;
 	
-	public static final String GAPLISTDIRECTORY = "/home/pi/.jbserver/";
+	public String workingDirectory;
 	
 	/**
 	 * the server socket to handle connections to the server
@@ -89,9 +89,9 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			ProcessCommunicator.startPlayer(port,GAPLISTDIRECTORY+"clientplayer.jar");
+			ProcessCommunicator.startPlayer(port,workingDirectory+"clientplayer.jar");
 			closePrompt.acquire();
-			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+			IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
 			scheduler.setRunning(false);
 			scheduler.interrupt();
 			waiter.setRunning(false);
@@ -104,6 +104,14 @@ public class YTJBServer extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private synchronized String[] listToArray(LinkedList<MusicTrack> list){
+		String[] result = new String[list.size()];
+		for (int i = 0; i < result.length; i++){
+			result[i] = list.get(i).getTitle();
+		}
+		return result;
 	}
 	
 	/**adds a MusicTrack to a list
@@ -120,13 +128,13 @@ public class YTJBServer extends Thread {
 			if (atFirst)
 				wishList.addFirst(track);
 			else wishList.add(track);
-			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
+			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else{
 			if (atFirst)
 				gapList.addFirst(track);
 			else gapList.add(track);
-			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
 		if (isFirstTrack){     //if so, notify waiting scheduler
 			scheduler.notifyPlayableTrack();
@@ -150,11 +158,11 @@ public class YTJBServer extends Thread {
 		try{
 			if (fromWishList){
 				temp = wishList.remove(index);
-				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
+				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 			}
 			else{
 				temp = gapList.remove(index);
-				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
 		catch (IndexOutOfBoundsException e){
@@ -190,13 +198,13 @@ public class YTJBServer extends Thread {
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
 			temp =  wishList.removeFirst();
-			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY);
+			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else {
 			if (!gapList.isEmpty()){
 				temp = gapList.removeFirst();
 				gapList.add(temp);
-				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
+				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
 		return temp;
@@ -207,9 +215,11 @@ public class YTJBServer extends Thread {
 	 */
 	public void loadGapListFromFile(){
 		gapList.clear();
-		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY);
-		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this);	
+		String[] args = new String[1];
+		args[0] = currentGapList;
+		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY,args);
+		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+		IO.loadGapListFromFile(workingDirectory+currentGapList, this);	
 	}
 	
 	/**saves the gap list to a file
@@ -217,10 +227,10 @@ public class YTJBServer extends Thread {
 	 * @return true, when no error occurred
 	 */	
 	public boolean saveGapListToFile(){
-		boolean savedCorrectly = IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+		boolean savedCorrectly = IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
 		if (savedCorrectly){
 			searchGapLists();
-			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
 		}
 		return savedCorrectly;
 	}
@@ -239,10 +249,10 @@ public class YTJBServer extends Thread {
 	
 	public boolean deleteGapList(String filename){
 		filename = filename +".jb";
-		boolean deletedCorrectly = IO.deleteGapList(GAPLISTDIRECTORY+filename);
+		boolean deletedCorrectly = IO.deleteGapList(workingDirectory+filename);
 		if (deletedCorrectly){
 			this.searchGapLists();
-			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
 		}
 		return deletedCorrectly;
 	}
@@ -284,7 +294,7 @@ public class YTJBServer extends Thread {
 	
 	public String[] readOutGapList(String filename){
 		IO.printlnDebug(this, "Reading out gap list");
-		return IO.readOutGapList(GAPLISTDIRECTORY+filename);
+		return IO.readOutGapList(workingDirectory+filename);
 	}
 	
 	public synchronized boolean switchWithUpper(int index){
@@ -293,7 +303,7 @@ public class YTJBServer extends Thread {
 			gapList.set(index - 1, gapList.get(index));
 			gapList.set(index, upper);
 			IO.printlnDebug(this, "notify clients");
-			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			return true;
 		}
 		else return false;
@@ -340,15 +350,15 @@ public class YTJBServer extends Thread {
 		}
 	}
 	
-	public void notifyClients(int messageType){
+	public void notifyClients(int messageType,String[] args){
 		for (Connection h: notifiables){
-			h.notify(messageType);
+			h.notify(messageType,args);
 		}
 	}	
 	
-	public void notifyPlayers(int messageType){
+	public void notifyPlayers(int messageType,String[] args){
 		for (Connection c : player){
-			c.notify(messageType);
+			c.notify(messageType,args);
 		}
 	}
 	
@@ -360,11 +370,13 @@ public class YTJBServer extends Thread {
 	public YTJBServer(int port) {
 			try {
 				this.port = port;
+				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().toString();
+				System.out.println(this.workingDirectory);
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
 				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
-				initFile = new InitFileCommunicator(GAPLISTDIRECTORY);
+				initFile = new InitFileCommunicator(workingDirectory);
 				currentGapList = initFile.getStartUpGapList();
 				searchGapLists();
 				gapListLoader = new GapListLoader(this);
@@ -381,7 +393,7 @@ public class YTJBServer extends Thread {
 	
 	
 	public void searchGapLists(){
-		gapLists = IO.getGapLists(GAPLISTDIRECTORY);
+		gapLists = IO.getGapLists(workingDirectory);
 	}
 	
 	private String getIpAddress() { 

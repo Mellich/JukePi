@@ -44,7 +44,9 @@ public class TrackScheduler extends Thread {
 	public boolean pauseResume(){
 		if (player != null){
 			boolean result = player.pauseResume();
-			server.notifyClients(MessageType.PAUSERESUMENOTIFY);
+			String[] args = new String[1];
+			args[0] = ""+isPlaying();
+			server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 			return result;
 		}
 		return false;
@@ -70,6 +72,7 @@ public class TrackScheduler extends Thread {
 			while (running){
 				IO.printlnDebug(this, "getting next track in the list");
 				current = server.chooseNextTrack();
+				String[] args = new String[1];
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a track added to a list...");
 					playableTrack.acquire();
@@ -79,13 +82,17 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				server.notifyClients(MessageType.PAUSERESUMENOTIFY);
-				server.notifyClients(MessageType.NEXTTRACKNOTIFY);
+				String[] argsNext = new String[2];
+				argsNext[0] = current.getTitle();
+				argsNext[1] = current.getVideoURL();
+				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
+				args[0] = ""+true;
+				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				player = new ClientPlayer(server,this);
 				player.play(current);
 				player = null;
-				server.notifyClients(MessageType.PAUSERESUMENOTIFY);
+				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");
