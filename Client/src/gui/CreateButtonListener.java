@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import threads.ConnectedThread;
+import threads.ShowLabelThread;
 import threads.CreateThread;
 import connection.Collector;
 
@@ -59,7 +59,7 @@ public class CreateButtonListener implements ActionListener{
 			fail.setVerticalAlignment(JLabel.CENTER);
 			fail.setHorizontalAlignment(JLabel.CENTER);
 			fail.setVisible(true);
-			ConnectedThread ct = new ConnectedThread(fail, null);
+			ShowLabelThread ct = new ShowLabelThread(fail, null);
 			ct.start();
 		}
 	}

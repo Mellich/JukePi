@@ -1,4 +1,4 @@
-package threads;
+package garbageCollector;
 
 import gui.GUI;
 
@@ -13,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import connection.Collector;
-import connection.MessageType;
-import connection.Sender;
 
 /**
  * A Thread that will check the Connection.
@@ -22,7 +20,7 @@ import connection.Sender;
  *
  */
 public class StabilityThread extends Thread{
-	
+
 	/**
 	 * The IP of the Server as a String
 	 */
@@ -66,7 +64,7 @@ public class StabilityThread extends Thread{
 	/**
 	 * The Sender, that will send the Messages.
 	 */
-	private Sender sender;
+//	private Sender sender;
 	
 	/**
 	 * The Collector, that provides necessary Methods.
@@ -88,7 +86,7 @@ public class StabilityThread extends Thread{
 		this.running = true;
 		this.fail = fail;
 		this.c = c;
-		this.sender = new Sender();
+//		this.sender = new Sender();
 	}
 	
 	/**
@@ -107,9 +105,9 @@ public class StabilityThread extends Thread{
 			while (running) {
 				Thread.sleep(5000);
 				try {
-					if (!sender.sendMessage(MessageType.ISREADY, "", writer))
+			//		if (!sender.sendMessage(MessageType.ISREADY, "", writer))
 						throw new IOException();
-					reader.readLine();
+			//		reader.readLine();
 				} catch (Exception e){
 					fail.setText("Connection lost");
 					fail.setVisible(true);
@@ -130,5 +128,5 @@ public class StabilityThread extends Thread{
 				e1.printStackTrace();
 			}
 		}
-	}
+	} 
 }

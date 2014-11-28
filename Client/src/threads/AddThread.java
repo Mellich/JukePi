@@ -3,6 +3,7 @@ package threads;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -51,6 +52,11 @@ public class AddThread extends Thread{
 	private JLabel fail;
 	
 	/**
+	 * The Frame, the Add Button is in.
+	 */
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the Thread.
 	 * @param link	The Link to the YouTube-Video.
 	 * @param add	The AddButton.
@@ -60,7 +66,7 @@ public class AddThread extends Thread{
 	 * @param inFront	Determines, if the Track should be added in front or at the End of the List.
 	 * @param fail	The Label, that displays possible Messages.
 	 */
-	public AddThread(String link, JButton add, JTextField txt, Collector c, ActionListener buttonListener, boolean inFront, JLabel fail) {
+	public AddThread(String link, JButton add, JTextField txt, Collector c, ActionListener buttonListener, boolean inFront, JLabel fail, JFrame frame) {
 		this.link = link;
 		this.add = add;
 		this.txt = txt;
@@ -68,6 +74,7 @@ public class AddThread extends Thread{
 		this.al = buttonListener;
 		this.inFront = inFront;
 		this.fail = fail;
+		this.frame = frame;
 	}
 	
 	/**
@@ -76,14 +83,9 @@ public class AddThread extends Thread{
 	public void run() {
 		fail.setText("Sending URL to Server");
 		fail.setVisible(true);
-		if (c.addToList(link, inFront)) {
-			fail.setText("Track added");
-		} else {
-			fail.setText("Couldn't add the Track");
-		}
+		c.addToList(link, inFront, fail, frame);
+		
 		txt.setText("Insert a YouTube Link here.");
 		add.addActionListener(al);
-		try {Thread.sleep(2000);} catch (Exception e) {}
-		fail.setVisible(false);
 	}
 }

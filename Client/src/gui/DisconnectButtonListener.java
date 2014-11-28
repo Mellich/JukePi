@@ -30,6 +30,10 @@ public class DisconnectButtonListener implements ActionListener{
 	private JFrame secondFrame;
 	
 	/**
+	 * Determines, if the action was already performed.
+	 */
+	private boolean disconnected;
+	/**
 	 * The Constructor for the ActionListener.
 	 * @param frame	The Frame, that will be changed.
 	 * @param c	The Collector, that will send the Messages.
@@ -38,6 +42,8 @@ public class DisconnectButtonListener implements ActionListener{
 	public DisconnectButtonListener(JFrame frame, Collector c, JFrame secondFrame) {
 		this.frame = frame;
 		this.c = c;
+		this.secondFrame = secondFrame;
+		this.disconnected = false;
 	}
 	
 	/**
@@ -45,14 +51,18 @@ public class DisconnectButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		c.disconnect();
-		frame.getContentPane().removeAll();
-		frame.setEnabled(false);
-		frame.setVisible(false);
-		if (secondFrame != null) {
-			secondFrame.setEnabled(false);
-			secondFrame.setVisible(false);
+		if (arg0 != null)
+			c.disconnect();
+		if (!disconnected) {
+			frame.getContentPane().removeAll();
+			frame.setEnabled(false);
+			frame.setVisible(false);
+			if (secondFrame != null) {
+				secondFrame.setEnabled(false);
+				secondFrame.setVisible(false);
+			}
+			GUI.main(null);
+			disconnected = true;
 		}
-		GUI.main(null);
 	}
 }

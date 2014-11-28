@@ -1,11 +1,7 @@
 package connection;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
+import gui.DisconnectButtonListener;
+
 import java.util.LinkedList;
 
 import javax.swing.DefaultListModel;
@@ -14,8 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
-import threads.NotifierReaderThread;
-import threads.StabilityThread;
+import connection.responseListener.*;
+import clientinterface.listener.ResponseListener;
+import clientwrapper.YTJBClientWrapper;
+import threads.ShowLabelThread;
+//import threads.StabilityThread;
 
 /**
  * A Class, that will handle the Communication to the Server.
@@ -39,31 +38,6 @@ public class Collector {
 	 * the Gaplist or the Wishlist.
 	 */
 	private JRadioButton gaplistRB;
-	
-	/**
-	 * The Socket, that receives all notifier from the server.
-	 */
-	private Socket notifier;
-	
-	/**
-	 * The Socket that sends Commands to the Server and receives the answers to these 
-	 * commands.
-	 */
-	private Socket sender;
-	
-	/**
-	 * The BufferedWriter for the Sender-Socket.
-	 */
-	private BufferedWriter senderWriter;
-	/**
-	 * The BufferedReader for the Notifier-Socket.
-	 */
-	private BufferedReader notifierReader;
-	
-	/**
-	 * The BufferedReader for the Sender-Socket.
-	 */
-	private BufferedReader senderReader;
 	
 	/**
 	 * The Play-Button.
@@ -92,14 +66,9 @@ public class Collector {
 	private JLabel contentLabel;
 	
 	/**
-	 * The Sender to communicate with the Server.
-	 */
-	private Sender s;
-	
-	/**
 	 * The Stability-Thread to check the Connection.
 	 */
-	private StabilityThread st;
+//	private StabilityThread st;
 	/**
 	 * The Gaplist as a Linked List.
 	 */
@@ -108,11 +77,6 @@ public class Collector {
 	 * The Wishlist as a Linked List.
 	 */
 	private LinkedList<String> wishlist;
-	
-	/**
-	 * The NotifierReaderThread, that will listen to notifies from the Server
-	 */
-	private NotifierReaderThread nrt;
 	
 	/**
 	 * The Gaplist as a ListModel.
@@ -139,14 +103,35 @@ public class Collector {
 	private JFrame secondFrame;
 	
 	/**
+	 * The Wrapper for all Messages to the Server.
+	 */
+	private YTJBClientWrapper wrapper;
+	
+	/**
+	 * The NotifyListener for Notifies from the Server.
+	 */
+	private NotifyListener notifyListener;
+	
+	/**
+	 * Determines, if the Client is connected to a Server.
+	 */
+	private boolean connected = false;
+	
+	/**
+	 * The Listener to perform the Action when disconnected from the Server.
+	 */
+	private DisconnectButtonListener dcListener;
+	
+	/**
 	 * The Constructor for all Collector-Instances.
 	 */
 	public Collector() {
-		s = new Sender();
 		gaplist = new LinkedList<String>();
 		wishlist = new LinkedList<String>();
 		gaplistModel = new DefaultListModel<String>();
 		wishlistModel = new DefaultListModel<String>();
+		notifyListener = new NotifyListener(this);
+		wrapper.addNotificationListener(notifyListener);
 	}
 	
 	/**
@@ -254,6 +239,14 @@ public class Collector {
 	}
 	
 	/**
+	 * Adds the given DisconnectButtonListener as DisconnectListener.
+	 * @param dcListener	The Listener to be set.
+	 */
+	public void addDisconnectListener(DisconnectButtonListener dcListener) {
+		this.dcListener = dcListener;
+	}
+	
+	/**
 	 * Tries to connect to the given IP and Port.
 	 * @param IP	The IP of the Server.
 	 * @param port	The Port of the Server.
@@ -262,19 +255,17 @@ public class Collector {
 	public boolean connect(String IP, String port) {
 		try {
 			int iport = Integer.parseInt(port);
-			notifier = new Socket(IP, iport);
-			sender = new Socket(IP, iport);
-			BufferedWriter notifierWriter = new BufferedWriter(new OutputStreamWriter(notifier.getOutputStream()));
-			senderWriter = new BufferedWriter(new OutputStreamWriter(sender.getOutputStream()));
-			notifierReader = new BufferedReader(new InputStreamReader(notifier.getInputStream()));
-			senderReader = new BufferedReader(new InputStreamReader(sender.getInputStream()));
-			nrt = new NotifierReaderThread(notifierReader, this);
-			nrt.start();
-			notifierWriter.write("20");
-			notifierWriter.newLine();
-			notifierWriter.flush();
-			return true;
-		} catch (Exception e) {
+			wrapper = new YTJBClientWrapper(IP, iport);
+			if (wrapper.connect()) {
+				connected = true;
+				return true;
+			}
+			else {
+				connected = false;
+				return false;
+			}
+		} catch (NumberFormatException nfe) {
+			connected = false;
 			return false;
 		}
 	}
@@ -283,13 +274,10 @@ public class Collector {
 	 * Disconnects from the Server.
 	 */
 	public void disconnect() {
-		try {
-			nrt.interrupt();
-			notifier.close();
-			sender.close();
-			st.interrupt();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (connected) {
+			wrapper.close();
+			//TODO Deadlock?
+			dcListener.actionPerformed(null);
 		}
 	}
 	
@@ -301,7 +289,7 @@ public class Collector {
 	 * @param fail	The Label, that will display a Message, when the Connection is lost.
 	 */
 	public void startStableTest(String ip, int port, JFrame frame, JLabel fail) {
-		st = new StabilityThread(ip, port, frame, fail, this);
+	//	st = new StabilityThread(ip, port, frame, fail, this);
 	//	st.start();
 	}
 	
@@ -309,87 +297,38 @@ public class Collector {
 	 * Adds the given Link to either the Gaplist or the Wishlist.
 	 * @param link	The Link to the YouTube-Video.
 	 * @param inFront	Determines, if the Track should be added in front of the List or not.
-	 * @return	True, if the Track was added, false else.
 	 */
-	public boolean addToList(String link, boolean inFront) {
-		if (gaplistRB.isSelected())
-			if (!inFront)
-				s.sendMessage(MessageType.GAPYOUTUBE, link, senderWriter);
-			else 
-				s.sendMessage(MessageType.GAPBEGINNINGYOUTUBE, link, senderWriter);
-		else
-			if (!inFront)
-				s.sendMessage(MessageType.YOUTUBE, link, senderWriter);
-			else
-				s.sendMessage(MessageType.BEGINNINGYOUTUBE, link, senderWriter);
-		
+	public void addToList(String link, boolean inFront, JLabel fail, JFrame frame) {
+		ResponseListener listener = new AddToListListener(fail, new ShowLabelThread(fail, frame));
+		wrapper.addToList(listener, link, !gaplistRB.isSelected(), !inFront);
 		repaint();
-		
-		try {
-			String answer = senderReader.readLine();
-			String pos[] = answer.split(MessageType.SEPERATOR);
-			if (pos[1].equals("false")) {
-				return false;
-			} else {
-				return true;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 	
 	/**
 	 * Tries to skip the current track.
-	 * @return	True, if the Track was skipped, false else.
 	 */
-	public boolean skip() {
-		s.sendMessage(MessageType.SKIP, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			repaint();
-			if (answerparts[1].equals("true"))
-				return true;
-			else
-				return false;
-		} catch (IOException e) {
-			repaint();
-			return false;
-		}
+	public void skip(JLabel fail, JFrame frame) {
+		SkipListener listener = new SkipListener(fail, new ShowLabelThread(fail, frame));
+		wrapper.skip(listener);
 	}
 	
 	/**
 	 * Handles the Input, when the PlayButton was pressed.
-	 * @return True, if Track was paused/resumed, false else.
 	 */
-	public boolean playButtonPressed() {
-		s.sendMessage(MessageType.PAUSERESUME, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			if (answerparts[1].equals("true"))
-				return true;
-			else
-				return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+	public void playButtonPressed(JLabel fail, JFrame frame) {
+		PlayPauseListener listener = new PlayPauseListener(fail, new ShowLabelThread(fail, frame));
+		wrapper.pauseResume(listener);
+		listener.setMessage(this.getStatus());
 	}
 	
 	/**
 	 * Handles the case, when a new Track is played on the Server.
 	 */
 	public void nextTrack() {
-		s.sendMessage(MessageType.GETCURRENTTRACK, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			nowPlaying.setText(answerparts[1]);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		GetCurrentTrackListener listener = new GetCurrentTrackListener();
+		wrapper.getCurrentTrackTitle(listener);
+		
+		nowPlaying.setText(listener.getName());
 		
 		if (wishlist.isEmpty())
 			if (gaplist.isEmpty())
@@ -401,34 +340,107 @@ public class Collector {
 	}
 	
 	/**
-	 * Updates all Lists, whenever it is necessary.
+	 * Sets the currentTrack to the given title.
+	 * @param title	The new track's title.
+	 */
+	public void setTrack(String title) {
+		nowPlaying.setText(title);
+		
+		if (wishlist.isEmpty())
+			if (gaplist.isEmpty())
+				nextTrack.setText("No tracks in the lists");
+			else
+				nextTrack.setText(gaplist.get(0));
+		else
+			nextTrack.setText(wishlist.get(0));
+	}
+	
+	/**
+	 * Updates Wishlist and Gaplist.
 	 */
 	public void updateLists() {
-		s.sendMessage(MessageType.GETGAPLIST, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			gaplist.clear();
-			for (int i = 1; i < answerparts.length; i++) {
-				gaplist.add(answerparts[i]);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		gaplistlabel.setText(""+gaplist.size());
+		this.updateGaplist();
+		this.updateWishlist();
+	}
+	
+	/**
+	 * Updates the Gaplist.
+	 */
+	public void updateGaplist() {
+		UpdateGaplistListener listener = new UpdateGaplistListener();
+		wrapper.getGapList(listener);
+		this.gaplist = listener.getGaplist();
 		
-		s.sendMessage(MessageType.GETWISHLIST, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String answerparts[] = answer.split(MessageType.SEPERATOR);
-			wishlist.clear();
-			for (int i = 1; i < answerparts.length; i++) {
-				wishlist.add(answerparts[i]);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		wishlistlabel.setText(""+wishlist.size());
+		if (gaplistlabel != null)
+			this.gaplistlabel.setText("" + gaplist.size());
+		
+		if (nextTrack != null)
+			if (wishlist.isEmpty())
+				if (gaplist.isEmpty())
+					nextTrack.setText("No tracks in the lists");
+				else
+					nextTrack.setText(gaplist.get(0));
+			else
+				nextTrack.setText(wishlist.get(0));
+		repaint();
+	}
+	
+	/**
+	 * Sets the Gaplist to the given Gaplist and updates the belonging Labels.
+	 * @param gaplist	The Gaplist to be saved.
+	 */
+	public void setGaplist(String[] newGaplist) {
+		gaplist.clear();
+		for (String s : newGaplist)
+			gaplist.add(s);
+		
+		if (gaplistlabel != null)
+			this.gaplistlabel.setText("" + gaplist.size());
+		
+		if (nextTrack != null)
+			if (wishlist.isEmpty())
+				if (gaplist.isEmpty())
+					nextTrack.setText("No tracks in the lists");
+				else
+					nextTrack.setText(gaplist.get(0));
+			else
+				nextTrack.setText(wishlist.get(0));
+		repaint();
+	}
+	
+	/**
+	 * Updates the Wishlist.
+	 */
+	public void updateWishlist() {
+		UpdateWishlistListener listener = new UpdateWishlistListener();
+		wrapper.getWishList(listener);
+		this.wishlist = listener.getWishlist();
+		
+		if (wishlistlabel != null)
+			wishlistlabel.setText(""+wishlist.size());
+		
+		if (nextTrack != null)
+			if (wishlist.isEmpty())
+				if (gaplist.isEmpty())
+					nextTrack.setText("No tracks in the lists");
+				else
+					nextTrack.setText(gaplist.get(0));
+			else
+				nextTrack.setText(wishlist.get(0));
+		repaint();	
+	}
+	
+	/**
+	 * Sets the Wishlist to the given Value of newWishlist and updates the belonging Labels.
+	 * @param newWishlist	The new Wishlist.
+	 */
+	public void setWishlist(String[] newWishlist) {
+		wishlist.clear();
+		for (String s : newWishlist)
+			wishlist.add(s);
+		
+		if (wishlistlabel != null)
+			wishlistlabel.setText(""+wishlist.size());
 		
 		if (nextTrack != null)
 			if (wishlist.isEmpty())
@@ -445,24 +457,24 @@ public class Collector {
 	 * Updates the Status of the Server (Track playing or Track paused).
 	 * @return True, if a Track is playing, false else.
 	 */
-	public boolean updateStatus() {
-		s.sendMessage(MessageType.GETCURRENTPLAYBACKSTATUS, "", senderWriter);
-		try {
-			String answer = senderReader.readLine();
-			String[] answerparts = answer.split(MessageType.SEPERATOR);
-			if (answerparts[1].equals("true")) {
-				play.setText("Pause");
-				play.setToolTipText("Click here to pause the current track");
-				return true;
-			}
-			else {
-				play.setText("Play");
-				play.setToolTipText("Click here to play the current track");
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+	public boolean getStatus() {
+		UpdateStatusListener listener = new UpdateStatusListener(play);
+		wrapper.getCurrentPlaybackStatus(listener);
+		return listener.getPlaying();
+	}
+	
+	/**
+	 * Sets the Status to playing/paused.
+	 * @param isRunning	The Status of the Server.
+	 */
+	public void setStatus(boolean isRunning) {
+		if (isRunning) {
+			this.play.setText("Pause");
+			play.setToolTipText("Click here to pause the current Track.");
+		}
+		else {
+			play.setText("Play");
+			play.setToolTipText("Click here to resume.");
 		}
 	}
 	
@@ -487,35 +499,20 @@ public class Collector {
 	 * @return	True, if the Track was deleted, false else.
 	 */
 	public boolean deleteTrack(int index) {
-		s.sendMessage(MessageType.DELETEFROMGAPLIST, ""+index, senderWriter);
-		try {
-			String[] answer = senderReader.readLine().split(MessageType.SEPERATOR);
-			
-			if (answer[1].equals("true")) {
-				repaint();
-				return true;
-			}
-			else {
-				repaint();
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			repaint();
-			return false;
-		}
+		DeleteTrackListener listener = new DeleteTrackListener();
+		wrapper.deleteFromList(listener, index);
+		repaint();
+		return listener.getDeleted();
 	}
 	
 	/**
 	 * Saves the current Gaplist.
+	 * @return	True, if the Gaplist was saved, false else.
 	 */
-	public void saveGaplist() {
-		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
-		try {
-			senderReader.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public boolean saveGaplist() {
+		SaveGaplistListener listener = new SaveGaplistListener();
+		wrapper.saveGapList(listener);
+		return listener.getSaved();
 	}
 	
 	/**
@@ -523,41 +520,42 @@ public class Collector {
 	 * @param index	The index of the Track.
 	 */
 	public void moveTrackDown(int index) {
-		s.sendMessage(MessageType.GAPLISTTRACKDOWN, ""+index, senderWriter);
-		try {
-			senderReader.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//TODO Add response Listener?
+		wrapper.setGapListTrackDown(null, index);
 	}
 	
 	/**
 	 * Moves the Track at given index up.
 	 * @param index	The index of the Track.
 	 */
-	public void moveTrackUp(int index) {
-		s.sendMessage(MessageType.GAPLISTTRACKUP, ""+index, senderWriter);
-		try {
-			senderReader.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public boolean moveTrackUp(int index) {
+		MoveTrackUpListener listener = new MoveTrackUpListener();
+		wrapper.setGapListTrackUp(listener, index);
+		return listener.getMoved();
 	}
 	
 	/**
 	 * Updates the Name of the current Gaplist and sets the GaplistNameLabel.
 	 */
 	public void updateGaplistName() {
-		s.sendMessage(MessageType.GETCURRENTGAPLISTNAME, "", senderWriter);
-		try {
-			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
-			if (gaplistName != null) {
-				gaplistName.setText("Gaplist - "+answerparts[1]);
-				gaplistName.setHorizontalAlignment(JLabel.CENTER);
-				gaplistName.setVerticalAlignment(JLabel.CENTER);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		CurrentGaplistListener listener = new CurrentGaplistListener();
+		wrapper.getCurrentGapListName(listener);
+		if (gaplistName != null) {
+			gaplistName.setText("Gaplist - "+listener.getName()+".jb");
+			gaplistName.setHorizontalAlignment(JLabel.CENTER);
+			gaplistName.setVerticalAlignment(JLabel.CENTER);
+		}
+	}
+	
+	/**
+	 * Sets the Name of the current Gaplist to the given Value of name.
+	 * @param name	The Name of the new Gaplist.
+	 */
+	public void setGaplistName(String name) {
+		if (gaplistName != null) {
+			gaplistName.setText("Gaplist - "+name+".jb");
+			gaplistName.setHorizontalAlignment(JLabel.CENTER);
+			gaplistName.setVerticalAlignment(JLabel.CENTER);
 		}
 	}
 	
@@ -575,74 +573,76 @@ public class Collector {
 	 * Fills the GaplistModel.
 	 */
 	public void fillGaplistModel() {
-		s.sendMessage(MessageType.GETAVAILABLEGAPLISTS, "", senderWriter);
-		try {
-			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
+		AvailableGaplistListener listener = new AvailableGaplistListener();
+		wrapper.getAvailableGapLists(listener);
+		if (gaplistCollectionModel != null) {
 			gaplistCollectionModel.clear();
-			for (int i = 1; i < answerparts.length; i++) {
-				gaplistCollectionModel.addElement(answerparts[i]);
-			}
-		} catch (Exception e) {
-			// Disconnected or window for gaplists wasn't open yet
+			for (String s : listener.getGaplists())
+				gaplistCollectionModel.addElement(s);
 		}
 		repaint();
+	}
+	
+	/**
+	 * Sets the values of the gaplistCollectionModel to the given values.
+	 * @param newGaplists	All Gaplists as an Array of Strings.
+	 */
+	public void setGaplists(String[] newGaplists) {
+		if (gaplistCollectionModel != null) {
+			gaplistCollectionModel.clear();
+			for (String s : newGaplists)
+				gaplistCollectionModel.addElement(s);
+		}
 	}
 	
 	/**
 	 * Fills the ContentModel for the Gaplist at the given index.
 	 * @param index	The index of the Gaplist.
-	 * @return	True, if the ContentModel was filled, false else.
 	 */
-	public boolean fillContentModel(int index) {
-		s.sendMessage(MessageType.GETTITLEFROMGAPLIST, gaplistCollectionModel.get(index), senderWriter);
-		try {
-			String[] answerparts = senderReader.readLine().split(MessageType.SEPERATOR);
-			contentModel.clear();
-			for (int i = 1; i < answerparts.length; i++) {
-				contentModel.addElement(answerparts[i]);
-			}
-			contentLabel.setText("Content - " + gaplistCollectionModel.get(index) + ".jb");
-			contentLabel.setHorizontalAlignment(JLabel.CENTER);
-			contentLabel.setVerticalAlignment(JLabel.CENTER);
-		} catch (Exception e) {
-			return false;
-		}
+	public void fillContentModel(int index) {
+		GetTitleListener listener = new GetTitleListener();
+		wrapper.getTitleFromGapList(listener, gaplistCollectionModel.get(index));
+		for (String s : listener.getContent())
+			contentModel.addElement(s);
+		contentLabel.setText("Content - " + gaplistCollectionModel.get(index) + ".jb");
+		contentLabel.setHorizontalAlignment(JLabel.CENTER);
+		contentLabel.setVerticalAlignment(JLabel.CENTER);
 		repaint();
-		return true;
 	}
 	
 	/**
 	 * Loads the given Gaplist.
 	 * @param gaplist	The Gaplist's Name.
-	 * @return	True, if the Gaplist was loaded, false else.
 	 */
 	public boolean loadGaplist(String gaplist) {
-		s.sendMessage(MessageType.LOADGAPLIST, gaplist, senderWriter);
-		try {senderReader.readLine();} catch(Exception e) {return false;}
-		return true;
+		GaplistSwitchListener listener = new GaplistSwitchListener();
+		wrapper.switchToGapList(listener, gaplist);
+		return listener.getSwitched();
 	}
 	
 	/**
 	 * Creates a new Gaplist with the given Name.
 	 * @param text	The Name of the new Gaplist.
-	 * @return	True, if the Gaplist was created, false else.
 	 */
 	public boolean createNewList(String text) {
-		s.sendMessage(MessageType.LOADGAPLIST, text, senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {return false;}
-		s.sendMessage(MessageType.GAPLISTSAVETOFILE, "", senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {return false;}
-		return true;
+		GaplistSwitchListener listener1 = new GaplistSwitchListener();
+		wrapper.switchToGapList(listener1, text);
+		if (listener1.getSwitched()) {
+			SaveGaplistListener listener2 = new SaveGaplistListener();
+			wrapper.saveGapList(listener2);
+			return listener2.getSaved();
+		}
+		else
+			return false;
 	}
 	
 	/**
 	 * Removes the Given Gaplist.
 	 * @param text	The Name of the Gaplist to be deleted.
-	 * @return	True, if the Gaplist was deleted, false else.
 	 */
 	public boolean removeGaplist(String text) {
-		s.sendMessage(MessageType.DELETEGAPLIST, text, senderWriter);
-		try {senderReader.readLine();} catch (Exception e) {return false;}
+		//TODO Add response Listener
+		wrapper.deleteGapList(null, text);
 		return true;
 	}
 }

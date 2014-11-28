@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import threads.ConnectedThread;
+import threads.ShowLabelThread;
 import connection.Collector;
 
 /**
@@ -53,10 +53,11 @@ public class ShowButtonListener implements ActionListener{
 			fail.setVerticalAlignment(JLabel.CENTER);
 			fail.setHorizontalAlignment(JLabel.CENTER);
 			fail.setVisible(true);
-			if (c.fillContentModel(gaplists.getSelectedIndex()))
+			c.fillContentModel(gaplists.getSelectedIndex());
+		/*	if (c.fillContentModel(gaplists.getSelectedIndex()))
 				fail.setText("Showing Gaplist " + gaplists.getSelectedValue() + ".jb");
 			else
-				fail.setText("Failed to show the Gaplist");
+				fail.setText("Failed to show the Gaplist"); */
 		}
 		else {
 			fail.setText("Please select a Gaplist first");
@@ -65,7 +66,7 @@ public class ShowButtonListener implements ActionListener{
 		fail.setVerticalAlignment(JLabel.CENTER);
 		fail.setHorizontalAlignment(JLabel.CENTER);
 		
-		ConnectedThread ct = new ConnectedThread(fail, null);
+		ShowLabelThread ct = new ShowLabelThread(fail, null);
 		ct.start();
 		
 		c.repaint();

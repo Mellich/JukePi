@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import connection.Collector;
-import connection.MessageType;
 
 /**
  * The Thread, that will listen to Notifies from the Server.
@@ -57,7 +56,7 @@ public class NotifierReaderThread extends Thread{
 	 * Executes the Listening.
 	 */
 	public void run() {
-		while (running) {
+/*		while (running) {
 			String line = "";
 			try {
 				line = reader.readLine();
@@ -78,6 +77,6 @@ public class NotifierReaderThread extends Thread{
 			case MessageType.GAPLISTCOUNTCHANGEDNOTIFY: c.fillGaplistModel();break;
 			default: break;
 			}
-		}
-	}
+		} */
+	} 
 }

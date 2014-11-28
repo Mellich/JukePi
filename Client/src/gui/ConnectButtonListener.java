@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import threads.ConnectedThread;
+import threads.ShowLabelThread;
 
 import connection.Collector;
 import javax.swing.JCheckBox;
@@ -92,7 +92,7 @@ public class ConnectButtonListener implements ActionListener{
 			jFrame.setContentPane(getJFrame().getContentPane());
 			jFrame.getContentPane().add(fail);
 			fail.setBounds(143, 278, 189, 14);
-			ConnectedThread ct = new ConnectedThread(fail, jFrame);
+			ShowLabelThread ct = new ShowLabelThread(fail, jFrame);
 			ct.start();
 			jFrame.repaint();
 		}
@@ -189,7 +189,7 @@ public class ConnectButtonListener implements ActionListener{
 		btnPlayPause.setBounds(10, 305, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
 		c.addPlayButton(btnPlayPause);
-		c.updateStatus();
+		c.getStatus();
 		
 		JButton btnSkip = new JButton("Skip");
 		btnSkip.setBounds(122, 305, 89, 45);
@@ -208,7 +208,7 @@ public class ConnectButtonListener implements ActionListener{
 
 		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
 		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront, fail));
+		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront, fail, jFrame));
 		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c, editTrackWindow));
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));

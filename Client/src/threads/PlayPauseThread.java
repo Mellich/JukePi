@@ -43,22 +43,7 @@ public class PlayPauseThread extends Thread{
 	 * Executes the Command.
 	 */
 	public void run() {
-		if (c.playButtonPressed()) {
-			if (c.updateStatus())
-				fail.setText("Track resumed");
-			else
-				fail.setText("Track paused");
-		}
-		else {
-			if (c.updateStatus())
-				fail.setText("Couldn't resume the track");
-			else
-				fail.setText("Couldn't pause the track");
-		}
-		fail.setVisible(true);
-		try {Thread.sleep(2000);} catch (Exception e) {}
-		fail.setVisible(false);
-		frame.repaint();
+		c.playButtonPressed(fail, frame);
 	}
 	
 }

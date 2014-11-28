@@ -4,11 +4,10 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import connection.Collector;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+import connection.Collector;
 
 /**
  * The Class, that will initiate the GUI.
