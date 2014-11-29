@@ -1,30 +1,24 @@
 package connection.responseListener;
 
-import javax.swing.JLabel;
-
-import threads.ShowLabelThread;
 import clientinterface.listener.ResponseListener;
 
 public class AddToListListener implements ResponseListener{
 
-	private JLabel fail;
-	private ShowLabelThread slt;
+	private boolean added;
 	
-	public AddToListListener(JLabel fail, ShowLabelThread ct) {
-		this.fail = fail;
-		this.slt = ct;
+	public AddToListListener() {
+		added = false;
 	}
 	
 	@Override
 	public void onResponse(String[] response) {
 		if (response[0].equals("true"))
-			fail.setText("Track was added to the List.");
+			added = true;
 		else
-			fail.setText("Track couldn't be added to the List.");
-		
-		fail.setHorizontalAlignment(JLabel.CENTER);
-		fail.setVerticalAlignment(JLabel.CENTER);
-		slt.start();
+			added = false;
 	}
-
+	
+	public boolean getAdded() {
+		return added;
+	}
 }

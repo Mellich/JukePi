@@ -38,6 +38,8 @@ public class CreateThread extends Thread{
 		this.fail = fail;
 	}
 	
+	//TODO Start a ShowLabelThread.
+	
 	/**
 	 * Executes the Command.
 	 */

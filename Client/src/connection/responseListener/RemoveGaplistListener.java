@@ -1,15 +1,12 @@
 package connection.responseListener;
 
-import javax.swing.JLabel;
-
-import threads.ShowLabelThread;
 import clientinterface.listener.ResponseListener;
 
-public class PlayPauseListener implements ResponseListener{
+public class RemoveGaplistListener implements ResponseListener{
 
 	private boolean success;
 	
-	public PlayPauseListener() {
+	public RemoveGaplistListener() {
 		success = false;
 	}
 	
@@ -20,8 +17,9 @@ public class PlayPauseListener implements ResponseListener{
 		else
 			success = false;
 	}
-
+	
 	public boolean getSuccess() {
 		return success;
 	}
+
 }

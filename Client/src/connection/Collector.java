@@ -11,9 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
 import connection.responseListener.*;
-import clientinterface.listener.ResponseListener;
 import clientwrapper.YTJBClientWrapper;
-import threads.ShowLabelThread;
 //import threads.StabilityThread;
 
 /**
@@ -123,6 +121,11 @@ public class Collector {
 	private DisconnectButtonListener dcListener;
 	
 	/**
+	 * Determines, if a track is played at the moment.
+	 */
+	private boolean isRunning;
+	
+	/**
 	 * The Constructor for all Collector-Instances.
 	 */
 	public Collector() {
@@ -131,7 +134,6 @@ public class Collector {
 		gaplistModel = new DefaultListModel<String>();
 		wishlistModel = new DefaultListModel<String>();
 		notifyListener = new NotifyListener(this);
-		wrapper.addNotificationListener(notifyListener);
 	}
 	
 	/**
@@ -256,6 +258,7 @@ public class Collector {
 		try {
 			int iport = Integer.parseInt(port);
 			wrapper = new YTJBClientWrapper(IP, iport);
+			wrapper.addNotificationListener(notifyListener);
 			if (wrapper.connect()) {
 				connected = true;
 				return true;
@@ -298,27 +301,29 @@ public class Collector {
 	 * @param link	The Link to the YouTube-Video.
 	 * @param inFront	Determines, if the Track should be added in front of the List or not.
 	 */
-	public void addToList(String link, boolean inFront, JLabel fail, JFrame frame) {
-		ResponseListener listener = new AddToListListener(fail, new ShowLabelThread(fail, frame));
+	public boolean addToList(String link, boolean inFront, JLabel fail, JFrame frame) {
+		AddToListListener listener = new AddToListListener();
 		wrapper.addToList(listener, link, !gaplistRB.isSelected(), !inFront);
 		repaint();
+		return listener.getAdded();
 	}
 	
 	/**
 	 * Tries to skip the current track.
 	 */
-	public void skip(JLabel fail, JFrame frame) {
-		SkipListener listener = new SkipListener(fail, new ShowLabelThread(fail, frame));
+	public boolean skip(JLabel fail, JFrame frame) {
+		SkipListener listener = new SkipListener();
 		wrapper.skip(listener);
+		return listener.getSkipped();
 	}
 	
 	/**
 	 * Handles the Input, when the PlayButton was pressed.
 	 */
-	public void playButtonPressed(JLabel fail, JFrame frame) {
-		PlayPauseListener listener = new PlayPauseListener(fail, new ShowLabelThread(fail, frame));
+	public boolean playButtonPressed() {
+		PlayPauseListener listener = new PlayPauseListener();
 		wrapper.pauseResume(listener);
-		listener.setMessage(this.getStatus());
+		return listener.getSuccess();
 	}
 	
 	/**
@@ -457,10 +462,19 @@ public class Collector {
 	 * Updates the Status of the Server (Track playing or Track paused).
 	 * @return True, if a Track is playing, false else.
 	 */
-	public boolean getStatus() {
+	public boolean getFirstStatus() {
 		UpdateStatusListener listener = new UpdateStatusListener(play);
 		wrapper.getCurrentPlaybackStatus(listener);
-		return listener.getPlaying();
+		this.isRunning = listener.getPlaying();
+		return isRunning;
+	}
+	
+	/**
+	 * Returns the Status without asking the Server.
+	 * @return	The Status of the Player.
+	 */
+	public boolean getStatus() {
+		return isRunning;
 	}
 	
 	/**
@@ -476,6 +490,7 @@ public class Collector {
 			play.setText("Play");
 			play.setToolTipText("Click here to resume.");
 		}
+		this.isRunning = isRunning;
 	}
 	
 	/**
@@ -519,9 +534,10 @@ public class Collector {
 	 * Moves the Track at the given index down.
 	 * @param index	The index of the Track.
 	 */
-	public void moveTrackDown(int index) {
-		//TODO Add response Listener?
-		wrapper.setGapListTrackDown(null, index);
+	public boolean moveTrackDown(int index) {
+		MoveTrackDownListener listener = new MoveTrackDownListener();
+		wrapper.setGapListTrackDown(listener, index);
+		return listener.getMoved();
 	}
 	
 	/**
@@ -641,8 +657,8 @@ public class Collector {
 	 * @param text	The Name of the Gaplist to be deleted.
 	 */
 	public boolean removeGaplist(String text) {
-		//TODO Add response Listener
-		wrapper.deleteGapList(null, text);
-		return true;
+		RemoveGaplistListener listener = new RemoveGaplistListener();
+		wrapper.deleteGapList(listener, text);
+		return listener.getSuccess();
 	}
 }

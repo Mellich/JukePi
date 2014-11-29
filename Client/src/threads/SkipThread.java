@@ -43,7 +43,13 @@ public class SkipThread extends Thread{
 	 * Executes the Command.
 	 */
 	public void run() {
-		c.skip(fail, frame);
+		if (c.skip(fail, frame))
+			fail.setText("Skipped Track successfully.");
+		else
+			fail.setText("Couldn't skip Track");
+		fail.setHorizontalAlignment(JLabel.CENTER);
+		fail.setVerticalAlignment(JLabel.CENTER);
+		new ShowLabelThread(fail, frame).start();
 	}
 	
 }

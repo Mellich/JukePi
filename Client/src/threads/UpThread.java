@@ -1,5 +1,7 @@
 package threads;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 
 import connection.Collector;
@@ -22,13 +24,21 @@ public class UpThread extends Thread{
 	private Collector c;
 	
 	/**
+	 * The Label that displays responses.
+	 */
+	private JLabel fail;
+	
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the Thread.
 	 * @param gaplist	The Gaplist as a selectable List.
 	 * @param c	The Collector, that will send the Messages.
 	 */
-	public UpThread(JList<String> gaplist, Collector c) {
+	public UpThread(JList<String> gaplist, Collector c, JLabel fail, JFrame frame) {
 		this.gaplist = gaplist;
 		this.c = c;
+		this.frame = frame;
 	}
 	
 	/**
@@ -36,7 +46,13 @@ public class UpThread extends Thread{
 	 */
 	public void run() {
 		int index = gaplist.getSelectedIndex();
-		c.moveTrackUp(index);
+		if (c.moveTrackUp(index))
+			fail.setText("Moved track successfully.");
+		else
+			fail.setText("Failed to move track");
+		fail.setHorizontalAlignment(JLabel.CENTER);
+		fail.setVerticalAlignment(JLabel.CENTER);
+		new ShowLabelThread(fail, frame).start();
 		try {Thread.sleep(100);} catch (InterruptedException e ) {}
 		gaplist.setSelectedIndex(index-1);
 	}

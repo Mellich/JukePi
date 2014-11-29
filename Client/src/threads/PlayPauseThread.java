@@ -43,7 +43,21 @@ public class PlayPauseThread extends Thread{
 	 * Executes the Command.
 	 */
 	public void run() {
-		c.playButtonPressed(fail, frame);
+		boolean wasRunning = c.getStatus();
+		boolean success = c.playButtonPressed();
+		if (!wasRunning)
+			if (success)
+				fail.setText("Track resumed successfully.");
+			else
+				fail.setText("Track couldn't be paused.");
+		else
+			if (success)
+				fail.setText("Track paused successfully.");
+			else
+				fail.setText("Track couldn't be resumed");
+		fail.setHorizontalAlignment(JLabel.CENTER);
+		fail.setVerticalAlignment(JLabel.CENTER);
+		new ShowLabelThread(fail, frame).start();
 	}
 	
 }

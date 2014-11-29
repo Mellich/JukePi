@@ -189,7 +189,7 @@ public class ConnectButtonListener implements ActionListener{
 		btnPlayPause.setBounds(10, 305, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
 		c.addPlayButton(btnPlayPause);
-		c.getStatus();
+		c.getFirstStatus();
 		
 		JButton btnSkip = new JButton("Skip");
 		btnSkip.setBounds(122, 305, 89, 45);

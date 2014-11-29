@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import threads.AddThread;
+import threads.ShowLabelThread;
 import connection.Collector;
 
 /**
@@ -77,8 +78,10 @@ public class AddButtonListener implements ActionListener{
 			AddThread at = new AddThread(link, button, tf, c, this, inFront, fail, frame);
 			at.start();
 		}
-		else
-			tf.setText("No valid Link");
+		else {
+			fail.setText("No valid Link");
+			new ShowLabelThread(fail, frame).start();
+		}
 	}
 
 }

@@ -51,7 +51,7 @@ public class EditTrackListener implements ActionListener{
 		//TODO Delete
 	//	JFrame frame = new JFrame();
 		//Till here
-		frame.setSize(new Dimension(575, 376));
+		frame.setSize(new Dimension(575, 400));
 		frame.setTitle("Track Edit");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setContentPane(fillContent());
@@ -124,11 +124,17 @@ public class EditTrackListener implements ActionListener{
 		btnOpen.setBounds(360, 301, 89, 23);
 		contentPane.add(btnOpen);
 		
+		JLabel lblFail = new JLabel("");
+		lblFail.setBounds(25, 346, 525, 14);
+		contentPane.add(lblFail);
+		
+		btnOpen.addActionListener(new OpenButtonListener(frame, this, c));
 		btnSave.addActionListener(new SaveButtonListener(c));
 		btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList));
-		btnUp.addActionListener(new UpButtonListener(gaplistList, c));
+		btnUp.addActionListener(new UpButtonListener(gaplistList, c, lblFail, frame));
 		btnDown.addActionListener(new DownButtonListener(gaplistList, c));
-		btnOpen.addActionListener(new OpenButtonListener(frame, this, c));
+		
+		
 		
 		return contentPane;
 	}

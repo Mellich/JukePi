@@ -83,8 +83,14 @@ public class AddThread extends Thread{
 	public void run() {
 		fail.setText("Sending URL to Server");
 		fail.setVisible(true);
-		c.addToList(link, inFront, fail, frame);
+		if (c.addToList(link, inFront, fail, frame))
+			fail.setText("Track was added to the List.");
+		else
+			fail.setText("Track couldn't be added to the List.");
 		
+		fail.setHorizontalAlignment(JLabel.CENTER);
+		fail.setVerticalAlignment(JLabel.CENTER);
+		new ShowLabelThread(fail, frame).start();
 		txt.setText("Insert a YouTube Link here.");
 		add.addActionListener(al);
 	}
