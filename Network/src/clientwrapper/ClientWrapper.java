@@ -27,5 +27,6 @@ public interface ClientWrapper {
 	public void notifyPlayerFinished(ResponseListener response);
 	public void setMeAsPlayer();
 	public boolean connect();
-	public void close();
+	public boolean isConnected();
+	public boolean close();
 }

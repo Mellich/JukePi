@@ -13,10 +13,12 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	
 	private List<NotificationListener> notificationListener;
 	private ServerConnection serverConnection;
+	private boolean connected = false;
 	
 	public YTJBClientWrapper(String ipAddress,int port) {
 		serverConnection = new YTJBServerConnection(this,ipAddress,port);
 		notificationListener = new ArrayList<NotificationListener>();
+		connected = false;
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 		case MessageType.GAPLISTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListChangedNotify(args[0]);
 			break;
 		case MessageType.DISCONNECT: for(NotificationListener l: notificationListener) l.onDisconnect();
+										connected = false;
 		}
 
 	}
@@ -155,8 +158,14 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	}
 
 	@Override
-	public void close() {
-		this.serverConnection.close();
+	public boolean close() {
+		if(serverConnection.close()){
+			connected = false;
+			return true;
+		}else{
+			connected = true;
+			return false;
+		}
 	}
 
 	@Override
@@ -166,12 +175,23 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 
 	@Override
 	public boolean connect() {
-		return serverConnection.connect();
+		if (serverConnection.connect()){
+			connected = true;
+			return true;
+		}else{
+			connected = false;
+			return false;			
+		}
 	}
 
 	@Override
 	public void getLoadGapListStatus(ResponseListener response) {
 		this.serverConnection.sendMessage(response,MessageType.GETLOADGAPLISTSTATUS);
+	}
+
+	@Override
+	public boolean isConnected() {
+		return connected;
 	}
 
 }
