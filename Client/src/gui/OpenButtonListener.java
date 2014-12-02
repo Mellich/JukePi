@@ -146,11 +146,11 @@ public class OpenButtonListener implements ActionListener{
 		lblFail.setBounds(25, 355, 525, 14);
 		contentPane.add(lblFail);
 		
-		btnCreate.addActionListener(new CreateButtonListener(c, textField, lblFail));
-		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList, lblFail));
+		btnCreate.addActionListener(new CreateButtonListener(c, textField, lblFail, frame));
+		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList, lblFail, frame));
 		btnShow.addActionListener(new ShowButtonListener(c, gaplistList, lblFail));
 		btnBack.addActionListener(new BackButtonListener(listener));
-		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList, lblFail));
+		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList, lblFail, frame));
 		
 		return contentPane;
 	}

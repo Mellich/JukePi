@@ -129,12 +129,10 @@ public class EditTrackListener implements ActionListener{
 		contentPane.add(lblFail);
 		
 		btnOpen.addActionListener(new OpenButtonListener(frame, this, c));
-		btnSave.addActionListener(new SaveButtonListener(c));
-		btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList));
+		btnSave.addActionListener(new SaveButtonListener(c, lblFail, frame));
+		btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList, lblFail, frame));
 		btnUp.addActionListener(new UpButtonListener(gaplistList, c, lblFail, frame));
-		btnDown.addActionListener(new DownButtonListener(gaplistList, c));
-		
-		
+		btnDown.addActionListener(new DownButtonListener(gaplistList, c, lblFail, frame));
 		
 		return contentPane;
 	}

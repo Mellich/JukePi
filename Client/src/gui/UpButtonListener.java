@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import connection.Collector;
-import threads.UpThread;
 
 /**
  * The ActionListener for the Up-Button.
@@ -51,7 +50,9 @@ public class UpButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		UpThread ut = new UpThread(gaplist, c, fail, frame);
-		ut.start();
+		int index = gaplist.getSelectedIndex();
+		c.moveTrackUp(index, fail, frame);
+		try{Thread.sleep(100);}catch(Exception e) {}
+		gaplist.setSelectedIndex(index-1);
 	}
 }

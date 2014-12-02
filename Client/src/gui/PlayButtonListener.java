@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import threads.PlayPauseThread;
-
 import connection.Collector;
 
 /**
@@ -49,8 +47,7 @@ public class PlayButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		PlayPauseThread ppt = new PlayPauseThread(c, fail, frame);
-		ppt.start();
+		c.playButtonPressed(fail, frame);
 		frame.repaint();
 	}
 

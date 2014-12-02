@@ -3,10 +3,10 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import threads.RemoveThread;
 import connection.Collector;
 
 /**
@@ -32,15 +32,21 @@ public class RemoveButtonListener implements ActionListener{
 	private JLabel fail;
 	
 	/**
+	 * The Frame of the Application.
+	 */
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector, that will send the Messages.
 	 * @param gaplists	The Gaplists as a selectable List.
 	 * @param fail	The Label, that will display possible Messages.
 	 */
-	public RemoveButtonListener(Collector c, JList<String> gaplists, JLabel fail) {
+	public RemoveButtonListener(Collector c, JList<String> gaplists, JLabel fail, JFrame frame) {
 		this.c = c;
 		this.gaplists = gaplists;
 		this.fail = fail;
+		this.frame = frame;
 	}
 
 	/**
@@ -48,7 +54,6 @@ public class RemoveButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		RemoveThread rt = new RemoveThread(c, gaplists, fail);
-		rt.start();
+		c.removeFromGaplist(gaplists.getSelectedValue(), fail, frame);
 	}
 }

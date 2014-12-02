@@ -7,10 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import threads.AddThread;
-import threads.ShowLabelThread;
 import connection.Collector;
 
 /**
@@ -40,6 +39,8 @@ public class AddButtonListener implements ActionListener{
 	 */
 	private JCheckBox checkBox;
 	
+	private JRadioButton wishlist;
+	
 	/**
 	 * The Label, that will Display Messages.
 	 */
@@ -57,13 +58,14 @@ public class AddButtonListener implements ActionListener{
 	 * @param checkBox	The CheckBox.
 	 * @param fail	The Label.
 	 */
-	public AddButtonListener(JTextField field, Collector c, JButton button, JCheckBox checkBox, JLabel fail, JFrame frame) {
+	public AddButtonListener(JTextField field, JRadioButton wishlist, Collector c, JButton button, JCheckBox checkBox, JLabel fail, JFrame frame) {
 		this.tf = field;
 		this.c = c;
 		this.button = button;
 		this.checkBox = checkBox;
 		this.fail = fail;
 		this.frame = frame;
+		this.wishlist = wishlist;
 	}
 	
 	/**
@@ -75,12 +77,11 @@ public class AddButtonListener implements ActionListener{
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
 		if (link.contains("youtube.") && link.contains("/watch")) {
-			AddThread at = new AddThread(link, button, tf, c, this, inFront, fail, frame);
-			at.start();
+			c.addToList(link, wishlist.isSelected(), inFront, tf, fail, frame);
 		}
 		else {
 			fail.setText("No valid Link");
-			new ShowLabelThread(fail, frame).start();
+			new util.ShowLabelThread(fail, frame).start();
 		}
 	}
 

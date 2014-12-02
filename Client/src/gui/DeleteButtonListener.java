@@ -3,9 +3,9 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
-
-import threads.DeleteThread;
 
 import connection.Collector;
 
@@ -27,13 +27,25 @@ public class DeleteButtonListener implements ActionListener{
 	private JList<String> gaplistModel;
 	
 	/**
+	 * The Label that displays responses.
+	 */
+	private JLabel fail;
+	
+	/**
+	 * The Frame of the Application.
+	 */
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector that will send the Messages.
 	 * @param gaplistModel	The Gaplist as a selectable List.
 	 */
-	public DeleteButtonListener(Collector c, JList<String> gaplistModel) {
+	public DeleteButtonListener(Collector c, JList<String> gaplistModel, JLabel fail, JFrame frame) {
 		this.c = c;
 		this.gaplistModel = gaplistModel;
+		this.fail = fail;
+		this.frame = frame;
 	}
 	
 	/**
@@ -42,8 +54,7 @@ public class DeleteButtonListener implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		int i = gaplistModel.getSelectedIndex();
-		DeleteThread dt = new DeleteThread(c, i);
-		dt.start();
+		c.deleteFromGaplist(i, fail, frame);
 	}
 
 }

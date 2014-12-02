@@ -52,7 +52,7 @@ public class GUI {
 		
 		txtPort = new JTextField();
 //TODO	txtPort.setText("Port");
-		txtPort.setText("12345");
+		txtPort.setText("22222");
 		txtPort.setBounds(151, 184, 45, 20);
 		jFrame.getContentPane().add(txtPort);
 		txtPort.setColumns(10);
