@@ -326,7 +326,7 @@ public class YTJBServer extends Thread {
 			player.remove(c);
 			playerFinished.release();
 		}
-		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
+		IO.printlnDebug(this, "Count of connected Players: "+player.size());
 	}
 	
 	public synchronized void removeNotifiable(Connection c){
