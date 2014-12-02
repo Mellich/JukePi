@@ -55,7 +55,15 @@ public class CreateButtonListener implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		if (tf.getText() != null && !tf.getText().equals("")) {
-			c.createGaplist(tf.getText(), fail, frame);
+			String s = tf.getText();
+			s = s.replaceAll("ä", "ae");
+			s = s.replaceAll("Ä", "ae");
+			s = s.replaceAll("ü", "ue");
+			s = s.replaceAll("Ü", "ue");
+			s = s.replaceAll("ö", "oe");
+			s = s.replaceAll("Ö", "oe");
+			s = s.replaceAll("ß", "ss");
+			c.createGaplist(s, fail, frame);
 		}
 		else {
 			fail.setText("Please insert a Name for the new Gaplist first");

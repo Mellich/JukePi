@@ -259,10 +259,10 @@ public class Collector implements NotificationListener{
 	public void createGaplist(String name, JLabel fail, JFrame frame) {
 		wrapper.switchToGapList((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Created a new Gaplist.");else fail.setText("Failed to create a new Gaplist.");
 												fail.setVerticalAlignment(JLabel.CENTER);fail.setHorizontalAlignment(JLabel.CENTER);
-												new ShowLabelThread(fail, frame).start();}, name);
-		wrapper.saveGapList((String[] s) -> {boolean answer = Boolean.parseBoolean(s[0]);if (answer)fail.setText("New Gaplist created.");else 
-											fail.setText("Failed to create a new Gaplist.");fail.setHorizontalAlignment(JLabel.CENTER); 
-											fail.setVerticalAlignment(JLabel.CENTER);new ShowLabelThread(fail, frame).start();});
+												new ShowLabelThread(fail, frame).start();wrapper.saveGapList((String[] l) -> {boolean answer = Boolean.parseBoolean(l[0]);
+												if (answer)fail.setText("New Gaplist saved.");else fail.setText("Failed to save the new Gaplist.");
+												fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
+												new ShowLabelThread(fail, frame).start();});}, name);
 	}
 	
 	public void skip(JLabel fail, JFrame frame) {

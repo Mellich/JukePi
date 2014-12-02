@@ -73,7 +73,6 @@ public class AddButtonListener implements ActionListener{
 	 * @param e Just a stub.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		button.removeActionListener(this);		//If you do that in the thread, sending this message multiple times is possible
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
 		if (link.contains("youtube.") && link.contains("/watch")) {
