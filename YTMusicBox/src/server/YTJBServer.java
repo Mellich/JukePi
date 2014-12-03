@@ -219,7 +219,10 @@ public class YTJBServer extends Thread {
 		args[0] = currentGapList;
 		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY,args);
 		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
-		IO.loadGapListFromFile(workingDirectory+currentGapList, this);	
+		if(!IO.loadGapListFromFile(workingDirectory+currentGapList, this)){
+			this.searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY, gapLists);
+		}
 	}
 	
 	/**saves the gap list to a file

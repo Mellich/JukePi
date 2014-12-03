@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
+import messages.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -103,7 +104,7 @@ public class IO {
 		
 	}
 	
-	public static void loadGapListFromFile(String filename, YTJBServer server){
+	public static boolean loadGapListFromFile(String filename, YTJBServer server){
 		try {
 			BufferedReader reader = getFileOutput(filename);
 			server.setMaxGapListTrackCount((int) reader.lines().count());
@@ -124,8 +125,11 @@ public class IO {
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
 			IO.saveGapListToFile(null, filename);
+			server.setMaxGapListTrackCount(0);
+			return false;
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
+		return true;
 	}
 	
 	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
