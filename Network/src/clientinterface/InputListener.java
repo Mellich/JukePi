@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import messages.MessageType;
+import clientinterface.YTJBServerConnection.AliveChecker;
 import clientinterface.handler.NotificationHandler;
 import clientinterface.handler.ResponseHandler;
 import clientwrapper.ClientNotifyWrapper;
@@ -14,11 +15,13 @@ public class InputListener implements Runnable {
 	private BufferedReader input;
 	private ClientNotifyWrapper notifyWrapper;
 	private ResponseController responses;
+	private AliveChecker checker;
 	
-	public InputListener(BufferedReader input, ClientNotifyWrapper notifyWrapper,ResponseController responses) {
+	public InputListener(BufferedReader input, ClientNotifyWrapper notifyWrapper,ResponseController responses, AliveChecker checker) {
 		this.input = input;
 		this.notifyWrapper = notifyWrapper;
 		this.responses = responses;
+		this.checker = checker;
 	}
 	
 	@Override
@@ -26,6 +29,7 @@ public class InputListener implements Runnable {
 		try {
 			while (running){
 				String line = input.readLine();
+				checker.setLastResponse();
 				if (Thread.interrupted())
 					break;
 				String[] params = line.split(MessageType.SEPERATOR);

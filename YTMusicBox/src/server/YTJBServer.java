@@ -251,11 +251,14 @@ public class YTJBServer extends Thread {
 	}
 	
 	public boolean deleteGapList(String filename){
+		boolean deletedCorrectly = false;
 		filename = filename +".jb";
-		boolean deletedCorrectly = IO.deleteGapList(workingDirectory+filename);
-		if (deletedCorrectly){
-			this.searchGapLists();
-			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
+		if (!filename.equals(currentGapList)){
+			deletedCorrectly = IO.deleteGapList(workingDirectory+filename);
+			if (deletedCorrectly){
+				this.searchGapLists();
+				this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
+			}
 		}
 		return deletedCorrectly;
 	}

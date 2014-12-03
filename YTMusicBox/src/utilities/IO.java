@@ -15,7 +15,6 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
-import messages.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -122,9 +121,10 @@ public class IO {
 				url = reader.readLine();
 			}
 			reader.close();
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
-			IO.saveGapListToFile(null, filename);
+			IO.printlnDebug(null, "Creating new Gap list: "+filename);
+			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename);
 			server.setMaxGapListTrackCount(0);
 			return false;
 		}

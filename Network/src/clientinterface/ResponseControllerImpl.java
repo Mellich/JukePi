@@ -34,7 +34,10 @@ public class ResponseControllerImpl implements ResponseController {
 				return temp.poll();
 			else return null;
 		}
-		else return null;
+		else {
+			System.out.println("MessageType nicht gefunden!");
+			return null;
+		}
 	}
 
 }

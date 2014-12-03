@@ -13,6 +13,10 @@ import clientinterface.listener.NotificationListener;
 import clientwrapper.YTJBClientWrapper;
 
 public class Collector implements NotificationListener{
+	
+	//time in ms when the wrapper should check the connectivity of the server
+	//if no response arrived
+	private static final int CONNECTIONCHECKINTERVALL = 15000;
 
 	private YTJBClientWrapper wrapper;
 	private boolean isPlaying;
@@ -157,7 +161,7 @@ public class Collector implements NotificationListener{
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		wrapper = new YTJBClientWrapper(ip, iport);
+		wrapper = new YTJBClientWrapper(ip, iport,CONNECTIONCHECKINTERVALL);
 		wrapper.addNotificationListener(this);
 		
 		if (wrapper.connect())
@@ -259,10 +263,7 @@ public class Collector implements NotificationListener{
 	public void createGaplist(String name, JLabel fail, JFrame frame) {
 		wrapper.switchToGapList((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Created a new Gaplist.");else fail.setText("Failed to create a new Gaplist.");
 												fail.setVerticalAlignment(JLabel.CENTER);fail.setHorizontalAlignment(JLabel.CENTER);
-												new ShowLabelThread(fail, frame).start();wrapper.saveGapList((String[] l) -> {boolean answer = Boolean.parseBoolean(l[0]);
-												if (answer)fail.setText("New Gaplist saved.");else fail.setText("Failed to save the new Gaplist.");
-												fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
-												new ShowLabelThread(fail, frame).start();});}, name);
+												new ShowLabelThread(fail, frame).start();}, name);
 	}
 	
 	public void skip(JLabel fail, JFrame frame) {

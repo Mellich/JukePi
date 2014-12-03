@@ -12,7 +12,7 @@ import clientwrapper.YTJBClientWrapper;
 public class SmallClientANdListener implements NotificationListener {
 	
 	public SmallClientANdListener() {
-		ClientWrapper server = new YTJBClientWrapper("192.168.178.34",22222);
+		ClientWrapper server = new YTJBClientWrapper("192.168.178.34",22222,30000);
 		if (server.connect()){
 			server.addNotificationListener(this);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

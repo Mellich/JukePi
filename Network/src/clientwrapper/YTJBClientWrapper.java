@@ -16,7 +16,11 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	private boolean connected = false;
 	
 	public YTJBClientWrapper(String ipAddress,int port) {
-		serverConnection = new YTJBServerConnection(this,ipAddress,port);
+		this(ipAddress,port,0);
+	}
+	
+	public YTJBClientWrapper(String ipAddress,int port, int checkIntervall) {
+		serverConnection = new YTJBServerConnection(this,ipAddress,port,checkIntervall);
 		notificationListener = new ArrayList<NotificationListener>();
 		connected = false;
 	}
