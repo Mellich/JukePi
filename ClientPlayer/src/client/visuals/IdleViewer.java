@@ -45,7 +45,7 @@ public class IdleViewer {
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7 (Should work properly now!)");
+		Text version = new Text(5,25,"Build version 0.7.1 (Fixed crash when skipped many times in a row!)");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");

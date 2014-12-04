@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 public class PlayerStarter extends Application implements NotificationListener {
 	
 	private ClientWrapper server;
-	private OMXPlayer player;
+	private OMXPlayer player = null;
 	private IdleViewer viewer;
 
 	@Override
@@ -61,8 +61,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 
 	@Override
 	public void onDisconnect() {
-		// TODO Auto-generated method stub
-		
+		IO.printlnDebug(this, "Disconnect from Server!");
 	}
 
 	@Override

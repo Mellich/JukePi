@@ -3,6 +3,7 @@ package client;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+
 import clientwrapper.ClientWrapper;
 import utilities.IO;
 import utilities.ProcessCommunicator;
@@ -14,11 +15,12 @@ public class OMXPlayer implements Runnable{
 	private boolean wasSkipped = false;
 	private BufferedWriter out;
 	private ClientWrapper server;
-	private String track;
 	private Thread playThread;
 
 	public void play(String track) {
-		this.track = track;
+		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
+		if (playerProcess != null)
+			out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 		playThread = new Thread(this);
 		playThread.start();
 	}
@@ -26,25 +28,34 @@ public class OMXPlayer implements Runnable{
 	public OMXPlayer(ClientWrapper server) {
 		this.server = server;
 	}
+	
+	private synchronized void setSkipped(boolean b){
+		wasSkipped = true;
+	}
+	
+	private synchronized boolean isSkipped(){
+		return wasSkipped;
+	}
 
 	public boolean skip() {
 		try {
+			setSkipped(true);
 			out.write("q");
 			out.flush();
-			IO.printlnDebug(this, "Skipped track successfully");
-			wasSkipped = true;
+			playerProcess.destroy();
 			playThread.join();
+			IO.printlnDebug(this, "Skipped track successfully");
 			return true;
 		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(this, "could not skip track successfully");
-		}
-		catch(InterruptedException e){
-			IO.printlnDebug(this, "Waiting for play back thread interrupted!");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}
 
-	public boolean pauseResume() {
+	public synchronized boolean pauseResume() {
 		try {
 			
 			out.write(' ');
@@ -63,13 +74,11 @@ public class OMXPlayer implements Runnable{
 
 	@Override
 	public void run() {
-		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
 		if (playerProcess != null){
 			try {
-				out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 				playing = true;
 				playerProcess.waitFor();
-				if (!wasSkipped)
+				if (!isSkipped())
 					server.notifyPlayerFinished((String[] s) -> {});
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
