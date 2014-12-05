@@ -161,10 +161,10 @@ public class Collector implements NotificationListener{
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		wrapper = new YTJBClientWrapper(ip, iport,CONNECTIONCHECKINTERVALL);
+		wrapper = new YTJBClientWrapper(CONNECTIONCHECKINTERVALL);
 		wrapper.addNotificationListener(this);
 		
-		if (wrapper.connect())
+		if (wrapper.connect(ip, iport))
 			return true;
 		else
 			return false;

@@ -134,4 +134,18 @@ public class YTJBServerConnection implements ServerConnection {
 		
 	}
 
+	@Override
+	public String getIPAddress() {
+		if (socket != null)
+			return socket.getInetAddress().getHostAddress();
+		else return null;
+	}
+
+	@Override
+	public int getPort() {
+		if (socket != null)
+			return socket.getPort();
+		else return 0;
+	}
+
 }

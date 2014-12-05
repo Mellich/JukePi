@@ -1,7 +1,5 @@
 package client;
 
-import java.util.List;
-
 import utilities.IO;
 import client.visuals.IdleViewer;
 import clientinterface.listener.NotificationListener;
@@ -15,21 +13,16 @@ public class PlayerStarter extends Application implements NotificationListener {
 	private ClientWrapper server;
 	private OMXPlayer player = null;
 	private IdleViewer viewer;
+	private Thread listenBroadcast;
 
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
 		viewer = new IdleViewer(primaryStage);
 		viewer.showLogoSync(true);
-		List<String> args = this.getParameters().getRaw();
-		String ip = args.get(0);
-		int port = Integer.parseInt(args.get(1));
-		server = new YTJBClientWrapper(ip,port);
+		server = new YTJBClientWrapper();
 		server.addNotificationListener(this);
-		if (server.connect())
-			IO.printlnDebug(this, "Connected!");
-		server.setMeAsPlayer();
-		server.getCurrentGapListName((String[] s) -> viewer.currentGaplistSync(s[0]));
-		viewer.editConnectionDetails(ip, port);
+		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
+		listenBroadcast.start();
 	}
 	
 	public static void main(String[] args) {
@@ -62,6 +55,8 @@ public class PlayerStarter extends Application implements NotificationListener {
 	@Override
 	public void onDisconnect() {
 		IO.printlnDebug(this, "Disconnect from Server!");
+		viewer.editConnectionDetails("NICHT VERBUNDEN", 0);
+		listenBroadcast.start();
 	}
 
 	@Override

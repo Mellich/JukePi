@@ -1,5 +1,9 @@
 package clientwrapper;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +18,16 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	private List<NotificationListener> notificationListener;
 	private ServerConnection serverConnection;
 	private boolean connected = false;
+	private int checkIntervall = 0;
 	
-	public YTJBClientWrapper(String ipAddress,int port) {
-		this(ipAddress,port,0);
+	public YTJBClientWrapper() {
+		this(0);
 	}
 	
-	public YTJBClientWrapper(String ipAddress,int port, int checkIntervall) {
-		serverConnection = new YTJBServerConnection(this,ipAddress,port,checkIntervall);
+	public YTJBClientWrapper(int checkIntervall) {
 		notificationListener = new ArrayList<NotificationListener>();
 		connected = false;
+		this.checkIntervall = checkIntervall;
 	}
 
 	@Override
@@ -178,7 +183,8 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	}
 
 	@Override
-	public boolean connect() {
+	public boolean connect(String ipAddress, int port) {
+		this.serverConnection = new YTJBServerConnection(this,ipAddress,port,checkIntervall);
 		if (serverConnection.connect()){
 			connected = true;
 			return true;
@@ -196,6 +202,53 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	@Override
 	public boolean isConnected() {
 		return connected;
+	}
+
+	@Override
+	public String[] waitForUDPConnect() {
+	    // Netzwerk-Gruppe
+	    String NETWORK_GROUP = "230.0.0.1";
+	    // Netzwerk-Gruppen Port
+	    int NETWORK_GROUP_PORT = 4447;
+	   
+	    // Nachrichten-Codierung
+	    String TEXT_ENCODING = "UTF8";
+	   
+	    MulticastSocket socket;
+	 
+	    try {
+	      // Gruppe anlegen
+	      socket = new MulticastSocket(NETWORK_GROUP_PORT);
+	      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
+
+	      socket.joinGroup(socketAddress);
+	   
+	     
+	      byte[] bytes = new byte[65536];
+	      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+	     
+	      while(true){
+	        // Warten auf Nachricht
+	        socket.receive(packet);
+	        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
+	        socket.close();
+	        return message.split(MessageType.SEPERATOR);
+	      }   
+	     
+	    } catch (IOException e) {
+	      e.printStackTrace();
+	    }
+	    return null;
+	}
+
+	@Override
+	public String getIPAddress() {
+		return this.serverConnection.getIPAddress();
+	}
+
+	@Override
+	public int getPort() {
+		return this.serverConnection.getPort();
 	}
 
 }

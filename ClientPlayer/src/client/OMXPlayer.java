@@ -12,7 +12,7 @@ public class OMXPlayer implements Runnable{
 	
 	private Process playerProcess;
 	private boolean playing = false;
-	private boolean wasSkipped = false;
+	private volatile boolean wasSkipped = false;
 	private BufferedWriter out;
 	private ClientWrapper server;
 	private Thread playThread;

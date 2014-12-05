@@ -16,7 +16,6 @@ import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 import utilities.IO;
-import utilities.ProcessCommunicator;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
  * by a client 
@@ -81,6 +80,8 @@ public class YTJBServer extends Thread {
 	
 	private int maxGapListTracks = 0;
 	
+	private Thread connectionBroadcast = null;
+	
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -89,7 +90,9 @@ public class YTJBServer extends Thread {
 		try {
 			waiter.start();
 			scheduler.start();
-			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
+			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
+			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
+			this.connectionBroadcast.start();
 			closePrompt.acquire();
 			IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
 			scheduler.setRunning(false);
@@ -104,6 +107,10 @@ public class YTJBServer extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public String getWorkingDir(){
+		return workingDirectory;
 	}
 	
 	private synchronized String[] listToArray(LinkedList<MusicTrack> list){
@@ -376,7 +383,16 @@ public class YTJBServer extends Thread {
 	public YTJBServer(int port) {
 			try {
 				this.port = port;
-				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath().replace("server.jar", "");
+				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				int lastdir = this.workingDirectory.lastIndexOf("/");
+				if (lastdir == this.workingDirectory.length() - 1){
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir);
+					lastdir = this.workingDirectory.lastIndexOf("/");
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);
+				}
+				else{
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);					
+				}
 				System.out.println(this.workingDirectory);
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
@@ -402,7 +418,7 @@ public class YTJBServer extends Thread {
 		gapLists = IO.getGapLists(workingDirectory);
 	}
 	
-	private String getIpAddress() { 
+	public String getIpAddress() { 
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();

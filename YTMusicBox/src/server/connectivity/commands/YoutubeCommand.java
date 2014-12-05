@@ -33,7 +33,7 @@ public class YoutubeCommand extends Command {
 	public boolean handle() {
 		String[] parsedURL;
 		try {
-			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url);
+			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url,server.getWorkingDir());
 			if (parsedURL[0] != null){
 				response(""+true);
 				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,parsedURL[0],parsedURL[1],url);

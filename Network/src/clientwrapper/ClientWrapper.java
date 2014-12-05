@@ -26,7 +26,10 @@ public interface ClientWrapper {
 	public void getLoadGapListStatus(ResponseListener response);
 	public void notifyPlayerFinished(ResponseListener response);
 	public void setMeAsPlayer();
-	public boolean connect();
+	public boolean connect(String ipAddress, int port);
 	public boolean isConnected();
 	public boolean close();
+	public String[] waitForUDPConnect();
+	public String getIPAddress();
+	public int getPort();
 }
