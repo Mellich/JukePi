@@ -49,6 +49,8 @@ public class SkipButtonListener implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		c.skip(fail, frame);
 		frame.repaint();
+		try{Thread.sleep(100);}catch(Exception e) {}
+		c.repaint();
 	}
 
 }

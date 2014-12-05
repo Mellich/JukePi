@@ -3,7 +3,6 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,11 +29,6 @@ public class AddButtonListener implements ActionListener{
 	private Collector c;
 	
 	/**
-	 * The AddButton.
-	 */
-	private JButton button;
-	
-	/**
 	 * The CheckBox, that will determine, if a Track will be added in Front or at the End of the List.
 	 */
 	private JCheckBox checkBox;
@@ -58,10 +52,9 @@ public class AddButtonListener implements ActionListener{
 	 * @param checkBox	The CheckBox.
 	 * @param fail	The Label.
 	 */
-	public AddButtonListener(JTextField field, JRadioButton wishlist, Collector c, JButton button, JCheckBox checkBox, JLabel fail, JFrame frame) {
+	public AddButtonListener(JTextField field, JRadioButton wishlist, Collector c, JCheckBox checkBox, JLabel fail, JFrame frame) {
 		this.tf = field;
 		this.c = c;
-		this.button = button;
 		this.checkBox = checkBox;
 		this.fail = fail;
 		this.frame = frame;

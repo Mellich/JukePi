@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,8 +13,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import util.ShowLabelThread;
-
 import connection.Collector;
+
 import javax.swing.JCheckBox;
 
 /**
@@ -205,10 +206,10 @@ public class ConnectButtonListener implements ActionListener{
 		
 		DisconnectButtonListener dcListener = new DisconnectButtonListener(jFrame, c, editTrackWindow);
 		c.addDisconnectListener(dcListener);
-		
-		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
-		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, rdbtnWishlist, c, btnAdd, chckbxInfront, fail, jFrame));
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(rdbtnGaplist);
+		bg.add(rdbtnWishlist);
+		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, rdbtnWishlist, c, chckbxInfront, fail, jFrame));
 		btnDisconnect.addActionListener(dcListener);
 		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
 		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
