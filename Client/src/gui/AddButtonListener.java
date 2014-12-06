@@ -33,6 +33,9 @@ public class AddButtonListener implements ActionListener{
 	 */
 	private JCheckBox checkBox;
 	
+	/**
+	 * The selectable RadioButton, that determines, if a Track should be added to the Wishlist.
+	 */
 	private JRadioButton wishlist;
 	
 	/**
@@ -44,13 +47,15 @@ public class AddButtonListener implements ActionListener{
 	 * The Frame, the Button for this Listener is in.
 	 */
 	private JFrame frame;
+	
 	/**
 	 * The Constructor for the Listener.
-	 * @param field	The TextField.
-	 * @param c	The Collector.
-	 * @param button	The AddButton
-	 * @param checkBox	The CheckBox.
-	 * @param fail	The Label.
+	 * @param field	The TextField with the Link in it.
+	 * @param wishlist	The RadioButton for the Wishlist.
+	 * @param c	The Collector, that will send the Message.
+	 * @param checkBox	The CheckBox, that determines if the Track should be added in front of the List.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public AddButtonListener(JTextField field, JRadioButton wishlist, Collector c, JCheckBox checkBox, JLabel fail, JFrame frame) {
 		this.tf = field;

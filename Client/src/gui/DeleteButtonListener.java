@@ -40,6 +40,8 @@ public class DeleteButtonListener implements ActionListener{
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector that will send the Messages.
 	 * @param gaplistModel	The Gaplist as a selectable List.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public DeleteButtonListener(Collector c, JList<String> gaplistModel, JLabel fail, JFrame frame) {
 		this.c = c;

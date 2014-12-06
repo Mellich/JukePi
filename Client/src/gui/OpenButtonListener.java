@@ -17,8 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 
 /**
- * The ActionListener for the OpenButton
- * @author Frederic
+ * The ActionListener for the OpenButton.
+ * @author Haeldeus
  *
  */
 public class OpenButtonListener implements ActionListener{

@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import connection.Collector;
 
 /**
- * The ActionListener for the CreateButton
+ * The ActionListener for the CreateButton.
  * @author Haeldeus.
  *
  */
@@ -41,6 +41,7 @@ public class CreateButtonListener implements ActionListener{
 	 * @param c	The Collector that will send the Messages.
 	 * @param tf	The TextField, that contains the Name for the List.
 	 * @param fail	The Label, that will display possible Messages.
+	 * @param frame The Frame, that contains the Fail-Label.
 	 */
 	public CreateButtonListener(Collector c, JTextField tf, JLabel fail, JFrame frame) {
 		this.c = c;

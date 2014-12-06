@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import connection.Collector;
 
 /**
- * The ActionListener for the DisconnectButton
+ * The ActionListener for the DisconnectButton.
  * @author Haeldeus
  *
  */

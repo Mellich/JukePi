@@ -45,7 +45,7 @@ public class GUI {
 		
 		txtIp = new JTextField();
 //TODO	txtIp.setText("IP");
-		txtIp.setText("192.168.178.34");
+		txtIp.setText("192.168.178.20");
 		txtIp.setBounds(151, 110, 186, 20);
 		jFrame.getContentPane().add(txtIp);
 		txtIp.setColumns(10);

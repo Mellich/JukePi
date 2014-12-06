@@ -40,6 +40,7 @@ public class LoadButtonListener implements ActionListener{
 	 * @param c	The Collector that will send the Messages.
 	 * @param gaplists	The Gaplists as a selectable List.
 	 * @param fail	The Label that will will display possible Messages.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public LoadButtonListener(Collector c, JList<String> gaplists, JLabel fail, JFrame frame) {
 		this.c = c;

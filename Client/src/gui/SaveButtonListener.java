@@ -20,13 +20,21 @@ public class SaveButtonListener implements ActionListener{
 	 */
 	private Collector c;
 	
+	/**
+	 * The Label, that will display Responses.
+	 */
 	private JLabel fail;
 	
+	/**
+	 * The Frame, that contains the Fail-Label.
+	 */
 	private JFrame frame;
 	
 	/**
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector that will send the Messages.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public SaveButtonListener(Collector c, JLabel fail, JFrame frame) {
 		this.c = c;

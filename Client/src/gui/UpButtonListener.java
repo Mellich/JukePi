@@ -31,12 +31,17 @@ public class UpButtonListener implements ActionListener{
 	 */
 	private JLabel fail;
 	
+	/**
+	 * The Frame, that contains the Fail-Label.
+	 */
 	private JFrame frame;
 	
 	/**
 	 * The Constructor for the ActionListener.
 	 * @param gaplist	The Gaplist as a selectable List.
 	 * @param c	The Collector, that will send the Message.
+ 	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public UpButtonListener(JList<String> gaplist, Collector c, JLabel fail, JFrame frame) {
 		this.gaplist = gaplist;

@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * The ActionListener for the Back-Button
+ * The ActionListener for the Back-Button.
  * @author Haeldeus
  *
  */
@@ -17,7 +17,7 @@ public class BackButtonListener implements ActionListener{
 	
 	/**
 	 * The Constructor for the Listener.
-	 * @param listener	The Disconnect-ActionListener.
+	 * @param listener	The Listener, to build the EditTrackWindow.
 	 */
 	public BackButtonListener(EditTrackListener listener) {
 		this.listener = listener;
