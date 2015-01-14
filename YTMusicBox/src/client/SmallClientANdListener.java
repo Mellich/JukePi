@@ -30,6 +30,7 @@ public class SmallClientANdListener implements NotificationListener {
 	
 	public static void main(String[] args) {
 		SmallClientANdListener l = new SmallClientANdListener();
+		l.getClass();
 	}
 
 	@Override

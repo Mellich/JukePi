@@ -121,6 +121,14 @@ public class YTJBServer extends Thread {
 		return result;
 	}
 	
+	public int getCurrentClientCount(){
+		return notifiables.size();
+	}
+	
+	public int getCurrentPlayerCount(){
+		return player.size();
+	}
+	
 	/**adds a MusicTrack to a list
 	 * 
 	 * @param track the track to be added

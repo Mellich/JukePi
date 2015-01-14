@@ -251,4 +251,14 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 		return this.serverConnection.getPort();
 	}
 
+	@Override
+	public void getCurrentPlayerCount(ResponseListener response) {
+		this.serverConnection.sendMessage(response,MessageType.GETCURRENTPLAYERCOUNT);
+	}
+
+	@Override
+	public void getCurrentClientCount(ResponseListener response) {
+		this.serverConnection.sendMessage(response, MessageType.GETCURRENTCLIENTCOUNT);
+	}
+
 }

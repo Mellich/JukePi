@@ -121,12 +121,14 @@ public class IO {
 				url = reader.readLine();
 			}
 			reader.close();
-		} catch (IOException | NullPointerException e) {
+		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
 			IO.printlnDebug(null, "Creating new Gap list: "+filename);
+			return false;
+		}
+		catch (NullPointerException e){
 			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename);
 			server.setMaxGapListTrackCount(0);
-			return false;
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
 		return true;

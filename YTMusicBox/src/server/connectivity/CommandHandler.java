@@ -83,6 +83,10 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
 			break;
+		case MessageType.GETCURRENTCLIENTCOUNT: new GetCurrentClientCountCommand(out,prompt,server).handle();
+			break;
+		case MessageType.GETCURRENTPLAYERCOUNT: new GetCurrentPlayerCountCommand(out,prompt,server).handle();
+			break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}
