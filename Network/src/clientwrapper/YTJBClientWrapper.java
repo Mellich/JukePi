@@ -205,7 +205,7 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	}
 
 	@Override
-	public String[] waitForUDPConnect() {
+	public ServerAddress waitForUDPConnect() {
 	    // Netzwerk-Gruppe
 	    String NETWORK_GROUP = "230.0.0.1";
 	    // Netzwerk-Gruppen Port
@@ -216,12 +216,12 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	   
 	    MulticastSocket socket;
 	 
-	    try {
 	      // Gruppe anlegen
-	      socket = new MulticastSocket(NETWORK_GROUP_PORT);
-	      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
+	      try {
+			socket = new MulticastSocket(NETWORK_GROUP_PORT);
+		      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
 
-	      socket.joinGroup(socketAddress);
+		      socket.joinGroup(socketAddress);
 	   
 	     
 	      byte[] bytes = new byte[65536];
@@ -229,15 +229,21 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	     
 	      while(true){
 	        // Warten auf Nachricht
-	        socket.receive(packet);
-	        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
-	        socket.close();
-	        return message.split(MessageType.SEPERATOR);
+	  	    try {
+		        socket.receive(packet);
+		        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
+		        socket.leaveGroup(socketAddress);
+		        socket.close();
+		        String[] values = message.split(MessageType.SEPERATOR);
+		        return new ServerAddress(values[0],Integer.parseInt(values[1]));
+		    } catch (IOException e) {
+			      e.printStackTrace();
+			    }
 	      }   
-	     
-	    } catch (IOException e) {
-	      e.printStackTrace();
-	    }
+		} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+		}
 	    return null;
 	}
 
@@ -259,6 +265,11 @@ public class YTJBClientWrapper implements ClientWrapper, ClientNotifyWrapper {
 	@Override
 	public void getCurrentClientCount(ResponseListener response) {
 		this.serverConnection.sendMessage(response, MessageType.GETCURRENTCLIENTCOUNT);
+	}
+
+	@Override
+	public boolean connect(ServerAddress serverAddress) {
+		return connect(serverAddress.getIPAddress(),serverAddress.getPort());
 	}
 
 }

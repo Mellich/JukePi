@@ -4,18 +4,18 @@ import java.util.concurrent.Semaphore;
 
 import utilities.IO;
 import client.visuals.IdleViewer;
+import client.visuals.Visualizer;
 import clientinterface.listener.NotificationListener;
 import clientwrapper.ClientWrapper;
 import clientwrapper.YTJBClientWrapper;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class PlayerStarter extends Application implements NotificationListener {
 	
 	private ClientWrapper server;
 	private volatile OMXPlayer player = null;
-	private IdleViewer viewer;
+	private Visualizer viewer;
 	private Thread listenBroadcast;
 	private Semaphore playerMutex = new Semaphore(1);
 	private volatile int pauseResumeWaitingCount = 0;
@@ -23,9 +23,9 @@ public class PlayerStarter extends Application implements NotificationListener {
 
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
-		viewer = new IdleViewer(primaryStage);
-		viewer.showLogoSync(true);
 		server = new YTJBClientWrapper(15000);
+		viewer = new IdleViewer(primaryStage,server);
+		viewer.showIdleScreen(true);
 		server.addNotificationListener(this);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
 		listenBroadcast.start();
@@ -43,7 +43,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 			if (player != null && isPlaying != player.isPlaying()){
 				player.pauseResume();
 				if (pauseResumeWaitingCount == 1)
-					viewer.showLogoSync(!player.isPlaying());
+					viewer.showIdleScreen(!player.isPlaying());
 			}
 			pauseResumeWaitingCount--;
 			playerMutex.release();			
@@ -64,13 +64,13 @@ public class PlayerStarter extends Application implements NotificationListener {
 		skipWaitingCount++;
 		try {
 			playerMutex.acquire();
-			viewer.showLogoSync(true);
+			viewer.showIdleScreen(true);
 			if (player != null)
 					player.skip();
 			player = new OMXPlayer(server);
 			player.play(videoURL);
 			if (skipWaitingCount == 1)
-				viewer.showLogoSync(false);
+				viewer.showIdleScreen(false);
 			skipWaitingCount--;
 			playerMutex.release();
 		} catch (InterruptedException e) {
@@ -82,29 +82,28 @@ public class PlayerStarter extends Application implements NotificationListener {
 	@Override
 	public void onDisconnect() {
 		IO.printlnDebug(this, "Disconnect from Server!");
-		viewer.showLogoSync(true);
+		viewer.showIdleScreen(true);
 		if (player != null)
 			player.skip();
-		Platform.runLater(() -> viewer.editConnectionDetails("NICHT VERBUNDEN", 0));
+		viewer.resetView();
+		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
 		listenBroadcast.start();
 	}
 
 	@Override
 	public void onGapListChangedNotify(String name) {
-		viewer.currentGaplistSync(name);
-		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatusSync(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+		viewer.updateInfos();
 	}
 
 	@Override
 	public void onGapListUpdatedNotify(String[] title) {
-		server.getLoadGapListStatus((String[] s) -> viewer.gaplistStatusSync(Integer.parseInt(s[0]),Integer.parseInt(s[1])));
+		viewer.updateInfos();
 		
 	}
 
 	@Override
 	public void onWishListUpdatedNotify(String[] title) {
-		// TODO Auto-generated method stub
-		
+		viewer.updateInfos();
 	}
 
 }

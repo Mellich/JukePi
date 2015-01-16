@@ -1,51 +1,51 @@
 package client.visuals;
 
 
+import clientwrapper.ClientWrapper;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class IdleViewer {
+public class IdleViewer implements Visualizer {
 	
 	private Stage stage;
+	private ClientWrapper serverConnection;
 	private ImageView imgView;
 	private Text ipAddress;
 	private Text info;
 	private Text currentGapList;
-	public Scene infoFullscreen;
-	public Scene infoNextTrack;
+	private Group root;
 	
-	public IdleViewer(Stage stage) {
+	public IdleViewer(Stage stage, ClientWrapper serverConnection) {
 		this.stage = stage;
-		buildInfoFullscreen();
-		buildNextTrack();
+		this.serverConnection = serverConnection;
+		root = new Group();
+		//buildNextTrack();
 		stage.centerOnScreen();
 		stage.setFullScreenExitHint("");
-		stage.setScene(infoFullscreen);
+		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+		Scene infoScene = new Scene(root,screenBounds.getWidth(),screenBounds.getHeight(),Color.CORAL);
+		buildIdleScreen();
+		stage.setScene(infoScene);
 		stage.setFullScreen(true);
 		stage.show();
 	}
 	
-	private void buildInfoFullscreen(){
-		Group root = new Group();
-		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-		infoFullscreen = new Scene(root,screenBounds.getWidth(),screenBounds.getHeight(),Color.BLACK);
+	private void buildIdleScreen(){
 		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
-		ipAddress = new Text(500,700,"Lade Server...");
-		info = new Text(500,750,"Gaplist wird ausgelesen... ");
+		ipAddress = new Text(500,700,"Suche Server...");
+		info = new Text(500,750,"");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7.4");
+		Text version = new Text(5,25,"Build version 0.7.5");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -60,11 +60,7 @@ public class IdleViewer {
 		root.getChildren().add(version);		
 	}
 	
-	private void buildNextTrack(){
-		VBox vbox = new VBox();
-		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-		vbox.setPadding(new Insets(10));
-	    vbox.setSpacing(10);
+	/*private void buildTrackInfoScreen(){
 	    Text now = new Text("Jetzt:");
 	    Text next = new Text("2.");
 	    Text soon = new Text("3.");
@@ -74,19 +70,10 @@ public class IdleViewer {
 	    now.setFill(Color.WHITE);
 	    next.setFill(Color.WHITE);
 	    soon.setFill(Color.WHITE);
-	    vbox.getChildren().add(now);
-	    vbox.getChildren().add(next);
-	    vbox.getChildren().add(soon);
-	    infoNextTrack = new Scene(vbox,screenBounds.getWidth(),vbox.getHeight(),Color.BLACK);
-	}
-	
-	public void gaplistStatusSync(int current,int max){
-		Platform.runLater(() -> this.gaplistReadOutStatus(current, max));
-	}
-	
-	public void currentGaplistSync(String name){
-		Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+name)); 
-	}
+	    root.getChildren().add(now);
+	    root.getChildren().add(next);
+	    root.getChildren().add(soon);
+	}*/
 	
 	private void gaplistReadOutStatus(int currentCount,int maxCount){
 		if (currentCount < maxCount){
@@ -99,11 +86,12 @@ public class IdleViewer {
 		}
 	}
 	
-	public void editConnectionDetails(String ip,int port){
+	private void editConnectionDetails(String ip,int port){
 		ipAddress.setText("Die Jukebox IP-Addresse: "+ip+" und Port: "+port);
 	}
-	
-	public void showLogoSync(boolean show){
+
+	@Override
+	public void showIdleScreen(boolean show) {
 		Platform.runLater(() -> {
 		if (show){
 			stage.setOpacity(1);
@@ -112,6 +100,28 @@ public class IdleViewer {
 			stage.setOpacity(0);
 			imgView.setOpacity(0);
 		}
+		});		
+	}
+
+	@Override
+	public void showTrackInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateInfos() {
+		serverConnection.getCurrentGapListName((String[] s) -> {Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+s[0]));});
+		serverConnection.getLoadGapListStatus((String[] s) -> {Platform.runLater(() -> gaplistReadOutStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));});
+		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
+	}
+
+	@Override
+	public void resetView() {
+		Platform.runLater(() ->{
+		ipAddress.setText("Suche Server...");
+		info.setText("");
+		currentGapList.setText("");
 		});
 	}
 

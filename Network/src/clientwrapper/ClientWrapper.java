@@ -160,6 +160,8 @@ public interface ClientWrapper {
 	 */
 	public boolean connect(String ipAddress, int port);
 	
+	public boolean connect(ServerAddress serverAddress);
+	
 	/**
 	 * 
 	 * @return
@@ -172,11 +174,12 @@ public interface ClientWrapper {
 	 */
 	public boolean close();
 	
-	/**
+	/**blocks the current thread until a YTJBServer in the network is found.
+	 * connect to the returned ServerAddress with the connect()-method to establish a connection.
 	 * 
-	 * @return
+	 * @return the ServerAddress of the found server
 	 */
-	public String[] waitForUDPConnect();
+	public ServerAddress waitForUDPConnect();
 	
 	/**
 	 * 
