@@ -45,7 +45,7 @@ public class IdleViewer {
 		info = new Text(500,750,"Gaplist wird ausgelesen... ");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7.1 (Fixed crash when skipped many times in a row!)");
+		Text version = new Text(5,25,"Build version 0.7.4");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -90,14 +90,12 @@ public class IdleViewer {
 	
 	private void gaplistReadOutStatus(int currentCount,int maxCount){
 		if (currentCount < maxCount){
-			if (currentCount == 0)
-				info.setText("Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
-			else info.setText("Wiedergabe pausiert! Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
+			info.setText("Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
 		}
 		else{
 			if (maxCount == 0)
-				info.setText("Wiedergabe pausiert! Gaplist ist leer!");
-			else info.setText("Wiedergabe pausiert! Gaplist vollständig geladen!");
+				info.setText("Gaplist ist leer!");
+			else info.setText("Gaplist vollständig geladen!");
 		}
 	}
 	

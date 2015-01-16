@@ -10,18 +10,22 @@ import utilities.ProcessCommunicator;
 
 public class OMXPlayer implements Runnable{
 	
-	private Process playerProcess;
-	private boolean playing = false;
+	private final static long SKIPWAITDURATION = 500;
+	
+	private volatile Process playerProcess;
+	private volatile boolean playing = false;
 	private volatile boolean wasSkipped = false;
 	private BufferedWriter out;
 	private ClientWrapper server;
-	private Thread playThread;
+	private volatile Thread playThread;
+	private volatile long lastSkipAction = 0;
 
 	public void play(String track) {
 		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
 		if (playerProcess != null)
 			out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 		playThread = new Thread(this);
+		lastSkipAction = System.currentTimeMillis();
 		playThread.start();
 	}
 	
@@ -40,9 +44,11 @@ public class OMXPlayer implements Runnable{
 	public boolean skip() {
 		try {
 			setSkipped(true);
+			if (System.currentTimeMillis() - lastSkipAction < SKIPWAITDURATION)
+				Thread.sleep(SKIPWAITDURATION);
+			lastSkipAction = System.currentTimeMillis();
 			out.write("q");
 			out.flush();
-			playerProcess.destroy();
 			playThread.join();
 			IO.printlnDebug(this, "Skipped track successfully");
 			return true;
@@ -57,7 +63,6 @@ public class OMXPlayer implements Runnable{
 
 	public synchronized boolean pauseResume() {
 		try {
-			
 			out.write(' ');
 			out.flush();
 			playing = !playing;

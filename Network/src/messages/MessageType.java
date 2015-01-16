@@ -156,6 +156,10 @@ public class MessageType {
 	
 	public static final int WISHLISTUPDATEDNOTIFY = 38;
 	
+	public static final int GETCURRENTCLIENTCOUNT = 39;
+	
+	public static final int GETCURRENTPLAYERCOUNT = 40;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */
