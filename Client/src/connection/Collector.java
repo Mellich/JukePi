@@ -323,14 +323,14 @@ public class Collector implements NotificationListener{
 	 * Sets the given Array of Strings as GaplistCollection.
 	 * @param gaplists	The new GaplistCollection
 	 */
-	public void setGaplists(String[] gaplists) {
+	public synchronized void setGaplists(String[] gaplists) {
 		this.gaplists = gaplists;
 	}
 
 	/**
 	 * Fils the GaplistModel with all Gaplists saved on the Server.
 	 */
-	public void fillGaplistModel() {
+	public synchronized void fillGaplistModel() {
 		gaplistCollectionModel.clear();
 		
 		try {
@@ -352,7 +352,7 @@ public class Collector implements NotificationListener{
 	/**
 	 * Fills the GaplistModel and the WishlistModel.
 	 */
-	public void fillModels() {
+	public synchronized void fillModels() {
 		gaplistModel.clear();
 		wishlistModel.clear();
 		
@@ -392,14 +392,14 @@ public class Collector implements NotificationListener{
 	/**
 	 * Updates the Wishlist.
 	 */
-	public void updateWishlist() {
+	public synchronized void updateWishlist() {
 		wrapper.getWishList((String[] s) -> {onWishListUpdatedNotify(s);});
 	}
 
 	/**
 	 * Updates the Gaplist.
 	 */
-	public void updateGaplist() {
+	public synchronized void updateGaplist() {
 		wrapper.getGapList((String[] s) -> {onGapListUpdatedNotify(s);});
 	}
 
@@ -546,7 +546,7 @@ public class Collector implements NotificationListener{
 	/**
 	 * Repaints the second Frame.
 	 */
-	public void repaint() {
+	public synchronized void repaint() {
 		if (secondFrame != null)
 			secondFrame.repaint();
 	}

@@ -73,7 +73,7 @@ public class AddButtonListener implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
-		if (link.contains("youtube.") && link.contains("/watch")) {
+		if (!link.isEmpty()) {
 			c.addToList(link, wishlist.isSelected(), inFront, tf, fail, frame);
 		}
 		else {

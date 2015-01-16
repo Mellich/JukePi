@@ -19,7 +19,7 @@ public class GUI {
 	/**
 	 * The Collector that will send the Messages.
 	 */
-	Collector c;
+	private Collector c;
 	
 	/**
 	 * The TextField, where the User can insert the IP.
