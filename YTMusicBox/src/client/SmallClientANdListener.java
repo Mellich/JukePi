@@ -68,7 +68,7 @@ public class SmallClientANdListener implements NotificationListener {
 	}
 
 	@Override
-	public void onNextTrackNotify(String title, String videoURL) {
+	public void onNextTrackNotify(String title, String videoURL,boolean isVideo) {
 		System.out.println("Next Track: "+title);
 	}
 

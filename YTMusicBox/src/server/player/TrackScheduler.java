@@ -82,9 +82,10 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				String[] argsNext = new String[2];
+				String[] argsNext = new String[3];
 				argsNext[0] = current.getTitle();
 				argsNext[1] = current.getVideoURL();
+				argsNext[2] = ""+current.getIsVideo();
 				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
 				args[0] = ""+true;
 				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);

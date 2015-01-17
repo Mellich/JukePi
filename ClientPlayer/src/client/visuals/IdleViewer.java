@@ -1,6 +1,8 @@
 package client.visuals;
 
 
+import java.sql.Timestamp;
+
 import clientwrapper.ClientWrapper;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -22,6 +24,9 @@ public class IdleViewer implements Visualizer {
 	private Text ipAddress;
 	private Text info;
 	private Text currentGapList;
+	private Text currentTrack;
+	private Text playbackStatus;
+	private Text debugInfo;
 	private Group root;
 	
 	public IdleViewer(Stage stage, ClientWrapper serverConnection) {
@@ -45,18 +50,30 @@ public class IdleViewer implements Visualizer {
 		info = new Text(500,750,"");
 		info.setFont(new Font(30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7.5");
+		Text version = new Text(5,25,"Build version 0.7.10");
 		version.setFont(new Font(20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
 		currentGapList.setFont(new Font(30));
 		currentGapList.setFill(Color.WHITE);
+		currentTrack = new Text(500,850,"");
+		currentTrack.setFont(new Font(30));
+		currentTrack.setFill(Color.WHITE);
+		playbackStatus = new Text(500,900,"");
+		playbackStatus.setFont(new Font(30));
+		playbackStatus.setFill(Color.WHITE);
+		debugInfo = new Text(50,1040,"");
+		debugInfo.setFont(new Font(30));
+		debugInfo.setFill(Color.WHITE);
 		ipAddress.setFont(new Font(30));
 		ipAddress.setFill(Color.WHITE);
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
 		root.getChildren().add(info);
+		root.getChildren().add(debugInfo);
 		root.getChildren().add(currentGapList);
+		root.getChildren().add(currentTrack);
+		root.getChildren().add(playbackStatus);
 		root.getChildren().add(version);		
 	}
 	
@@ -111,9 +128,13 @@ public class IdleViewer implements Visualizer {
 
 	@Override
 	public void updateInfos() {
+		this.showDebugInfo("Informations were updated");
 		serverConnection.getCurrentGapListName((String[] s) -> {Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+s[0]));});
 		serverConnection.getLoadGapListStatus((String[] s) -> {Platform.runLater(() -> gaplistReadOutStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));});
 		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
+		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playbackStatus.setText("Wiedergabe läuft..."));}
+																	else Platform.runLater(() -> this.playbackStatus.setText("Wiedergabe angehalten/pausiert")); });
+		serverConnection.getCurrentTrackTitle((String[] s) -> Platform.runLater(() -> this.currentTrack.setText(s[0])));
 	}
 
 	@Override
@@ -122,7 +143,16 @@ public class IdleViewer implements Visualizer {
 		ipAddress.setText("Suche Server...");
 		info.setText("");
 		currentGapList.setText("");
+		currentTrack.setText("");
+		playbackStatus.setText("");
 		});
+		this.showDebugInfo("View was reseted!");
+	}
+
+	@Override
+	public void showDebugInfo(String info) {
+		Timestamp t = new Timestamp(System.currentTimeMillis());
+		Platform.runLater(() -> debugInfo.setText(t.toString()+": "+info));
 	}
 
 }

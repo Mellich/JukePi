@@ -5,4 +5,5 @@ public interface Visualizer {
 	public void showTrackInfo();
 	public void updateInfos();
 	public void resetView();
+	public void showDebugInfo(String info);
 }
