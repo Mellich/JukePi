@@ -284,7 +284,8 @@ public class Collector implements NotificationListener{
 		gaplistLabel.setText("" + gaplist.length);
 		getNextTrack();
 		fillModels();
-		etl.actionPerformed(null);
+		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))
+			etl.actionPerformed(null);
 		repaint();
 	}
 
@@ -294,15 +295,17 @@ public class Collector implements NotificationListener{
 		wishlistLabel.setText("" + wishlist.length);
 		getNextTrack();
 		fillModels();
-		etl.actionPerformed(null);
+		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))
+			etl.actionPerformed(null);
 		repaint();
 	}
 
 	@Override
-	public void onNextTrackNotify(String title, String videoURL) {
+	public void onNextTrackNotify(String title, String videoURL, boolean isVideo) {
 		nowPlaying.setText(title);
 		fillModels();
-		etl.actionPerformed(null);
+		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))
+			etl.actionPerformed(null);
 		repaint();
 	}
 
