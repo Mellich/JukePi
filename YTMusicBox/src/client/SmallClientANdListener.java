@@ -5,14 +5,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import clientinterface.listener.NotificationListener;
-import clientwrapper.ClientWrapper;
-import clientwrapper.YTJBClientWrapper;
+import client.listener.NotificationListener;
+import client.serverconnection.ServerConnection;
+import client.serverconnection.impl.YTJBServerConnection;
 
 public class SmallClientANdListener implements NotificationListener {
 	
 	public SmallClientANdListener() {
-		ClientWrapper server = new YTJBClientWrapper(15000);
+		ServerConnection server = new YTJBServerConnection(15000);
 		if (server.connect("192.168.178.34",22222)){
 			server.addNotificationListener(this);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

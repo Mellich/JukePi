@@ -3,7 +3,7 @@ package client.visuals;
 
 import java.sql.Timestamp;
 
-import clientwrapper.ClientWrapper;
+import client.serverconnection.ServerConnection;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class IdleViewer implements Visualizer {
 	
 	private Stage stage;
-	private ClientWrapper serverConnection;
+	private ServerConnection serverConnection;
 	private ImageView imgView;
 	private Text ipAddress;
 	private Text info;
@@ -32,7 +32,7 @@ public class IdleViewer implements Visualizer {
 	
 	private static final String FONTFAMILY = "Tahoma";
 	
-	public IdleViewer(Stage stage, ClientWrapper serverConnection) {
+	public IdleViewer(Stage stage, ServerConnection serverConnection) {
 		this.stage = stage;
 		this.serverConnection = serverConnection;
 		root = new Group();

@@ -2,17 +2,16 @@ package client;
 
 import java.util.concurrent.Semaphore;
 
+import client.listener.NotificationListener;
+import client.serverconnection.ServerConnection;
 import client.visuals.IdleViewer;
 import client.visuals.Visualizer;
-import clientinterface.listener.NotificationListener;
-import clientwrapper.ClientWrapper;
-import clientwrapper.YTJBClientWrapper;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PlayerStarter extends Application implements NotificationListener {
 	
-	private ClientWrapper server;
+	private ServerConnection server;
 	private volatile OMXPlayer player = null;
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;
@@ -23,7 +22,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
-		server = new YTJBClientWrapper(15000);
+		server = ServerConnectionFactory.createServerConnection(15000);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
 		server.addNotificationListener(this);

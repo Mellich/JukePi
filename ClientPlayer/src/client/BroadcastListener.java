@@ -1,15 +1,15 @@
 package client;
 
+import client.serverconnection.ServerConnection;
 import client.visuals.Visualizer;
-import clientwrapper.ClientWrapper;
 import utilities.IO;
 
 public class BroadcastListener implements Runnable {
 	
-	private ClientWrapper server;
+	private ServerConnection server;
 	private Visualizer viewer;
 
-	public BroadcastListener(ClientWrapper server,Visualizer viewer2) {
+	public BroadcastListener(ServerConnection server,Visualizer viewer2) {
 		this.server = server;
 		this.viewer = viewer2;
 	}

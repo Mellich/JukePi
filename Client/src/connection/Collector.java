@@ -10,8 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import util.ShowLabelThread;
-import clientinterface.listener.NotificationListener;
-import clientwrapper.YTJBClientWrapper;
+import client.ServerConnectionFactory;
+import client.listener.NotificationListener;
+import client.serverconnection.ServerConnection;
 
 /**
  * A Class that will implement the NotificationListener and connects to the ClientWrapper to 
@@ -30,7 +31,7 @@ public class Collector implements NotificationListener{
 	/**
 	 * The wrapper, that will send the Messages.
 	 */
-	private YTJBClientWrapper wrapper;
+	private ServerConnection wrapper;
 	
 	/**
 	 * Determines, if a Track is played at the moment.
@@ -131,7 +132,7 @@ public class Collector implements NotificationListener{
 		wishlistModel = new DefaultListModel<String>();
 		gaplistCollectionModel = new DefaultListModel<String>();
 		contentModel = new DefaultListModel<String>();
-		wrapper = new YTJBClientWrapper(CONNECTIONCHECKINTERVALL);
+		wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL);
 	}
 	
 	/**
