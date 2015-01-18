@@ -51,6 +51,7 @@ public class EditTrackListener implements ActionListener{
 		//TODO Delete
 	//	JFrame frame = new JFrame();
 		//Till here
+		c.addEditTrackListener(this);
 		frame.setSize(new Dimension(575, 400));
 		frame.setTitle("Track Edit");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

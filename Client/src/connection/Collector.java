@@ -1,6 +1,7 @@
 package connection;
 
 import gui.DisconnectButtonListener;
+import gui.EditTrackListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -70,6 +71,11 @@ public class Collector implements NotificationListener{
 	 * The Label, that shows the Name of the displayed content's Gaplist.
 	 */
 	private JLabel contentLabel;
+	
+	/**
+	 * The EditTrackListener, which is needed to get the right Informations at the EditTrack Window.
+	 */
+	private EditTrackListener etl;
 	
 	/**
 	 * The Gaplist as an Array of Strings.
@@ -232,6 +238,14 @@ public class Collector implements NotificationListener{
 		this.secondFrame = frame;
 	}
 	
+	/**
+	 * Adds the given Listener as etl.
+	 * @param etl
+	 */
+	public void addEditTrackListener(EditTrackListener etl) {
+		this.etl = etl;
+	}
+	
 	@Override
 	public void onDisconnect() {
 		dcListener.actionPerformed(null);
@@ -270,6 +284,7 @@ public class Collector implements NotificationListener{
 		gaplistLabel.setText("" + gaplist.length);
 		getNextTrack();
 		fillModels();
+		etl.actionPerformed(null);
 		repaint();
 	}
 
@@ -279,6 +294,7 @@ public class Collector implements NotificationListener{
 		wishlistLabel.setText("" + wishlist.length);
 		getNextTrack();
 		fillModels();
+		etl.actionPerformed(null);
 		repaint();
 	}
 
@@ -286,6 +302,7 @@ public class Collector implements NotificationListener{
 	public void onNextTrackNotify(String title, String videoURL) {
 		nowPlaying.setText(title);
 		fillModels();
+		etl.actionPerformed(null);
 		repaint();
 	}
 
