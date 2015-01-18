@@ -39,7 +39,7 @@ public class YTJBServerConnection implements ServerConnection {
 		try {
 			socket = new Socket(ipAddress,port);
 			output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream())),notifyWrapper,responses,checker));
+			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker));
 			inputListener.start();
 			checker.start();
 			this.sendMessage(MessageType.DECLAREMEASNOTIFY);

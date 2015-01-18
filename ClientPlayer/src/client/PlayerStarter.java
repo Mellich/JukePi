@@ -38,6 +38,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 	@Override
 	public void onPauseResumeNotify(boolean isPlaying) {
 		pauseResumeWaitingCount++;
+		viewer.showDebugInfo("New Pause/Resume request! In Line:"+pauseResumeWaitingCount+" New Playstatus: "+isPlaying);
 		try {
 			playerMutex.acquire();
 			if (player != null && isPlaying != player.isPlaying()){
@@ -47,12 +48,13 @@ public class PlayerStarter extends Application implements NotificationListener {
 						viewer.showIdleScreen(!player.isPlaying());
 					viewer.updateInfos();
 				}
-			}
+			}			
+		} catch (Exception e) {
+			viewer.showDebugInfo("Error while pause/resume track: "+e.getLocalizedMessage());
+		}
+		finally{
 			pauseResumeWaitingCount--;
-			playerMutex.release();			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			playerMutex.release();
 		}
 	}
 
@@ -66,24 +68,25 @@ public class PlayerStarter extends Application implements NotificationListener {
 	public void onNextTrackNotify(String title, String videoURL,boolean isVideo) {
 		skipWaitingCount++;
 		try {
+			viewer.showDebugInfo("New Skip request! In Line:"+skipWaitingCount+" Title: "+title);
 			playerMutex.acquire();
 			videoMode = isVideo;
-			viewer.showDebugInfo("Video-Mode set to: "+videoMode);
-			viewer.showIdleScreen(true);
-			if (player != null)
+			if (player != null){
 					player.skip();
-			player = new OMXPlayer(server);
+			}
+			player = new OMXPlayer(this);
 			player.play(videoURL);
 			if (skipWaitingCount == 1){
 				if (videoMode)
 					viewer.showIdleScreen(false);
 				viewer.updateInfos();
 			}
+		} catch (Exception e) {
+			viewer.showDebugInfo("Error while skipping track: "+e.getLocalizedMessage());
+		}
+		finally{
 			skipWaitingCount--;
 			playerMutex.release();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -93,6 +96,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 		viewer.showIdleScreen(true);
 		if (player != null)
 			player.skip();
+		player = null;
 		viewer.resetView();
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
 		listenBroadcast.start();
@@ -112,6 +116,13 @@ public class PlayerStarter extends Application implements NotificationListener {
 	@Override
 	public void onWishListUpdatedNotify(String[] title) {
 		viewer.updateInfos();
+	}
+	
+	public void trackIsFinished(boolean wasSkipped){
+		viewer.showIdleScreen(true);
+		viewer.updateInfos();
+		if (!wasSkipped)
+			server.notifyPlayerFinished((String[] s) -> {});
 	}
 
 }

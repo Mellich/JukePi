@@ -4,19 +4,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import clientwrapper.ClientWrapper;
 import utilities.IO;
 import utilities.ProcessCommunicator;
 
 public class OMXPlayer implements Runnable{
 	
-	private final static long SKIPWAITDURATION = 500;
+	private final static long SKIPWAITDURATION = 1000;
 	
 	private volatile Process playerProcess;
 	private volatile boolean playing = false;
 	private volatile boolean wasSkipped = false;
 	private BufferedWriter out;
-	private ClientWrapper server;
+	private PlayerStarter parent;
 	private volatile Thread playThread;
 	private volatile long lastSkipAction = 0;
 
@@ -29,11 +28,11 @@ public class OMXPlayer implements Runnable{
 		playThread.start();
 	}
 	
-	public OMXPlayer(ClientWrapper server) {
-		this.server = server;
+	public OMXPlayer(PlayerStarter parent) {
+		this.parent = parent;
 	}
 	
-	private synchronized void setSkipped(boolean b){
+	private synchronized void setSkipped(){
 		wasSkipped = true;
 	}
 	
@@ -43,9 +42,10 @@ public class OMXPlayer implements Runnable{
 
 	public boolean skip() {
 		try {
-			setSkipped(true);
-			if (System.currentTimeMillis() - lastSkipAction < SKIPWAITDURATION)
-				Thread.sleep(SKIPWAITDURATION);
+			setSkipped();
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - lastSkipAction < SKIPWAITDURATION)
+				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
 			lastSkipAction = System.currentTimeMillis();
 			out.write("q");
 			out.flush();
@@ -83,8 +83,7 @@ public class OMXPlayer implements Runnable{
 			try {
 				playing = true;
 				playerProcess.waitFor();
-				if (!isSkipped())
-					server.notifyPlayerFinished((String[] s) -> {});
+				parent.trackIsFinished(this.isSkipped());
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			}

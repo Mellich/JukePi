@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -26,8 +27,10 @@ public class IdleViewer implements Visualizer {
 	private Text currentGapList;
 	private Text currentTrack;
 	private Text playbackStatus;
-	private Text debugInfo;
+	private TextArea debugInfo;
 	private Group root;
+	
+	private static final String FONTFAMILY = "Tahoma";
 	
 	public IdleViewer(Stage stage, ClientWrapper serverConnection) {
 		this.stage = stage;
@@ -42,30 +45,36 @@ public class IdleViewer implements Visualizer {
 		stage.setScene(infoScene);
 		stage.setFullScreen(true);
 		stage.show();
+		this.showDebugInfo("Started up Player");
 	}
 	
 	private void buildIdleScreen(){
 		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
 		ipAddress = new Text(500,700,"Suche Server...");
 		info = new Text(500,750,"");
-		info.setFont(new Font(30));
+		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7.10");
-		version.setFont(new Font(20));
+		Text version = new Text(5,25,"Build version 0.7.18");
+		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
-		currentGapList.setFont(new Font(30));
+		currentGapList.setFont(new Font(FONTFAMILY,30));
 		currentGapList.setFill(Color.WHITE);
 		currentTrack = new Text(500,850,"");
-		currentTrack.setFont(new Font(30));
+		currentTrack.setFont(new Font(FONTFAMILY,30));
 		currentTrack.setFill(Color.WHITE);
 		playbackStatus = new Text(500,900,"");
-		playbackStatus.setFont(new Font(30));
+		playbackStatus.setFont(new Font(FONTFAMILY,30));
 		playbackStatus.setFill(Color.WHITE);
-		debugInfo = new Text(50,1040,"");
-		debugInfo.setFont(new Font(30));
-		debugInfo.setFill(Color.WHITE);
-		ipAddress.setFont(new Font(30));
+		debugInfo = new TextArea();
+		debugInfo.setFont(new Font(FONTFAMILY,15));
+		debugInfo.setWrapText(true);
+		debugInfo.setEditable(false);
+		debugInfo.setLayoutX(0);
+		debugInfo.setLayoutY(40);
+		debugInfo.setMaxSize(1920, 200);
+		debugInfo.setMinSize(1920, 200);
+		ipAddress.setFont(new Font(FONTFAMILY,30));
 		ipAddress.setFill(Color.WHITE);
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
@@ -128,7 +137,6 @@ public class IdleViewer implements Visualizer {
 
 	@Override
 	public void updateInfos() {
-		this.showDebugInfo("Informations were updated");
 		serverConnection.getCurrentGapListName((String[] s) -> {Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+s[0]));});
 		serverConnection.getLoadGapListStatus((String[] s) -> {Platform.runLater(() -> gaplistReadOutStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));});
 		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
@@ -152,7 +160,9 @@ public class IdleViewer implements Visualizer {
 	@Override
 	public void showDebugInfo(String info) {
 		Timestamp t = new Timestamp(System.currentTimeMillis());
-		Platform.runLater(() -> debugInfo.setText(t.toString()+": "+info));
+		Platform.runLater(() -> {debugInfo.appendText(t.toString()+": "+info+"\n");
+								 debugInfo.setScrollTop(Double.MAX_VALUE);
+							});
 	}
 
 }
