@@ -23,7 +23,7 @@ import utilities.IO;
  * @author Mellich
  *
  */
-public class YTJBServer extends Thread {
+public class YTJBServer implements Server {
 	
 	/**
 	 * the standard port will be used, when no other port is given
@@ -442,12 +442,10 @@ public class YTJBServer extends Thread {
         	IO.printlnDebug(this, "Could not find out ip address");
         }
         return null; 
-}
+	}
 	
-	@Override
-	public void run() {
-		super.run();
-		this.startUp();
+	public void shutDown(){
+		closePrompt.release();
 	}
 	
 	public static void main(String[] args) {
