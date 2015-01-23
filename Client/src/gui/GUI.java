@@ -71,7 +71,7 @@ public class GUI {
 		jFrame.getContentPane().add(lblPort);
 		
 		JButton btnConnect = new JButton("Connect");
-		btnConnect.setBounds(151, 259, 131, 40);
+		btnConnect.setBounds(151, 234, 131, 40);
 		jFrame.getContentPane().add(btnConnect);
 		c = new Collector();
 		
@@ -79,10 +79,17 @@ public class GUI {
 		lblFail.setBounds(49, 234, 374, 14);
 		jFrame.getContentPane().add(lblFail);
 		
+		JButton btnUDPConnect = new JButton("udp connect");
+		btnUDPConnect.setBounds(151, 298, 131, 40);
+		jFrame.getContentPane().add(btnUDPConnect);
+		
+		ConnectButtonListener cbl = new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail);
+		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
-		btnConnect.addActionListener(new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail));
-
+		btnConnect.addActionListener(cbl);
+	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
+		
 		return jFrame;
 	}
 	
