@@ -565,6 +565,28 @@ public class Collector implements NotificationListener{
 	}
 	
 	/**
+	 * Seeks forward 30 seconds.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
+	 */
+	public void seekForward(JLabel fail, JFrame frame) {
+		wrapper.seekForward((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Skipped 30 seconds");else fail.setText("Couldn't seek forward");
+											fail.setVerticalAlignment(JLabel.CENTER);fail.setHorizontalAlignment(JLabel.CENTER);
+											new ShowLabelThread(fail, frame).start();});
+	}
+	
+	/**
+	 * Seeks backward 30 seconds.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Label, that contains the Fail-Label.
+	 */
+	public void seekBackward(JLabel fail, JFrame frame) {
+		wrapper.seekBackward((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Moved back 30 seconds");else fail.setText("Couldn't seek backward");
+											 fail.setVerticalAlignment(JLabel.CENTER);fail.setHorizontalAlignment(JLabel.CENTER);
+											 new ShowLabelThread(fail, frame).start();});
+	}
+	
+	/**
 	 * Repaints the second Frame.
 	 */
 	public synchronized void repaint() {
@@ -611,7 +633,6 @@ public class Collector implements NotificationListener{
 
 	@Override
 	public void onSeekNotify(boolean forward) {
-		// TODO Auto-generated method stub
-		
+		//Nothing to do here IMO.
 	}
 }
