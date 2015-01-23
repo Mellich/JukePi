@@ -76,6 +76,28 @@ public class OMXPlayer implements Runnable{
 	public boolean isPlaying() {
 		return playing;
 	}
+	
+	public synchronized boolean seekForward(){
+		try {
+			out.write("^[[C");
+			out.flush();
+			return true;
+		} catch (IOException | NullPointerException e) {
+			IO.printlnDebug(this, "could not seek playback");
+		}
+		return false;		
+	}
+	
+	public synchronized boolean seekBackward(){
+		try {
+			out.write("^[[D");
+			out.flush();
+			return true;
+		} catch (IOException | NullPointerException e) {
+			IO.printlnDebug(this, "could not seek playback");
+		}
+		return false;		
+	}
 
 	@Override
 	public void run() {

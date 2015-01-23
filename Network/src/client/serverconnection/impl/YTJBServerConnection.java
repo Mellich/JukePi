@@ -57,6 +57,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			break;
 		case MessageType.DEBUGOUTPUTNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onNewOutput(args[0]);
 		break;
+		case MessageType.SEEKNOTIFY: for(NotificationListener l: notificationListener) l.onSeekNotify(Boolean.parseBoolean(args[0]));
+			break;
 		case MessageType.DISCONNECT: for(NotificationListener l: notificationListener) l.onDisconnect();
 										connected = false;
 		}
@@ -292,6 +294,18 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public void removeDebugNotificationListener(DebugNotificationListener listener) {
 		debugNotificationListener.remove(listener);
+	}
+
+	@Override
+	public void seekForward(ResponseListener response) {
+		this.serverConnection.sendMessage(MessageType.SEEKFORWARD);
+		
+	}
+
+	@Override
+	public void seekBackward(ResponseListener response) {
+		this.serverConnection.sendMessage(MessageType.SEEKBACKWARD);
+		
 	}
 
 }

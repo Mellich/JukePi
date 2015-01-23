@@ -213,4 +213,8 @@ public interface ServerConnection {
 	public void getCurrentPlayerCount(ResponseListener response);
 	
 	public void getCurrentClientCount(ResponseListener response);
+	
+	public void seekForward(ResponseListener response);
+	
+	public void seekBackward(ResponseListener response);
 }

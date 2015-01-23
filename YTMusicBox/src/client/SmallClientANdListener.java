@@ -78,4 +78,10 @@ public class SmallClientANdListener implements NotificationListener {
 
 	}
 
+	@Override
+	public void onSeekNotify(boolean forward) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

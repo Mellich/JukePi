@@ -52,6 +52,20 @@ public class TrackScheduler extends Thread {
 		return false;
 	}
 	
+	public boolean seekForward(){
+		String[] args = new String[1];
+		args[0] = ""+true;
+		server.notifyClients(MessageType.SEEKNOTIFY, args);
+		return player.seekForward();
+	}
+	
+	public boolean seekBackward(){
+		String[] args = new String[1];
+		args[0] = ""+false;
+		server.notifyClients(MessageType.SEEKNOTIFY, args);
+		return player.seekBackward();
+	}
+	
 	public boolean isPlaying(){
 		if (player != null)
 			return player.isPlaying();	

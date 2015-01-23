@@ -87,6 +87,10 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETCURRENTPLAYERCOUNT: new GetCurrentPlayerCountCommand(out,prompt,server).handle();
 			break;
+		case MessageType.SEEKFORWARD: new SeekForwardCommand(out,prompt,server.getScheduler()).handle();
+			break;
+		case MessageType.SEEKBACKWARD: new SeekBackwardCommand(out,prompt,server.getScheduler()).handle();
+			break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}

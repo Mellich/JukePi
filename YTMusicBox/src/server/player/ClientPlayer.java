@@ -38,4 +38,14 @@ public class ClientPlayer implements MusicPlayer {
 		return playing;
 	}
 
+	@Override
+	public boolean seekForward() {
+		return true;
+	}
+
+	@Override
+	public boolean seekBackward() {
+		return true;
+	}
+
 }

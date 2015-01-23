@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 
-import utilities.IO;
 import messages.MessageType;
 
 public class ConnectionBroadcast implements Runnable {

@@ -7,5 +7,6 @@ public interface NotificationListener {
 	public void onGapListUpdatedNotify(String[] title);
 	public void onWishListUpdatedNotify(String[] title);
 	public void onNextTrackNotify(String title,String url,boolean isVideo);
+	public void onSeekNotify(boolean forward);
 	public void onDisconnect();
 }

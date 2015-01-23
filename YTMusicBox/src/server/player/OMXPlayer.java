@@ -61,4 +61,16 @@ public class OMXPlayer implements MusicPlayer {
 		return playing;
 	}
 
+	@Override
+	public boolean seekForward() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean seekBackward() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

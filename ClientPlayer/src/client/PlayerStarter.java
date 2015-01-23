@@ -144,4 +144,14 @@ public class PlayerStarter extends Application implements NotificationListener, 
 		
 	}
 
+	@Override
+	public void onSeekNotify(boolean forward) {
+		if (player != null){
+			if (forward)
+				player.seekForward();
+			else player.seekBackward();
+		}
+		
+	}
+
 }

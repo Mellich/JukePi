@@ -166,6 +166,12 @@ public class MessageType {
 	
 	public static final int DEBUGOUTPUTNOTIFY = 43;
 	
+	public static final int SEEKNOTIFY = 44;
+	
+	public static final int SEEKFORWARD = 45;
+	
+	public static final int SEEKBACKWARD = 46;	
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */
