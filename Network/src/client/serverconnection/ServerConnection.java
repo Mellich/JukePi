@@ -1,6 +1,7 @@
 package client.serverconnection;
 
 import client.ServerAddress;
+import client.listener.DebugNotificationListener;
 import client.listener.NotificationListener;
 import client.listener.ResponseListener;
 
@@ -23,6 +24,18 @@ public interface ServerConnection {
 	 * @param listener the listener that should be removed
 	 */
 	public void removeNotificationListener(NotificationListener listener);
+	
+	/**Adds a debug notification listener, that will be executed, when the server sends a notifications regarding to debug issues
+	 * 
+	 * @param listener the notification listener that should be added
+	 */
+	public void addDebugNotificationListener(DebugNotificationListener listener);
+	
+	/**Removes a debug notification listener, so that he no longer will be executed by a notification from the server
+	 * 
+	 * @param listener the listener that should be removed
+	 */
+	public void removeDebugNotificationListener(DebugNotificationListener listener);
 	
 	/**
 	 * Adds a Youtube-Video to a list on the server

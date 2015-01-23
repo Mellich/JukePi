@@ -160,6 +160,12 @@ public class MessageType {
 	
 	public static final int GETCURRENTPLAYERCOUNT = 40;
 	
+	public static final int CLIENTCOUNTCHANGEDNOTIFY = 41;
+	
+	public static final int PLAYERCOUNTCHANGEDNOTIFY = 42;
+	
+	public static final int DEBUGOUTPUTNOTIFY = 43;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */

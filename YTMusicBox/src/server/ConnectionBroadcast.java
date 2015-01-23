@@ -42,7 +42,7 @@ public class ConnectionBroadcast implements Runnable {
 	    	socket.joinGroup(group);
 			while(true){
 			      // Nachricht an Gruppe senden
-				IO.printlnDebug(this, "Broadcast connection details...: "+message);
+				//IO.printlnDebug(this, "Broadcast connection details...: "+message);
 			    socket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
 			    Thread.sleep(SLEEPTIME);
 			}

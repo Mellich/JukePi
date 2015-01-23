@@ -50,13 +50,12 @@ public abstract class Command {
 	 */
 	private void sendMessage(String s){
 		try{
-			IO.printlnDebug(this, "Sending Message: "+s);
 			out.write(s);
 			out.newLine();
 			out.flush();
 		}
 		catch (IOException e){
-			IO.printlnDebug(this, "ERROR could not send message to client");
+			//IO.printlnDebug(this, "ERROR could not send message to client");
 		}
 	}
 	

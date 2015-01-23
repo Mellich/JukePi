@@ -9,6 +9,7 @@ import java.util.List;
 
 import messages.MessageType;
 import client.ServerAddress;
+import client.listener.DebugNotificationListener;
 import client.listener.NotificationListener;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
@@ -19,6 +20,7 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
 	private List<NotificationListener> notificationListener;
+	private List<DebugNotificationListener> debugNotificationListener;
 	private LowLevelServerConnection serverConnection;
 	private boolean connected = false;
 	private int checkIntervall = 0;
@@ -29,6 +31,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	
 	public YTJBServerConnection(int checkIntervall) {
 		notificationListener = new ArrayList<NotificationListener>();
+		debugNotificationListener = new ArrayList<DebugNotificationListener>();
 		connected = false;
 		this.checkIntervall = checkIntervall;
 	}
@@ -48,6 +51,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			break;
 		case MessageType.GAPLISTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListChangedNotify(args[0]);
 			break;
+		case MessageType.CLIENTCOUNTCHANGEDNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onClientCountChangedNotify(Integer.parseInt(args[0]));
+			break;
+		case MessageType.PLAYERCOUNTCHANGEDNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onPlayerCountChangedNotify(Integer.parseInt(args[0]));
+			break;
+		case MessageType.DEBUGOUTPUTNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onNewOutput(args[0]);
+		break;
 		case MessageType.DISCONNECT: for(NotificationListener l: notificationListener) l.onDisconnect();
 										connected = false;
 		}
@@ -273,6 +282,16 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean connect(ServerAddress serverAddress) {
 		return connect(serverAddress.getIPAddress(),serverAddress.getPort());
+	}
+
+	@Override
+	public void addDebugNotificationListener(DebugNotificationListener listener) {
+		debugNotificationListener.add(listener);
+	}
+
+	@Override
+	public void removeDebugNotificationListener(DebugNotificationListener listener) {
+		debugNotificationListener.remove(listener);
 	}
 
 }

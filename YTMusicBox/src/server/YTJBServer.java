@@ -332,6 +332,9 @@ public class YTJBServer implements Server {
 	
 	public synchronized void registerNotifiable(Connection c){
 		notifiables.add(c);
+		String[] s = new String[1];
+		s[0] = ""+notifiables.size();
+		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
@@ -339,19 +342,28 @@ public class YTJBServer implements Server {
 		player.add(c);
 		if (player.size() == 1)
 			scheduler.notifyPlayerAvailable();
-		IO.printlnDebug(this, "Count of connected Players: "+notifiables.size());
+		String[] s = new String[1];
+		s[0] = ""+player.size();
+		this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
+		IO.printlnDebug(this, "Count of connected Players: "+player.size());
 	}
 	
 	public synchronized void removePlayer(Connection c){
 		if(player.contains(c)){
 			player.remove(c);
 			playerFinished.release();
+			String[] s = new String[1];
+			s[0] = ""+player.size();
+			this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
+			IO.printlnDebug(this, "Count of connected Players: "+player.size());
 		}
-		IO.printlnDebug(this, "Count of connected Players: "+player.size());
 	}
 	
 	public synchronized void removeNotifiable(Connection c){
 		notifiables.remove(c);
+		String[] s = new String[1];
+		s[0] = ""+notifiables.size();
+		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
@@ -377,12 +389,6 @@ public class YTJBServer implements Server {
 		}
 	}	
 	
-	public void notifyPlayers(int messageType,String[] args){
-		for (Connection c : player){
-			c.notify(messageType,args);
-		}
-	}
-	
 	/**
 	 * creates new instance of a server
 	 * 
@@ -391,6 +397,7 @@ public class YTJBServer implements Server {
 	public YTJBServer(int port) {
 			try {
 				this.port = port;
+				IO.setServer(this);
 				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 				int lastdir = this.workingDirectory.lastIndexOf("/");
 				if (lastdir == this.workingDirectory.length() - 1){

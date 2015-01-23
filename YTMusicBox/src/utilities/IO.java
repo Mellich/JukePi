@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
+import messages.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
 import server.YTJBServer;
@@ -27,6 +28,11 @@ import server.YTJBServer;
 public class IO {
 	
 	public static boolean debugMode = true;
+	private static YTJBServer server = null;
+	
+	public static void setServer(YTJBServer s){
+		server = s;
+	}
 
 	static public void printlnDebug(Object speaker, String input){
 		if (debugMode){
@@ -37,6 +43,11 @@ public class IO {
 			long n = Thread.currentThread().getId();
 			Timestamp t = new Timestamp(System.currentTimeMillis());
 			System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
+			if (server != null){
+				String[] s = new String[1];
+				s[0] = t.toString()+" Thread-"+n+"="+name+": "+input;
+				server.notifyClients(MessageType.DEBUGOUTPUTNOTIFY, s);
+			}
 		}
 	}
 	

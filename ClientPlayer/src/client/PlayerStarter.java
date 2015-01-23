@@ -2,6 +2,7 @@ package client;
 
 import java.util.concurrent.Semaphore;
 
+import client.listener.DebugNotificationListener;
 import client.listener.NotificationListener;
 import client.serverconnection.ServerConnection;
 import client.visuals.IdleViewer;
@@ -9,7 +10,7 @@ import client.visuals.Visualizer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class PlayerStarter extends Application implements NotificationListener {
+public class PlayerStarter extends Application implements NotificationListener, DebugNotificationListener {
 	
 	private ServerConnection server;
 	private volatile OMXPlayer player = null;
@@ -26,6 +27,7 @@ public class PlayerStarter extends Application implements NotificationListener {
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
 		server.addNotificationListener(this);
+		server.addDebugNotificationListener(this);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
 		listenBroadcast.start();
 	}
@@ -122,6 +124,24 @@ public class PlayerStarter extends Application implements NotificationListener {
 		viewer.updateInfos();
 		if (!wasSkipped)
 			server.notifyPlayerFinished((String[] s) -> {});
+	}
+
+	@Override
+	public void onClientCountChangedNotify(int newClientCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayerCountChangedNotify(int newPlayerCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNewOutput(String output) {
+		viewer.showDebugInfo("SERVER: "+output);
+		
 	}
 
 }
