@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
 import client.listener.ResponseListener;
@@ -93,7 +94,40 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		}
 	}
 	
-	public class AliveChecker extends Thread implements ResponseListener{
+	@Override
+	public String[] sendBlockingMessage(int messageType) {
+		return this.sendBlockingMessage(messageType, "");
+	}
+
+	@Override
+	public String[] sendBlockingMessage(int messageType, String messageArgument) {
+		Semaphore blockMutex = new Semaphore(0);
+		RequestResult result = new RequestResult();
+		responses.addReponseListener(messageType, (String[] s) -> {result.setResult(s);blockMutex.release(); });
+		this.sendMessage(messageType, messageArgument);
+		try {
+			blockMutex.acquire();
+			return result.getResult();
+		} catch (InterruptedException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public String getIPAddress() {
+		if (socket != null)
+			return socket.getInetAddress().getHostAddress();
+		else return null;
+	}
+
+	@Override
+	public int getPort() {
+		if (socket != null)
+			return socket.getPort();
+		else return 0;
+	}
+	
+	protected class AliveChecker extends Thread implements ResponseListener{
 		
 		private int checkIntervall;
 		private long lastResponse;
@@ -133,19 +167,15 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		}
 		
 	}
-
-	@Override
-	public String getIPAddress() {
-		if (socket != null)
-			return socket.getInetAddress().getHostAddress();
-		else return null;
-	}
-
-	@Override
-	public int getPort() {
-		if (socket != null)
-			return socket.getPort();
-		else return 0;
+	
+	private class RequestResult{
+		private volatile String[] result = null;
+		public void setResult(String[] s){
+			result = s;
+		}
+		public String[] getResult(){
+			return result;
+		}
 	}
 
 }

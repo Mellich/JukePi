@@ -45,7 +45,7 @@ public class GUI {
 		
 		txtIp = new JTextField();
 //TODO	txtIp.setText("IP");
-		txtIp.setText("192.168.178.20");
+		txtIp.setText("localhost");
 		txtIp.setBounds(151, 110, 186, 20);
 		jFrame.getContentPane().add(txtIp);
 		txtIp.setColumns(10);
@@ -79,7 +79,7 @@ public class GUI {
 		lblFail.setBounds(49, 234, 374, 14);
 		jFrame.getContentPane().add(lblFail);
 		
-		JButton btnUDPConnect = new JButton("udp connect");
+		JButton btnUDPConnect = new JButton("UDP Connect");
 		btnUDPConnect.setBounds(151, 298, 131, 40);
 		jFrame.getContentPane().add(btnUDPConnect);
 		

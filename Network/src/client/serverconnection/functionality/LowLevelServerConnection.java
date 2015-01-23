@@ -11,4 +11,6 @@ public interface LowLevelServerConnection {
 	public boolean sendMessage(ResponseListener listener,int messageType,String messageArgument);
 	public boolean sendMessage(int messageType);
 	public boolean sendMessage(int messageType,String messageArgument);
+	public String[] sendBlockingMessage(int messageType);
+	public String[] sendBlockingMessage(int messageType,String messageArgument);
 }

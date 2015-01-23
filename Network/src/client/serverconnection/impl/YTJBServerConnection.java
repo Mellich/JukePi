@@ -298,14 +298,139 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public void seekForward(ResponseListener response) {
-		this.serverConnection.sendMessage(MessageType.SEEKFORWARD);
+		this.serverConnection.sendMessage(response,MessageType.SEEKFORWARD);
 		
 	}
 
 	@Override
 	public void seekBackward(ResponseListener response) {
-		this.serverConnection.sendMessage(MessageType.SEEKBACKWARD);
+		this.serverConnection.sendMessage(response,MessageType.SEEKBACKWARD);
 		
+	}
+
+	@Override
+	public boolean addToList(String url, boolean toWishList, boolean toBack) {
+		String[] result = {"false"};
+		if (toWishList && toBack)
+			result = this.serverConnection.sendBlockingMessage(MessageType.YOUTUBE, url);
+		else if (!toWishList && toBack)
+			result = this.serverConnection.sendBlockingMessage(MessageType.GAPYOUTUBE, url);
+		else if (toWishList && !toBack)
+			result = this.serverConnection.sendBlockingMessage(MessageType.BEGINNINGYOUTUBE, url);
+		else if (!toWishList && !toBack)
+			result = this.serverConnection.sendBlockingMessage(MessageType.GAPBEGINNINGYOUTUBE, url);	
+		return Boolean.parseBoolean(result[0]);
+	}
+
+	@Override
+	public boolean deleteFromList(int index) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.DELETEFROMGAPLIST, ""+index)[0]);
+	}
+
+	@Override
+	public String getCurrentTrackTitle() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
+	}
+
+	@Override
+	public String[] getGapList() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETGAPLIST);
+	}
+
+	@Override
+	public String[] getWishList() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETWISHLIST);
+	}
+
+	@Override
+	public boolean skip() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SKIP)[0]);
+	}
+
+	@Override
+	public boolean pauseResume() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.PAUSERESUME)[0]);
+	}
+
+	@Override
+	public boolean switchToGapList(String name) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.LOADGAPLIST,name)[0]);
+	}
+
+	@Override
+	public boolean deleteGapList(String name) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.DELETEGAPLIST,name)[0]);
+	}
+
+	@Override
+	public String[] getAvailableGapLists() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETAVAILABLEGAPLISTS);
+	}
+
+	@Override
+	public boolean saveGapList() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GAPLISTSAVETOFILE)[0]);
+	}
+
+	@Override
+	public String getCurrentGapListName() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTGAPLISTNAME)[0];
+	}
+
+	@Override
+	public String[] getTitleFromGapList(String name) {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETTITLEFROMGAPLIST);
+	}
+
+	@Override
+	public boolean getCurrentPlaybackStatus() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTPLAYBACKSTATUS)[0]);
+	}
+
+	@Override
+	public boolean setGapListTrackUp(int index) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GAPLISTTRACKUP,""+index)[0]);
+	}
+
+	@Override
+	public boolean setGapListTrackDown(int index) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GAPLISTTRACKDOWN,""+index)[0]);
+	}
+
+	@Override
+	public String getNextVideoURL() {
+		return this.serverConnection.sendBlockingMessage(MessageType.GETNEXTVIDEOURL)[0];
+	}
+
+	@Override
+	public LoadGapListStatus getLoadGapListStatus() {
+		String[] temp = this.serverConnection.sendBlockingMessage(MessageType.GETLOADGAPLISTSTATUS);
+		return new LoadGapListStatus(Integer.parseInt(temp[0]),Integer.parseInt(temp[1]));
+	}
+
+	@Override
+	public boolean notifyPlayerFinished() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.PLAYERFINISHED)[0]);
+	}
+
+	@Override
+	public int getCurrentPlayerCount() {
+		return Integer.parseInt(this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTPLAYERCOUNT)[0]);
+	}
+
+	@Override
+	public int getCurrentClientCount() {
+		return Integer.parseInt(this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTCLIENTCOUNT)[0]);
+	}
+
+	@Override
+	public boolean seekForward() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SEEKFORWARD)[0]);
+	}
+
+	@Override
+	public boolean seekBackward() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SEEKBACKWARD)[0]);
 	}
 
 }

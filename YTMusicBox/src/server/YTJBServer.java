@@ -74,8 +74,6 @@ public class YTJBServer implements Server {
 	
 	private GapListLoader gapListLoader;
 	
-	private Semaphore closePrompt = new Semaphore(0);
-	
 	private Semaphore playerFinished = new Semaphore(0);
 	
 	private int maxGapListTracks = 0;
@@ -87,26 +85,11 @@ public class YTJBServer implements Server {
 	 * starts the server and makes him ready for work
 	 */
 	public void startUp(){
-		try {
 			waiter.start();
 			scheduler.start();
 			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
-			closePrompt.acquire();
-			IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
-			scheduler.setRunning(false);
-			scheduler.interrupt();
-			waiter.setRunning(false);
-			waiter.interrupt();	
-			server.close();
-			scheduler.join();
-			waiter.join();
-			IO.printlnDebug(this, "Server was shut down");
-		} catch (InterruptedException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public String getWorkingDir(){
@@ -452,7 +435,18 @@ public class YTJBServer implements Server {
 	}
 	
 	public void shutDown(){
-		closePrompt.release();
+		try {
+			scheduler.setRunning(false);
+			scheduler.interrupt();
+			waiter.setRunning(false);
+			waiter.interrupt();	
+			server.close();
+			scheduler.join();
+			waiter.join();
+			IO.printlnDebug(this, "Server was shut down");
+		} catch (IOException | InterruptedException e) {
+			IO.printlnDebug(this, "Error while closing server");
+		}
 	}
 	
 	public static void main(String[] args) {

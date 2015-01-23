@@ -13,8 +13,12 @@ public class SmallClientANdListener implements NotificationListener {
 	
 	public SmallClientANdListener() {
 		ServerConnection server = new YTJBServerConnection(15000);
-		if (server.connect("192.168.178.34",22222)){
+		if (server.connect("localhost",22222)){
 			server.addNotificationListener(this);
+			System.out.println(server.getCurrentGapListName());
+			System.out.println(server.getLoadGapListStatus().getLoadedTrackCount());
+			System.out.println(server.getCurrentPlaybackStatus());
+			System.out.println(server.getCurrentTrackTitle());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			try {
 				reader.readLine();

@@ -121,9 +121,8 @@ public class PlayerStarter extends Application implements NotificationListener, 
 	
 	public void trackIsFinished(boolean wasSkipped){
 		viewer.showIdleScreen(true);
-		viewer.updateInfos();
 		if (!wasSkipped)
-			server.notifyPlayerFinished((String[] s) -> {});
+			server.notifyPlayerFinished((String[] s) -> {viewer.updateInfos();});
 	}
 
 	@Override
