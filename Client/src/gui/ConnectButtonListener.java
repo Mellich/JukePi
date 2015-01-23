@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.Dimension;
+//import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -104,7 +104,7 @@ public class ConnectButtonListener implements ActionListener{
 	 */
 	public JFrame getJFrame() {
 		// TODO Delete when Design is completed	
-		JFrame jFrame = new JFrame();
+/*		JFrame jFrame = new JFrame();
 		jFrame.setSize(new Dimension(528, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
