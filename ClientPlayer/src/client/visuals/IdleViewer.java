@@ -1,14 +1,14 @@
 package client.visuals;
 
 
-import java.sql.Timestamp;
+//import java.sql.Timestamp;
 
 import client.serverconnection.ServerConnection;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
+//import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -27,7 +27,7 @@ public class IdleViewer implements Visualizer {
 	private Text currentGapList;
 	private Text currentTrack;
 	private Text playbackStatus;
-	private TextArea debugInfo;
+	//private TextArea debugInfo;
 	private Group root;
 	
 	private static final String FONTFAMILY = "Tahoma";
@@ -54,7 +54,7 @@ public class IdleViewer implements Visualizer {
 		info = new Text(500,750,"");
 		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.7.19");
+		Text version = new Text(5,25,"Build version 0.7.20 (Without debug)");
 		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -66,20 +66,20 @@ public class IdleViewer implements Visualizer {
 		playbackStatus = new Text(500,900,"");
 		playbackStatus.setFont(new Font(FONTFAMILY,30));
 		playbackStatus.setFill(Color.WHITE);
-		debugInfo = new TextArea();
+		/*debugInfo = new TextArea();
 		debugInfo.setFont(new Font(FONTFAMILY,15));
 		debugInfo.setWrapText(true);
 		debugInfo.setEditable(false);
 		debugInfo.setLayoutX(0);
 		debugInfo.setLayoutY(40);
 		debugInfo.setMaxSize(1920, 200);
-		debugInfo.setMinSize(1920, 200);
+		debugInfo.setMinSize(1920, 200);*/
 		ipAddress.setFont(new Font(FONTFAMILY,30));
 		ipAddress.setFill(Color.WHITE);
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
 		root.getChildren().add(info);
-		root.getChildren().add(debugInfo);
+		//root.getChildren().add(debugInfo);
 		root.getChildren().add(currentGapList);
 		root.getChildren().add(currentTrack);
 		root.getChildren().add(playbackStatus);
@@ -159,10 +159,10 @@ public class IdleViewer implements Visualizer {
 
 	@Override
 	public void showDebugInfo(String info) {
-		Timestamp t = new Timestamp(System.currentTimeMillis());
+		/*Timestamp t = new Timestamp(System.currentTimeMillis());
 		Platform.runLater(() -> {debugInfo.appendText(t.toString()+": "+info+"\n");
 								 debugInfo.setScrollTop(Double.MAX_VALUE);
-							});
+							});*/
 	}
 
 }

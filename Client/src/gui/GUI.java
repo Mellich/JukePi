@@ -88,6 +88,7 @@ public class GUI {
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
 		btnConnect.addActionListener(cbl);
+		btnUDPConnect.addActionListener(new UDPConnectButtonListener(c,cbl,lblFail));
 	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
 		
 		return jFrame;

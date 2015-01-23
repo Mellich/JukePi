@@ -608,4 +608,10 @@ public class Collector implements NotificationListener{
 		try{Thread.sleep(100);} catch (Exception e) {}
 		repaint();
 	}
+
+	@Override
+	public void onSeekNotify(boolean forward) {
+		// TODO Auto-generated method stub
+		
+	}
 }
