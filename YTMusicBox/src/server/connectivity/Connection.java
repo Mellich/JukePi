@@ -20,10 +20,12 @@ public class Connection extends Thread {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private boolean running = true;
+	private ConnectionWaiter waiter;
 	
-	public Connection(Socket s,YTJBServer server) {
+	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
 		this.server = server;
+		this.waiter = waiter;
 	}
 	
 	@Override
@@ -34,7 +36,7 @@ public class Connection extends Thread {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running){
 				String message = receiveMessage();
-				if (message == null)		//if connection is lost, close connection. if not handled here
+				if (message == null || this.isInterrupted())		//if connection is lost, close connection. if not handled here
 					break;					//it would cause a NumberFormatException in the CommandHandler and the connection wouldn't close
 				IO.printlnDebug(this, "Received message: "+message);
 				try{
@@ -51,8 +53,18 @@ public class Connection extends Thread {
 			IO.printlnDebug(this, "ERROR: lost client connection!");
 		}
 		finally{
+			waiter.removeConnection(this);
 			server.removeNotifiable(this);
 			server.removePlayer(this);
+		}
+	}
+	
+	public void closeConnection(){
+		try{
+			socket.close();
+		}
+		catch (IOException e){
+			IO.printlnDebug(this, "Could not close connection");
 		}
 	}
 	

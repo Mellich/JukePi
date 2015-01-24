@@ -20,7 +20,8 @@ public class PlayerStarter extends Application implements NotificationListener, 
 	private Semaphore playerMutex = new Semaphore(1);
 	private volatile int pauseResumeWaitingCount = 0;
 	private volatile int skipWaitingCount = 0;
-
+	private volatile int seekWaitingCount = 0;
+	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
 		server = ServerConnectionFactory.createServerConnection(15000);
@@ -145,12 +146,22 @@ public class PlayerStarter extends Application implements NotificationListener, 
 
 	@Override
 	public void onSeekNotify(boolean forward) {
-		if (player != null){
-			if (forward)
-				player.seekForward();
-			else player.seekBackward();
+		seekWaitingCount++;
+		viewer.showDebugInfo("New seek request! In Line:"+seekWaitingCount);
+		try {
+			playerMutex.acquire();
+			if (player != null){
+				if (forward)
+					player.seekForward();
+				else player.seekBackward();
+			}
+		} catch (Exception e) {
+			viewer.showDebugInfo("Error while seek in track: "+e.getLocalizedMessage());
 		}
-		
+		finally{
+			seekWaitingCount--;
+			playerMutex.release();
+		}		
 	}
 
 }
