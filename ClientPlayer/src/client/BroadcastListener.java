@@ -1,6 +1,7 @@
 package client;
 
 import client.serverconnection.ServerConnection;
+import client.serverconnection.UDPTimeoutException;
 import client.visuals.Visualizer;
 import utilities.IO;
 
@@ -17,10 +18,19 @@ public class BroadcastListener implements Runnable {
 	@Override
 	public void run() {
 		IO.printlnDebug(this, "Waiting for message from server...");
-		if (server.connect(server.waitForUDPConnect()))
-			IO.printlnDebug(this, "Connected!");
-		server.setMeAsPlayer();
-		viewer.updateInfos();
+		boolean serverNotFound = true;
+		while (serverNotFound){
+			try {
+				ServerAddress address = server.udpScanning();
+				if (server.connect(address))
+					IO.printlnDebug(this, "Connected!");
+				server.setMeAsPlayer();
+				viewer.updateInfos();
+				serverNotFound = false;
+			} catch (UDPTimeoutException e) {
+				viewer.showDebugInfo("Timeout: No server found! Further searching...");
+			}
+		}
 	}
 
 }

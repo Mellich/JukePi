@@ -14,6 +14,7 @@ import client.listener.NotificationListener;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.UDPTimeoutException;
 import client.serverconnection.functionality.LowLevelServerConnection;
 import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 
@@ -219,7 +220,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public ServerAddress waitForUDPConnect() {
+	public ServerAddress udpScanning() throws UDPTimeoutException {
 	    // Netzwerk-Gruppe
 	    String NETWORK_GROUP = "230.0.0.1";
 	    // Netzwerk-Gruppen Port
@@ -227,36 +228,51 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	   
 	    // Nachrichten-Codierung
 	    String TEXT_ENCODING = "UTF8";
+	    
+	    int TIMEOUT = 6000;
 	   
 	    MulticastSocket socket;
 	 
 	      // Gruppe anlegen
-	      try {
+	     try {
 			socket = new MulticastSocket(NETWORK_GROUP_PORT);
 		      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
-
 		      socket.joinGroup(socketAddress);
 	   
 	     
 	      byte[] bytes = new byte[65536];
 	      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+	      
+	      Thread timeoutThread = new Thread(() -> {
+	    	  try {
+				Thread.sleep(TIMEOUT);
+				socket.close();
+			} catch (Exception e) {
+				//timeout was not necessary
+			}
+	      });
+	      timeoutThread.start();
 	     
 	      while(true){
 	        // Warten auf Nachricht
 	  	    try {
 		        socket.receive(packet);
+		    } catch (IOException e) {
+			     //IO Exception occured while receiving data
+			    }
+		        if (packet.getLength() == 0)
+		        	throw new UDPTimeoutException();
 		        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
 		        socket.leaveGroup(socketAddress);
 		        socket.close();
+		        timeoutThread.interrupt();
 		        String[] values = message.split(MessageType.SEPERATOR);
 		        return new ServerAddress(values[0],Integer.parseInt(values[1]));
-		    } catch (IOException e) {
-			      e.printStackTrace();
-			    }
 	      }   
-		} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+	     }catch (UDPTimeoutException e){
+		    	 throw new UDPTimeoutException();
+		     } catch (IOException e1) {
+				//fehler beim erstellen des sockets etc
 		}
 	    return null;
 	}

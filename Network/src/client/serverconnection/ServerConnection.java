@@ -216,7 +216,7 @@ public interface ServerConnection {
 	 * 
 	 * @return the ServerAddress of the found server
 	 */
-	public ServerAddress waitForUDPConnect();
+	public ServerAddress udpScanning() throws UDPTimeoutException;
 	
 	/**
 	 * 

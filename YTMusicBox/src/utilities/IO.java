@@ -156,7 +156,7 @@ public class IO {
 			writer.close();
 			return true;
 		} catch (IOException e) {
-			IO.printlnDebug(null, "Error while saving the gaplist!");
+			IO.printlnDebug(null, "Error while saving the gaplist: "+e.getMessage());
 		}
 		return false;
 	}

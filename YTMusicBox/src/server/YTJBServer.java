@@ -382,6 +382,8 @@ public class YTJBServer implements Server {
 				this.port = port;
 				IO.setServer(this);
 				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				this.workingDirectory = this.workingDirectory.replace("%20", " ");
+				System.out.println(this.workingDirectory);
 				int lastdir = this.workingDirectory.lastIndexOf("/");
 				if (lastdir == this.workingDirectory.length() - 1){
 					this.workingDirectory = this.workingDirectory.substring(0, lastdir);
