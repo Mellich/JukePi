@@ -29,17 +29,19 @@ public class InputListener implements Runnable {
 		try {
 			while (running){
 				String line = input.readLine();
-				checker.setLastResponse();
-				if (Thread.interrupted())
-					break;
-				String[] params = line.split(MessageType.SEPERATOR);
-				int messageType = Integer.parseInt(params[0]);
-				if (messageType == MessageType.RESPONSENOTIFY){
-					Thread t = new Thread(new ResponseHandler(responses,params));
-					t.start();
-				}else{
-					Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType,params));
-					t.start();					
+				if (!line.equals("")){
+					checker.setLastResponse();
+					if (Thread.interrupted())
+						break;
+					String[] params = line.split(MessageType.SEPERATOR);
+					int messageType = Integer.parseInt(params[0]);
+					if (messageType == MessageType.RESPONSENOTIFY){
+						Thread t = new Thread(new ResponseHandler(responses,params));
+						t.start();
+					}else{
+						Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType,params));
+						t.start();					
+					}
 				}
 			}
 		} catch (IOException | NullPointerException e) {

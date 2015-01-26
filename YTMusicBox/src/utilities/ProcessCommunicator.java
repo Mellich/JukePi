@@ -36,10 +36,11 @@ public class ProcessCommunicator {
 	 * @return  the direct video url in a string
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
-	static public String parseShortURLToVideoURL(String url) throws IOException{
+	static public String parseShortURLToVideoURL(String url, String path) throws IOException{
 		IO.printlnDebug(null, "waiting for output url...");
+		IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl.exe");
 		String result = null;
-		Process parseProcess = new ProcessBuilder("youtube-dl","-g", url).start();
+		Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-g", url).start();
 		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 		result = parseInput.readLine();
 		parseInput.close();
