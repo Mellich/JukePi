@@ -11,15 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import connection.Collector;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
-
 import javax.swing.JTextField;
 
 /**
  * The ActionListener for the OpenButton.
  * @author Haeldeus
- *
  */
 public class OpenButtonListener implements ActionListener{
 
@@ -146,12 +145,39 @@ public class OpenButtonListener implements ActionListener{
 		lblFail.setBounds(25, 355, 525, 14);
 		contentPane.add(lblFail);
 		
-		btnCreate.addActionListener(new CreateButtonListener(c, textField, lblFail, frame));
-		btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList, lblFail, frame));
+	//	btnCreate.addActionListener(new CreateButtonListener(c, textField, lblFail, frame));
+		btnCreate.addActionListener((ActionEvent ae) -> {if (textField.getText() != null && !textField.getText().equals("")) { String s = textField.getText();
+														s = replaceSpecials(s);c.createGaplist(s, lblFail, frame);} else {lblFail.setText("Please insert a Name for the new Gaplist first");
+														lblFail.setVerticalAlignment(JLabel.CENTER);lblFail.setHorizontalAlignment(JLabel.CENTER);lblFail.setVisible(true);new util.ShowLabelThread(lblFail, frame).start();}});
+		
+	//	btnRemove.addActionListener(new RemoveButtonListener(c, gaplistList, lblFail, frame));
+		btnRemove.addActionListener((ActionEvent ae) -> {c.removeGaplist(gaplistList.getSelectedValue(), lblFail, frame);});
+		
 		btnShow.addActionListener(new ShowButtonListener(c, gaplistList, lblFail));
-		btnBack.addActionListener(new BackButtonListener(listener));
-		btnLoad.addActionListener(new LoadButtonListener(c, gaplistList, lblFail, frame));
+		//TODO: Think about adding this ActionListener as Lamdba-Function.
+		
+	//	btnBack.addActionListener(new BackButtonListener(listener));
+		btnBack.addActionListener((ActionEvent ae) -> {listener.actionPerformed(ae);});
+		
+	//	btnLoad.addActionListener(new LoadButtonListener(c, gaplistList, lblFail, frame));
+		btnLoad.addActionListener((ActionEvent ae) -> {c.loadGaplist(gaplistList.getSelectedValue(), lblFail, frame);});
 		
 		return contentPane;
+	}
+	
+	/**
+	 * Replaces all special Characters from the given String.
+	 * @param regex The String to have all specials replaced.
+	 * @return	The given String withou special Characters.
+	 */
+	private String replaceSpecials(String regex) {
+		regex = regex.replaceAll("ä", "ae");
+		regex = regex.replaceAll("Ä", "ae");
+		regex = regex.replaceAll("ü", "ue");
+		regex = regex.replaceAll("Ü", "ue");
+		regex = regex.replaceAll("ö", "oe");
+		regex = regex.replaceAll("Ö", "oe");
+		regex = regex.replaceAll("ß", "ss");
+		return regex;
 	}
 }

@@ -11,8 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import connection.Collector;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
+
 import java.awt.Font;
 
 /**
@@ -130,10 +132,20 @@ public class EditTrackListener implements ActionListener{
 		contentPane.add(lblFail);
 		
 		btnOpen.addActionListener(new OpenButtonListener(frame, this, c));
-		btnSave.addActionListener(new SaveButtonListener(c, lblFail, frame));
-		btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList, lblFail, frame));
-		btnUp.addActionListener(new UpButtonListener(gaplistList, c, lblFail, frame));
-		btnDown.addActionListener(new DownButtonListener(gaplistList, c, lblFail, frame));
+		
+	//	btnSave.addActionListener(new SaveButtonListener(c, lblFail, frame));
+		btnSave.addActionListener((ActionEvent ae) -> {c.saveGaplist(lblFail, frame);});
+		
+	//	btnDelete.addActionListener(new DeleteButtonListener(c, gaplistList, lblFail, frame));
+		btnDelete.addActionListener((ActionEvent ae) -> {c.deleteFromGaplist(gaplistList.getSelectedIndex(), lblFail, frame);});
+		
+	//	btnUp.addActionListener(new UpButtonListener(gaplistList, c, lblFail, frame));
+		btnUp.addActionListener((ActionEvent ae) -> {int index = gaplistList.getSelectedIndex();c.moveTrackUp(index, lblFail, frame);
+													try{Thread.sleep(100);}catch(Exception e) {}gaplistList.setSelectedIndex(index-1);});
+		
+	//	btnDown.addActionListener(new DownButtonListener(gaplistList, c, lblFail, frame));
+		btnDown.addActionListener((ActionEvent ae) -> {int index = gaplistList.getSelectedIndex();c.moveTrackDown(index, lblFail, frame);
+													  try{Thread.sleep(100);}catch(Exception e) {}gaplistList.setSelectedIndex(index+1);});
 		
 		return contentPane;
 	}

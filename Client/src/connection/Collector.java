@@ -376,11 +376,12 @@ public class Collector implements NotificationListener{
 	public synchronized void fillModels() {
 		gaplistModel.clear();
 		wishlistModel.clear();
-		
-		for (String s : gaplist)
-			gaplistModel.addElement(s);
-		for (String s : wishlist)
-			wishlistModel.addElement(s);
+		if (gaplist != null && wishlist != null) {
+			for (String s : gaplist)
+				gaplistModel.addElement(s);
+			for (String s : wishlist)
+				wishlistModel.addElement(s);
+		}
 		repaint();
 	}
 	

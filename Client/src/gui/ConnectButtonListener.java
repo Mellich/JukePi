@@ -184,23 +184,25 @@ public class ConnectButtonListener implements ActionListener{
 		jFrame.getContentPane().add(btnEditTracks);
 		
 		JButton btnPlayPause = new JButton("Play");
-		btnPlayPause.setBounds(10, 305, 89, 45);
+		btnPlayPause.setBounds(122, 305, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
 		c.addPlayButton(btnPlayPause);
 		c.getFirstStatus();
 		
+		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backwards</body></html>");
+		btnSeekBackwards.setBounds(10, 305, 89, 45);
+		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backwards.");
+		jFrame.getContentPane().add(btnSeekBackwards);
+		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(122, 305, 89, 45);
+		btnSkip.setBounds(346, 305, 89, 45);
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		jFrame.getContentPane().add(btnSkip);
 		
 		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
 		btnSeekForward.setBounds(234, 305, 89, 45);
+		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
 		jFrame.getContentPane().add(btnSeekForward);
-		
-		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backwards</body></html>");
-		btnSeekBackwards.setBounds(346, 305, 89, 45);
-		jFrame.getContentPane().add(btnSeekBackwards);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
 		btnDisconnect.setBounds(388, 11, 114, 23);
