@@ -26,13 +26,14 @@ public class UDPConnectButtonListener implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		client.ServerAddress sa = serverConnection.waitForUDPConnect();
-		if (c.connect(sa.getIPAddress(), ""+sa.getPort()))
-			cbl.actionPerformed(null);
-		else {
-			fail.setText("Failed to connect to the Server. Please check for correct spelling.");
-			new ShowLabelThread(fail, null).start();
-		}
+		new Thread( ()-> {
+			client.ServerAddress sa = serverConnection.waitForUDPConnect();
+			if (c.connect(sa.getIPAddress(), ""+sa.getPort()))
+				cbl.actionPerformed(null);
+			else {
+				fail.setText("Failed to connect to the Server. Please check for correct spelling.");
+				new ShowLabelThread(fail, null).start();
+			}}).start();
 	}
 
 }
