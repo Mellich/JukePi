@@ -153,7 +153,6 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 						}
 					}
 				} catch (InterruptedException e) {
-					System.out.println("CheckThread beendet");
 				}
 				close();
 			}
