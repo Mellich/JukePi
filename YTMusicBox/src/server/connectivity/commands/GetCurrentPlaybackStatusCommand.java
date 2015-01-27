@@ -8,8 +8,8 @@ public class GetCurrentPlaybackStatusCommand extends Command {
 
 	private TrackScheduler scheduler;
 	
-	public GetCurrentPlaybackStatusCommand(BufferedWriter out,TrackScheduler scheduler) {
-		super(out);
+	public GetCurrentPlaybackStatusCommand(BufferedWriter out,int messageType,TrackScheduler scheduler) {
+		super(out, messageType);
 		this.scheduler = scheduler;
 	}
 

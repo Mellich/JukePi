@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import network.MessageType;
+import messages.MessageType;
 
 public class NotifyListener {
 	public static void main(String[] args) {

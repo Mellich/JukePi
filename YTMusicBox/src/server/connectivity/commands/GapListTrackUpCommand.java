@@ -10,8 +10,8 @@ public class GapListTrackUpCommand extends Command {
 	private int index;
 	private YTJBServer server;
 	
-	public GapListTrackUpCommand(BufferedWriter out, YTJBServer server,int index) {
-		super(out);
+	public GapListTrackUpCommand(BufferedWriter out,int messageType, YTJBServer server,int index) {
+		super(out, messageType);
 		this.server = server;
 		this.index = index;
 	}

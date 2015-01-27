@@ -5,15 +5,16 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import threads.ConnectedThread;
-
+import util.ShowLabelThread;
 import connection.Collector;
+
 import javax.swing.JCheckBox;
 
 /**
@@ -41,7 +42,7 @@ public class ConnectButtonListener implements ActionListener{
 	/**
 	 * The TextField that contains the YouTube-Link.
 	 */
-	private JTextField txtYoutubelink;
+	private JTextField txtLink;
 	
 	/**
 	 * The TextField that contains the IP.
@@ -85,15 +86,13 @@ public class ConnectButtonListener implements ActionListener{
 			fail.setText("Failed to connect to the Server. Please check for correct spelling.");
 		else {
 			fail.setText("Connected to "+ip.getText());
-			c.startStableTest(ip.getText(), Integer.parseInt(port.getText()), jFrame, fail);
 			jFrame.setTitle("JukePi - "+ip.getText()+":"+port.getText());
 			jFrame.getContentPane().removeAll();
 			jFrame.repaint();
 			jFrame.setContentPane(getJFrame().getContentPane());
 			jFrame.getContentPane().add(fail);
 			fail.setBounds(143, 278, 189, 14);
-			ConnectedThread ct = new ConnectedThread(fail, jFrame);
-			ct.start();
+			new ShowLabelThread(fail, jFrame).start();
 			jFrame.repaint();
 		}
 	}
@@ -104,13 +103,13 @@ public class ConnectButtonListener implements ActionListener{
 	 * @return The created Frame.
 	 */
 	public JFrame getJFrame() {
-	/*	// TODO Delete when Design is completed	
-		JFrame jFrame = new JFrame();
+		// TODO Delete when Design is completed	
+/*		JFrame jFrame = new JFrame();
 		jFrame.setSize(new Dimension(528, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.getContentPane().setLayout(null);
-*/		/*Delete till here*/		
+		/*Delete till here*/		
 		
 		JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -135,12 +134,12 @@ public class ConnectButtonListener implements ActionListener{
 		c.addWishlistLabel(lblNoWishlist);
 		c.updateLists();
 		
-		txtYoutubelink = new JTextField();
-		txtYoutubelink.setBounds(10, 60, 362, 20);
-		jFrame.getContentPane().add(txtYoutubelink);
-		txtYoutubelink.setText("Insert a YouTube Link here.");
-		txtYoutubelink.addMouseListener(new TextFieldListener(new String[] {"Insert a YouTube Link here.", "Couldn't add", "Track added", "No valid"}, txtYoutubelink));
-		txtYoutubelink.setColumns(10);
+		txtLink = new JTextField();
+		txtLink.setBounds(10, 60, 362, 20);
+		jFrame.getContentPane().add(txtLink);
+		txtLink.setText("Insert a YouTube Link here.");
+		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a YouTube Link here.", "Couldn't add", "Track added", "No valid"}, txtLink));
+		txtLink.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(10, 91, 62, 20);
@@ -155,7 +154,6 @@ public class ConnectButtonListener implements ActionListener{
 		JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
 		rdbtnGaplist.setBounds(155, 90, 75, 23);
 		jFrame.getContentPane().add(rdbtnGaplist);
-		c.addGaplistRB(rdbtnGaplist);
 		
 		JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -178,7 +176,7 @@ public class ConnectButtonListener implements ActionListener{
 		lblPlayingTrack.setBounds(88, 144, 244, 14);
 		c.addNowPlayingLabel(lblPlayingTrack);
 		jFrame.getContentPane().add(lblPlayingTrack);
-		c.nextTrack();
+		c.getNextTrack();
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
 		btnEditTracks.setBounds(10, 194, 100, 23);
@@ -186,18 +184,28 @@ public class ConnectButtonListener implements ActionListener{
 		jFrame.getContentPane().add(btnEditTracks);
 		
 		JButton btnPlayPause = new JButton("Play");
-		btnPlayPause.setBounds(10, 305, 89, 45);
+		btnPlayPause.setBounds(122, 305, 89, 45);
 		jFrame.getContentPane().add(btnPlayPause);
 		c.addPlayButton(btnPlayPause);
-		c.updateStatus();
+		c.getFirstStatus();
+		
+		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backwards</body></html>");
+		btnSeekBackwards.setBounds(10, 305, 89, 45);
+		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backwards.");
+		jFrame.getContentPane().add(btnSeekBackwards);
 		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(122, 305, 89, 45);
+		btnSkip.setBounds(346, 305, 89, 45);
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		jFrame.getContentPane().add(btnSkip);
 		
+		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
+		btnSeekForward.setBounds(234, 305, 89, 45);
+		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
+		jFrame.getContentPane().add(btnSeekForward);
+		
 		JButton btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.setBounds(388, 327, 114, 23);
+		btnDisconnect.setBounds(388, 11, 114, 23);
 		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
 		jFrame.getContentPane().add(btnDisconnect);
 		
@@ -205,14 +213,29 @@ public class ConnectButtonListener implements ActionListener{
 		chckbxInfront.setBounds(232, 90, 97, 23);
 		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
 		jFrame.getContentPane().add(chckbxInfront);
-
-		rdbtnWishlist.addActionListener(new RadioButtonListener(rdbtnWishlist, rdbtnGaplist));
-		rdbtnGaplist.addActionListener(new RadioButtonListener(rdbtnGaplist, rdbtnWishlist));
-		btnAdd.addActionListener(new AddButtonListener(txtYoutubelink, c, btnAdd, chckbxInfront, fail));
-		btnDisconnect.addActionListener(new DisconnectButtonListener(jFrame, c, editTrackWindow));
-		btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
-		btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
+		
+		DisconnectButtonListener dcListener = new DisconnectButtonListener(jFrame, c, editTrackWindow);
+		c.addDisconnectListener(dcListener);
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(rdbtnGaplist);
+		bg.add(rdbtnWishlist);
+		
+//		btnAdd.addActionListener(new AddButtonListener(txtLink, rdbtnWishlist, c, chckbxInfront, fail, jFrame));
+		btnAdd.addActionListener((ActionEvent ae) -> {String link = txtLink.getText();boolean inFront = chckbxInfront.isSelected();
+													 if (!link.isEmpty()) c.addToList(link, rdbtnWishlist.isSelected(), inFront, txtLink, fail, jFrame);
+													 else {fail.setText("No valid Link");fail.setVerticalAlignment(JLabel.CENTER);fail.setHorizontalAlignment(JLabel.CENTER);
+													 new util.ShowLabelThread(fail, jFrame).start();}});
+		btnDisconnect.addActionListener(dcListener);
+		
+	//	btnSkip.addActionListener(new SkipButtonListener(c, fail, jFrame));
+		btnSkip.addActionListener((ActionEvent ae) -> {c.skip(fail, jFrame);});
+		
+	//	btnPlayPause.addActionListener(new PlayButtonListener(c, fail, jFrame));
+		btnPlayPause.addActionListener((ActionEvent ae) -> {c.playButtonPressed(fail, jFrame);});
+		
 		btnEditTracks.addActionListener(new EditTrackListener(editTrackWindow, c));
+		btnSeekForward.addActionListener((ActionEvent ae) -> {c.seekForward(fail, jFrame);});
+		btnSeekBackwards.addActionListener((ActionEvent ae) -> {c.seekBackward(fail, jFrame);});
 		
 		jFrame.repaint();
 		

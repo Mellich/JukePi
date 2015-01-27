@@ -8,8 +8,8 @@ public class GetCurrentGapListNameCommand extends Command {
 
 	private YTJBServer server;
 	
-	public GetCurrentGapListNameCommand(BufferedWriter out, YTJBServer server) {
-		super(out);
+	public GetCurrentGapListNameCommand(BufferedWriter out,int messageType, YTJBServer server) {
+		super(out, messageType);
 		this.server = server;
 	}
 

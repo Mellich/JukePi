@@ -3,15 +3,14 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import threads.ConnectedThread;
-import threads.CreateThread;
 import connection.Collector;
 
 /**
- * The ActionListener for the CreateButton
+ * The ActionListener for the CreateButton.
  * @author Haeldeus.
  *
  */
@@ -33,15 +32,22 @@ public class CreateButtonListener implements ActionListener{
 	private JLabel fail;
 	
 	/**
+	 * The Frame of the Application.
+	 */
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector that will send the Messages.
 	 * @param tf	The TextField, that contains the Name for the List.
 	 * @param fail	The Label, that will display possible Messages.
+	 * @param frame The Frame, that contains the Fail-Label.
 	 */
-	public CreateButtonListener(Collector c, JTextField tf, JLabel fail) {
+	public CreateButtonListener(Collector c, JTextField tf, JLabel fail, JFrame frame) {
 		this.c = c;
 		this.tf = tf;
 		this.fail = fail;
+		this.frame = frame;
 	}
 
 	/**
@@ -50,17 +56,22 @@ public class CreateButtonListener implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		if (tf.getText() != null && !tf.getText().equals("")) {
-			System.out.println(tf.getText());
-			CreateThread ct = new CreateThread(c, tf.getText(), fail);
-			ct.start();
+			String s = tf.getText();
+			s = s.replaceAll("ä", "ae");
+			s = s.replaceAll("Ä", "ae");
+			s = s.replaceAll("ü", "ue");
+			s = s.replaceAll("Ü", "ue");
+			s = s.replaceAll("ö", "oe");
+			s = s.replaceAll("Ö", "oe");
+			s = s.replaceAll("ß", "ss");
+			c.createGaplist(s, fail, frame);
 		}
 		else {
 			fail.setText("Please insert a Name for the new Gaplist first");
 			fail.setVerticalAlignment(JLabel.CENTER);
 			fail.setHorizontalAlignment(JLabel.CENTER);
 			fail.setVisible(true);
-			ConnectedThread ct = new ConnectedThread(fail, null);
-			ct.start();
+			new util.ShowLabelThread(fail, frame).start();
 		}
 	}
 }

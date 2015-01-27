@@ -9,8 +9,8 @@ public class GetCurrentTrackCommand extends Command {
 
 	private TrackScheduler scheduler;
 	
-	public GetCurrentTrackCommand(BufferedWriter out,TrackScheduler scheduler) {
-		super(out);
+	public GetCurrentTrackCommand(BufferedWriter out,int messageType,TrackScheduler scheduler) {
+		super(out, messageType);
 		this.scheduler = scheduler;
 	}
 

@@ -2,10 +2,7 @@ package server.connectivity;
 
 import java.io.BufferedWriter;
 
-
-
-
-import network.MessageType;
+import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
 import utilities.IO;
@@ -36,49 +33,65 @@ public class CommandHandler extends Thread {
 		int prompt = Integer.parseInt(args[0]);
 		IO.printlnDebug(this, "Parsing input...");
 		switch (prompt){
-		case MessageType.PAUSERESUME: new PauseResumeCommand(out,server).handle();
+		case MessageType.PAUSERESUME: new PauseResumeCommand(out,prompt,server).handle();
 			break;
-		case MessageType.SKIP: new SkipCommand(out,server.getScheduler()).handle();
+		case MessageType.SKIP: new SkipCommand(out,prompt,server.getScheduler()).handle();
 			break;
-		case MessageType.GAPYOUTUBE: new YoutubeCommand(out,server,false,false,args[1]).handle();
+		case MessageType.GAPYOUTUBE: new YoutubeCommand(out,prompt,server,false,false,args[1]).handle();
 			break;
-		case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommand(out,server).handle();
+		case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommand(out,prompt,server).handle();
 			break;
-		case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommand(out,server,false,Integer.parseInt(args[1])).handle();
+		case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommand(out,prompt,server,false,Integer.parseInt(args[1])).handle();
 			break;
-		case MessageType.GETGAPLIST: new GetListCommand(out, server,false).handle();
+		case MessageType.GETGAPLIST: new GetListCommand(out,prompt, server,false).handle();
 			break;
-		case MessageType.GETWISHLIST: new GetListCommand(out, server,true).handle();
+		case MessageType.GETWISHLIST: new GetListCommand(out,prompt, server,true).handle();
 			break;
-		case MessageType.YOUTUBE:  new YoutubeCommand(out,server,true,false,args[1]).handle();
+		case MessageType.YOUTUBE:  new YoutubeCommand(out,prompt,server,true,false,args[1]).handle();
 			break;
-		case MessageType.ISREADY: new CheckIfReadyCommand(out).handle();
+		case MessageType.ISREADY: new CheckIfReadyCommand(out,prompt).handle();
 			break;
-		case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommand(out,server.getScheduler()).handle();
+		case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommand(out,prompt,server.getScheduler()).handle();
 			break;
-		case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommand(out,server.getScheduler()).handle();
+		case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommand(out,prompt,server.getScheduler()).handle();
 			break;
-		case MessageType.BEGINNINGYOUTUBE: new YoutubeCommand(out,server,true,true,args[1]).handle();
+		case MessageType.BEGINNINGYOUTUBE: new YoutubeCommand(out,prompt,server,true,true,args[1]).handle();
 			break;
-		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommand(out,server,false,true,args[1]).handle();
+		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommand(out,prompt,server,false,true,args[1]).handle();
 			break;
-		case MessageType.DECLAREMEASNOTIFY: server.registerClient(parent);;
+		case MessageType.DECLAREMEASNOTIFY: server.registerNotifiable(parent);;
 			break;
-		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,server,Integer.parseInt(args[1])).handle();
+		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1])).handle();
 			break;
-		case MessageType.GAPLISTTRACKDOWN: new GapListTrackUpCommand(out,server,Integer.parseInt(args[1]) + 1).handle();
+		case MessageType.GAPLISTTRACKDOWN: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1]) + 1).handle();
 			break;	
-		case MessageType.GETAVAILABLEGAPLISTS: new GetGapListsCommand(out,server).handle();
+		case MessageType.GETAVAILABLEGAPLISTS: new GetGapListsCommand(out,prompt,server).handle();
 			break;
-		case MessageType.LOADGAPLIST: new ChangeGapListCommand(out,server,args[1]).handle();
+		case MessageType.LOADGAPLIST: new ChangeGapListCommand(out,prompt,server,args[1]).handle();
 			break;
-		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,server).handle();
+		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,prompt,server).handle();
 			break;
-		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,server,args[1]).handle();
+		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,prompt,server,args[1]).handle();
 			break;
-		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, server, args[1]).handle();
+		case MessageType.SETMEASPLAYER: server.registerPlayer(parent);
 			break;
-		default: new UnknownCommand(out,""+prompt).handle();
+		case MessageType.GETNEXTVIDEOURL: new GetNextVideoURLCommand(out,prompt, server.getScheduler()).handle();
+			break;
+		case MessageType.PLAYERFINISHED: new PlayerFinishedCommand(out,prompt, server).handle();
+			break;
+		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, prompt,server, args[1]).handle();
+			break;
+		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
+			break;
+		case MessageType.GETCURRENTCLIENTCOUNT: new GetCurrentClientCountCommand(out,prompt,server).handle();
+			break;
+		case MessageType.GETCURRENTPLAYERCOUNT: new GetCurrentPlayerCountCommand(out,prompt,server).handle();
+			break;
+		case MessageType.SEEKFORWARD: new SeekForwardCommand(out,prompt,server.getScheduler()).handle();
+			break;
+		case MessageType.SEEKBACKWARD: new SeekBackwardCommand(out,prompt,server.getScheduler()).handle();
+			break;
+		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}
 	

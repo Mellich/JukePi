@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import threads.SkipThread;
-
 import connection.Collector;
 
 /**
@@ -49,10 +47,10 @@ public class SkipButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
+		c.skip(fail, frame);
 		frame.repaint();
-		SkipThread st = new SkipThread(c, fail, frame);
-		st.start();
-		frame.repaint();
+		try{Thread.sleep(100);}catch(Exception e) {}
+		c.repaint();
 	}
 
 }

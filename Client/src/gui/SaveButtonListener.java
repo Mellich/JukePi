@@ -3,7 +3,8 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import threads.SaveThread;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import connection.Collector;
 
@@ -20,11 +21,25 @@ public class SaveButtonListener implements ActionListener{
 	private Collector c;
 	
 	/**
+	 * The Label, that will display Responses.
+	 */
+	private JLabel fail;
+	
+	/**
+	 * The Frame, that contains the Fail-Label.
+	 */
+	private JFrame frame;
+	
+	/**
 	 * The Constructor for the ActionListener.
 	 * @param c	The Collector that will send the Messages.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
-	public SaveButtonListener(Collector c) {
+	public SaveButtonListener(Collector c, JLabel fail, JFrame frame) {
 		this.c = c;
+		this.fail = fail;
+		this.frame = frame;
 	}
 	
 	/**
@@ -32,7 +47,6 @@ public class SaveButtonListener implements ActionListener{
 	 * @param arg0 Just a stub.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		SaveThread st = new SaveThread(c);
-		st.start();
+		c.saveGaplist(fail, frame);
 	}
 }

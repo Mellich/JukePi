@@ -10,8 +10,8 @@ public class PauseResumeCommand extends Command {
 	
 	private TrackScheduler trackScheduler;
 
-	public PauseResumeCommand(BufferedWriter out, YTJBServer server) {
-		super(out);
+	public PauseResumeCommand(BufferedWriter out,int messageType, YTJBServer server) {
+		super(out, messageType);
 		trackScheduler = server.getScheduler();
 	}
 

@@ -11,12 +11,10 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-import javafx.application.Platform;
-import network.MessageType;
+import messages.MessageType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
-import server.visuals.IdleViewer;
 import utilities.IO;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
@@ -25,19 +23,21 @@ import utilities.IO;
  * @author Mellich
  *
  */
-public class YTJBServer extends Thread {
+public class YTJBServer implements Server {
 	
 	/**
 	 * the standard port will be used, when no other port is given
 	 */
 	public static final int PORT = 12345;
 	
-	public static final String GAPLISTDIRECTORY = "/home/pi/.jbserver/";
+	public String workingDirectory;
 	
 	/**
 	 * the server socket to handle connections to the server
 	 */
 	private ServerSocket server;
+	
+	private int port;
 	
 	/**
 	 * the connection waiter of the server
@@ -62,9 +62,9 @@ public class YTJBServer extends Thread {
 	/**
 	 * list of clients connected to the server
 	 */
-	private ArrayList<Connection> clients;
-
-	private IdleViewer idelViewer;
+	private ArrayList<Connection> notifiables;
+	
+	private ArrayList<Connection> player;
 	
 	private InitFileCommunicator initFile;
 	
@@ -74,33 +74,42 @@ public class YTJBServer extends Thread {
 	
 	private GapListLoader gapListLoader;
 	
-	private Semaphore closePrompt = new Semaphore(0);
+	private Semaphore playerFinished = new Semaphore(0);
+	
+	private int maxGapListTracks = 0;
+	
+	private Thread connectionBroadcast = null;
 	
 	
 	/**
 	 * starts the server and makes him ready for work
 	 */
 	public void startUp(){
-		try {
 			waiter.start();
 			scheduler.start();
-			//BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-			//r.readLine(); //giving a input will shut down the server
-			closePrompt.acquire();
-			IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
-			scheduler.setRunning(false);
-			scheduler.interrupt();
-			waiter.setRunning(false);
-			waiter.interrupt();	
-			server.close();
-			scheduler.join();
-			waiter.join();
-			this.showLogo(false);
-			IO.printlnDebug(this, "Server was shut down");
-		} catch (InterruptedException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
+			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
+			this.connectionBroadcast.start();
+	}
+	
+	public String getWorkingDir(){
+		return workingDirectory;
+	}
+	
+	private synchronized String[] listToArray(LinkedList<MusicTrack> list){
+		String[] result = new String[list.size()];
+		for (int i = 0; i < result.length; i++){
+			result[i] = list.get(i).getTitle();
 		}
+		return result;
+	}
+	
+	public int getCurrentClientCount(){
+		return notifiables.size();
+	}
+	
+	public int getCurrentPlayerCount(){
+		return player.size();
 	}
 	
 	/**adds a MusicTrack to a list
@@ -117,17 +126,22 @@ public class YTJBServer extends Thread {
 			if (atFirst)
 				wishList.addFirst(track);
 			else wishList.add(track);
+			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else{
 			if (atFirst)
 				gapList.addFirst(track);
 			else gapList.add(track);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
-		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
 		if (isFirstTrack){     //if so, notify waiting scheduler
-			scheduler.playableTrack.release();
+			scheduler.notifyPlayableTrack();
 			IO.printlnDebug(this, "First element in the lists");
 		}
+	}
+	
+	public int getPlayerCount(){
+		return player.size();
 	}
 	
 	/**
@@ -142,11 +156,11 @@ public class YTJBServer extends Thread {
 		try{
 			if (fromWishList){
 				temp = wishList.remove(index);
-				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 			}
 			else{
 				temp = gapList.remove(index);
-				this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
 		catch (IndexOutOfBoundsException e){
@@ -174,44 +188,75 @@ public class YTJBServer extends Thread {
 		return response.toString();
 	}
 	
+	/**chooses the next track for play back
+	 * 
+	 * @return the musictrack to play back
+	 */
 	public synchronized MusicTrack chooseNextTrack(){
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
 			temp =  wishList.removeFirst();
-			notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else {
 			if (!gapList.isEmpty()){
 				temp = gapList.removeFirst();
 				gapList.add(temp);
-				notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
 		return temp;
 	}
 	
+	/**
+	 * loads current gap list from a file
+	 */
 	public void loadGapListFromFile(){
 		gapList.clear();
-		idelViewer.currentGaplist(currentGapList);
-		this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
-		IO.loadGapListFromFile(GAPLISTDIRECTORY+currentGapList, this, idelViewer);		
+		String[] args = new String[1];
+		args[0] = currentGapList;
+		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY,args);
+		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+		if(!IO.loadGapListFromFile(workingDirectory+currentGapList, this)){
+			this.searchGapLists();
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY, gapLists);
+		}
 	}
 	
+	/**saves the gap list to a file
+	 * 
+	 * @return true, when no error occurred
+	 */	
 	public boolean saveGapListToFile(){
-		boolean savedCorrectly = IO.saveGapListToFile(gapList, GAPLISTDIRECTORY+currentGapList);
+		boolean savedCorrectly = IO.saveGapListToFile(gapList, workingDirectory+currentGapList,this);
 		if (savedCorrectly){
 			searchGapLists();
-			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
 		}
 		return savedCorrectly;
 	}
 	
+	public int getCurrentLoadedGapListTracksCount(){
+		return this.gapList.size();
+	}
+	
+	public int getMaxLoadedGapListTracksCount(){
+		return this.maxGapListTracks;
+	}
+	
+	public void setMaxGapListTrackCount(int max){
+		this.maxGapListTracks = max;
+	}
+	
 	public boolean deleteGapList(String filename){
+		boolean deletedCorrectly = false;
 		filename = filename +".jb";
-		boolean deletedCorrectly = IO.deleteGapList(GAPLISTDIRECTORY+filename);
-		if (deletedCorrectly){
-			this.searchGapLists();
-			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY);
+		if (!filename.equals(currentGapList)){
+			deletedCorrectly = IO.deleteGapList(workingDirectory+filename);
+			if (deletedCorrectly){
+				this.searchGapLists();
+				this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);
+			}
 		}
 		return deletedCorrectly;
 	}
@@ -224,7 +269,7 @@ public class YTJBServer extends Thread {
 		return server;
 	}
 	
-	public String[] getGapLists(){
+	public String[] getGapListNames(){
 		return gapLists;
 	}
 	
@@ -253,7 +298,7 @@ public class YTJBServer extends Thread {
 	
 	public String[] readOutGapList(String filename){
 		IO.printlnDebug(this, "Reading out gap list");
-		return IO.readOutGapList(GAPLISTDIRECTORY+filename);
+		return IO.readOutGapList(workingDirectory+filename);
 	}
 	
 	public synchronized boolean switchWithUpper(int index){
@@ -262,45 +307,98 @@ public class YTJBServer extends Thread {
 			gapList.set(index - 1, gapList.get(index));
 			gapList.set(index, upper);
 			IO.printlnDebug(this, "notify clients");
-			this.notifyClients(MessageType.LISTSUPDATEDNOTIFY);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			return true;
 		}
 		else return false;
 	}
 	
-	public synchronized void registerClient(Connection c){
-		clients.add(c);
-		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	public synchronized void registerNotifiable(Connection c){
+		notifiables.add(c);
+		String[] s = new String[1];
+		s[0] = ""+notifiables.size();
+		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
+		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
-	public synchronized void removeClient(Connection c){
-		clients.remove(c);
-		IO.printlnDebug(this, "Count of connected Clients: "+clients.size());
+	public synchronized void registerPlayer(Connection c){
+		player.add(c);
+		if (player.size() == 1)
+			scheduler.notifyPlayerAvailable();
+		String[] s = new String[1];
+		s[0] = ""+player.size();
+		this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
+		IO.printlnDebug(this, "Count of connected Players: "+player.size());
 	}
 	
-	public void notifyClients(int messageType){
-		for (Connection h: clients){
-			h.notify(messageType);
+	public synchronized void removePlayer(Connection c){
+		if(player.contains(c)){
+			player.remove(c);
+			playerFinished.release();
+			String[] s = new String[1];
+			s[0] = ""+player.size();
+			this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
+			IO.printlnDebug(this, "Count of connected Players: "+player.size());
 		}
 	}
 	
-	public void showLogo(boolean show){
-		Platform.runLater(() -> idelViewer.showLogo(show));
+	public synchronized void removeNotifiable(Connection c){
+		notifiables.remove(c);
+		String[] s = new String[1];
+		s[0] = ""+notifiables.size();
+		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
+		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
 	
+	public void playerHasFinished(){
+		playerFinished.release();
+	}
+	
+	public void waitForPlayerToFinish(){
+		try {
+			int finishedCount = 0;
+			while (finishedCount < player.size()){
+					playerFinished.acquire();
+					finishedCount++;
+			}
+		} catch (InterruptedException e) {
+			IO.printlnDebug(this, "ERROR: Interrupted while waiting for players to finish");
+		}
+	}
+	
+	public void notifyClients(int messageType,String[] args){
+		for (Connection h: notifiables){
+			h.notify(messageType,args);
+		}
+	}	
 	
 	/**
 	 * creates new instance of a server
 	 * 
 	 * @param port the port used for the server socket
 	 */
-	public YTJBServer(int port,IdleViewer idelViewer) {
+	public YTJBServer(int port) {
 			try {
-				this.idelViewer = idelViewer;
+				this.port = port;
+				IO.setServer(this);
+				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				this.workingDirectory = this.workingDirectory.replace("%20", " ");
+				System.out.println(this.workingDirectory);
+				int lastdir = this.workingDirectory.lastIndexOf("/");
+				if (lastdir == this.workingDirectory.length() - 1){
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir);
+					lastdir = this.workingDirectory.lastIndexOf("/");
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);
+				}
+				else{
+					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);					
+				}
+				System.out.println(this.workingDirectory);
 				wishList = new LinkedList<MusicTrack>();
-				clients = new ArrayList<Connection>();
+				notifiables = new ArrayList<Connection>();
+				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
-				initFile = new InitFileCommunicator(GAPLISTDIRECTORY);
+				initFile = new InitFileCommunicator(workingDirectory);
 				currentGapList = initFile.getStartUpGapList();
 				searchGapLists();
 				gapListLoader = new GapListLoader(this);
@@ -308,8 +406,6 @@ public class YTJBServer extends Thread {
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
-				String ip = getIpAddress();
-				Platform.runLater(() -> idelViewer.editConnectionDetails(ip, port));
 				IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -319,10 +415,10 @@ public class YTJBServer extends Thread {
 	
 	
 	public void searchGapLists(){
-		gapLists = IO.getGapLists(GAPLISTDIRECTORY);
+		gapLists = IO.getGapLists(workingDirectory);
 	}
 	
-	private String getIpAddress() { 
+	public String getIpAddress() { 
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
@@ -338,12 +434,26 @@ public class YTJBServer extends Thread {
         	IO.printlnDebug(this, "Could not find out ip address");
         }
         return null; 
-}
+	}
 	
-	@Override
-	public void run() {
-		super.run();
-		this.startUp();
+	public void shutDown(){
+		try {
+			scheduler.setRunning(false);
+			scheduler.interrupt();
+			waiter.setRunning(false);
+			waiter.interrupt();	
+			server.close();
+			scheduler.join();
+			waiter.join();
+			IO.printlnDebug(this, "Server was shut down");
+		} catch (IOException | InterruptedException e) {
+			IO.printlnDebug(this, "Error while closing server");
+		}
+	}
+	
+	public static void main(String[] args) {
+		YTJBServer server = new YTJBServer(22222);
+		server.startUp();
 	}
 	
 

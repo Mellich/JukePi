@@ -9,8 +9,8 @@ public class DeleteGapListCommand extends Command {
 	private YTJBServer server;
 	private String filename;
 
-	public DeleteGapListCommand(BufferedWriter out,YTJBServer server,String filename) {
-		super(out);
+	public DeleteGapListCommand(BufferedWriter out,int messageType,YTJBServer server,String filename) {
+		super(out, messageType);
 		this.server = server;
 		this.filename = filename;
 	}

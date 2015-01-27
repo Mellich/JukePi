@@ -2,7 +2,7 @@ package server.connectivity.commands;
 
 import java.io.BufferedWriter;
 
-import network.MessageType;
+import messages.MessageType;
 import server.YTJBServer;
 
 public class GetTitleOfGapListCommand extends Command {
@@ -10,8 +10,8 @@ public class GetTitleOfGapListCommand extends Command {
 	private YTJBServer server;
 	private String filename;
 	
-	public GetTitleOfGapListCommand(BufferedWriter out,YTJBServer server,String filename) {
-		super(out);
+	public GetTitleOfGapListCommand(BufferedWriter out,int messageType,YTJBServer server,String filename) {
+		super(out, messageType);
 		this.server = server;
 		this.filename = filename;
 	}

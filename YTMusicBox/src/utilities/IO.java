@@ -15,9 +15,9 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
+import messages.MessageType;
 import server.MusicTrack;
 import server.MusicTrack.TrackType;
-import server.visuals.IdleViewer;
 import server.YTJBServer;
 
 /**static class that provides functions for uniform input and output
@@ -28,6 +28,11 @@ import server.YTJBServer;
 public class IO {
 	
 	public static boolean debugMode = true;
+	private static YTJBServer server = null;
+	
+	public static void setServer(YTJBServer s){
+		server = s;
+	}
 
 	static public void printlnDebug(Object speaker, String input){
 		if (debugMode){
@@ -38,6 +43,11 @@ public class IO {
 			long n = Thread.currentThread().getId();
 			Timestamp t = new Timestamp(System.currentTimeMillis());
 			System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
+			if (server != null){
+				String[] s = new String[1];
+				s[0] = t.toString()+" Thread-"+n+"="+name+": "+input;
+				server.notifyClients(MessageType.DEBUGOUTPUTNOTIFY, s);
+			}
 		}
 	}
 	
@@ -100,45 +110,47 @@ public class IO {
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR: Could not read out title of the gaplist "+filename);
 		}
-		return null;
+		return new String[0];
 		
 	}
 	
-	public static void loadGapListFromFile(String filename, YTJBServer server, IdleViewer viewer){
+	public static boolean loadGapListFromFile(String filename, YTJBServer server){
 		try {
-			IO.printlnDebug(null, "Start to load gap list "+filename);
 			BufferedReader reader = getFileOutput(filename);
-			long max = reader.lines().count();
-			reader.close();
-			reader = new BufferedReader(new FileReader(filename));
+			server.setMaxGapListTrackCount((int) reader.lines().count());
+			reader.close();		
+			IO.printlnDebug(null, "Start to load gap list "+filename);
+			reader = getFileOutput(filename);
 			String url = reader.readLine();
-			int current = 0;
-			viewer.gaplistStatus(current, (int)max);
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
-				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
+				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2],server.getWorkingDir()),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
 				if (Thread.interrupted())
 					break;
 				server.addToList(yURL, false, true);
-				current++;
-				viewer.gaplistStatus(current, (int) max);
 				url = reader.readLine();
 			}
 			reader.close();
-			viewer.gaplistStatus(current, (int) max);
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
-			viewer.gaplistStatus(0, 0);
-			IO.saveGapListToFile(null, filename);
+
+			return false;
+		}
+		catch (NullPointerException e){
+			IO.printlnDebug(null, "Creating new Gap list: "+filename);
+			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename,server);
+			server.setMaxGapListTrackCount(0);
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
+		return true;
 	}
 	
-	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
+	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename,YTJBServer server){
 		try {
 			BufferedWriter writer = new BufferedWriter( new FileWriter(filename));
 			writer.write("");
+			server.setMaxGapListTrackCount(urls.size());
 			for (MusicTrack url : urls){
 				writer.write(url.getMusicType()+";"+url.getTitle()+";"+url.getShortURL());
 				writer.newLine();
@@ -146,7 +158,7 @@ public class IO {
 			writer.close();
 			return true;
 		} catch (IOException e) {
-			IO.printlnDebug(null, "Error while saving the gaplist!");
+			IO.printlnDebug(null, "Error while saving the gaplist: "+e.getMessage());
 		}
 		return false;
 	}

@@ -4,9 +4,7 @@ package server.connectivity.commands;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-
-import network.MessageType;
-import utilities.IO;
+import messages.MessageType;
 
 /**handles a specific command
  * 
@@ -16,13 +14,16 @@ import utilities.IO;
 public abstract class Command {
 
 	private BufferedWriter out;
+	private int messageType;
 	
 	/**creates a new command handler
 	 * 
-	 * @param s the socket of the connection, that should be handled
+	 * @param out the buffered writer for the socket to response to
+	 * @param messageType the message type of the received message
 	 */
-	public Command(BufferedWriter out){
+	public Command(BufferedWriter out,int messageType){
 		this.out = out;
+		this.messageType = messageType;
 	}
 	
 	
@@ -31,15 +32,15 @@ public abstract class Command {
 	 * @param s the response
 	 */
 	protected void response(String s){
-		sendMessage(MessageType.RESPONSENOTIFY+MessageType.SEPERATOR+s);
+		sendMessage(MessageType.RESPONSENOTIFY+MessageType.SEPERATOR+messageType+MessageType.SEPERATOR+s);
 	}
 	
 	/**notify the client 
 	 * 
 	 * @param notify the type of the notification
 	 */
-	protected void notify(int notify){
-		sendMessage(""+notify);
+	protected void notify(int notify,String arguments){
+		sendMessage(""+notify+arguments);
 	}
 	
 	/**sends a string to the client
@@ -48,13 +49,12 @@ public abstract class Command {
 	 */
 	private void sendMessage(String s){
 		try{
-			IO.printlnDebug(this, "Sending Message: "+s);
 			out.write(s);
 			out.newLine();
 			out.flush();
 		}
 		catch (IOException e){
-			IO.printlnDebug(this, "ERROR could not send message to client");
+			//IO.printlnDebug(this, "ERROR could not send message to client");
 		}
 	}
 	

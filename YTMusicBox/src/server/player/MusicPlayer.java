@@ -7,4 +7,6 @@ public interface MusicPlayer{
 	public boolean skip();
 	public boolean pauseResume();
 	public boolean isPlaying();
+	public boolean seekForward();
+	public boolean seekBackward();
 }

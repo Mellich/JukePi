@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.NotifyClientCommand;
 import server.connectivity.commands.UnknownCommand;
@@ -19,10 +20,12 @@ public class Connection extends Thread {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private boolean running = true;
+	private ConnectionWaiter waiter;
 	
-	public Connection(Socket s,YTJBServer server) {
+	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
 		this.server = server;
+		this.waiter = waiter;
 	}
 	
 	@Override
@@ -33,7 +36,7 @@ public class Connection extends Thread {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running){
 				String message = receiveMessage();
-				if (message == null)		//if connection is lost, close connection. if not handled here
+				if (message == null || this.isInterrupted())		//if connection is lost, close connection. if not handled here
 					break;					//it would cause a NumberFormatException in the CommandHandler and the connection wouldn't close
 				IO.printlnDebug(this, "Received message: "+message);
 				try{
@@ -42,7 +45,7 @@ public class Connection extends Thread {
 				}
 				catch (NumberFormatException | IndexOutOfBoundsException e){
 					IO.printlnDebug(this, "Wrong command format was sendet by client:"+message);
-					new UnknownCommand(out,""+message).handle();
+					new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+message).handle();
 				}
 			}
 			socket.close();
@@ -50,12 +53,23 @@ public class Connection extends Thread {
 			IO.printlnDebug(this, "ERROR: lost client connection!");
 		}
 		finally{
-			server.removeClient(this);
+			waiter.removeConnection(this);
+			server.removeNotifiable(this);
+			server.removePlayer(this);
 		}
 	}
 	
-	public void notify(int messageType){
-			new NotifyClientCommand(out,messageType).handle();
+	public void closeConnection(){
+		try{
+			socket.close();
+		}
+		catch (IOException e){
+			IO.printlnDebug(this, "Could not close connection");
+		}
+	}
+	
+	public void notify(int messageType,String[] args){
+			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args).handle();
 	}
 
 

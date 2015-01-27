@@ -21,8 +21,8 @@ public class YoutubeCommand extends Command {
 	private boolean toWishList;
 	private boolean atFirst;
 	
-	public YoutubeCommand(BufferedWriter out,YTJBServer server, boolean toWishList,boolean atFirst,String url) {
-		super(out);
+	public YoutubeCommand(BufferedWriter out,int messageType,YTJBServer server, boolean toWishList,boolean atFirst,String url) {
+		super(out, messageType);
 		this.url = url;
 		this.server = server;
 		this.toWishList = toWishList;
@@ -33,7 +33,7 @@ public class YoutubeCommand extends Command {
 	public boolean handle() {
 		String[] parsedURL;
 		try {
-			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url);
+			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url,server.getWorkingDir());
 			if (parsedURL[0] != null){
 				response(""+true);
 				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,parsedURL[0],parsedURL[1],url);

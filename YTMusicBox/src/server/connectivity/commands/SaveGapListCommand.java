@@ -9,8 +9,8 @@ public class SaveGapListCommand extends Command {
 
 	private YTJBServer server;
 	
-	public SaveGapListCommand(BufferedWriter out, YTJBServer server) {
-		super(out);
+	public SaveGapListCommand(BufferedWriter out,int messageType, YTJBServer server) {
+		super(out, messageType);
 		this.server = server;
 	}
 

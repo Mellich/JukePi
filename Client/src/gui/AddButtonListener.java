@@ -3,12 +3,11 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-
-import threads.AddThread;
 
 import connection.Collector;
 
@@ -30,14 +29,14 @@ public class AddButtonListener implements ActionListener{
 	private Collector c;
 	
 	/**
-	 * The AddButton.
-	 */
-	private JButton button;
-	
-	/**
 	 * The CheckBox, that will determine, if a Track will be added in Front or at the End of the List.
 	 */
 	private JCheckBox checkBox;
+	
+	/**
+	 * The selectable RadioButton, that determines, if a Track should be added to the Wishlist.
+	 */
+	private JRadioButton wishlist;
 	
 	/**
 	 * The Label, that will Display Messages.
@@ -45,19 +44,26 @@ public class AddButtonListener implements ActionListener{
 	private JLabel fail;
 	
 	/**
-	 * The Constructor for the Listener.
-	 * @param field	The TextField.
-	 * @param c	The Collector.
-	 * @param button	The AddButton
-	 * @param checkBox	The CheckBox.
-	 * @param fail	The Label.
+	 * The Frame, the Button for this Listener is in.
 	 */
-	public AddButtonListener(JTextField field, Collector c, JButton button, JCheckBox checkBox, JLabel fail) {
+	private JFrame frame;
+	
+	/**
+	 * The Constructor for the Listener.
+	 * @param field	The TextField with the Link in it.
+	 * @param wishlist	The RadioButton for the Wishlist.
+	 * @param c	The Collector, that will send the Message.
+	 * @param checkBox	The CheckBox, that determines if the Track should be added in front of the List.
+	 * @param fail	The Label, that displays Responses.
+	 * @param frame	The Frame, that contains the Fail-Label.
+	 */
+	public AddButtonListener(JTextField field, JRadioButton wishlist, Collector c, JCheckBox checkBox, JLabel fail, JFrame frame) {
 		this.tf = field;
 		this.c = c;
-		this.button = button;
 		this.checkBox = checkBox;
 		this.fail = fail;
+		this.frame = frame;
+		this.wishlist = wishlist;
 	}
 	
 	/**
@@ -65,15 +71,15 @@ public class AddButtonListener implements ActionListener{
 	 * @param e Just a stub.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		button.removeActionListener(this);		//If you do that in the thread, sending this message multiple times is possible
 		String link = tf.getText();
 		boolean inFront = checkBox.isSelected();
-		if (link.contains("youtube.") && link.contains("/watch")) {
-			AddThread at = new AddThread(link, button, tf, c, this, inFront, fail);
-			at.start();
+		if (!link.isEmpty()) {
+			c.addToList(link, wishlist.isSelected(), inFront, tf, fail, frame);
 		}
-		else
-			tf.setText("No valid Link");
+		else {
+			fail.setText("No valid Link");
+			new util.ShowLabelThread(fail, frame).start();
+		}
 	}
 
 }

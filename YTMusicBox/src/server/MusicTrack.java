@@ -25,6 +25,7 @@ public class MusicTrack {
 	private String title;
 	private String videoURL;
 	private TrackType type;
+	private boolean isVideo = true;
 	
 	/**creates a new music track
 	 * 
@@ -37,10 +38,16 @@ public class MusicTrack {
 		this.videoURL = videoURL;
 		type = t;
 		this.shortURL = shortURL;
+		if (shortURL.contains("//soundcloud.com/"))
+			isVideo = false;
 	}
 	
 	public String getTitle(){
 		return title;
+	}
+	
+	public boolean getIsVideo(){
+		return isVideo;
 	}
 	
 	public TrackType getMusicType(){

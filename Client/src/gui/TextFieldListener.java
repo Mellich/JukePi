@@ -34,6 +34,7 @@ public class TextFieldListener implements MouseListener{
 	
 	/**
 	 * Performs the Action, when the Mouse is clicked.
+	 * @param arg0	Just a stub.
 	 */
 	public void mouseClicked(MouseEvent arg0) {
 		for (String i : delete) {

@@ -4,11 +4,10 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import connection.Collector;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+import connection.Collector;
 
 /**
  * The Class, that will initiate the GUI.
@@ -20,7 +19,7 @@ public class GUI {
 	/**
 	 * The Collector that will send the Messages.
 	 */
-	Collector c;
+	private Collector c;
 	
 	/**
 	 * The TextField, where the User can insert the IP.
@@ -46,14 +45,14 @@ public class GUI {
 		
 		txtIp = new JTextField();
 //TODO	txtIp.setText("IP");
-		txtIp.setText("192.168.178.34");
+		txtIp.setText("localhost");
 		txtIp.setBounds(151, 110, 186, 20);
 		jFrame.getContentPane().add(txtIp);
 		txtIp.setColumns(10);
 		
 		txtPort = new JTextField();
 //TODO	txtPort.setText("Port");
-		txtPort.setText("12345");
+		txtPort.setText("22222");
 		txtPort.setBounds(151, 184, 45, 20);
 		jFrame.getContentPane().add(txtPort);
 		txtPort.setColumns(10);
@@ -72,7 +71,7 @@ public class GUI {
 		jFrame.getContentPane().add(lblPort);
 		
 		JButton btnConnect = new JButton("Connect");
-		btnConnect.setBounds(151, 259, 131, 40);
+		btnConnect.setBounds(151, 234, 131, 40);
 		jFrame.getContentPane().add(btnConnect);
 		c = new Collector();
 		
@@ -80,10 +79,18 @@ public class GUI {
 		lblFail.setBounds(49, 234, 374, 14);
 		jFrame.getContentPane().add(lblFail);
 		
+		JButton btnUDPConnect = new JButton("UDP Connect");
+		btnUDPConnect.setBounds(151, 298, 131, 40);
+		jFrame.getContentPane().add(btnUDPConnect);
+		
+		ConnectButtonListener cbl = new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail);
+		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
-		btnConnect.addActionListener(new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail));
-
+		btnConnect.addActionListener(cbl);
+		btnUDPConnect.addActionListener(new UDPConnectButtonListener(c,cbl,lblFail));
+	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
+		
 		return jFrame;
 	}
 	
