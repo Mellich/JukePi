@@ -138,17 +138,18 @@ public class IO {
 			return false;
 		}
 		catch (NullPointerException e){
-			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename);
+			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename,server);
 			server.setMaxGapListTrackCount(0);
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
 		return true;
 	}
 	
-	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename){
+	public static boolean saveGapListToFile(LinkedList<MusicTrack> urls, String filename,YTJBServer server){
 		try {
 			BufferedWriter writer = new BufferedWriter( new FileWriter(filename));
 			writer.write("");
+			server.setMaxGapListTrackCount(urls.size());
 			for (MusicTrack url : urls){
 				writer.write(url.getMusicType()+";"+url.getTitle()+";"+url.getShortURL());
 				writer.newLine();

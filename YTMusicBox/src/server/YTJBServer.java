@@ -228,7 +228,7 @@ public class YTJBServer implements Server {
 	 * @return true, when no error occurred
 	 */	
 	public boolean saveGapListToFile(){
-		boolean savedCorrectly = IO.saveGapListToFile(gapList, workingDirectory+currentGapList);
+		boolean savedCorrectly = IO.saveGapListToFile(gapList, workingDirectory+currentGapList,this);
 		if (savedCorrectly){
 			searchGapLists();
 			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY,gapLists);

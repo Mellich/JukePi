@@ -54,7 +54,7 @@ public class IdleViewer implements Visualizer {
 		info = new Text(500,750,"");
 		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.8.1 (Without debug - untested)");
+		Text version = new Text(5,25,"Build version 0.8.3 (Without debug - untested)");
 		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -106,9 +106,7 @@ public class IdleViewer implements Visualizer {
 			info.setText("Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
 		}
 		else{
-			if (maxCount == 0)
-				info.setText("Gaplist ist leer!");
-			else info.setText("Gaplist vollständig geladen!");
+			info.setText("Gaplist vollständig geladen!");
 		}
 	}
 	
