@@ -124,7 +124,7 @@ public class IO {
 			String url = reader.readLine();
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
-				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2]),splitted[2]);
+				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],ProcessCommunicator.parseShortURLToVideoURL(splitted[2],server.getWorkingDir()),splitted[2]);
 				IO.printlnDebug(null, "Loaded Track: "+splitted[1]);
 				if (Thread.interrupted())
 					break;
@@ -134,10 +134,11 @@ public class IO {
 			reader.close();
 		} catch (IOException e) {
 			IO.printlnDebug(null, "ERROR while opening file: "+filename);
-			IO.printlnDebug(null, "Creating new Gap list: "+filename);
+
 			return false;
 		}
 		catch (NullPointerException e){
+			IO.printlnDebug(null, "Creating new Gap list: "+filename);
 			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename,server);
 			server.setMaxGapListTrackCount(0);
 		}
