@@ -78,7 +78,7 @@ public class IO {
 		IO.printlnDebug(null, "getting gap lists...");
 		String[] result = null;
 		File dir = new File(directory);
-		File[] gaplists = dir.listFiles((File f,String s) -> {if (s.contains(".jb")) return true; else return false;});
+		File[] gaplists = dir.listFiles((File f,String s) -> {if (s.substring(s.length()-3).equals(".jb")) return true; else return false;});
 		if (gaplists != null){
 			result = new String[gaplists.length];
 			for (int i = 0; i < result.length; i++){
