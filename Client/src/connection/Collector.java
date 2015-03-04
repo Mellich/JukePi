@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import server.Server;
+import server.ServerFactory;
 import util.ShowLabelThread;
 import client.ServerConnectionFactory;
 import client.listener.NotificationListener;
@@ -124,6 +126,8 @@ public class Collector implements NotificationListener{
 	 */
 	private volatile DefaultListModel<String> contentModel;
 	
+	private Server localServer = null;
+	
 	/**
 	 * The Constructor for the Collector.
 	 */
@@ -141,6 +145,12 @@ public class Collector implements NotificationListener{
 	 */
 	public void addPlayButton(JButton playButton) {
 		this.playButton = playButton;
+	}
+	
+	public void createLocalServer(int port){
+		localServer = ServerFactory.createServer(port);
+		localServer.startUp();
+		this.connect("localhost", ""+port);
 	}
 	
 	/**
@@ -338,6 +348,8 @@ public class Collector implements NotificationListener{
 	public void disconnect() {
 		dcListener.actionPerformed(null);
 		wrapper.close();
+		if (localServer != null)
+			localServer.shutDown();
 	}
 
 	/**

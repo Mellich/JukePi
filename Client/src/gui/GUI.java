@@ -37,7 +37,7 @@ public class GUI {
 	 */
 	public JFrame getFrame() {
 		JFrame jFrame = new JFrame();
-		jFrame.setSize(new Dimension(528, 400));
+		jFrame.setSize(new Dimension(528, 450));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.setResizable(false);
@@ -83,12 +83,17 @@ public class GUI {
 		btnUDPConnect.setBounds(151, 298, 131, 40);
 		jFrame.getContentPane().add(btnUDPConnect);
 		
+		JButton btnInternServer = new JButton("Create own server");
+		btnInternServer.setBounds(131, 362, 171, 40);
+		jFrame.getContentPane().add(btnInternServer);
+		
 		ConnectButtonListener cbl = new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail);
 		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
 		btnConnect.addActionListener(cbl);
 		btnUDPConnect.addActionListener(new UDPConnectButtonListener(c,cbl,lblFail));
+		btnInternServer.addActionListener(new InternServerButtonListener(c,cbl));
 	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
 		
 		return jFrame;
