@@ -58,6 +58,16 @@ public class ConnectButtonListener implements ActionListener{
 	 * The Label that displays possible Messages.
 	 */
 	private JLabel fail;
+	
+	/**
+	 * The IP of the Server, the Client is connected to.
+	 */
+	private String connectedIp;
+	
+	/**
+	 * The Port of the Server, the Client is connected to.
+	 */
+	private int connectedPort = -1;
 
 	/**
 	 * The Constructor for the ActionListener.
@@ -78,15 +88,44 @@ public class ConnectButtonListener implements ActionListener{
 	
 
 	/**
+	 * Sets connectedIP to the given Value, which is the IP that was found by UDP-Connect.
+	 * @param ip	The IP of the Server.
+	 */
+	public void setIP(String ip) {
+		this.connectedIp = ip;
+	}
+	
+	/**
+	 * Sets connectedPort to the given Value, which is the Port that was found by UDP-Connect.
+	 * @param port	The Port of the Server.
+	 */
+	public void setPort(int port) {
+		this.connectedPort = port;
+	}
+	
+	/**
 	 * Performs the Action.
 	 * @param e Just a stub.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (!(c.connect(ip.getText(), port.getText())))
-			fail.setText("Failed to connect to the Server. Please check for correct spelling.");
+		if (connectedPort == -1) {
+			if (!(c.connect(ip.getText(), port.getText())))
+				fail.setText("Failed to connect to the Server. Please check for correct spelling.");
+			else {
+				fail.setText("Connected to "+ip.getText());
+				jFrame.setTitle("JukePi - "+ip.getText()+":"+port.getText());
+				jFrame.getContentPane().removeAll();
+				jFrame.repaint();
+				jFrame.setContentPane(getJFrame().getContentPane());
+				jFrame.getContentPane().add(fail);
+				fail.setBounds(143, 278, 189, 14);
+				new ShowLabelThread(fail, jFrame).start();
+				jFrame.repaint();
+			}
+		}
 		else {
-			fail.setText("Connected to "+ip.getText());
-			jFrame.setTitle("JukePi - "+ip.getText()+":"+port.getText());
+			fail.setText("Connected to "+connectedIp);
+			jFrame.setTitle("JukePi - "+connectedIp+":"+connectedPort);
 			jFrame.getContentPane().removeAll();
 			jFrame.repaint();
 			jFrame.setContentPane(getJFrame().getContentPane());

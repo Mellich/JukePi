@@ -17,6 +17,8 @@ public class InternServerButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		c.createLocalServer(22222);
+		cbl.setIP("localhost");
+		cbl.setPort(22222);
 		cbl.actionPerformed(null);
 	}
 
