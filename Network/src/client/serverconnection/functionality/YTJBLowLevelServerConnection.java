@@ -89,7 +89,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			output.newLine();
 			output.flush();
 			return true;
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			return false;
 		}
 	}

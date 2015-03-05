@@ -20,6 +20,7 @@ public class Connection extends Thread {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private boolean running = true;
+	private boolean isDebug = false;
 	private ConnectionWaiter waiter;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
@@ -68,7 +69,12 @@ public class Connection extends Thread {
 		}
 	}
 	
+	public void setAsDebug(){
+		isDebug = true;
+	}
+	
 	public void notify(int messageType,String[] args){
+		if (messageType != MessageType.DEBUGOUTPUTNOTIFY || isDebug)
 			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args).handle();
 	}
 

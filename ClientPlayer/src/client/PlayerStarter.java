@@ -3,14 +3,14 @@ package client;
 import java.util.concurrent.Semaphore;
 
 import client.listener.DebugNotificationListener;
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
 import client.serverconnection.ServerConnection;
 import client.visuals.IdleViewer;
 import client.visuals.Visualizer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class PlayerStarter extends Application implements NotificationListener, DebugNotificationListener {
+public class PlayerStarter extends Application implements DefaultNotificationListener, DebugNotificationListener {
 	
 	private ServerConnection server;
 	private volatile OMXPlayer player = null;

@@ -5,11 +5,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.impl.YTJBServerConnection;
 
-public class SmallClientANdListener implements NotificationListener {
+public class SmallClientANdListener implements DefaultNotificationListener {
 	
 	public SmallClientANdListener() {
 		ServerConnection server = new YTJBServerConnection(15000);

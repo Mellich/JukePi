@@ -73,7 +73,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,prompt,server,args[1]).handle();
 			break;
-		case MessageType.SETMEASPLAYER: server.registerPlayer(parent);
+		case MessageType.SETMEASPLAYER: new SetAsPlayerCommand(out,prompt,server,parent).handle();
 			break;
 		case MessageType.GETNEXTVIDEOURL: new GetNextVideoURLCommand(out,prompt, server.getScheduler()).handle();
 			break;
@@ -90,6 +90,8 @@ public class CommandHandler extends Thread {
 		case MessageType.SEEKFORWARD: new SeekForwardCommand(out,prompt,server.getScheduler()).handle();
 			break;
 		case MessageType.SEEKBACKWARD: new SeekBackwardCommand(out,prompt,server.getScheduler()).handle();
+			break;
+		case MessageType.SETMEASDEBUG: new SetAsDebugCommand(out,prompt,parent).handle();
 			break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		

@@ -172,6 +172,8 @@ public class MessageType {
 	
 	public static final int SEEKBACKWARD = 46;	
 	
+	public static final int SETMEASDEBUG = 47;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */

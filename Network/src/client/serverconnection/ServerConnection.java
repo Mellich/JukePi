@@ -2,7 +2,7 @@ package client.serverconnection;
 
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
 import client.listener.ResponseListener;
 import client.serverconnection.impl.LoadGapListStatus;
 
@@ -18,13 +18,61 @@ public interface ServerConnection {
 	 * 
 	 * @param listener the notification listener that should be added
 	 */
-	public void addNotificationListener(NotificationListener listener);
+	public void addDefaultNotificationListener(DefaultNotificationListener listener);
 	
 	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
 	 * 
 	 * @param listener the listener that should be removed
 	 */
-	public void removeNotificationListener(NotificationListener listener);
+	public void removeDefaultNotificationListener(DefaultNotificationListener listener);
+	
+	/**Adds a notification listener, that will be executed, when the server sends a notification
+	 * 
+	 * @param listener the notification listener that should be added
+	 */
+	public void addDebugNotificationListener(DefaultNotificationListener listener);
+	
+	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
+	 * 
+	 * @param listener the listener that should be removed
+	 */
+	public void removeDebugNotificationListener(DefaultNotificationListener listener);	
+	
+	/**Adds a notification listener, that will be executed, when the server sends a notification
+	 * 
+	 * @param listener the notification listener that should be added
+	 */
+	public void addGapListNotificationListener(DefaultNotificationListener listener);
+	
+	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
+	 * 
+	 * @param listener the listener that should be removed
+	 */
+	public void removeGapListNotificationListener(DefaultNotificationListener listener);
+	
+	/**Adds a notification listener, that will be executed, when the server sends a notification
+	 * 
+	 * @param listener the notification listener that should be added
+	 */
+	public void addPauseResumeNotificationListener(DefaultNotificationListener listener);
+	
+	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
+	 * 
+	 * @param listener the listener that should be removed
+	 */
+	public void removePauseResumeNotificationListener(DefaultNotificationListener listener);
+	
+	/**Adds a notification listener, that will be executed, when the server sends a notification
+	 * 
+	 * @param listener the notification listener that should be added
+	 */
+	public void addSeekNotificationListener(DefaultNotificationListener listener);
+	
+	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
+	 * 
+	 * @param listener the listener that should be removed
+	 */
+	public void removeSeekNotificationListener(DefaultNotificationListener listener);
 	
 	/**Adds a debug notification listener, that will be executed, when the server sends a notifications regarding to debug issues
 	 * 
@@ -187,7 +235,8 @@ public interface ServerConnection {
 	/**
 	 * 
 	 */
-	public void setMeAsPlayer();
+	public void setMeAsPlayer(ResponseListener response);
+	public boolean setMeAsPlayer();
 	
 	/**
 	 * 
@@ -241,4 +290,6 @@ public interface ServerConnection {
 	
 	public void seekBackward(ResponseListener response);
 	public boolean seekBackward();
+	
+	
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import messages.MessageType;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
@@ -20,7 +20,10 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
-	private List<NotificationListener> notificationListener;
+	private List<DefaultNotificationListener> seekNotificationListener;
+	private List<DefaultNotificationListener> gapListNotificationListener;
+	private List<DefaultNotificationListener> pauseResumeNotificationListener;
+	private List<DefaultNotificationListener> defaultNotificationListener;
 	private List<DebugNotificationListener> debugNotificationListener;
 	private LowLevelServerConnection serverConnection;
 	private boolean connected = false;
@@ -31,7 +34,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 	
 	public YTJBServerConnection(int checkIntervall) {
-		notificationListener = new ArrayList<NotificationListener>();
+		notificationListener = new ArrayList<DefaultNotificationListener>();
 		debugNotificationListener = new ArrayList<DebugNotificationListener>();
 		connected = false;
 		this.checkIntervall = checkIntervall;
@@ -40,17 +43,17 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public void onNotify(int notifyType,String[] args) {
 		switch(notifyType){
-		case MessageType.PAUSERESUMENOTIFY: for(NotificationListener l: notificationListener) l.onPauseResumeNotify(Boolean.parseBoolean(args[0]));
+		case MessageType.PAUSERESUMENOTIFY: for(DefaultNotificationListener l: notificationListener) l.onPauseResumeNotify(Boolean.parseBoolean(args[0]));
 			break;
-		case MessageType.NEXTTRACKNOTIFY:for(NotificationListener l: notificationListener) l.onNextTrackNotify(args[0],args[1],Boolean.parseBoolean(args[2]));
+		case MessageType.NEXTTRACKNOTIFY:for(DefaultNotificationListener l: notificationListener) l.onNextTrackNotify(args[0],args[1],Boolean.parseBoolean(args[2]));
 			break;
-		case MessageType.GAPLISTUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListUpdatedNotify(args);
+		case MessageType.GAPLISTUPDATEDNOTIFY:for(DefaultNotificationListener l: notificationListener) l.onGapListUpdatedNotify(args);
 			break;
-		case MessageType.WISHLISTUPDATEDNOTIFY:for(NotificationListener l: notificationListener) l.onWishListUpdatedNotify(args);
+		case MessageType.WISHLISTUPDATEDNOTIFY:for(DefaultNotificationListener l: notificationListener) l.onWishListUpdatedNotify(args);
 			break;
-		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListCountChangedNotify(args);
+		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(DefaultNotificationListener l: notificationListener) l.onGapListCountChangedNotify(args);
 			break;
-		case MessageType.GAPLISTCHANGEDNOTIFY:for(NotificationListener l: notificationListener) l.onGapListChangedNotify(args[0]);
+		case MessageType.GAPLISTCHANGEDNOTIFY:for(DefaultNotificationListener l: notificationListener) l.onGapListChangedNotify(args[0]);
 			break;
 		case MessageType.CLIENTCOUNTCHANGEDNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onClientCountChangedNotify(Integer.parseInt(args[0]));
 			break;
@@ -58,22 +61,22 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			break;
 		case MessageType.DEBUGOUTPUTNOTIFY: for(DebugNotificationListener l: debugNotificationListener) l.onNewOutput(args[0]);
 		break;
-		case MessageType.SEEKNOTIFY: for(NotificationListener l: notificationListener) l.onSeekNotify(Boolean.parseBoolean(args[0]));
+		case MessageType.SEEKNOTIFY: for(DefaultNotificationListener l: notificationListener) l.onSeekNotify(Boolean.parseBoolean(args[0]));
 			break;
-		case MessageType.DISCONNECT: for(NotificationListener l: notificationListener) l.onDisconnect();
+		case MessageType.DISCONNECT: for(DefaultNotificationListener l: notificationListener) l.onDisconnect();
 										connected = false;
 		}
 
 	}
 
 	@Override
-	public void addNotificationListener(NotificationListener listener) {
+	public void addNotificationListener(DefaultNotificationListener listener) {
 		this.notificationListener.add(listener);
 
 	}
 
 	@Override
-	public void removeNotificationListener(NotificationListener listener) {
+	public void removeNotificationListener(DefaultNotificationListener listener) {
 		this.notificationListener.remove(listener);
 
 	}
@@ -193,8 +196,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public void setMeAsPlayer() {
-		this.serverConnection.sendMessage(MessageType.SETMEASPLAYER);
+	public boolean setMeAsPlayer() {
+		String[] result = this.serverConnection.sendBlockingMessage(MessageType.SETMEASPLAYER);
+		return Boolean.parseBoolean(result[0]);
 	}
 
 	@Override
@@ -447,6 +451,80 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean seekBackward() {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SEEKBACKWARD)[0]);
+	}
+
+	@Override
+	public void setMeAsPlayer(ResponseListener response) {
+		this.serverConnection.sendMessage(response,MessageType.SETMEASPLAYER);
+	}
+
+	@Override
+	public void addDefaultNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeDefaultNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addDebugNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeDebugNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addGapListNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeGapListNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addPauseResumeNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removePauseResumeNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addSeekNotificationListener(DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeSeekNotificationListener(
+			DefaultNotificationListener listener) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
