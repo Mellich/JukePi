@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 
+import utilities.IO;
 import messages.MessageType;
 
 public class ConnectionBroadcast implements Runnable {
@@ -42,7 +43,14 @@ public class ConnectionBroadcast implements Runnable {
 			while(true){
 			      // Nachricht an Gruppe senden
 				//IO.printlnDebug(this, "Broadcast connection details...: "+message);
-			    socket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+				try{
+					socket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+				}
+			    catch (IOException e){
+			    	IO.printlnDebug(this, "Fehler beim senden des Broadcasts! Versuche weiter...");
+			    }
+			    if (Thread.interrupted())
+			    	break;
 			    Thread.sleep(SLEEPTIME);
 			}
 		} catch (IOException | InterruptedException e) {

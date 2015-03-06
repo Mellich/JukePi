@@ -90,6 +90,7 @@ public class YTJBServer implements Server {
 			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
+			IO.printlnDebug(this, "Server is running now");
 	}
 	
 	public String getWorkingDir(){
@@ -297,7 +298,7 @@ public class YTJBServer implements Server {
 	}
 	
 	public String[] readOutGapList(String filename){
-		IO.printlnDebug(this, "Reading out gap list");
+		IO.printlnDebug(this, "Reading out gap list: "+filename);
 		return IO.readOutGapList(workingDirectory+filename);
 	}
 	
@@ -306,7 +307,6 @@ public class YTJBServer implements Server {
 			MusicTrack upper = gapList.get(index - 1);
 			gapList.set(index - 1, gapList.get(index));
 			gapList.set(index, upper);
-			IO.printlnDebug(this, "notify clients");
 			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			return true;
 		}
@@ -383,7 +383,6 @@ public class YTJBServer implements Server {
 				IO.setServer(this);
 				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 				this.workingDirectory = this.workingDirectory.replace("%20", " ");
-				System.out.println(this.workingDirectory);
 				int lastdir = this.workingDirectory.lastIndexOf("/");
 				if (lastdir == this.workingDirectory.length() - 1){
 					this.workingDirectory = this.workingDirectory.substring(0, lastdir);
@@ -393,9 +392,9 @@ public class YTJBServer implements Server {
 				else{
 					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);					
 				}
-				System.out.println(this.workingDirectory);
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
+				IO.printlnDebug(this, "Working directory: "+this.workingDirectory);
 				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
 				initFile = new InitFileCommunicator(workingDirectory);
@@ -445,6 +444,7 @@ public class YTJBServer implements Server {
 			server.close();
 			scheduler.join();
 			waiter.join();
+			connectionBroadcast.interrupt();
 			IO.printlnDebug(this, "Server was shut down");
 		} catch (IOException | InterruptedException e) {
 			IO.printlnDebug(this, "Error while closing server");

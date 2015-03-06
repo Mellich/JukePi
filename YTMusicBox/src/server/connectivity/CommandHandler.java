@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import messages.MessageType;
 import server.YTJBServer;
 import server.connectivity.commands.*;
-import utilities.IO;
 
 /**handles incomming connections
  * 
@@ -31,7 +30,6 @@ public class CommandHandler extends Thread {
 	
 	private void handleCommand(String[] args){
 		int prompt = Integer.parseInt(args[0]);
-		IO.printlnDebug(this, "Parsing input...");
 		switch (prompt){
 		case MessageType.PAUSERESUME: new PauseResumeCommand(out,prompt,server).handle();
 			break;

@@ -297,7 +297,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		gaplistLabel.setText("" + gaplist.length);
 		getNextTrack();
 		fillModels();
-		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))
+		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))//TODO: hier NullPointerExceptions. frames evtl noch nicht initialisiert?
 			etl.actionPerformed(null);
 		repaint();
 	}
@@ -317,7 +317,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	public void onNextTrackNotify(String title, String videoURL, boolean isVideo) {
 		nowPlaying.setText(title);
 		fillModels();
-		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))
+		if (secondFrame.isVisible() && secondFrame.getTitle().contains("Track"))//TODO: hier NullPointerException während wiedergabe
 			etl.actionPerformed(null);
 		repaint();
 	}

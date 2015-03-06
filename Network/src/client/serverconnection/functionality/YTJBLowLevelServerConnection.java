@@ -132,6 +132,8 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		private int checkIntervall;
 		private long lastResponse;
 		
+		private volatile boolean answerFromIsReady = true;
+		
 		public AliveChecker(int intervall) {
 			this.checkIntervall = intervall;
 		}
@@ -144,12 +146,22 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		public void run() {
 			if (checkIntervall > 0){
 				setLastResponse();
+				answerFromIsReady = true;
 				try {
 					while(true){
 						Thread.sleep(checkIntervall);
+						if (!answerFromIsReady)
+							break;
+						answerFromIsReady = false;
 						if (lastResponse < System.currentTimeMillis() - checkIntervall){
-							if (!sendMessage(this,MessageType.ISREADY,""))
+							System.out.println("Verbindung wird überprüft...");
+							responses.addReponseListener(MessageType.ISREADY, (String[] s) -> {if (Boolean.parseBoolean(s[0])) answerFromIsReady = true;});
+							if (!sendMessage(this,MessageType.ISREADY)){
+								System.out.println("Da ist die Verbindung wohl wech...");
 								break;
+							}
+						}else{
+							answerFromIsReady = true;
 						}
 					}
 				} catch (InterruptedException e) {

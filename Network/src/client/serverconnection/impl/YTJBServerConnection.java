@@ -200,6 +200,16 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkIntervall);
 		if (serverConnection.connect()){
 			connected = true;
+			if (!defaultNotificationListener.isEmpty())
+				this.serverConnection.sendMessage(MessageType.SWITCHDEFAULTNOTIFY);
+			if (!gapListNotificationListener.isEmpty())
+				this.serverConnection.sendMessage(MessageType.SWITCHGAPLISTNOTIFY);
+			if (!pauseResumeNotificationListener.isEmpty())
+				this.serverConnection.sendMessage(MessageType.SWITCHPAUSERESUMENOTIFY);
+			if (!seekNotificationListener.isEmpty())
+				this.serverConnection.sendMessage(MessageType.SWITCHSEEKNOTIFY);
+			if (!debugNotificationListener.isEmpty())
+				this.serverConnection.sendMessage(MessageType.SWITCHDEBUGNOTIFY);
 			return true;
 		}else{
 			connected = false;
@@ -298,16 +308,6 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean connect(ServerAddress serverAddress) {
 		return connect(serverAddress.getIPAddress(),serverAddress.getPort());
-	}
-
-	@Override
-	public void addDebugNotificationListener(DebugNotificationListener listener) {
-		debugNotificationListener.add(listener);
-	}
-
-	@Override
-	public void removeDebugNotificationListener(DebugNotificationListener listener) {
-		debugNotificationListener.remove(listener);
 	}
 
 	@Override
@@ -451,13 +451,30 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public void setMeAsPlayer(ResponseListener response) {
 		this.serverConnection.sendMessage(response,MessageType.SETMEASPLAYER);
 	}
+	
+
+	@Override
+	public void addDebugNotificationListener(DebugNotificationListener listener) {
+		if (!debugNotificationListener.contains(listener)){
+			debugNotificationListener.add(listener);
+			if (debugNotificationListener.size() == 1 && connected)
+				this.serverConnection.sendMessage(MessageType.SWITCHDEBUGNOTIFY);
+		}
+	}
+
+	@Override
+	public void removeDebugNotificationListener(DebugNotificationListener listener) {
+		debugNotificationListener.remove(listener);
+		if (debugNotificationListener.size() == 0 && connected)
+			this.serverConnection.sendMessage(MessageType.SWITCHDEBUGNOTIFY);
+	}
 
 	@Override
 	public void addDefaultNotificationListener(
 			DefaultNotificationListener listener) {
 		if (!defaultNotificationListener.contains(listener)){
 			defaultNotificationListener.add(listener);
-			if (defaultNotificationListener.size() == 1)
+			if (defaultNotificationListener.size() == 1 && connected)
 				this.serverConnection.sendMessage(MessageType.SWITCHDEFAULTNOTIFY);
 		}
 		
@@ -467,7 +484,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public void removeDefaultNotificationListener(
 			DefaultNotificationListener listener) {
 		defaultNotificationListener.remove(listener);
-		if (defaultNotificationListener.size() == 0)
+		if (defaultNotificationListener.size() == 0 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHDEFAULTNOTIFY);
 	}
 
@@ -477,7 +494,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			GapListNotificationListener listener) {
 		if (!gapListNotificationListener.contains(listener)){
 		gapListNotificationListener.add(listener);
-		if (gapListNotificationListener.size() == 1)
+		if (gapListNotificationListener.size() == 1 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHGAPLISTNOTIFY);
 		}
 	}
@@ -486,7 +503,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public void removeGapListNotificationListener(
 			GapListNotificationListener listener) {
 		gapListNotificationListener.remove(listener);
-		if (gapListNotificationListener.size() == 0)
+		if (gapListNotificationListener.size() == 0 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHGAPLISTNOTIFY);
 	}
 
@@ -495,7 +512,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			PauseResumeNotificationListener listener) {
 		if (!pauseResumeNotificationListener.contains(listener)){
 		pauseResumeNotificationListener.add(listener);
-		if (pauseResumeNotificationListener.size() == 1)
+		if (pauseResumeNotificationListener.size() == 1 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHPAUSERESUMENOTIFY);
 		}
 	}
@@ -504,7 +521,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public void removePauseResumeNotificationListener(
 			PauseResumeNotificationListener listener) {
 		pauseResumeNotificationListener.remove(listener);
-		if (pauseResumeNotificationListener.size() == 0)
+		if (pauseResumeNotificationListener.size() == 0 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHPAUSERESUMENOTIFY);
 	}
 
@@ -512,7 +529,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public void addSeekNotificationListener(SeekNotificationListener listener) {
 		if (!seekNotificationListener.contains(listener)){
 		seekNotificationListener.add(listener);
-		if (seekNotificationListener.size() == 1)
+		if (seekNotificationListener.size() == 1 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHSEEKNOTIFY);
 		}
 	}
@@ -520,7 +537,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public void removeSeekNotificationListener(SeekNotificationListener listener) {
 		seekNotificationListener.remove(listener);
-		if (seekNotificationListener.size() == 0)
+		if (seekNotificationListener.size() == 0 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHSEEKNOTIFY);
 	}
 
