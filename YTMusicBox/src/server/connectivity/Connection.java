@@ -111,7 +111,6 @@ public class Connection extends Thread {
 
 
 	private String receiveMessage() throws IOException {
-		IO.printlnDebug(this, "Waiting for input...");
 		return in.readLine();
 	}
 }

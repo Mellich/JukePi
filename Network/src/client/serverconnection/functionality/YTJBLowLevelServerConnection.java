@@ -154,10 +154,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 							break;
 						answerFromIsReady = false;
 						if (lastResponse < System.currentTimeMillis() - checkIntervall){
-							System.out.println("Verbindung wird überprüft...");
-							responses.addReponseListener(MessageType.ISREADY, (String[] s) -> {if (Boolean.parseBoolean(s[0])) answerFromIsReady = true;});
 							if (!sendMessage(this,MessageType.ISREADY)){
-								System.out.println("Da ist die Verbindung wohl wech...");
 								break;
 							}
 						}else{
@@ -174,6 +171,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		public void onResponse(String[] response) {
 			if (Boolean.parseBoolean(response[0])){
 				setLastResponse();
+				answerFromIsReady = true;
 			}
 		}
 		

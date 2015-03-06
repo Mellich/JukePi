@@ -24,6 +24,7 @@ public class ResponseHandler implements Runnable {
 		synchronized(responses){
 			currentResponseListener = responses.getResponseListener(messageType);
 		}
+		
 		currentResponseListener.onResponse(arguments);
 	}
 
