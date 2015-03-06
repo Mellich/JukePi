@@ -26,12 +26,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 		server = ServerConnectionFactory.createServerConnection(15000);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
-		server.addDefaultNotificationListener(this);
-		server.addDebugNotificationListener(this);
-		server.addGapListNotificationListener(this);
-		server.addPauseResumeNotificationListener(this);
-		server.addSeekNotificationListener(this);
-		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
+		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
 	}
 	
@@ -96,7 +91,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			player.skip();
 		player = null;
 		viewer.resetView();
-		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
+		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
 	}
 

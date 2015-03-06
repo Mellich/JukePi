@@ -13,7 +13,9 @@ import server.Server;
 import server.ServerFactory;
 import util.ShowLabelThread;
 import client.ServerConnectionFactory;
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
+import client.listener.GapListNotificationListener;
+import client.listener.PauseResumeNotificationListener;
 import client.serverconnection.ServerConnection;
 
 /**
@@ -22,7 +24,7 @@ import client.serverconnection.ServerConnection;
  * @author Haeldeus
  *
  */
-public class Collector implements NotificationListener{
+public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
 	
 	/**
 	 * Time in ms when the wrapper should check the connectivity of the server if no response 
@@ -334,10 +336,13 @@ public class Collector implements NotificationListener{
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		wrapper.addNotificationListener(this);
 		
-		if (wrapper.connect(ip, iport))
+		if (wrapper.connect(ip, iport)){
+			wrapper.addDefaultNotificationListener(this);
+			wrapper.addPauseResumeNotificationListener(this);
+			wrapper.addGapListNotificationListener(this);
 			return true;
+		}
 		else
 			return false;
 	}
@@ -642,10 +647,5 @@ public class Collector implements NotificationListener{
 			new ShowLabelThread(fail, frame).start();}, name);
 		try{Thread.sleep(100);} catch (Exception e) {}
 		repaint();
-	}
-
-	@Override
-	public void onSeekNotify(boolean forward) {
-		//Nothing to do here IMO.
 	}
 }
