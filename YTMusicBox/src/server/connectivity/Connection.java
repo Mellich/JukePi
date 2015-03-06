@@ -26,6 +26,8 @@ public class Connection extends Thread {
 	private boolean isDefaultListener = false;
 	private boolean isSeekListener = false;
 	private boolean isGapListListener = false;
+	private long macAddress = -1L;
+	private long upvotedTrackID = -1L;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
@@ -61,6 +63,24 @@ public class Connection extends Thread {
 			server.removeNotifiable(this);
 			server.removePlayer(this);
 		}
+	}
+	
+	public void setMACAddress(long mac){
+		macAddress = mac;
+	}
+	
+	public void resetVote(){
+		upvotedTrackID = -1L;
+	}
+	
+	public long getUpvotedTrackID(){
+		return upvotedTrackID;
+	}
+	
+	public boolean voteForTrack(long trackID){
+		upvotedTrackID = trackID;
+		//TODO: voting system hinzufuegen
+		return false;
 	}
 	
 	public void closeConnection(){

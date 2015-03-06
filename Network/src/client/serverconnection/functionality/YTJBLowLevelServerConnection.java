@@ -5,7 +5,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
@@ -22,6 +26,25 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	private Thread inputListener;
 	private BufferedWriter output;
 	private AliveChecker checker;
+	
+	private long getMACAddress(){
+		InetAddress ip;
+		try {
+			ip = InetAddress.getLocalHost();			 
+			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+			byte[] mac = network.getHardwareAddress(); 
+			long value = 0;
+			for (int i = 0; i < mac.length; i++)
+			{
+			   value += ((long) mac[i] & 0xffL) << (8 * i);
+			}
+			return value;
+		} catch (UnknownHostException | SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1L;
+	}
 	
 	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port) {
 		this(notifyWrapper,ip,port,0);
@@ -43,7 +66,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker));
 			inputListener.start();
 			checker.start();
-			this.sendMessage(MessageType.DECLAREMEASNOTIFY);
+			this.sendMessage(MessageType.REGISTERCLIENT,""+getMACAddress());
 			return true;
 		} catch (IOException | NullPointerException e) {
 			return false;

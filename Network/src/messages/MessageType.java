@@ -98,7 +98,7 @@ public class MessageType {
 	/**
 	 * declare the client as notify listener
 	 */
-	public static final int DECLAREMEASNOTIFY = 20;
+	public static final int REGISTERCLIENT = 20;
 	
 	/**
 	 * the shit you sent is not implemented, stupid bitch!

@@ -80,6 +80,8 @@ public class YTJBServer implements Server {
 	
 	private Thread connectionBroadcast = null;
 	
+	private VotingController votingController;
+	
 	
 	/**
 	 * starts the server and makes him ready for work
@@ -95,6 +97,10 @@ public class YTJBServer implements Server {
 	
 	public String getWorkingDir(){
 		return workingDirectory;
+	}
+	
+	public void addVote(long trackID,long macAddress){
+		votingController.addVote(trackID, macAddress);
 	}
 	
 	private synchronized String[] listToArray(LinkedList<MusicTrack> list){
@@ -178,7 +184,7 @@ public class YTJBServer implements Server {
 	 */
 	public String getTitle(boolean fromWishList){
 		StringBuilder response = new StringBuilder();
-		if (fromWishList)
+		if (fromWishList)//TODO: versende auch trackID und votes!
 			for (MusicTrack m: wishList){
 				response.append(m.getTitle()+MessageType.SEPERATOR);
 			}
@@ -197,6 +203,7 @@ public class YTJBServer implements Server {
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
 			temp =  wishList.removeFirst();
+			votingController.removeTrack(temp.getTrackID());//TODO: hier schon fertig?
 			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else {
@@ -394,6 +401,7 @@ public class YTJBServer implements Server {
 				}
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
+				votingController = new VotingController(wishList);
 				IO.printlnDebug(this, "Working directory: "+this.workingDirectory);
 				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();

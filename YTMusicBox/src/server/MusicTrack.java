@@ -20,11 +20,15 @@ public class MusicTrack {
 		UNKNOWN
 	}
 	
+	private static long currentTrackID = 0;
+	
 	
 	private String shortURL;
 	private String title;
 	private String videoURL;
 	private TrackType type;
+	private long trackID;
+	private int voteCount = 0;
 	private boolean isVideo = true;
 	
 	/**creates a new music track
@@ -38,8 +42,18 @@ public class MusicTrack {
 		this.videoURL = videoURL;
 		type = t;
 		this.shortURL = shortURL;
+		trackID = currentTrackID;
+		currentTrackID++;
 		if (shortURL.contains("//soundcloud.com/"))
 			isVideo = false;
+	}
+	
+	public void setVoteCount(int count){
+		voteCount = count;
+	}
+	
+	public int getVoteCount(){
+		return voteCount;
 	}
 	
 	public String getTitle(){
@@ -52,6 +66,10 @@ public class MusicTrack {
 	
 	public TrackType getMusicType(){
 		return type;
+	}
+	
+	public long getTrackID(){
+		return trackID;
 	}
 	
 	public String getShortURL(){

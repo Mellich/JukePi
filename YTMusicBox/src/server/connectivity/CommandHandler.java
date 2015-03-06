@@ -57,7 +57,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommand(out,prompt,server,false,true,args[1]).handle();
 			break;
-		case MessageType.DECLAREMEASNOTIFY: server.registerNotifiable(parent);;
+		case MessageType.REGISTERCLIENT: server.registerNotifiable(parent);parent.setMACAddress(Long.parseLong(args[1]));
 			break;
 		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1])).handle();
 			break;

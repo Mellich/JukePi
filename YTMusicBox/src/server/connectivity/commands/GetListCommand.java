@@ -17,7 +17,7 @@ public class GetListCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		response(server.getTitle(fromWishList));
+		response(server.getTitle(fromWishList));//TODO: hier muss noch der vote der aktuellen mac adresse hinzugefügt werden
 		return true;
 	}
 
