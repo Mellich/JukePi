@@ -91,8 +91,16 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.SEEKBACKWARD: new SeekBackwardCommand(out,prompt,server.getScheduler()).handle();
 			break;
-		case MessageType.SETMEASDEBUG: new SetAsDebugCommand(out,prompt,parent).handle();
+		case MessageType.SWITCHDEBUGNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
 			break;
+		case MessageType.SWITCHPAUSERESUMENOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+			break;
+		case MessageType.SWITCHDEFAULTNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
+		case MessageType.SWITCHSEEKNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
+		case MessageType.SWITCHGAPLISTNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}

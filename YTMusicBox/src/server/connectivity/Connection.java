@@ -20,8 +20,12 @@ public class Connection extends Thread {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private boolean running = true;
-	private boolean isDebug = false;
 	private ConnectionWaiter waiter;
+	private boolean isDebugListener = false;
+	private boolean isPauseResumeListener = false;
+	private boolean isDefaultListener = false;
+	private boolean isSeekListener = false;
+	private boolean isGapListListener = false;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
@@ -69,12 +73,40 @@ public class Connection extends Thread {
 		}
 	}
 	
-	public void setAsDebug(){
-		isDebug = true;
+	public void setAsDebugListener(){
+		isDebugListener = !isDebugListener;
 	}
 	
+	public void setAsPauseResumeListener(){
+		isPauseResumeListener = !isPauseResumeListener;
+	}
+	
+	public void setAsDefaultListener(){
+		isDefaultListener = !isDefaultListener;
+	}
+	
+	public void setAsSeekListener(){
+		isSeekListener = !isSeekListener;
+	}
+	
+	public void setAsGapListListener(){
+		isGapListListener = !isGapListListener;
+	}
+	
+	
+	
+	
 	public void notify(int messageType,String[] args){
-		if (messageType != MessageType.DEBUGOUTPUTNOTIFY || isDebug)
+		if (messageType == MessageType.DEBUGOUTPUTNOTIFY && isDebugListener ||
+				messageType == MessageType.PLAYERCOUNTCHANGEDNOTIFY && isDebugListener ||
+				messageType == MessageType.CLIENTCOUNTCHANGEDNOTIFY && isDebugListener ||
+				messageType == MessageType.NEXTTRACKNOTIFY && isDefaultListener ||
+				messageType == MessageType.WISHLISTUPDATEDNOTIFY && isDefaultListener ||
+				messageType == MessageType.PAUSERESUMENOTIFY && isPauseResumeListener ||
+				messageType == MessageType.GAPLISTCOUNTCHANGEDNOTIFY && isGapListListener ||
+				messageType == MessageType.GAPLISTUPDATEDNOTIFY && isGapListListener ||
+				messageType == MessageType.SEEKNOTIFY && isSeekListener ||
+				messageType == MessageType.GAPLISTCHANGEDNOTIFY && isGapListListener) 
 			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args).handle();
 	}
 

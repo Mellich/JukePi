@@ -172,7 +172,16 @@ public class MessageType {
 	
 	public static final int SEEKBACKWARD = 46;	
 	
-	public static final int SETMEASDEBUG = 47;
+	
+	public static final int SWITCHDEBUGNOTIFY = 47;
+	
+	public static final int SWITCHGAPLISTNOTIFY = 48;
+	
+	public static final int SWITCHPAUSERESUMENOTIFY = 49;
+	
+	public static final int SWITCHSEEKNOTIFY = 50;
+	
+	public static final int SWITCHDEFAULTNOTIFY = 51;
 	
 	/**
 	 * the seperator for the arguments of a command

@@ -14,7 +14,7 @@ public class SmallClientANdListener implements DefaultNotificationListener {
 	public SmallClientANdListener() {
 		ServerConnection server = new YTJBServerConnection(15000);
 		if (server.connect("localhost",22222)){
-			server.addNotificationListener(this);
+			server.addDefaultNotificationListener(this);
 			System.out.println(server.getCurrentGapListName());
 			System.out.println(server.getLoadGapListStatus().getLoadedTrackCount());
 			System.out.println(server.getCurrentPlaybackStatus());
@@ -37,30 +37,6 @@ public class SmallClientANdListener implements DefaultNotificationListener {
 		l.getClass();
 	}
 
-	@Override
-	public void onPauseResumeNotify(boolean isPlaying) {
-		System.out.println("Play Status changed to "+isPlaying);
-
-	}
-
-	@Override
-	public void onGapListCountChangedNotify(String[] gapLists) {
-	}
-
-	@Override
-	public void onGapListChangedNotify(String gapListName) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onGapListUpdatedNotify(String[] title) {
-		System.out.println("New GapList:");
-		for (String s : title)
-			System.out.print(s+", ");
-		System.out.println();
-
-	}
 
 	@Override
 	public void onWishListUpdatedNotify(String[] title) {
@@ -80,12 +56,6 @@ public class SmallClientANdListener implements DefaultNotificationListener {
 	public void onDisconnect() {
 		System.out.println("Disconnected!");
 
-	}
-
-	@Override
-	public void onSeekNotify(boolean forward) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

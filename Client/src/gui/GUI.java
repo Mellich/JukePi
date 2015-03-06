@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,7 +40,7 @@ public class GUI {
 	 */
 	public JFrame getFrame() {
 		JFrame jFrame = new JFrame();
-		jFrame.setSize(new Dimension(528, 450));
+		jFrame.setSize(new Dimension(500, 400));
 		jFrame.setTitle("JukePi");
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.setResizable(false);
@@ -71,7 +74,7 @@ public class GUI {
 		jFrame.getContentPane().add(lblPort);
 		
 		JButton btnConnect = new JButton("Connect");
-		btnConnect.setBounds(151, 234, 131, 40);
+		btnConnect.setBounds(10, 278, 131, 40);
 		jFrame.getContentPane().add(btnConnect);
 		c = new Collector();
 		
@@ -80,11 +83,11 @@ public class GUI {
 		jFrame.getContentPane().add(lblFail);
 		
 		JButton btnUDPConnect = new JButton("UDP Connect");
-		btnUDPConnect.setBounds(151, 298, 131, 40);
+		btnUDPConnect.setBounds(158, 278, 131, 40);
 		jFrame.getContentPane().add(btnUDPConnect);
 		
 		JButton btnInternServer = new JButton("Create own server");
-		btnInternServer.setBounds(131, 362, 171, 40);
+		btnInternServer.setBounds(313, 278, 171, 40);
 		jFrame.getContentPane().add(btnInternServer);
 		
 		ConnectButtonListener cbl = new ConnectButtonListener(jFrame, c, txtIp, txtPort, lblFail);
@@ -95,6 +98,38 @@ public class GUI {
 		btnUDPConnect.addActionListener(new UDPConnectButtonListener(c,cbl,lblFail));
 		btnInternServer.addActionListener(new InternServerButtonListener(c,cbl));
 	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
+		
+		txtIp.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getExtendedKeyCode() == 10)
+					cbl.actionPerformed(null);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+			}
+		});
+		
+		txtPort.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getExtendedKeyCode() == 10)
+					cbl.actionPerformed(null);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+			}
+		});
 		
 		return jFrame;
 	}

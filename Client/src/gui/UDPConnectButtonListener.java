@@ -30,8 +30,11 @@ public class UDPConnectButtonListener implements ActionListener {
 			client.ServerAddress sa;
 			try {
 				sa = serverConnection.udpScanning();
-				if (c.connect(sa.getIPAddress(), ""+sa.getPort()))
+				if (c.connect(sa.getIPAddress(), ""+sa.getPort())) {
+					cbl.setIP(sa.getIPAddress());
+					cbl.setPort(sa.getPort());
 					cbl.actionPerformed(null);
+				}
 				else {
 					fail.setText("Failed to connect to the Server: Invalid connection details sent by server.");
 					new ShowLabelThread(fail, null).start();

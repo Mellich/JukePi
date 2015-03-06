@@ -3,7 +3,10 @@ package client.serverconnection;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
+import client.listener.GapListNotificationListener;
+import client.listener.PauseResumeNotificationListener;
 import client.listener.ResponseListener;
+import client.listener.SeekNotificationListener;
 import client.serverconnection.impl.LoadGapListStatus;
 
 /**
@@ -24,55 +27,43 @@ public interface ServerConnection {
 	 * 
 	 * @param listener the listener that should be removed
 	 */
-	public void removeDefaultNotificationListener(DefaultNotificationListener listener);
+	public void removeDefaultNotificationListener(DefaultNotificationListener listener);	
 	
 	/**Adds a notification listener, that will be executed, when the server sends a notification
 	 * 
 	 * @param listener the notification listener that should be added
 	 */
-	public void addDebugNotificationListener(DefaultNotificationListener listener);
+	public void addGapListNotificationListener(GapListNotificationListener listener);
 	
 	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
 	 * 
 	 * @param listener the listener that should be removed
 	 */
-	public void removeDebugNotificationListener(DefaultNotificationListener listener);	
+	public void removeGapListNotificationListener(GapListNotificationListener listener);
 	
 	/**Adds a notification listener, that will be executed, when the server sends a notification
 	 * 
 	 * @param listener the notification listener that should be added
 	 */
-	public void addGapListNotificationListener(DefaultNotificationListener listener);
+	public void addPauseResumeNotificationListener(PauseResumeNotificationListener listener);
 	
 	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
 	 * 
 	 * @param listener the listener that should be removed
 	 */
-	public void removeGapListNotificationListener(DefaultNotificationListener listener);
+	public void removePauseResumeNotificationListener(PauseResumeNotificationListener listener);
 	
 	/**Adds a notification listener, that will be executed, when the server sends a notification
 	 * 
 	 * @param listener the notification listener that should be added
 	 */
-	public void addPauseResumeNotificationListener(DefaultNotificationListener listener);
+	public void addSeekNotificationListener(SeekNotificationListener listener);
 	
 	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
 	 * 
 	 * @param listener the listener that should be removed
 	 */
-	public void removePauseResumeNotificationListener(DefaultNotificationListener listener);
-	
-	/**Adds a notification listener, that will be executed, when the server sends a notification
-	 * 
-	 * @param listener the notification listener that should be added
-	 */
-	public void addSeekNotificationListener(DefaultNotificationListener listener);
-	
-	/**Removes a notification listener, so that he no longer will be executed by a notification from the server
-	 * 
-	 * @param listener the listener that should be removed
-	 */
-	public void removeSeekNotificationListener(DefaultNotificationListener listener);
+	public void removeSeekNotificationListener(SeekNotificationListener listener);
 	
 	/**Adds a debug notification listener, that will be executed, when the server sends a notifications regarding to debug issues
 	 * 

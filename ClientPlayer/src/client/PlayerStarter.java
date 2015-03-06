@@ -2,15 +2,14 @@ package client;
 
 import java.util.concurrent.Semaphore;
 
-import client.listener.DebugNotificationListener;
-import client.listener.DefaultNotificationListener;
+import client.listener.*;
 import client.serverconnection.ServerConnection;
 import client.visuals.IdleViewer;
 import client.visuals.Visualizer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class PlayerStarter extends Application implements DefaultNotificationListener, DebugNotificationListener {
+public class PlayerStarter extends Application implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener, SeekNotificationListener, DebugNotificationListener {
 	
 	private ServerConnection server;
 	private volatile OMXPlayer player = null;
@@ -27,8 +26,11 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 		server = ServerConnectionFactory.createServerConnection(15000);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
-		server.addNotificationListener(this);
+		server.addDefaultNotificationListener(this);
 		server.addDebugNotificationListener(this);
+		server.addGapListNotificationListener(this);
+		server.addPauseResumeNotificationListener(this);
+		server.addSeekNotificationListener(this);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer));
 		listenBroadcast.start();
 	}
@@ -58,12 +60,6 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			pauseResumeWaitingCount--;
 			playerMutex.release();
 		}
-	}
-
-	@Override
-	public void onGapListCountChangedNotify(String[] gapLists) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -162,6 +158,12 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			seekWaitingCount--;
 			playerMutex.release();
 		}		
+	}
+
+	@Override
+	public void onGapListCountChangedNotify(String[] gapLists) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
