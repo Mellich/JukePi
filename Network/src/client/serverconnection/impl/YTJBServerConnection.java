@@ -164,12 +164,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public void setGapListTrackUp(ResponseListener response, int index) {
-		this.serverConnection.sendMessage(response, MessageType.GAPLISTTRACKUP,""+index);
+	public void setGapListTrackUp(ResponseListener response, long trackID) {
+		this.serverConnection.sendMessage(response, MessageType.GAPLISTTRACKUP,""+trackID);
 	}
 
 	@Override
-	public void setGapListTrackDown(ResponseListener response, int index) {
+	public void setGapListTrackDown(ResponseListener response, long index) {
 		this.serverConnection.sendMessage(response, MessageType.GAPLISTTRACKDOWN,""+index);
 	}
 
@@ -409,12 +409,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean setGapListTrackUp(int index) {
+	public boolean setGapListTrackUp(long index) {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GAPLISTTRACKUP,""+index)[0]);
 	}
 
 	@Override
-	public boolean setGapListTrackDown(int index) {
+	public boolean setGapListTrackDown(long index) {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.GAPLISTTRACKDOWN,""+index)[0]);
 	}
 

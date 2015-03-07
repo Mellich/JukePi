@@ -119,6 +119,8 @@ public class Connection extends Thread {
 			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
 				args.add(0, ""+server.getVote(macAddress));
 			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args.toArray(new String[args.size()])).handle();
+			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
+				args.remove(0);		
 		}
 	}
 

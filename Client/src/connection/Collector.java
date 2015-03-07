@@ -543,9 +543,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public void moveTrackDown(int index, JLabel fail, JFrame frame) {
+		long song = gaplist[index].getTrackID();
 		wrapper.setGapListTrackDown((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Moved Track down.");else fail.setText("Failed to move the Track.");
 													fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
-													new ShowLabelThread(fail, frame).start();}, index);
+													new ShowLabelThread(fail, frame).start();}, song);
 		try{Thread.sleep(100);}catch(Exception e) {}
 		repaint();
 	}
@@ -557,9 +558,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public void moveTrackUp(int index, JLabel fail, JFrame frame) {
+		long song = gaplist[index].getTrackID();
 		wrapper.setGapListTrackUp((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Moved Track up.");else fail.setText("Failed to move the Track.");
 													fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
-													new ShowLabelThread(fail, frame).start();}, index);
+													new ShowLabelThread(fail, frame).start();}, song);
 		try{Thread.sleep(100);}catch(Exception e) {}
 		repaint();
 	}
