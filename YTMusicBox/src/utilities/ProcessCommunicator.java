@@ -19,7 +19,6 @@ public class ProcessCommunicator {
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
 	static public String[] parseShortURLToVideoURLAndTitle(String url,String path) throws IOException{
-		IO.printlnDebug(null, "waiting for output url...");
 		String[] result = new String[2];
 		IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl.exe");
 		Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e","-g", url).start();
@@ -37,7 +36,6 @@ public class ProcessCommunicator {
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
 	static public String parseShortURLToVideoURL(String url, String path) throws IOException{
-		IO.printlnDebug(null, "waiting for output url...");
 		IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl.exe");
 		String result = null;
 		Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-g", url).start();
@@ -45,6 +43,23 @@ public class ProcessCommunicator {
 		result = parseInput.readLine();
 		parseInput.close();
 		return result;
+	}
+	
+	public static void updateYoutubeDL(String path){
+		IO.printlnDebug(null, "Updating youtube-dl... please wait...");
+		try {
+			Process updateProcess = new ProcessBuilder(path+"youtube-dl.exe","-U").start();
+			BufferedReader updateInput = new BufferedReader(new InputStreamReader(updateProcess.getInputStream()));
+			while (updateProcess.isAlive()){
+				String out = updateInput.readLine();
+				if (out != null)
+					IO.printlnDebug(null,out);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
