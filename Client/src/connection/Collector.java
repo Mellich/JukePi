@@ -17,6 +17,7 @@ import client.listener.DefaultNotificationListener;
 import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 
 /**
  * A Class that will implement the NotificationListener and connects to the ClientWrapper to 
@@ -85,12 +86,12 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	/**
 	 * The Gaplist as an Array of Strings.
 	 */
-	private volatile String[] gaplist;
+	private volatile Song[] gaplist;
 	
 	/**
 	 * The Wishlist as an Array of Strings.
 	 */
-	private volatile String[] wishlist;
+	private volatile Song[] wishlist;
 	
 	/**
 	 * All Gaplists on the Server as an Array of Strings.
@@ -292,7 +293,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	}
 
 	@Override
-	public void onGapListUpdatedNotify(String[] title) {
+	public void onGapListUpdatedNotify(Song[] title) {
 		this.gaplist = title;
 		gaplistLabel.setText("" + gaplist.length);
 		getNextTrack();
@@ -303,7 +304,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	}
 
 	@Override
-	public void onWishListUpdatedNotify(String[] title) {
+	public void onWishListUpdatedNotify(Song[] title) {
 		wishlist = title;
 		wishlistLabel.setText("" + wishlist.length);
 		getNextTrack();
@@ -394,10 +395,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		gaplistModel.clear();
 		wishlistModel.clear();
 		if (gaplist != null && wishlist != null) {
-			for (String s : gaplist)
-				gaplistModel.addElement(s);
-			for (String s : wishlist)
-				wishlistModel.addElement(s);
+			for (Song s : gaplist)
+				gaplistModel.addElement(s.getName());
+			for (Song s : wishlist)
+				wishlistModel.addElement(s.getName());
 		}
 		repaint();
 	}
@@ -424,22 +425,26 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * Updates Wishlist and Gaplist.
 	 */
 	public void updateLists() {
-		wrapper.getWishList((String[] s) -> {wishlist = s;wishlistLabel.setText("" + wishlist.length);nextTrack();});
-		wrapper.getGapList((String[] s) -> {gaplist = s;gaplistLabel.setText("" + gaplist.length);nextTrack();});
+		wishlist = wrapper.getWishList();
+		gaplist = wrapper.getGapList();
+		wishlistLabel.setText("" + wishlist.length);
+		nextTrack();
+		gaplistLabel.setText("" + gaplist.length);
+		nextTrack();
 	}
 
 	/**
 	 * Updates the Wishlist.
 	 */
 	public synchronized void updateWishlist() {
-		wrapper.getWishList((String[] s) -> {onWishListUpdatedNotify(s);});
+		onWishListUpdatedNotify(wrapper.getWishList());
 	}
 
 	/**
 	 * Updates the Gaplist.
 	 */
 	public synchronized void updateGaplist() {
-		wrapper.getGapList((String[] s) -> {onGapListUpdatedNotify(s);});
+		onGapListUpdatedNotify(wrapper.getGapList());
 	}
 
 	/**
@@ -452,9 +457,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 				if (gaplist.length == 0)
 					nextTrackLabel.setText("No Tracks in the Lists");
 				else
-					nextTrackLabel.setText(gaplist[0]);
+					nextTrackLabel.setText(gaplist[0].getName());
 			else
-				nextTrackLabel.setText(wishlist[0]);
+				nextTrackLabel.setText(wishlist[0].getName());
 		}
 		catch (NullPointerException e) {
 		}
@@ -469,9 +474,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 				if (gaplist.length == 0)
 					nextTrackLabel.setText("No Tracks in the Lists");
 				else
-					nextTrackLabel.setText(gaplist[0]);
+					nextTrackLabel.setText(gaplist[0].getName());
 			else
-				nextTrackLabel.setText(wishlist[0]);
+				nextTrackLabel.setText(wishlist[0].getName());
 		}
 		catch (NullPointerException e) {
 		}
@@ -514,9 +519,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public void deleteFromGaplist(int index, JLabel fail, JFrame frame) {
+		Song song = gaplist[index];
 		wrapper.deleteFromList((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Deleted the Track from the List.");else 
 												fail.setText("Couldn't delete the Track from the List.");fail.setHorizontalAlignment(JLabel.CENTER);
-												fail.setVerticalAlignment(JLabel.CENTER);new ShowLabelThread(fail, frame).start();}, index);
+												fail.setVerticalAlignment(JLabel.CENTER);new ShowLabelThread(fail, frame).start();}, song);
 	}
 	
 	/**
@@ -537,9 +543,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public void moveTrackDown(int index, JLabel fail, JFrame frame) {
+		long song = gaplist[index].getTrackID();
 		wrapper.setGapListTrackDown((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Moved Track down.");else fail.setText("Failed to move the Track.");
 													fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
-													new ShowLabelThread(fail, frame).start();}, index);
+													new ShowLabelThread(fail, frame).start();}, song);
 		try{Thread.sleep(100);}catch(Exception e) {}
 		repaint();
 	}
@@ -551,9 +558,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param frame	The Frame, that contains the Fail-Label.
 	 */
 	public void moveTrackUp(int index, JLabel fail, JFrame frame) {
+		long song = gaplist[index].getTrackID();
 		wrapper.setGapListTrackUp((String[] s) -> {if (Boolean.parseBoolean(s[0]))fail.setText("Moved Track up.");else fail.setText("Failed to move the Track.");
 													fail.setHorizontalAlignment(JLabel.CENTER);fail.setVerticalAlignment(JLabel.CENTER);
-													new ShowLabelThread(fail, frame).start();}, index);
+													new ShowLabelThread(fail, frame).start();}, song);
 		try{Thread.sleep(100);}catch(Exception e) {}
 		repaint();
 	}

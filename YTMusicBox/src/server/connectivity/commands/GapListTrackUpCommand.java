@@ -3,7 +3,6 @@ package server.connectivity.commands;
 import java.io.BufferedWriter;
 
 import server.YTJBServer;
-import utilities.IO;
 
 public class GapListTrackUpCommand extends Command {
 
@@ -18,7 +17,6 @@ public class GapListTrackUpCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		IO.printlnDebug(this, "Setting track one step up");
 		response(""+server.switchWithUpper(trackID));
 		return true;
 	}

@@ -5,13 +5,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.concurrent.Semaphore;
-
 import messages.MessageType;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
@@ -28,9 +28,10 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	private AliveChecker checker;
 	
 	private long getMACAddress(){
+		System.out.println("MAC Adresse wird ermittelt...");
 		InetAddress ip;
 		try {
-			ip = InetAddress.getLocalHost();			 
+			ip = this.getLocalIPAddress();			 
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 			byte[] mac = network.getHardwareAddress(); 
 			long value = 0;
@@ -38,8 +39,9 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			{
 			   value += ((long) mac[i] & 0xffL) << (8 * i);
 			}
+			System.out.println("MAC-Adresse: "+value);
 			return value;
-		} catch (UnknownHostException | SocketException e) {
+		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -69,6 +71,8 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			this.sendMessage(MessageType.REGISTERCLIENT,""+getMACAddress());
 			return true;
 		} catch (IOException | NullPointerException e) {
+			System.out.println("Fehler beim Verbinden!");
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -141,6 +145,22 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		if (socket != null)
 			return socket.getInetAddress().getHostAddress();
 		else return null;
+	}
+	
+	private InetAddress getLocalIPAddress() { 
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()&&inetAddress instanceof Inet4Address) {
+                        return inetAddress;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+        }
+        return null; 
 	}
 
 	@Override

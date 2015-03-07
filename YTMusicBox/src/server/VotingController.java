@@ -87,9 +87,10 @@ public class VotingController {
 	
 	public ArrayList<Long> removeTrack(long trackID){
 		ArrayList<Long> list = votes.remove(trackID);
-		for (Long l : list){
-			macs.remove(l);
-		}
+		if (list != null)
+			for (Long l : list){
+				macs.remove(l);
+			}
 		return list;
 	}
 

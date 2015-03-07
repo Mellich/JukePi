@@ -189,16 +189,16 @@ public interface ServerConnection {
 	 * @param response the response listener, that will be executed, when the server responses the command
 	 * @param index
 	 */
-	public void setGapListTrackUp(ResponseListener response,int index);
-	public boolean setGapListTrackUp(int index);
+	public void setGapListTrackUp(ResponseListener response,long trackID);
+	public boolean setGapListTrackUp(long trackID);
 	
 	/**
 	 * 
 	 * @param response the response listener, that will be executed, when the server responses the command
-	 * @param index
+	 * @param song
 	 */
-	public void setGapListTrackDown(ResponseListener response,int index);
-	public boolean setGapListTrackDown(int index);
+	public void setGapListTrackDown(ResponseListener response,long trackID);
+	public boolean setGapListTrackDown(long trackID);
 	
 	/**
 	 * 
