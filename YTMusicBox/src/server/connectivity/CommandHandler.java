@@ -39,11 +39,11 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GAPLISTSAVETOFILE: new SaveGapListCommand(out,prompt,server).handle();
 			break;
-		case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommand(out,prompt,server,false,Integer.parseInt(args[1])).handle();
+		case MessageType.DELETEFROMGAPLIST: new DeleteFromListCommand(out,prompt,server,false,Long.parseLong(args[1])).handle();
 			break;
-		case MessageType.GETGAPLIST: new GetListCommand(out,prompt, server,false).handle();
+		case MessageType.GETGAPLIST: new GetListCommand(out,prompt, server,parent.getMACAddress(),false).handle();
 			break;
-		case MessageType.GETWISHLIST: new GetListCommand(out,prompt, server,true).handle();
+		case MessageType.GETWISHLIST: new GetListCommand(out,prompt, server,parent.getMACAddress(),true).handle();
 			break;
 		case MessageType.YOUTUBE:  new YoutubeCommand(out,prompt,server,true,false,args[1]).handle();
 			break;
@@ -98,6 +98,10 @@ public class CommandHandler extends Thread {
 		case MessageType.SWITCHSEEKNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
 		break;
 		case MessageType.SWITCHGAPLISTNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
+		case MessageType.VOTEFORSONG: new VoteForSongCommand(out, prompt, server, parent.getMACAddress(), Long.parseLong(args[1])).handle();
+			break;
+		case MessageType.REMOVEVOTE: new RemoveVoteCommand(out, prompt, server, parent.getMACAddress()).handle();
 		break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		

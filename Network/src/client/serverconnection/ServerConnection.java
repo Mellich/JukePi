@@ -93,8 +93,8 @@ public interface ServerConnection {
 	 * @param response the response listener, that will be executed, when the server responses the command
 	 * @param index the index of the track in the gap list, that should be removed
 	 */
-	public void deleteFromList(ResponseListener response,int index);
-	public boolean deleteFromList(int index);
+	public void deleteFromList(ResponseListener response,Song s);
+	public boolean deleteFromList(Song s);
 	
 	/**gets the title of the track, that is currently played by the server
 	 * 
@@ -107,15 +107,13 @@ public interface ServerConnection {
 	 * 
 	 * @param response the response listener, that will be executed, when the server responses the command
 	 */
-	public void getGapList(ResponseListener response);
-	public String[] getGapList();
+	public Song[] getGapList();
 	
 	/**gets the title of all tracks in the wish list
 	 * 
 	 * @param response the response listener, that will be executed, when the server responses the command
 	 */
-	public void getWishList(ResponseListener response);
-	public String[] getWishList();
+	public Song[] getWishList();
 	
 	/**skips the current track.
 	 * ResponseListener receives true if track could be skipped, false otherwise.
@@ -281,6 +279,12 @@ public interface ServerConnection {
 	
 	public void seekBackward(ResponseListener response);
 	public boolean seekBackward();
+	
+	public void voteSong(ResponseListener response,Song song);
+	public boolean voteSong(Song song);
+	
+	public void removeVote(ResponseListener response);
+	public boolean removeVote();
 	
 	
 }

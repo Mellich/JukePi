@@ -11,20 +11,20 @@ import utilities.IO;
 public class DeleteFromListCommand extends Command {
 
 	private boolean fromWishList;
-	private int trackIndex;
+	private long trackID;
 	private YTJBServer server;
 	
-	public DeleteFromListCommand(BufferedWriter out,int messageType,YTJBServer server, boolean fromWishList,int trackIndex) {
-		super(out, trackIndex);
+	public DeleteFromListCommand(BufferedWriter out,int messageType,YTJBServer server, boolean fromWishList,long trackID) {
+		super(out, messageType);
 		this.fromWishList = fromWishList;
-		this.trackIndex = trackIndex;
+		this.trackID = trackID;
 		this.server = server;
 	}
 
 	@Override
 	public boolean handle() {
 		try{
-			MusicTrack track = server.deleteFromList(fromWishList, trackIndex);
+			MusicTrack track = server.deleteFromList(fromWishList, trackID);
 			if (track.getMusicType() == TrackType.SENDED){
 				File musicFile = new File(track.getShortURL());
 				if (musicFile.exists()){

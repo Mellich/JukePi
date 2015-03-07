@@ -4,6 +4,7 @@ import java.util.concurrent.Semaphore;
 
 import client.listener.*;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 import client.visuals.IdleViewer;
 import client.visuals.Visualizer;
 import javafx.application.Application;
@@ -101,13 +102,13 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	}
 
 	@Override
-	public void onGapListUpdatedNotify(String[] title) {
+	public void onGapListUpdatedNotify(Song[] songs) {
 		viewer.updateInfos();
 		
 	}
 
 	@Override
-	public void onWishListUpdatedNotify(String[] title) {
+	public void onWishListUpdatedNotify(Song[] songs) {
 		viewer.updateInfos();
 	}
 	

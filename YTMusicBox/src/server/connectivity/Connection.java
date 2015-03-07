@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.List;
 
 import messages.MessageType;
 import server.YTJBServer;
@@ -27,7 +28,6 @@ public class Connection extends Thread {
 	private boolean isSeekListener = false;
 	private boolean isGapListListener = false;
 	private long macAddress = -1L;
-	private long upvotedTrackID = -1L;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
@@ -68,19 +68,9 @@ public class Connection extends Thread {
 	public void setMACAddress(long mac){
 		macAddress = mac;
 	}
-	
-	public void resetVote(){
-		upvotedTrackID = -1L;
-	}
-	
-	public long getUpvotedTrackID(){
-		return upvotedTrackID;
-	}
-	
-	public boolean voteForTrack(long trackID){
-		upvotedTrackID = trackID;
-		//TODO: voting system hinzufuegen
-		return false;
+
+	public long getMACAddress(){
+		return macAddress;
 	}
 	
 	public void closeConnection(){
@@ -115,7 +105,7 @@ public class Connection extends Thread {
 	
 	
 	
-	public void notify(int messageType,String[] args){
+	public void notify(int messageType,List<String> args){
 		if (messageType == MessageType.DEBUGOUTPUTNOTIFY && isDebugListener ||
 				messageType == MessageType.PLAYERCOUNTCHANGEDNOTIFY && isDebugListener ||
 				messageType == MessageType.CLIENTCOUNTCHANGEDNOTIFY && isDebugListener ||
@@ -125,8 +115,11 @@ public class Connection extends Thread {
 				messageType == MessageType.GAPLISTCOUNTCHANGEDNOTIFY && isGapListListener ||
 				messageType == MessageType.GAPLISTUPDATEDNOTIFY && isGapListListener ||
 				messageType == MessageType.SEEKNOTIFY && isSeekListener ||
-				messageType == MessageType.GAPLISTCHANGEDNOTIFY && isGapListListener) 
-			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args).handle();
+				messageType == MessageType.GAPLISTCHANGEDNOTIFY && isGapListListener) {
+			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
+				args.add(0, ""+server.getVote(macAddress));
+			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args.toArray(new String[args.size()])).handle();
+		}
 	}
 
 

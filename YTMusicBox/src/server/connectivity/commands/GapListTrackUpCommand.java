@@ -7,19 +7,19 @@ import utilities.IO;
 
 public class GapListTrackUpCommand extends Command {
 
-	private int index;
+	private long trackID;
 	private YTJBServer server;
 	
-	public GapListTrackUpCommand(BufferedWriter out,int messageType, YTJBServer server,int index) {
+	public GapListTrackUpCommand(BufferedWriter out,int messageType, YTJBServer server,long trackID) {
 		super(out, messageType);
 		this.server = server;
-		this.index = index;
+		this.trackID = trackID;
 	}
 
 	@Override
 	public boolean handle() {
 		IO.printlnDebug(this, "Setting track one step up");
-		response(""+server.switchWithUpper(index));
+		response(""+server.switchWithUpper(trackID));
 		return true;
 	}
 

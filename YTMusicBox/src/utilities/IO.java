@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import messages.MessageType;
@@ -44,8 +45,8 @@ public class IO {
 			Timestamp t = new Timestamp(System.currentTimeMillis());
 			System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
 			if (server != null){
-				String[] s = new String[1];
-				s[0] = t.toString()+" Thread-"+n+"="+name+": "+input;
+				ArrayList<String> s = new ArrayList<String>();
+				s.add(t.toString()+" Thread-"+n+"="+name+": "+input);
 				server.notifyClients(MessageType.DEBUGOUTPUTNOTIFY, s);
 			}
 		}
@@ -74,15 +75,14 @@ public class IO {
 		return null;
 	}
 	
-	public static String[] getGapLists(String directory){
+	public static ArrayList<String> getGapLists(String directory){
 		IO.printlnDebug(null, "getting gap lists...");
-		String[] result = null;
+		ArrayList<String> result = new ArrayList<String>();
 		File dir = new File(directory);
 		File[] gaplists = dir.listFiles((File f,String s) -> {if (s.substring(s.length()-3).equals(".jb")) return true; else return false;});
 		if (gaplists != null){
-			result = new String[gaplists.length];
-			for (int i = 0; i < result.length; i++){
-				result[i] = (gaplists[i].getName().substring(0,gaplists[i].getName().length() - 3));
+			for (int i = 0; i < gaplists.length; i++){
+				result.add((gaplists[i].getName().substring(0,gaplists[i].getName().length() - 3)));
 			}
 		}
 		return result;

@@ -1,5 +1,6 @@
 package server.player;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
@@ -44,8 +45,8 @@ public class TrackScheduler extends Thread {
 	public boolean pauseResume(){
 		if (player != null){
 			boolean result = player.pauseResume();
-			String[] args = new String[1];
-			args[0] = ""+isPlaying();
+			ArrayList<String> args = new ArrayList<String>();
+			args.add(""+isPlaying());
 			server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 			return result;
 		}
@@ -53,15 +54,15 @@ public class TrackScheduler extends Thread {
 	}
 	
 	public boolean seekForward(){
-		String[] args = new String[1];
-		args[0] = ""+true;
+		ArrayList<String> args = new ArrayList<String>();
+		args.add(""+true);
 		server.notifyClients(MessageType.SEEKNOTIFY, args);
 		return player.seekForward();
 	}
 	
 	public boolean seekBackward(){
-		String[] args = new String[1];
-		args[0] = ""+false;
+		ArrayList<String> args = new ArrayList<String>();
+		args.add(""+true);
 		server.notifyClients(MessageType.SEEKNOTIFY, args);
 		return player.seekBackward();
 	}
@@ -86,7 +87,7 @@ public class TrackScheduler extends Thread {
 			while (running){
 				IO.printlnDebug(this, "getting next track in the list");
 				current = server.chooseNextTrack();
-				String[] args = new String[1];
+				ArrayList<String> args = new ArrayList<String>();
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a track added to a list...");
 					playableTrack.acquire();
@@ -96,18 +97,18 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				String[] argsNext = new String[3];
-				argsNext[0] = current.getTitle();
-				argsNext[1] = current.getVideoURL();
-				argsNext[2] = ""+current.getIsVideo();
+				ArrayList<String> argsNext = new ArrayList<String>();
+				argsNext.add(current.getTitle());
+				argsNext.add(current.getVideoURL());
+				argsNext.add(""+current.getIsVideo());
 				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
-				args[0] = ""+true;
+				args.add(""+true);
 				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
 				player = new ClientPlayer(server,this);
 				player.play(current);
 				player = null;
-				args[0] = ""+false;
+				args.set(0,""+false);
 				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 			}
 		} catch (InterruptedException e) {

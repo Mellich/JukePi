@@ -183,6 +183,10 @@ public class MessageType {
 	
 	public static final int SWITCHDEFAULTNOTIFY = 51;
 	
+	public static final int VOTEFORSONG = 52;
+	
+	public static final int REMOVEVOTE = 53;
+	
 	/**
 	 * the seperator for the arguments of a command
 	 */

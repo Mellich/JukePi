@@ -17,6 +17,7 @@ import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 import client.serverconnection.UDPTimeoutException;
 import client.serverconnection.functionality.LowLevelServerConnection;
 import client.serverconnection.functionality.YTJBLowLevelServerConnection;
@@ -45,6 +46,20 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		connected = false;
 		this.checkIntervall = checkIntervall;
 	}
+	
+	private Song[] stringArrayToSongArray(String[] table){
+		long ownVote = Long.parseLong(table[0]);
+		int i = 0;
+		Song[] result = new Song[(table.length - 1) / 3];
+		while (i < result.length){
+			long trackID = Long.parseLong(table[3*i + 1]);
+			if (ownVote == trackID)
+				result[i] = new Song(trackID,table[3*i + 2],Integer.parseInt(table[3*i + 3]),true);
+			else result[i] = new Song(trackID,table[3*i + 2],Integer.parseInt(table[3*i + 3]),false);
+			i++;
+		}
+		return result;
+	}
 
 	@Override
 	public void onNotify(int notifyType,String[] args) {
@@ -53,9 +68,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			break;
 		case MessageType.NEXTTRACKNOTIFY:for(DefaultNotificationListener l: defaultNotificationListener) l.onNextTrackNotify(args[0],args[1],Boolean.parseBoolean(args[2]));
 			break;
-		case MessageType.GAPLISTUPDATEDNOTIFY:for(GapListNotificationListener l: gapListNotificationListener) l.onGapListUpdatedNotify(args);
+		case MessageType.GAPLISTUPDATEDNOTIFY:for(GapListNotificationListener l: gapListNotificationListener) l.onGapListUpdatedNotify(stringArrayToSongArray(args));
 			break;
-		case MessageType.WISHLISTUPDATEDNOTIFY:for(DefaultNotificationListener l: defaultNotificationListener) l.onWishListUpdatedNotify(args);
+		case MessageType.WISHLISTUPDATEDNOTIFY:for(DefaultNotificationListener l: defaultNotificationListener) l.onWishListUpdatedNotify(stringArrayToSongArray(args));
 			break;
 		case MessageType.GAPLISTCOUNTCHANGEDNOTIFY:for(GapListNotificationListener l: gapListNotificationListener) l.onGapListCountChangedNotify(args);
 			break;
@@ -89,24 +104,14 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public void deleteFromList(ResponseListener response, int index) {
-		this.serverConnection.sendMessage(response, MessageType.DELETEFROMGAPLIST, ""+index);
+	public void deleteFromList(ResponseListener response, Song s) {
+		this.serverConnection.sendMessage(response, MessageType.DELETEFROMGAPLIST, ""+s.getTrackID());
 	}
 
 	@Override
 	public void getCurrentTrackTitle(ResponseListener response) {
 		this.serverConnection.sendMessage(response, MessageType.GETCURRENTTRACK);
 		
-	}
-
-	@Override
-	public void getGapList(ResponseListener response) {
-		this.serverConnection.sendMessage(response, MessageType.GETGAPLIST);
-	}
-
-	@Override
-	public void getWishList(ResponseListener response) {
-		this.serverConnection.sendMessage(response, MessageType.GETWISHLIST);
 	}
 
 	@Override
@@ -337,8 +342,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean deleteFromList(int index) {
-		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.DELETEFROMGAPLIST, ""+index)[0]);
+	public boolean deleteFromList(Song s) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.DELETEFROMGAPLIST, ""+s.getTrackID())[0]);
 	}
 
 	@Override
@@ -347,13 +352,15 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public String[] getGapList() {
-		return this.serverConnection.sendBlockingMessage(MessageType.GETGAPLIST);
+	public Song[] getGapList() {
+		String[] table = this.serverConnection.sendBlockingMessage(MessageType.GETGAPLIST);
+		return this.stringArrayToSongArray(table);
 	}
 
 	@Override
-	public String[] getWishList() {
-		return this.serverConnection.sendBlockingMessage(MessageType.GETWISHLIST);
+	public Song[] getWishList() {
+		String[] table = this.serverConnection.sendBlockingMessage(MessageType.GETWISHLIST);
+		return this.stringArrayToSongArray(table);
 	}
 
 	@Override
@@ -539,6 +546,28 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		seekNotificationListener.remove(listener);
 		if (seekNotificationListener.size() == 0 && connected)
 			this.serverConnection.sendMessage(MessageType.SWITCHSEEKNOTIFY);
+	}
+
+	@Override
+	public void voteSong(ResponseListener response, Song song) {
+		this.serverConnection.sendMessage(response,MessageType.VOTEFORSONG,""+song.getTrackID());
+		
+	}
+
+	@Override
+	public boolean voteSong(Song song) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.VOTEFORSONG, ""+song.getTrackID())[0]);
+	}
+
+	@Override
+	public void removeVote(ResponseListener response) {
+		this.serverConnection.sendMessage(response,MessageType.REMOVEVOTE);
+		
+	}
+
+	@Override
+	public boolean removeVote() {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.REMOVEVOTE)[0]);
 	}
 
 }

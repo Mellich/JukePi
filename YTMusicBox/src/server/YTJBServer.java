@@ -70,7 +70,7 @@ public class YTJBServer implements Server {
 	
 	private String currentGapList;
 	
-	private String[] gapLists;
+	private ArrayList<String> gapLists;
 	
 	private GapListLoader gapListLoader;
 	
@@ -99,14 +99,32 @@ public class YTJBServer implements Server {
 		return workingDirectory;
 	}
 	
-	public void addVote(long trackID,long macAddress){
-		votingController.addVote(trackID, macAddress);
+	public long getVote(long macAddress){
+		return votingController.getVotedTrackID(macAddress);
 	}
 	
-	private synchronized String[] listToArray(LinkedList<MusicTrack> list){
-		String[] result = new String[list.size()];
-		for (int i = 0; i < result.length; i++){
-			result[i] = list.get(i).getTitle();
+	public boolean removeVote(long macAddress){
+		if (votingController.removeVote(macAddress)){
+			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY, this.listToArray(wishList));
+			return true;
+		}
+		return false;		
+	}
+	
+	public boolean addVote(long trackID,long macAddress){
+		if (votingController.addVote(trackID, macAddress)){
+			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY, this.listToArray(wishList));
+			return true;
+		}
+		return false;
+	}
+	
+	private synchronized ArrayList<String> listToArray(LinkedList<MusicTrack> list){
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i < list.size(); i++){
+			result.add(""+list.get(i).getTrackID());
+			result.add(list.get(i).getTitle());
+			result.add(""+list.get(i).getVoteCount());
 		}
 		return result;
 	}
@@ -158,15 +176,27 @@ public class YTJBServer implements Server {
 	 * @param index the index of the track in the list
 	 * @return the deleted track or null if the track does not exist
 	 */
-	public synchronized MusicTrack deleteFromList(boolean fromWishList,int index){
+	public synchronized MusicTrack deleteFromList(boolean fromWishList,long trackID){
 		MusicTrack temp = null;
 		try{
 			if (fromWishList){
-				temp = wishList.remove(index);
+				for (MusicTrack m: wishList){
+					if (m.getTrackID() == trackID){
+						temp = m;
+						break;
+					}
+				}
+				wishList.remove(temp);
 				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 			}
 			else{
-				temp = gapList.remove(index);
+				for (MusicTrack m: gapList){
+					if (m.getTrackID() == trackID){
+						temp = m;
+						break;
+					}
+				}
+				gapList.remove(temp);
 				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
@@ -184,13 +214,13 @@ public class YTJBServer implements Server {
 	 */
 	public String getTitle(boolean fromWishList){
 		StringBuilder response = new StringBuilder();
-		if (fromWishList)//TODO: versende auch trackID und votes!
+		if (fromWishList)
 			for (MusicTrack m: wishList){
-				response.append(m.getTitle()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR);
 			}
 		else
 			for (MusicTrack m: gapList){
-				response.append(m.getTitle()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR);
 			}
 		return response.toString();
 	}
@@ -221,8 +251,8 @@ public class YTJBServer implements Server {
 	 */
 	public void loadGapListFromFile(){
 		gapList.clear();
-		String[] args = new String[1];
-		args[0] = currentGapList;
+		ArrayList<String> args = new ArrayList<String>();
+		args.add(currentGapList);
 		this.notifyClients(MessageType.GAPLISTCHANGEDNOTIFY,args);
 		this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		if(!IO.loadGapListFromFile(workingDirectory+currentGapList, this)){
@@ -278,7 +308,7 @@ public class YTJBServer implements Server {
 	}
 	
 	public String[] getGapListNames(){
-		return gapLists;
+		return gapLists.toArray(new String[gapLists.size()]);
 	}
 	
 	public String getCurrentGapListName(){
@@ -309,21 +339,31 @@ public class YTJBServer implements Server {
 		return IO.readOutGapList(workingDirectory+filename);
 	}
 	
-	public synchronized boolean switchWithUpper(int index){
-		if (index > 0){
-			MusicTrack upper = gapList.get(index - 1);
-			gapList.set(index - 1, gapList.get(index));
-			gapList.set(index, upper);
-			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
-			return true;
+	public synchronized boolean switchWithUpper(long trackID){
+		if (trackID > -1L){
+			MusicTrack lower = null;
+			for (MusicTrack m : gapList){
+				if (trackID == m.getTrackID()){
+					lower = m;
+					break;
+				}
+			}
+			int upperIndex = gapList.indexOf(lower) - 1;
+			if (upperIndex >= 0){
+				gapList.set(upperIndex + 1, gapList.get(upperIndex));
+				gapList.set(upperIndex, lower);
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+				return true;
+			}
+			return false;
 		}
 		else return false;
 	}
 	
 	public synchronized void registerNotifiable(Connection c){
 		notifiables.add(c);
-		String[] s = new String[1];
-		s[0] = ""+notifiables.size();
+		ArrayList<String> s = new ArrayList<String>();
+		s.add( ""+notifiables.size());
 		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
@@ -332,8 +372,8 @@ public class YTJBServer implements Server {
 		player.add(c);
 		if (player.size() == 1)
 			scheduler.notifyPlayerAvailable();
-		String[] s = new String[1];
-		s[0] = ""+player.size();
+		ArrayList<String> s = new ArrayList<String>();
+		s.add(""+player.size());
 		this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Players: "+player.size());
 	}
@@ -342,8 +382,8 @@ public class YTJBServer implements Server {
 		if(player.contains(c)){
 			player.remove(c);
 			playerFinished.release();
-			String[] s = new String[1];
-			s[0] = ""+player.size();
+			ArrayList<String> s = new ArrayList<String>();
+			s.add(""+player.size());
 			this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
 			IO.printlnDebug(this, "Count of connected Players: "+player.size());
 		}
@@ -351,8 +391,8 @@ public class YTJBServer implements Server {
 	
 	public synchronized void removeNotifiable(Connection c){
 		notifiables.remove(c);
-		String[] s = new String[1];
-		s[0] = ""+notifiables.size();
+		ArrayList<String> s = new ArrayList<String>();
+		s.add(""+notifiables.size());
 		this.notifyClients(MessageType.CLIENTCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Notifiables: "+notifiables.size());
 	}
@@ -373,9 +413,9 @@ public class YTJBServer implements Server {
 		}
 	}
 	
-	public void notifyClients(int messageType,String[] args){
+	public void notifyClients(int messageType,ArrayList<String> arrayList){
 		for (Connection h: notifiables){
-			h.notify(messageType,args);
+			h.notify(messageType,arrayList);
 		}
 	}	
 	

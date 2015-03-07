@@ -13,31 +13,70 @@ public class VotingController {
 		this.wishList = wishList2;
 	}
 	
-	public void addVote(long trackID,long macAddress){//TODO: wishlist neu anordnen und notify senden
-		if (macs.containsKey(macAddress)){
-			long oldTrackID = macs.get(macAddress);
-			removeVote(oldTrackID,macAddress);
-		}
-		if (votes.containsKey(trackID)){
-			ArrayList<Long> list = votes.get(trackID);
-			list.add(macAddress);
-		}
-		else {
-			ArrayList<Long> list = new ArrayList<Long>();
-			list.add(macAddress);
-			votes.put(trackID, list);
-		}
-		macs.put(macAddress, trackID);
-		for (MusicTrack m : wishList){
-			if (m.getTrackID() == trackID){ 
-				m.setVoteCount(m.getVoteCount() +1);
-				break;
+	public boolean addVote(long trackID,long macAddress){
+		if (!macs.containsKey(macAddress)){
+			MusicTrack temp = null;
+			for (MusicTrack m : wishList){
+				if (m.getTrackID() == trackID){ 
+					m.setVoteCount(m.getVoteCount() +1);
+					temp = m;
+					break;
+				}
 			}
+			if (temp != null){
+				int i = wishList.indexOf(temp);
+				while (i >= 1 && wishList.get(i).getVoteCount() > wishList.get(i - 1).getVoteCount()){
+					MusicTrack m2 = wishList.get(i);
+					wishList.set(i, wishList.get(i-1));
+					wishList.set(i-1, m2);
+					i--;
+				}
+				if (votes.containsKey(trackID)){
+					ArrayList<Long> list = votes.get(trackID);
+					list.add(macAddress);
+				}
+				else {
+					ArrayList<Long> list = new ArrayList<Long>();
+					list.add(macAddress);
+					votes.put(trackID, list);
+				}
+				macs.put(macAddress, trackID);
+			}
+			return temp != null;
+		}else return false;
+	}
+	
+	public boolean removeVote(long macAddress){
+		if (macs.containsKey(macAddress)){
+			long trackID = macs.get(macAddress);
+			macs.remove(macAddress);
+			MusicTrack temp = null;
+			for (MusicTrack m : wishList){
+				if (m.getTrackID() == trackID){ 
+					m.setVoteCount(m.getVoteCount() -1);
+					temp = m;
+					break;
+				}
+			}
+			if (temp != null){
+				int i = wishList.indexOf(temp);
+				while (i < wishList.size() - 1 && wishList.get(i).getVoteCount() < wishList.get(i + 1).getVoteCount()){
+					MusicTrack m2 = wishList.get(i);
+					wishList.set(i, wishList.get(i+1));
+					wishList.set(i+1, m2);
+					i++;
+				}
+				return true;
+			}
+			return false;
 		}
+		else return false;
 	}
 	
 	public long getVotedTrackID(long macAddress){
-		return macs.get(macAddress);
+		if (macs.containsKey(macAddress))
+			return macs.get(macAddress);
+		else return -1L;
 	}
 	
 	public int getVoteCount(long trackID){
@@ -53,18 +92,5 @@ public class VotingController {
 		}
 		return list;
 	}
-	
-	public void removeVote(long trackID,long macAddress){ //TODO: wishlist neu anordnen
-		if (votes.containsKey(trackID)){
-			ArrayList<Long> list = votes.get(trackID);
-			list.remove(macAddress);
-			macs.remove(macAddress);
-			for (MusicTrack m : wishList){
-				if (m.getTrackID() == trackID){ 
-					m.setVoteCount(m.getVoteCount() -1);
-					break;
-				}
-			}
-		}
-	}
+
 }
