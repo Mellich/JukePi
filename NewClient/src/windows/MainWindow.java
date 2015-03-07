@@ -15,6 +15,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 import connection.Collector;
 
 public class MainWindow extends Window {
@@ -157,13 +158,13 @@ public class MainWindow extends Window {
 		lblNoGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNoGaplist.setBounds(143, 11, 68, 14);
 		frame.getContentPane().add(lblNoGaplist);
-		wrapper.getGapList((String[] s)-> {lblNoGaplist.setText(""+s.length);});
+	//	wrapper.getGapList((String[] s)-> {lblNoGaplist.setText(""+s.length);});
 		
 		JLabel lblNoWishlist = new JLabel("");
 		lblNoWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNoWishlist.setBounds(143, 36, 46, 14);
 		frame.getContentPane().add(lblNoWishlist);
-		wrapper.getWishList((String[] s)-> {lblNoWishlist.setText(""+s.length);});
+	//	wrapper.getWishList((String[] s)-> {lblNoWishlist.setText(""+s.length);});
 		
 		txtLink = new JTextField();
 		txtLink.setBounds(10, 60, 362, 20);
@@ -205,16 +206,16 @@ public class MainWindow extends Window {
 		lblTrackNext.setBounds(88, 169, 244, 14);
 		frame.getContentPane().add(lblTrackNext);
 		
-		String[] wishlist = wrapper.getWishList();
-		String[] gaplist = wrapper.getGapList();
+		Song[] wishlist = wrapper.getWishList();
+		Song[] gaplist = wrapper.getGapList();
 		
 		if (wishlist.length == 0) 
 			if (gaplist.length == 0) 
 				lblTrackNext.setText("NOTHING");
 			else
-				lblTrackNext.setText(gaplist[0]);
+				lblTrackNext.setText(gaplist[0].getName());
 		else
-			lblTrackNext.setText(wishlist[0]);
+			lblTrackNext.setText(wishlist[0].getName());
 		
 		JButton btnEditTracks = new JButton("Edit Tracks");
 		btnEditTracks.setBounds(10, 194, 100, 23);

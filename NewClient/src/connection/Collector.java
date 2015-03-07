@@ -8,10 +8,13 @@ import windows.LogIn;
 import windows.MainWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
-import client.listener.NotificationListener;
+import client.listener.DefaultNotificationListener;
+import client.listener.GapListNotificationListener;
+import client.listener.PauseResumeNotificationListener;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 
-public class Collector implements NotificationListener{
+public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
 
 	/**
 	 * Time in ms when the wrapper should check the connectivity of the server if no response 
@@ -61,13 +64,13 @@ public class Collector implements NotificationListener{
 	}
 
 	@Override
-	public void onGapListUpdatedNotify(String[] title) {
+	public void onGapListUpdatedNotify(Song[] title) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onWishListUpdatedNotify(String[] title) {
+	public void onWishListUpdatedNotify(Song[] title) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -76,11 +79,6 @@ public class Collector implements NotificationListener{
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void onSeekNotify(boolean forward) {
-		//Nothing needed
 	}
 
 	@Override
@@ -97,7 +95,9 @@ public class Collector implements NotificationListener{
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		wrapper.addNotificationListener(this);
+		wrapper.addDefaultNotificationListener(this);
+		wrapper.addGapListNotificationListener(this);
+		wrapper.addPauseResumeNotificationListener(this);
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
