@@ -16,6 +16,7 @@ import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 import utilities.IO;
+import utilities.ProcessCommunicator;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
  * by a client 
@@ -87,12 +88,17 @@ public class YTJBServer implements Server {
 	 * starts the server and makes him ready for work
 	 */
 	public void startUp(){
+			ProcessCommunicator.updateYoutubeDL(workingDirectory);
+			currentGapList = initFile.getStartUpGapList();
+			searchGapLists();				
+			gapListLoader = new GapListLoader(this);
+			gapListLoader.start();
 			waiter.start();
 			scheduler.start();
 			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
-			IO.printlnDebug(this, "Server is running now");
+			IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 	}
 	
 	public String getWorkingDir(){
@@ -148,8 +154,13 @@ public class YTJBServer implements Server {
 		if (gapList.isEmpty() && wishList.isEmpty())
 			isFirstTrack = true;
 		if (toWishList){
-			if (atFirst)
-				wishList.addFirst(track);
+			if (atFirst){
+				int i = wishList.size() - 1;
+				while(wishList.get(i - 1).getVoteCount() == 0){
+					i--;
+				}
+				wishList.add(i, track);
+			}
 			else wishList.add(track);
 			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
@@ -442,18 +453,12 @@ public class YTJBServer implements Server {
 				wishList = new LinkedList<MusicTrack>();
 				notifiables = new ArrayList<Connection>();
 				votingController = new VotingController(wishList);
-				IO.printlnDebug(this, "Working directory: "+this.workingDirectory);
 				player = new ArrayList<Connection>();
 				gapList = new LinkedList<MusicTrack>();
 				initFile = new InitFileCommunicator(workingDirectory);
-				currentGapList = initFile.getStartUpGapList();
-				searchGapLists();
-				gapListLoader = new GapListLoader(this);
-				gapListLoader.start();
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
-				IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

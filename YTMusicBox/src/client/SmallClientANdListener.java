@@ -12,6 +12,8 @@ import client.serverconnection.impl.YTJBServerConnection;
 
 public class SmallClientANdListener implements DefaultNotificationListener {
 	
+	private Song[] wishList;
+	
 	public SmallClientANdListener() {
 		ServerConnection server = new YTJBServerConnection(15000);
 		if (server.connect("localhost",22222)){
@@ -19,20 +21,41 @@ public class SmallClientANdListener implements DefaultNotificationListener {
 			System.out.println("Current Gaplist: "+server.getCurrentGapListName());
 			System.out.println("Current Playback status: "+server.getCurrentPlaybackStatus());
 			System.out.println("Current track title: "+server.getCurrentTrackTitle());
-			Song[] gapList = server.getGapList();
-			//server.addToList("https://www.youtube.com/watch?v=ZrK3MjSJ9gM", true, true);
-			for (Song s : gapList)
-				System.out.println(s.getTrackID()+", "+s.getName()+", "+s.getVotes()+", "+s.isOwnVote());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			wishList = server.getWishList();
 			try {
-				reader.readLine();
-				Song[] wishList = server.getWishList();
-				server.voteSong(wishList[1]);
-				reader.readLine();
-				server.removeVote();
-				reader.readLine();
+				String input = "";
+				do{
+					System.out.println("New WishList:");
+					System.out.println("Track-ID Name \t \t \t \t Votes \t Your vote");
+					for (Song s : wishList){
+						char[] name = s.getName().subSequence(0, 30).toString().toCharArray();
+						System.out.print(s.getTrackID()+"\t ");
+						System.out.print(name);
+						System.out.println("\t "+s.getVotes()+"\t "+s.isOwnVote());
+					}
+					System.out.println();
+					System.out.print("Please enter a track id to vote:");
+					input = reader.readLine();
+					try{
+						long trackID = Long.parseLong(input);
+						server.removeVote();
+						Song vote = null;
+						for (Song s: wishList){
+							if (s.getTrackID() == trackID){
+								vote = s;
+								break;
+							}
+						}
+						server.voteSong(vote);
+					}catch (NumberFormatException e){
+						if (input.equals("update")){
+							System.out.println("Update view!");
+						}else System.out.println("Input not a track ID!");
+					}
+				} while(input != "");
 				server.close();
-			} catch (IOException e1) {
+			} catch (IOException | NullPointerException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -48,21 +71,19 @@ public class SmallClientANdListener implements DefaultNotificationListener {
 
 	@Override
 	public void onNextTrackNotify(String title, String videoURL,boolean isVideo) {
-		System.out.println("Next Track: "+title);
+
 	}
 
 	@Override
 	public void onDisconnect() {
+		System.out.println();
 		System.out.println("Disconnected!");
 
 	}
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		System.out.println("New WishList:");
-		for (Song s : songs)
-			System.out.println(s.getTrackID()+", "+s.getName()+", "+s.getVotes()+", "+s.isOwnVote());
-		System.out.println();
+		wishList = songs;
 	}
 
 }
