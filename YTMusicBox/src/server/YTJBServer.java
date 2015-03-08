@@ -154,8 +154,13 @@ public class YTJBServer implements Server {
 		if (gapList.isEmpty() && wishList.isEmpty())
 			isFirstTrack = true;
 		if (toWishList){
-			if (atFirst)
-				wishList.addFirst(track);
+			if (atFirst){
+				int i = wishList.size() - 1;
+				while(wishList.get(i - 1).getVoteCount() == 0){
+					i--;
+				}
+				wishList.add(i, track);
+			}
 			else wishList.add(track);
 			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}

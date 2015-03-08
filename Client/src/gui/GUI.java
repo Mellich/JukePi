@@ -95,7 +95,7 @@ public class GUI {
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
 		btnConnect.addActionListener(cbl);
 		btnUDPConnect.addActionListener(new UDPConnectButtonListener(c,cbl,lblFail));
-		btnInternServer.addActionListener(new InternServerButtonListener(c,cbl));
+		btnInternServer.addActionListener(new InternServerButtonListener(c,Integer.parseInt(txtPort.getText()),cbl));
 	//	btnUDPConnect.addActionListener(new UDPConnectButtonListener(c, cbl, lblFail));
 		
 		txtIp.addKeyListener(new KeyListener() {

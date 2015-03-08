@@ -8,17 +8,19 @@ public class InternServerButtonListener implements ActionListener {
 	
 	private Collector c;
 	private ConnectButtonListener cbl;
+	private int port;
 
-	public InternServerButtonListener(Collector c,ConnectButtonListener cbl) {
+	public InternServerButtonListener(Collector c,int port,ConnectButtonListener cbl) {
 		this.c = c;
 		this.cbl = cbl;
+		this.port = port;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		c.createLocalServer(22222);
+		c.createLocalServer(port);
 		cbl.setIP("localhost");
-		cbl.setPort(22222);
+		cbl.setPort(port);
 		cbl.actionPerformed(null);
 	}
 

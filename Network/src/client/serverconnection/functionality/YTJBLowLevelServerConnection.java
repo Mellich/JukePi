@@ -28,7 +28,6 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	private AliveChecker checker;
 	
 	private long getMACAddress(){
-		System.out.println("MAC Adresse wird ermittelt...");
 		InetAddress ip;
 		try {
 			ip = this.getLocalIPAddress();			 
@@ -39,7 +38,6 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			{
 			   value += ((long) mac[i] & 0xffL) << (8 * i);
 			}
-			System.out.println("MAC-Adresse: "+value);
 			return value;
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
