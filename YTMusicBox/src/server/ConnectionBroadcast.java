@@ -3,7 +3,6 @@ package server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 
 import utilities.IO;
@@ -18,7 +17,7 @@ public class ConnectionBroadcast implements Runnable {
     // Netzwerk-Gruppen Port
     private static final int NETWORK_GROUP_PORT = 4447;
     // Client-Port
-    private static final int CLIENT_MULTICAST_PORT = 4446;
+    //private static final int CLIENT_MULTICAST_PORT = 4446;
    
     // Nachrichten-Codierung
     private static final String TEXT_ENCODING = "UTF8";
@@ -34,20 +33,39 @@ public class ConnectionBroadcast implements Runnable {
 
 	@Override
 	public void run() {	
-		MulticastSocket socket = null;
+		MulticastSocket sendSocket = null;
 	    try {
-	    	socket =  new MulticastSocket(new InetSocketAddress(server.getIpAddress(),CLIENT_MULTICAST_PORT));
+	    	sendSocket =  new MulticastSocket(NETWORK_GROUP_PORT);
 	    	byte[] byteMessage = message.getBytes(TEXT_ENCODING);
 	    	InetAddress group = InetAddress.getByName(NETWORK_GROUP) ;
-	    	socket.joinGroup(group);
+	    	sendSocket.setInterface(InetAddress.getByName(server.getIpAddress()));
+	    	sendSocket.joinGroup(group);
+	    	
+	    	byte[] bytes = new byte[65536];
+		      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+		      
 			while(true){
 			      // Nachricht an Gruppe senden
 				//IO.printlnDebug(this, "Broadcast connection details...: "+message);
 				try{
-					socket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+					//sendSocket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+			  	    try {
+			  	    	IO.printlnDebug(this, "Wait for incoming UDP request...");
+				        sendSocket.receive(packet);
+				    } catch (IOException e) {
+					     //IO Exception occured while receiving data
+					    }
+				        if (packet.getLength() > 0){
+				        	String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
+					        IO.printlnDebug(this, "UDP message received: "+message);
+				        	if (message.equals("REQUEST")){
+				        		sendSocket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+				        		IO.printlnDebug(this, "server information sent!");
+				        	}
+				        }
 				}
 			    catch (IOException e){
-			    	IO.printlnDebug(this, "Fehler beim senden des Broadcasts! Versuche weiter...");
+			    	IO.printlnDebug(this, "Error while waiting for UDP connection... trying again...");
 			    }
 			    if (Thread.interrupted())
 			    	break;
@@ -56,8 +74,10 @@ public class ConnectionBroadcast implements Runnable {
 		} catch (IOException | InterruptedException e) {
 		      e.printStackTrace();
 		}finally{
-			if (socket != null)
-				socket.close();
+			if (sendSocket != null){
+				sendSocket.close();
+			}
+			IO.printlnDebug(this, "UDP broadcast shut down!");
 		}
 	}
 

@@ -251,6 +251,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			socket = new MulticastSocket(NETWORK_GROUP_PORT);
 		      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
 		      socket.joinGroup(socketAddress);
+
 	   
 	     
 	      byte[] bytes = new byte[65536];
@@ -259,28 +260,35 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      Thread timeoutThread = new Thread(() -> {
 	    	  try {
 				Thread.sleep(TIMEOUT);
+				socket.leaveGroup(socketAddress);
 				socket.close();
 			} catch (Exception e) {
 				//timeout was not necessary
 			}
 	      });
 	      timeoutThread.start();
-	     
+	      
+	      sendUDPRequest(socket,socketAddress,NETWORK_GROUP_PORT);
+	     System.out.println("Sent UDP request");
 	      while(true){
-	        // Warten auf Nachricht
-	  	    try {
-		        socket.receive(packet);
-		    } catch (IOException e) {
-			     //IO Exception occured while receiving data
-			    }
+		        // Warten auf Nachricht
+		  	    try {
+		  	    	 System.out.println("waiting for response...");
+			        socket.receive(packet);
+			    } catch (IOException e) {
+				     //IO Exception occured while receiving data
+				    }
 		        if (packet.getLength() == 0)
 		        	throw new UDPTimeoutException();
 		        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
-		        socket.leaveGroup(socketAddress);
-		        socket.close();
-		        timeoutThread.interrupt();
-		        String[] values = message.split(MessageType.SEPERATOR);
-		        return new ServerAddress(values[0],Integer.parseInt(values[1]));
+		        System.out.println("Received: "+message);
+		        if (!message.equals("REQUEST")){
+					socket.leaveGroup(socketAddress);
+					socket.close();
+			        timeoutThread.interrupt();
+			        String[] values = message.split(MessageType.SEPERATOR);
+			        return new ServerAddress(values[0],Integer.parseInt(values[1]));
+		        }
 	      }   
 	     }catch (UDPTimeoutException e){
 		    	 throw new UDPTimeoutException();
@@ -288,6 +296,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 				//fehler beim erstellen des sockets etc
 		}
 	    return null;
+	}
+	
+	private void sendUDPRequest(MulticastSocket socket,InetAddress group, int port) throws IOException{
+		byte[] byteMessage;
+		byteMessage = "REQUEST".getBytes("UTF8");
+		socket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,port));
 	}
 
 	@Override
