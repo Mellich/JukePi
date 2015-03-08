@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 import server.Server;
 import server.ServerFactory;
+import windows.EditTracks;
 import windows.LogIn;
 import windows.MainWindow;
 import windows.Window;
@@ -35,6 +36,14 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	
 	private JFrame visibleScreen;
 	
+	private boolean editTracksOpened;
+	
+	private EditTracks editTracks;
+	
+	private Song[] gaplist;
+	
+	private Song[] wishlist;
+	
 	public Collector() {
 	/*	gaplistModel = new DefaultListModel<String>();
 		wishlistModel = new DefaultListModel<String>();
@@ -43,6 +52,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	*/	wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL);
 		visibleScreen = new JFrame();
 		loginScreen = new LogIn(this, visibleScreen);
+		editTracksOpened = false;
 	}
 	
 	@Override
@@ -138,5 +148,16 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 
 	public void showUDPFail(String string) {
 		showFail(loginScreen, string);
+	}
+	
+	public void openEditTracks() {
+		editTracksOpened = true;
+		editTracks = new EditTracks(wishlist, gaplist);
+		editTracks.show();
+	}
+	
+	public void setLists(Song[] wishlist, Song[] gaplist) {
+		this.wishlist = wishlist;
+		this.gaplist = gaplist;
 	}
 }

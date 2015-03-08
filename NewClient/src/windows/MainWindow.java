@@ -209,6 +209,8 @@ public class MainWindow extends Window {
 		Song[] wishlist = wrapper.getWishList();
 		Song[] gaplist = wrapper.getGapList();
 		
+		c.setLists(wishlist, gaplist);
+		
 		if (wishlist.length == 0) 
 			if (gaplist.length == 0) 
 				lblTrackNext.setText("NOTHING");
@@ -264,5 +266,6 @@ public class MainWindow extends Window {
 		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
 		btnSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), rdbtnWishlist.isSelected(), chckbxInfront.isSelected(), txtLink);});
+		btnEditTracks.addActionListener((ActionEvent ae) -> {c.openEditTracks();});
 	}
 }
