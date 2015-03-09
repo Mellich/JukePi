@@ -140,7 +140,7 @@ public class LogIn extends Window {
 		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
-		btnConnect.addActionListener((ActionEvent ae) -> {collector.connect(txtIp.getText(), txtPort.getText());});
+		btnConnect.addActionListener((ActionEvent ae) -> {new Thread(() -> {collector.connect(txtIp.getText(), txtPort.getText());}).start();});
 		btnUDPConnect.addActionListener(new UDPListener(collector));
 		btnInternServer.addActionListener((ActionEvent ae)->{collector.createLocalServer(txtPort.getText());});
 
