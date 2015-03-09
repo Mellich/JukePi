@@ -211,16 +211,16 @@ public class MainWindow extends Window {
 	 * @see ServerConnection#seekBackward(ResponseListener)
 	 * @since 1.0
 	 */
-	private void seek(boolean forward) {
+	private void wind(boolean forward) {
 		if (forward)
 			wrapper.seekForward((String[] s) -> {	if (s[0].equals("true")) 
-														showFail("Successfully winded forward!");
+														showFail("Successfully wound forward!");
 													else
 														showFail("Couldn't wind forward!");
 												});
 		else
 			wrapper.seekBackward((String[] s) -> {	if (s[0].equals("true"))
-														showFail("Successfully winded backwards!");
+														showFail("Successfully wound backwards!");
 													else
 														showFail("Couldn't wind backwards!");
 												});
@@ -638,8 +638,8 @@ public class MainWindow extends Window {
 		
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
-		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
-		btnSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
+		btnSeekForward.addActionListener((ActionEvent ae) -> {wind(true);});
+		btnSeekBackwards.addActionListener((ActionEvent ae) -> {wind(false);});
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), rdbtnWishlist.isSelected(), chckbxInfront.isSelected(), txtLink);});
 		btnSave.addActionListener((ActionEvent ae) -> {saveGaplist();});
 		btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(gaplistList.getSelectedIndex(), gaplistList);});
