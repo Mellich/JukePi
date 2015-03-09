@@ -24,60 +24,113 @@ import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 import connection.Collector;
 
+/**
+ * The Main {@link Window}, that contains information transmitted by the Server, this Client 
+ * is connected to.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class MainWindow extends Window {
 	
-	private Collector c;
+	/**
+	 * The {@link Collector}, that will perform Actions with extern needed information.
+	 */
+	private Collector collector;
 	
 	/**
-	 * The TextField that contains the YouTube-Link.
+	 * The TextField that contains the Link.
+	 * @see JTextField
 	 */
 	private JTextField txtLink;
 	
 	/**
 	 * The Label that displays possible Messages.
+	 * @see JLabel
 	 */
 	private JLabel lblFail;
 	
 	/**
-	 * The IP of the Server, the Client is connected to.
+	 * The Frame, this Screen displays.
+	 * @see JFrame
 	 */
-//	private String connectedIp;
-	
-	/**
-	 * The Port of the Server, the Client is connected to.
-	 */
-//	private int connectedPort = -1;
-	
 	private JFrame frame;
 	
+	/**
+	 * The {@link ServerConnection}, that will send the Messages.
+	 */
 	private ServerConnection wrapper;
 
+	/**
+	 * The Gaplist, that contains all {@link Song}s in the Gaplist.
+	 */
 	private Song[] gaplist;
 	
+	/**
+	 * The Wishlist, that contains all {@link Song}s in the Wishlist.
+	 */
 	private Song[] wishlist;
 	
-	private DefaultListModel<String> wishlistModel;
-	
+	/**
+	 * The {@link DefaultListModel}, that contains all the Names of the Songs in the Gaplist.
+	 */
 	private DefaultListModel<String> gaplistModel;
 	
-	private DefaultListModel<String> votelistModel;
-	
+	/**
+	 * The Button, that can be pushed to pause/resume a Track.
+	 * @see JButton
+	 */
 	private JButton btnPlayPause;
 	
+	/**
+	 * The Label, that will display the Name of the current Gaplist.
+	 * @see JLabel
+	 */
 	private JLabel lblGaplistName;
 	
+	/**
+	 * The Label, that will display the Name of the current Track.
+	 * @see JLabel
+	 */
 	private JLabel lblPlayingTrack;
 	
+	/**
+	 * The Label, that will display the Name of the next Track.
+	 * @see JLabel
+	 */
 	private JLabel lblTrackNext;
 	
+	/**
+	 * The Label, that will display the number of Tracks in the Gaplist.
+	 * @see JLabel
+	 */
 	private JLabel lblNoGaplist;
 	
+	/**
+	 * The Label, that will display the number of Tracks in the Wishlist.
+	 * @see JLabel
+	 */
 	private JLabel lblNoWishlist;
 	
+	/**
+	 * The ScrollPane, that contains the Old Wishlist-Table. Has to be stored to be able to 
+	 * keep the table updated.
+	 * @see JScrollPane
+	 */
 	private JScrollPane oldPane;
 	
-	public MainWindow(Collector c, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist) {
-		this.c = c;
+	/**
+	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
+	 * variables as well as instantiating a new {@link DefaultListModel} to store the Gaplist.
+	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
+	 * information.
+	 * @param frame	The Frame, this Screen will display.
+	 * @param wrapper	The {@link ServerConnection}, that will send the Messages.
+	 * @param gaplist	The Gaplist as an Array of {@link Song}s.
+	 * @param wishlist	The Wishlist as an Array of {@link Song}s.
+	 * @since 1.0
+	 */
+	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist) {
+		this.collector = collector;
 		this.frame = frame;
 		frame.getContentPane().removeAll();
 		this.wrapper = wrapper;
@@ -86,13 +139,6 @@ public class MainWindow extends Window {
 		this.wishlist = wishlist;
 		
 		gaplistModel = new DefaultListModel<String>();
-		wishlistModel = new DefaultListModel<String>();
-		votelistModel = new DefaultListModel<String>();
-		if (wishlist != null)
-			for (Song s : wishlist) {
-				wishlistModel.addElement(s.getName());
-				votelistModel.addElement("" + s.getVotes());
-			}
 	}
 	
 	@Override
@@ -106,6 +152,14 @@ public class MainWindow extends Window {
 		frame.setVisible(false);
 	}
 	
+	/**
+	 * Sets the IP and Port of the Server, the Client is connected to, so the Title of the 
+	 * Frame can display it.
+	 * @param ip	The IP of the Server, the Client is connected to.
+	 * @param port	The Port of the Server, the Client is connected to.
+	 * @see JFrame#setTitle(String)
+	 * @since 1.0
+	 */
 	public void setIpAndPort(String ip, int port) {
 		frame.setTitle("JukePi - "+ip+":"+port);
 	}
@@ -115,6 +169,11 @@ public class MainWindow extends Window {
 		new util.ShowLabelThread(lblFail, frame, text).start();
 	}
 	
+	/**
+	 * Skips the current Song.
+	 * @see ServerConnection#skip(ResponseListener)
+	 * @since 1.0
+	 */
 	private void skip() {
 		wrapper.skip((String[] s) -> {	if (s[0].equals("true")) 
 											showFail("Skipped Track successfully!"); 
@@ -123,6 +182,11 @@ public class MainWindow extends Window {
 									});
 	}
 	
+	/**
+	 * Messages the Server, that the Play/Pause-Button was pressed.
+	 * @see ServerConnection#pauseResume(ResponseListener)
+	 * @since 1.0
+	 */
 	private void pressPause() {
 		wrapper.pauseResume((String[] s) -> {	if (s[0].equals("true"))
 													wrapper.getCurrentPlaybackStatus((String[] st) -> {	if (st[0].equals("false"))
@@ -139,21 +203,40 @@ public class MainWindow extends Window {
 											});
 	}
 	
+	/**
+	 * Winds 30 seconds either forward or backward.
+	 * @param forward	Determines, whether the Server should wind forward({@code true}) or 
+	 * backward({@code false}).
+	 * @see ServerConnection#seekForward(ResponseListener)
+	 * @see ServerConnection#seekBackward(ResponseListener)
+	 * @since 1.0
+	 */
 	private void seek(boolean forward) {
 		if (forward)
 			wrapper.seekForward((String[] s) -> {	if (s[0].equals("true")) 
-														showFail("Successfully seeked forward!");
+														showFail("Successfully winded forward!");
 													else
-														showFail("Couldn't seek forward!");
+														showFail("Couldn't wind forward!");
 												});
 		else
 			wrapper.seekBackward((String[] s) -> {	if (s[0].equals("true"))
-														showFail("Successfully seeked backwards!");
+														showFail("Successfully winded backwards!");
 													else
-														showFail("Couldn't seek backwards!");
+														showFail("Couldn't wind backwards!");
 												});
 	}
 	
+	/**
+	 * Adds the given Link to a List, either the Gap- or the Wishlist.
+	 * @param link	The Link to the Song.
+	 * @param toWishlist	Determines, whether the Song should be added to the Wishlist 
+	 * ({@code true}) or to the Gaplist ({@code false}).
+	 * @param inFront Determines, whether the Track should be added in Front of the List 
+	 * ({@code true}) or at the the End of the List ({@code false}).
+	 * @param textfield The TextField, that contains the Link.
+	 * @see ServerConnection#addToList(ResponseListener, String, boolean, boolean)
+	 * @since 1.0
+	 */
 	private void add(String link, boolean toWishlist , boolean inFront, JTextField textfield) {
 		if (!link.isEmpty()) {
 			showFail("Pending Server...");
@@ -161,13 +244,21 @@ public class MainWindow extends Window {
 													showFail("Track added!");
 												else 
 													showFail("Couldn't add the Track.");
+												textfield.setText("Insert a Link here");
 												}, 
 								link, toWishlist, !inFront);
 		}
-		else
+		else {
 			showFail("No valid link!");
+			textfield.setText("Insert a Link here");
+		}
 	}
 	
+	/**
+	 * Sets the Gaplist to the given List and updates the Gaplist-Model
+	 * @param gaplist	The new Gaplist.
+	 * @since 1.0
+	 */
 	public void setGaplist(Song[] gaplist) {
 		this.gaplist = gaplist;
 		gaplistModel.clear();
@@ -176,12 +267,24 @@ public class MainWindow extends Window {
 		lblNoGaplist.setText(""+gaplist.length);
 	}
 	
+	/**
+	 * Sets the Wishlist to the given List and updates the Wishlist-Table.
+	 * @param wishlist	The new Wishlist.
+	 * @since 1.0
+	 */
 	public void setWishlist(Song[] wishlist) {
 		this.wishlist = wishlist;
 		lblNoWishlist.setText(""+wishlist.length);
 		createTable();
 	}
 	
+	/**
+	 * Moves the Song at the given index upwards in the Gaplist.
+	 * @param index	The index of the Track to be moved.
+	 * @param list	The List, that contains the Gaplist-Model.
+	 * @see ServerConnection#setGapListTrackUp(ResponseListener, long)
+	 * @since 1.0
+	 */
 	public void moveTrackUp(int index, JList<String> list) {
 		if (index >=0)
 			wrapper.setGapListTrackUp((String[] s)-> {	if (s[0].equals("true")) {
@@ -195,6 +298,13 @@ public class MainWindow extends Window {
 													}, gaplist[index].getTrackID());
 	}
 	
+	/**
+	 * Moves the Song at the given index downwards in the Gaplist.
+	 * @param index	The index of the Track to be moved.
+	 * @param list	The List, that contains the Gaplist-Model.
+	 * @see ServerConnection#setGapListTrackDown(ResponseListener, long)
+	 * @since 1.0
+	 */
 	public void moveTrackDown(int index, JList<String> list) {
 		if (index >= 0)
 			wrapper.setGapListTrackDown((String[] s) -> {	if (s[0].equals("true")) {
@@ -208,6 +318,13 @@ public class MainWindow extends Window {
 														}, gaplist[index].getTrackID());
 	}
 	
+	/**
+	 * Deletes the Song at the given index from the Gaplist.
+	 * @param index	The index of the Song to be deleted.
+	 * @param list	The List, that contains the Gaplist-Model.
+	 * @see ServerConnection#deleteFromList(Song)
+	 * @since 1.0
+	 */
 	public void deleteTrack(int index, JList<String> list) {
 		if (index >= 0) {
 			if (wrapper.deleteFromList(gaplist[index]))
@@ -218,6 +335,11 @@ public class MainWindow extends Window {
 		}
 	}
 	
+	/**
+	 * Saves the current Gaplist on the Server.
+	 * @see ServerConnection#saveGapList(ResponseListener)
+	 * @since 1.0
+	 */
 	public void saveGaplist() {
 		wrapper.saveGapList((String[] s) -> {	if (s[0].equals("true"))
 													showFail("Saved Gaplist.");
@@ -226,6 +348,12 @@ public class MainWindow extends Window {
 											});
 	}
 	
+	/**
+	 * Will be executed, when a Song was paused or resumed on the Server.
+	 * @param isPlaying	Determines, if the Song is now playing ({@code true}) or paused 
+	 * ({@code false}).
+	 * @since 1.0
+	 */
 	public void pauseResume(boolean isPlaying) {
 		if (isPlaying) {
 			btnPlayPause.setText("Pause");
@@ -237,10 +365,20 @@ public class MainWindow extends Window {
 		}
 	}
 	
+	/**
+	 * Will be executed, when an other Gaplist was loaded on the Server.
+	 * @param gapListName	The Name of the new Gaplist.
+	 * @since 1.0
+	 */
 	public void gaplistChanged(String gapListName) {
 		lblGaplistName.setText("Gaplist - " + gapListName);
 	}
 	
+	/**
+	 * Sets the Text of the NextTrackLabel to the given title.
+	 * @param title	The title of the next Song.
+	 * @since 1.0
+	 */
 	public void setNextTrack(String title) {
 		lblPlayingTrack.setText(title);
 		if (wishlist.length == 0) 
@@ -252,6 +390,10 @@ public class MainWindow extends Window {
 			lblTrackNext.setText(wishlist[0].getName());
 	}
 	
+	/**
+	 * Creates the Table, that displays the Wishlist and the Votes for each Song in it.
+	 * @since 1.0
+	 */
 	public void createTable() {	
 		if(oldPane != null)
 			frame.getContentPane().remove(oldPane);
@@ -311,8 +453,8 @@ public class MainWindow extends Window {
 	
 	/**
 	 * Creates a new Frame.
-	 * @wbp.parser.entryPoint
 	 * @return The created Frame.
+	 * @since 1.0
 	 */
 	public void constructFrame() {
 		gaplist = wrapper.getGapList();
@@ -353,7 +495,7 @@ public class MainWindow extends Window {
 		
 		txtLink = new JTextField();
 		txtLink.setBounds(10, 60, 362, 20);
-		txtLink.setText("Insert a YouTube Link here.");
+		txtLink.setText("Insert a Link here.");
 		frame.getContentPane().add(txtLink);
 		
 		JButton btnAdd = new JButton("Add");
@@ -394,15 +536,10 @@ public class MainWindow extends Window {
 		Song[] wishlist = wrapper.getWishList();
 		Song[] gaplist = wrapper.getGapList();
 		
-		for (Song s : wishlist) {
-			wishlistModel.addElement(s.getName());
-			votelistModel.addElement("" + s.getVotes());
-		}
-		
 		for (Song s : gaplist)
 			gaplistModel.addElement(s.getName());
 		
-		c.setLists(wishlist, gaplist);
+		collector.setLists(wishlist, gaplist);
 		
 		if (wishlist.length == 0) 
 			if (gaplist.length == 0) 
@@ -416,9 +553,9 @@ public class MainWindow extends Window {
 		btnPlayPause.setBounds(109, 194, 89, 45);
 		frame.getContentPane().add(btnPlayPause);
 		
-		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backwards</body></html>");
+		JButton btnSeekBackwards = new JButton("<html><body>Wind<br>Backward</body></html>");
 		btnSeekBackwards.setBounds(10, 194, 89, 45);
-		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backwards.");
+		btnSeekBackwards.setToolTipText("Click here to wind 30 seconds backward.");
 		frame.getContentPane().add(btnSeekBackwards);
 		
 		JButton btnSkip = new JButton("Skip");
@@ -426,9 +563,9 @@ public class MainWindow extends Window {
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		frame.getContentPane().add(btnSkip);
 		
-		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
+		JButton btnSeekForward = new JButton("<html><body>Wind<br>Forward</body></html>");
 		btnSeekForward.setBounds(208, 194, 89, 45);
-		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
+		btnSeekForward.setToolTipText("Click here to wind 30 seconds forward.");
 		frame.getContentPane().add(btnSeekForward);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
@@ -495,9 +632,9 @@ public class MainWindow extends Window {
 		bg.add(rdbtnGaplist);
 		bg.add(rdbtnWishlist);
 
-		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a YouTube Link here.", "Couldn't add", "Track added", "No valid"}, txtLink));
+		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
-		btnDisconnect.addActionListener((ActionEvent ae)->{c.disconnect();});
+		btnDisconnect.addActionListener((ActionEvent ae)->{collector.disconnect();});
 		
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});

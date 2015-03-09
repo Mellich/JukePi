@@ -15,28 +15,52 @@ import javax.swing.JTextField;
 import listener.UDPListener;
 import connection.Collector;
 
+/**
+ * The {@link Window}, that will contain the Login-Screen.
+ * @author Frederic
+ * @version 1.0
+ */
 public class LogIn extends Window {
 	/**
-	 * The Collector that will send the Messages.
+	 * The {@link Collector} that will send the Messages.
 	 */
-	private Collector c;
+	private Collector collector;
 	
 	/**
 	 * The TextField, where the User can insert the IP.
+	 * @see JTextField
 	 */
 	private JTextField txtIp;
 	
 	/**
 	 * The TextField, where the User can insert the Port.
+	 * @see JTextField
 	 */
 	private JTextField txtPort;
 	
+	/**
+	 * The Frame of the Login-Screen.
+	 * @see JFrame
+	 */
 	private JFrame frame;
 	
+	/**
+	 * The Label, that will display possible Messages.
+	 * @see JLabel
+	 */
 	private JLabel lblFail;
 	
-	public LogIn(Collector c, JFrame frame) {
-		this.c = c;
+	/**
+	 * The Constructor for the Login-Screen. Will set the given parameters to their belonging 
+	 * Class-Variables and instantiates a new Fail-Label.
+	 * @param collector	The {@link Collector}, that will perform the Actions, which contains 
+	 * information, that will be needed elsewhere, too (e.g. connecting, creating a new 
+	 * Server, etc.).
+	 * @param frame The Frame, this Screen will be displaying.
+	 * @since 1.0
+	 */
+	public LogIn(Collector collector, JFrame frame) {
+		this.collector = collector;
 		this.frame = frame;
 		lblFail = new JLabel("");
 	}
@@ -59,7 +83,7 @@ public class LogIn extends Window {
 	
 	/**
 	 * Constructs the Frame.
-	 * @wbp.parser.entryPoint
+	 * @since 1.0
 	 */
 	private void constructFrame() {
 		frame.setSize(new Dimension(500, 400));
@@ -113,15 +137,15 @@ public class LogIn extends Window {
 		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
-		btnConnect.addActionListener((ActionEvent ae) -> {c.connect(txtIp.getText(), txtPort.getText());});
-		btnUDPConnect.addActionListener(new UDPListener(c));
-		btnInternServer.addActionListener((ActionEvent ae)->{c.createLocalServer(22222);});
+		btnConnect.addActionListener((ActionEvent ae) -> {collector.connect(txtIp.getText(), txtPort.getText());});
+		btnUDPConnect.addActionListener(new UDPListener(collector));
+		btnInternServer.addActionListener((ActionEvent ae)->{collector.createLocalServer(22222);});
 
 		txtIp.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getExtendedKeyCode() == 10)
-					c.connect(txtIp.getText(), txtPort.getText());
+					collector.connect(txtIp.getText(), txtPort.getText());
 			}
 
 			@Override
@@ -137,7 +161,7 @@ public class LogIn extends Window {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getExtendedKeyCode() == 10)
-					c.connect(txtIp.getText(), txtPort.getText());
+					collector.connect(txtIp.getText(), txtPort.getText());
 			}
 
 			@Override
