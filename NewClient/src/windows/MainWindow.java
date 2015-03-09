@@ -28,7 +28,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.0
+ * @version 1.1
  */
 public class MainWindow extends Window {
 	
@@ -279,6 +279,7 @@ public class MainWindow extends Window {
 		for (Song s : gaplist)
 			gaplistModel.addElement(s.getName());
 		lblNoGaplist.setText(""+gaplist.length);
+		gaplistList = new JList<String>(gaplistModel);
 		gaplistPane = new JScrollPane(gaplistList);
 		gaplistPane.setBounds(10, 328, 248, 98);
 		frame.getContentPane().add(gaplistPane);
@@ -306,13 +307,13 @@ public class MainWindow extends Window {
 		if (index >=0)
 			wrapper.setGapListTrackUp((String[] s)-> {	if (s[0].equals("true")) {
 															showFail("Moved Track up.");
-															try{Thread.sleep(10);}catch(Exception e) {}
-															list.setSelectedIndex(index-1);
+															try{Thread.sleep(100);}catch(Exception e) {}
+															setSelectedIndex(index-1);
 														}
 														else {
 															showFail("Couldn't move Track up.");
-															try{Thread.sleep(10);}catch(Exception e) {}
-															list.setSelectedIndex(index);
+															try{Thread.sleep(100);}catch(Exception e) {}
+															setSelectedIndex(index);
 														}
 													}, gaplist[index].getTrackID());
 	}
@@ -328,13 +329,13 @@ public class MainWindow extends Window {
 		if (index >= 0)
 			wrapper.setGapListTrackDown((String[] s) -> {	if (s[0].equals("true")) {
 																showFail("Moved Track down.");
-																try{Thread.sleep(10);}catch(Exception e) {}
-																list.setSelectedIndex(index+1);
+																try{Thread.sleep(100);}catch(Exception e) {}
+																setSelectedIndex(index+1);
 															}
 															else {
 																showFail("Couldn't move Track down");
-																try{Thread.sleep(10);}catch(Exception e) {}
-																list.setSelectedIndex(index);
+																try{Thread.sleep(100);}catch(Exception e) {}
+																setSelectedIndex(index);
 															}
 														}, gaplist[index].getTrackID());
 	}
@@ -441,7 +442,8 @@ public class MainWindow extends Window {
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
         
-				tip = ""+ getValueAt(rowIndex, colIndex);
+				if (colIndex == 0)
+					tip = ""+ getValueAt(rowIndex, colIndex);
 				return tip;
 			}
 			
@@ -467,15 +469,25 @@ public class MainWindow extends Window {
         };
         table.getColumnModel().getColumn(0).setMinWidth(210);
 		JScrollPane wishlistPane = new JScrollPane(table);
-		wishlistPane.setBounds(300,328,250,98);
+		wishlistPane.setBounds(320,328,250,102);
 		frame.getContentPane().add(wishlistPane);
 		oldPane = wishlistPane;
+	}
+	
+	/**
+	 * Sets the SelectedIndex of gaplistList to the given index.
+	 * @param index	The index of the new Selection.
+	 * @since 1.1
+	 */
+	private void setSelectedIndex(int index) {
+		gaplistList.setSelectedIndex(index);
 	}
 	
 	/**
 	 * Creates a new Frame.
 	 * @return The created Frame.
 	 * @since 1.0
+	 * @wbp.parser.entryPoint
 	 */
 	public void constructFrame() {
 		gaplist = wrapper.getGapList();
@@ -571,26 +583,26 @@ public class MainWindow extends Window {
 			lblTrackNext.setText(wishlist[0].getName());
 		
 		btnPlayPause = new JButton("Play");
-		btnPlayPause.setBounds(109, 194, 89, 45);
+		btnPlayPause.setBounds(140, 194, 120, 45);
 		frame.getContentPane().add(btnPlayPause);
 		
 		JButton btnSeekBackwards = new JButton("<html><body>Wind<br>Backward</body></html>");
-		btnSeekBackwards.setBounds(10, 194, 89, 45);
+		btnSeekBackwards.setBounds(10, 194, 120, 45);
 		btnSeekBackwards.setToolTipText("Click here to wind 30 seconds backward.");
 		frame.getContentPane().add(btnSeekBackwards);
 		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(307, 194, 89, 45);
+		btnSkip.setBounds(450, 194, 120, 45);
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		frame.getContentPane().add(btnSkip);
 		
 		JButton btnSeekForward = new JButton("<html><body>Wind<br>Forward</body></html>");
-		btnSeekForward.setBounds(208, 194, 89, 45);
+		btnSeekForward.setBounds(320, 194, 120, 45);
 		btnSeekForward.setToolTipText("Click here to wind 30 seconds forward.");
 		frame.getContentPane().add(btnSeekForward);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.setBounds(360, 7, 114, 23);
+		btnDisconnect.setBounds(450, 7, 120, 23);
 		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
 		frame.getContentPane().add(btnDisconnect);
 		
@@ -604,7 +616,7 @@ public class MainWindow extends Window {
 
 		gaplistList = new JList<String>(gaplistModel);
 		gaplistPane = new JScrollPane(gaplistList);
-		gaplistPane.setBounds(10, 328, 248, 98);
+		gaplistPane.setBounds(10, 328, 250, 102);
 		frame.getContentPane().add(gaplistPane);
 		
 		lblGaplistName = new JLabel("");
@@ -619,27 +631,27 @@ public class MainWindow extends Window {
 		JLabel lblWishlist2 = new JLabel("Wishlist");
 		lblWishlist2.setHorizontalAlignment(JLabel.CENTER);
 		lblWishlist2.setVerticalAlignment(JLabel.CENTER);
-		lblWishlist2.setBounds(300, 303, 125, 14);
+		lblWishlist2.setBounds(320, 303, 250, 14);
 		frame.getContentPane().add(lblWishlist2);
 		
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(10, 437, 70, 23);
+		btnDelete.setBounds(10, 437, 120, 23);
 		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
 		frame.getContentPane().add(btnDelete);
 		
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(232, 437, 89, 23);
+		btnSave.setBounds(140, 437, 120, 23);
 		btnSave.setToolTipText("Click here to save the current Gaplist on the Server.");
 		frame.getContentPane().add(btnSave);
 		
-		JButton btnUp = new JButton("Up");
+		JButton btnUp = new JButton("/\\");
 		btnUp.setToolTipText("Click here to move the selected track upwards.");
-		btnUp.setBounds(84, 437, 49, 23);
+		btnUp.setBounds(260, 341, 40, 25);
 		frame.getContentPane().add(btnUp);
 		
-		JButton btnDown = new JButton("Down");
+		JButton btnDown = new JButton("\\/");
 		btnDown.setToolTipText("Click here to move the selected track downwards.");
-		btnDown.setBounds(143, 437, 76, 23);
+		btnDown.setBounds(260, 392, 40, 25);
 		frame.getContentPane().add(btnDown);
 		
 		JButton btnOpen = new JButton("Open...");
