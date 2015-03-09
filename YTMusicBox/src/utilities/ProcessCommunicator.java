@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -20,12 +21,16 @@ public class ProcessCommunicator {
 	 */
 	static public String[] parseShortURLToVideoURLAndTitle(String url,String path) throws IOException{
 		String[] result = new String[2];
-		IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl.exe");
-		Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e","-g", url).start();
-		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
-		result[0] = parseInput.readLine();
-		result[1] = parseInput.readLine();
-		parseInput.close();
+		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
+			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e","-g", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result[0] = parseInput.readLine();
+			result[1] = parseInput.readLine();
+			parseInput.close();
+		}else {
+			IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
+		}
 		return result;
 	}
 	
@@ -36,29 +41,37 @@ public class ProcessCommunicator {
 	 * @throws IOException raised when there are issues with communicating with the extern process
 	 */
 	static public String parseShortURLToVideoURL(String url, String path) throws IOException{
-		IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl.exe");
 		String result = null;
-		Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-g", url).start();
-		BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
-		result = parseInput.readLine();
-		parseInput.close();
+		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
+			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-g", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result = parseInput.readLine();
+			parseInput.close();
+		}else {
+			IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
+		}
 		return result;
 	}
 	
 	public static void updateYoutubeDL(String path){
 		IO.printlnDebug(null, "Updating youtube-dl... please wait...");
-		try {
-			Process updateProcess = new ProcessBuilder(path+"youtube-dl.exe","-U").start();
-			BufferedReader updateInput = new BufferedReader(new InputStreamReader(updateProcess.getInputStream()));
-			while (updateProcess.isAlive()){
-				String out = updateInput.readLine();
-				if (out != null)
-					IO.printlnDebug(null,out);
+		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+			try {
+				Process updateProcess = new ProcessBuilder(path+"youtube-dl","-U").start();
+				BufferedReader updateInput = new BufferedReader(new InputStreamReader(updateProcess.getInputStream()));
+				while (updateProcess.isAlive()){
+					String out = updateInput.readLine();
+					if (out != null)
+						IO.printlnDebug(null,out);
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}else{
+			IO.printlnDebug(null, "youtube-dl.exe could not be found! Put the program in the same directory as the server! Without this file, no lists can be loaded and no tracks can be added to a list!");
 		}
 	}
 
