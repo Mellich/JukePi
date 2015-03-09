@@ -70,6 +70,12 @@ public class MainWindow extends Window {
 	
 	private JLabel lblTrackNext;
 	
+	private JLabel lblNoGaplist;
+	
+	private JLabel lblNoWishlist;
+	
+	private JScrollPane oldPane;
+	
 	public MainWindow(Collector c, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist) {
 		this.c = c;
 		this.frame = frame;
@@ -87,9 +93,6 @@ public class MainWindow extends Window {
 				wishlistModel.addElement(s.getName());
 				votelistModel.addElement("" + s.getVotes());
 			}
-		if (gaplist != null)
-			for (Song s : gaplist)
-			gaplistModel.addElement(s.getName());
 	}
 	
 	@Override
@@ -167,18 +170,16 @@ public class MainWindow extends Window {
 	
 	public void setGaplist(Song[] gaplist) {
 		this.gaplist = gaplist;
+		gaplistModel.clear();
 		for (Song s : gaplist)
 			gaplistModel.addElement(s.getName());
-		frame.repaint();
+		lblNoGaplist.setText(""+gaplist.length);
 	}
 	
 	public void setWishlist(Song[] wishlist) {
 		this.wishlist = wishlist;
-		for (Song s : wishlist) {
-			wishlistModel.addElement(s.getName());
-			votelistModel.addElement("" + s.getVotes());
-		}
-		frame.repaint();
+		lblNoWishlist.setText(""+wishlist.length);
+		createTable();
 	}
 	
 	public void moveTrackUp(int index, JList<String> list) {
@@ -251,58 +252,61 @@ public class MainWindow extends Window {
 			lblTrackNext.setText(wishlist[0].getName());
 	}
 	
-	public void createTable() {
-		String[] columns = new String[2];
-		columns[0] = "Song:";
-		columns[1] = "Votes:";
+	public void createTable() {	
+		if(oldPane != null)
+			frame.getContentPane().remove(oldPane);
 		
-		String [] columnToolTips = {"The Song", "The Votes"};
+		String[] columns = {"Song:", "Votes:"};
 		
 		String[][] data = new String[wishlist.length][2];
 		
 		for (int i = 0; i < wishlist.length; i++) {
 			data[i][0] = wishlist[i].getName();
-			data[i][0] = ""+wishlist[i].getVotes();
+			data[i][1] = ""+wishlist[i].getVotes();
 		}
 		
-		JTable table = new JTable(data, columns) {    
-		    //Implement table cell tool tips.
-
+		JTable table = new JTable(data, columns) {
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = 3948106508298905956L;
+			private static final long serialVersionUID = 1L;
+			String [] columnToolTips = {"The Song", "The Votes"};
 
 			public String getToolTipText(MouseEvent e) {
-		        String tip = null;
-		        java.awt.Point p = e.getPoint();
-		        int rowIndex = rowAtPoint(p);
-		        int colIndex = columnAtPoint(p);
-		        
-		        tip = ""+ getValueAt(rowIndex, colIndex);
-		        return tip;
-		    }
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+				int colIndex = columnAtPoint(p);
+        
+				tip = ""+ getValueAt(rowIndex, colIndex);
+				return tip;
+			}
 			
+			public boolean isCellEditable(int row, int column){  
+				return false;  
+			}
+	
 			protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    /**
+				return new JTableHeader(columnModel) {
+					/**
 					 * 
 					 */
-					private static final long serialVersionUID = -3765911463157664031L;
+					private static final long serialVersionUID = 1L;
 
 					public String getToolTipText(MouseEvent e) {
-                        java.awt.Point p = e.getPoint();
-                        int index = columnModel.getColumnIndexAtX(p.x);
-                        int realIndex = columnModel.getColumn(index).getModelIndex();
-                        return columnToolTips[realIndex];
-                    }
-                };
+						java.awt.Point p = e.getPoint();
+						int index = columnModel.getColumnIndexAtX(p.x);
+						int realIndex = columnModel.getColumn(index).getModelIndex();
+						return columnToolTips[realIndex];
+					}
+				};
             }
-		};
-		
+        };
+        table.getColumnModel().getColumn(0).setMinWidth(210);
 		JScrollPane wishlistPane = new JScrollPane(table);
 		wishlistPane.setBounds(300,328,250,98);
 		frame.getContentPane().add(wishlistPane);
+		oldPane = wishlistPane;
 	}
 	
 	/**
@@ -337,12 +341,12 @@ public class MainWindow extends Window {
 		lblWishlist.setBounds(10, 36, 123, 14);
 		frame.getContentPane().add(lblWishlist);
 		
-		JLabel lblNoGaplist = new JLabel(""+ gaplist.length);
+		lblNoGaplist = new JLabel(""+ gaplist.length);
 		lblNoGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNoGaplist.setBounds(143, 11, 68, 14);
 		frame.getContentPane().add(lblNoGaplist);
 		
-		JLabel lblNoWishlist = new JLabel("" + wishlist.length);
+		lblNoWishlist = new JLabel("" + wishlist.length);
 		lblNoWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNoWishlist.setBounds(143, 36, 46, 14);
 		frame.getContentPane().add(lblNoWishlist);
@@ -440,16 +444,6 @@ public class MainWindow extends Window {
 		
 		//TODO Old Edit Track window from here
 		
-/*		JList<String> wishlistList = new JList<String>(wishlistModel);
-		JScrollPane wishlistPane = new JScrollPane(wishlistList);
-		wishlistPane.setBounds(300, 328, 125, 98);
-		frame.getContentPane().add(wishlistPane);
-		
-		JList<String> voteList = new JList<String>(votelistModel);
-		JScrollPane votePane = new JScrollPane(voteList);
-		votePane.setBounds(425, 328, 125, 98);
-		frame.getContentPane().add(votePane);
-*/		
 		createTable();
 
 		JList<String> gaplistList = new JList<String>(gaplistModel);
