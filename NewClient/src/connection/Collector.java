@@ -89,7 +89,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 
 	@Override
 	public void onGapListCountChangedNotify(String[] gapLists) {
-		// TODO Auto-generated method stub
+		mainScreen.setGaplists(gapLists);
 	}
 
 	@Override
@@ -109,7 +109,8 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 
 	@Override
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
-		mainScreen.setNextTrack(title);
+		mainScreen.setNowPlaying(title);
+		mainScreen.setNextTrack();
 	}
 
 	@Override

@@ -9,7 +9,7 @@ package windows;
 public abstract class Window {
 
 	/**
-	 * Shows the fail-Label on the Frame
+	 * Shows the fail-Label on the Frame.
 	 * @param text	The text, that will be displayed.
 	 * @since 1.0
 	 */

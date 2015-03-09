@@ -17,7 +17,7 @@ import connection.Collector;
 
 /**
  * The {@link Window}, that will contain the Login-Screen.
- * @author Frederic
+ * @author Haeldeus
  * @version 1.0
  */
 public class LogIn extends Window {
@@ -107,7 +107,9 @@ public class LogIn extends Window {
 		txtPort.setColumns(10);
 		
 		JLabel lblWelcomescreen = new JLabel("<html><body>Welcome to the RaspberryPi Jukebox.<br>" +
-											"Please enter IP-Address and Port below and click on Connect.</body></html>");
+											"Please enter IP-Address and Port below and click on \"Connect\".<br>" + 
+											"You could also scan your network for possible Servers by clicking \"UDP Connect\", <br>" +
+											"or you create your own Server by clicking on \"Create own Server\".</body></html>");
 		lblWelcomescreen.setBounds(10, 11, 492, 80);
 		frame.getContentPane().add(lblWelcomescreen);
 		

@@ -28,7 +28,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.1
+ * @version 1.2
  */
 public class MainWindow extends Window {
 	
@@ -119,6 +119,27 @@ public class MainWindow extends Window {
 	 * @see JScrollPane
 	 */
 	private JScrollPane oldGaplistPane;
+
+	/**
+	 * The ScrollPane, that contains the old Saved-Gaplists-Table. Has to be stored to be able
+	 * to keep the table updated.
+	 * @see JScrollPane
+	 * 
+	 */
+	private JScrollPane oldSavedGaplistPane;
+	
+	/**
+	 * The Gaplists saved on the Server.
+	 */
+	private String[] gaplists;
+	
+	/**
+	 * The ScrollPane, that contains the old Content-Table. Has to be stored to be able to 
+	 * keep the table updated.
+	 * @see JScrollPane
+	 */
+	private JScrollPane oldContentPane;
+	private JTextField textField;
 	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
@@ -276,6 +297,18 @@ public class MainWindow extends Window {
 		this.wishlist = wishlist;
 		lblNoWishlist.setText(""+wishlist.length);
 		createWishlistTable();
+		setNextTrack();
+	}
+	
+	/**
+	 * Sets the Gaplists to the given List and updates the Saved-Gaplists-Table.
+	 * @param gaplists	The Gaplists on the Server.
+	 * @since 1.2
+	 */
+	public void setGaplists(String[] gaplists) {
+		this.gaplists = gaplists;
+		createSavedGaplistsTable();
+		setNextTrack();
 	}
 	
 	/**
@@ -285,17 +318,17 @@ public class MainWindow extends Window {
 	 * @see ServerConnection#setGapListTrackUp(ResponseListener, long)
 	 * @since 1.0
 	 */
-	public void moveTrackUp(int index) {
+	private void moveTrackUp(int index) {
 		if (index >=0)
 			wrapper.setGapListTrackUp((String[] s)-> {	if (s[0].equals("true")) {
 															showFail("Moved Track up.");
 															try{Thread.sleep(100);}catch(Exception e) {}
-															setSelectedIndex(index-1);
+															setSelectedGaplistIndex(index-1);
 														}
 														else {
 															showFail("Couldn't move Track up.");
 															try{Thread.sleep(100);}catch(Exception e) {}
-															setSelectedIndex(index);
+															setSelectedGaplistIndex(index);
 														}
 													}, gaplist[index].getTrackID());
 	}
@@ -307,17 +340,17 @@ public class MainWindow extends Window {
 	 * @see ServerConnection#setGapListTrackDown(ResponseListener, long)
 	 * @since 1.0
 	 */
-	public void moveTrackDown(int index) {
+	private void moveTrackDown(int index) {
 		if (index >= 0)
 			wrapper.setGapListTrackDown((String[] s) -> {	if (s[0].equals("true")) {
 																showFail("Moved Track down.");
 																try{Thread.sleep(100);}catch(Exception e) {}
-																setSelectedIndex(index+1);
+																setSelectedGaplistIndex(index+1);
 															}
 															else {
 																showFail("Couldn't move Track down");
 																try{Thread.sleep(100);}catch(Exception e) {}
-																setSelectedIndex(index);
+																setSelectedGaplistIndex(index);
 															}
 														}, gaplist[index].getTrackID());
 	}
@@ -329,14 +362,14 @@ public class MainWindow extends Window {
 	 * @see ServerConnection#deleteFromList(Song)
 	 * @since 1.0
 	 */
-	public void deleteTrack(int index, JScrollPane list) {
+	private void deleteTrack(int index, JScrollPane list) {
 		if (index >= 0) {
 			if (wrapper.deleteFromList(gaplist[index]))
 				showFail("Deleted the Track from the Gaplist");
 			else
 				showFail("Couldn't delete the Track from the Gaplist");
 			try{Thread.sleep(100);} catch (Exception e) {}
-			setSelectedIndex(index);
+			setSelectedGaplistIndex(index);
 		}
 	}
 	
@@ -345,12 +378,34 @@ public class MainWindow extends Window {
 	 * @see ServerConnection#saveGapList(ResponseListener)
 	 * @since 1.0
 	 */
-	public void saveGaplist() {
+	private void saveGaplist() {
 		wrapper.saveGapList((String[] s) -> {	if (s[0].equals("true"))
 													showFail("Saved Gaplist.");
 												else
 													showFail("Couldn't save the Gaplist.");
 											});
+	}
+	
+	/**
+	 * Loads the Gaplist with the given Name
+	 * @param name	The Name of the Gaplist to be loaded.
+	 * @since 1.2
+	 */
+	private void loadGaplist(String name) {
+		wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
+														showFail("Loaded Gaplist.");
+													else
+														showFail("Couldn't load the Gaplist.");
+												}, name);
+	}
+	
+	/**
+	 * Shows the Content of the Gaplist with the given Name.
+	 * @param name	The Name of the Gaplist, which Content will be shown.
+	 * @since 1.2
+	 */
+	private void showGaplist(String name) {
+		wrapper.getTitleFromGapList((String[] s) -> {createContentTable(s);}, name);
 	}
 	
 	/**
@@ -380,12 +435,20 @@ public class MainWindow extends Window {
 	}
 	
 	/**
+	 * Sets the Text of the PlayingTrackLabel to the given title.
+	 * @param title	The title of the song, that is now playing.
+	 * @since 1.2
+	 */
+	public void setNowPlaying(String title) {
+		lblPlayingTrack.setText(title);
+	}
+	
+	/**
 	 * Sets the Text of the NextTrackLabel to the given title.
 	 * @param title	The title of the next Song.
 	 * @since 1.0
 	 */
-	public void setNextTrack(String title) {
-		lblPlayingTrack.setText(title);
+	public void setNextTrack() {
 		if (wishlist.length == 0) 
 			if (gaplist.length == 0) 
 				lblTrackNext.setText("NOTHING");
@@ -399,7 +462,7 @@ public class MainWindow extends Window {
 	 * Creates the Table, that displays the Wishlist and the Votes for each Song in it.
 	 * @since 1.0
 	 */
-	public void createWishlistTable() {	
+	private void createWishlistTable() {	
 		if(oldPane != null)
 			frame.getContentPane().remove(oldPane);
 		
@@ -511,9 +574,132 @@ public class MainWindow extends Window {
             }
         };
 		JScrollPane gaplistPane = new JScrollPane(table);
-		gaplistPane.setBounds(10, 328, 248, 102);
+		gaplistPane.setBounds(10, 328, 250, 102);
 		frame.getContentPane().add(gaplistPane);
 		oldGaplistPane = gaplistPane;
+	}
+	
+	/**
+	 * Creates a Table with all saved Gaplists in it.
+	 * @since 1.2
+	 */
+	private void createSavedGaplistsTable() {
+		if (oldSavedGaplistPane != null)
+			frame.getContentPane().remove(oldSavedGaplistPane);
+		
+		String[] columns = {"Gaplists:"};
+		
+		String[][] data = new String[gaplists.length][1];
+		
+		for (int i = 0; i < gaplists.length; i++)
+			data[i][0] = gaplists[i];
+		
+		JTable table = new JTable(data, columns) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			String [] columnToolTips = {"The Name of the Gaplist"};
+
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+				int colIndex = columnAtPoint(p);
+        
+				if (colIndex == 0)
+					tip = ""+ getValueAt(rowIndex, colIndex);
+				return tip;
+			}
+			
+			public boolean isCellEditable(int row, int column){  
+				return false;  
+			}
+	
+			protected JTableHeader createDefaultTableHeader() {
+				return new JTableHeader(columnModel) {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					public String getToolTipText(MouseEvent e) {
+						java.awt.Point p = e.getPoint();
+						int index = columnModel.getColumnIndexAtX(p.x);
+						int realIndex = columnModel.getColumn(index).getModelIndex();
+						return columnToolTips[realIndex];
+					}
+				};
+            }
+        };
+		JScrollPane gaplistsPane = new JScrollPane(table);
+		gaplistsPane.setBounds(10, 528, 248, 102);
+		frame.getContentPane().add(gaplistsPane);
+		oldSavedGaplistPane = gaplistsPane;
+	}
+	
+	/**
+	 * Creates the Table with the Content of the to be shown Gaplist. If the Content is null, 
+	 * an empty table will be build with nothing but the header in it.
+	 * @param content	The Content of the Gaplist, that should be shown.
+	 * @since 1.2
+	 */
+	private void createContentTable(String[] content) {
+		if (oldContentPane != null)
+			frame.getContentPane().remove(oldContentPane);
+		
+		String[] columns = {"Content:"};
+		String[][] data = new String[0][1];
+		
+		if (content != null) {
+			data = new String[content.length][1];
+		
+			for (int i = 0; i < content.length; i++)
+				data[i][0] = content[i];
+		}
+		
+		JTable table = new JTable(data, columns) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			String [] columnToolTips = {"The Name of the Song in the selected Gaplist."};
+
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+				int colIndex = columnAtPoint(p);
+        
+				if (colIndex == 0)
+					tip = ""+ getValueAt(rowIndex, colIndex);
+				return tip;
+			}
+			
+			public boolean isCellEditable(int row, int column){  
+				return false;  
+			}
+	
+			protected JTableHeader createDefaultTableHeader() {
+				return new JTableHeader(columnModel) {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					public String getToolTipText(MouseEvent e) {
+						java.awt.Point p = e.getPoint();
+						int index = columnModel.getColumnIndexAtX(p.x);
+						int realIndex = columnModel.getColumn(index).getModelIndex();
+						return columnToolTips[realIndex];
+					}
+				};
+            }
+        };
+		JScrollPane contentPane = new JScrollPane(table);
+		contentPane.setBounds(320, 528, 248, 102);
+		frame.getContentPane().add(contentPane);
+		oldContentPane = contentPane;
 	}
 	
 	/**
@@ -521,7 +707,7 @@ public class MainWindow extends Window {
 	 * @param index	The index of the new Selection.
 	 * @since 1.1
 	 */
-	private void setSelectedIndex(int index) {
+	private void setSelectedGaplistIndex(int index) {
 		if (index >= 0) {
 			try {
 				((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).setRowSelectionInterval(index, index);
@@ -533,17 +719,62 @@ public class MainWindow extends Window {
 	}
 	
 	/**
+	 * Removes the Gaplist with the given Name from the Server.
+	 * @param name	The Name of the Gaplist to be removed.
+	 * @since 1.2
+	 */
+	private void removeGaplist(String name) {
+		wrapper.deleteGapList((String[] s) -> {	if (s[0].equals("true"))
+													showFail("Removed the Gaplist.");
+												else
+													showFail("Coudln't remove the Gaplist");
+											  }, name);
+	}
+	
+	private void createGaplist(String name) {
+		if (name != null) {
+			String newName = replaceSpecials(name);
+			wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
+															showFail("Created a new Gaplist.");
+														else
+															showFail("Failed to create a new Gaplist.");
+													}, newName);
+		}
+		else {
+			showFail("Please enter a name first");
+		}
+	}
+	
+	/**
+	 * Replaces all special Characters from the given String.
+	 * @param regex The String to have all specials replaced.
+	 * @return	The given String without special Characters.
+	 * @since 1.2
+	 */
+	private String replaceSpecials(String regex) {
+		regex = regex.replaceAll("ä", "ae");
+		regex = regex.replaceAll("Ä", "ae");
+		regex = regex.replaceAll("ü", "ue");
+		regex = regex.replaceAll("Ü", "ue");
+		regex = regex.replaceAll("ö", "oe");
+		regex = regex.replaceAll("Ö", "oe");
+		regex = regex.replaceAll("ß", "ss");
+		return regex;
+	}
+	
+	/**
 	 * Creates a new Frame.
 	 * @return The created Frame.
 	 * @since 1.0
 	 * @wbp.parser.entryPoint
 	 */
-	public void constructFrame() {
+	private void constructFrame() {
 		gaplist = wrapper.getGapList();
 		wishlist = wrapper.getWishList();
+		gaplists = wrapper.getAvailableGapLists();
 		
 		frame = new JFrame();
-		frame.setSize(new Dimension(600, 500));
+		frame.setSize(new Dimension(600, 700));
 		frame.setTitle("JukePi");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -696,19 +927,47 @@ public class MainWindow extends Window {
 		btnDown.setBounds(260, 392, 40, 25);
 		frame.getContentPane().add(btnDown);
 		
-		JButton btnOpen = new JButton("Open...");
-		btnOpen.setToolTipText("Click here to open saved Gaplists");
-		btnOpen.setBounds(385, 437, 89, 23);
-		frame.getContentPane().add(btnOpen);
+		
+		//TODO Open Window from Here
+		createSavedGaplistsTable();
+		createContentTable(null);
 		
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(rdbtnGaplist);
 		bg.add(rdbtnWishlist);
+		
+		JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
+		lblSavedGaplists.setBounds(10, 501, 250, 20);
+		lblSavedGaplists.setVerticalAlignment(JLabel.CENTER);
+		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
+		frame.getContentPane().add(lblSavedGaplists);
+		
+		
+		JButton btnLoad = new JButton("Load");
+		btnLoad.setBounds(10, 637, 75, 23);
+		frame.getContentPane().add(btnLoad);
+		
+		JButton btnShow = new JButton("Show");
+		btnShow.setBounds(95, 637, 75, 23);
+		frame.getContentPane().add(btnShow);
+		
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.setBounds(180, 637, 80, 23);
+		frame.getContentPane().add(btnRemove);	
 
+		JButton btnCreate = new JButton("Create");
+		btnCreate.setBounds(320, 637, 80, 23);
+		frame.getContentPane().add(btnCreate);
+		
+		textField = new JTextField();
+		textField.setBounds(410, 637, 158, 23);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
+	
 		btnDisconnect.addActionListener((ActionEvent ae)->{collector.disconnect();});
-		
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		btnSeekForward.addActionListener((ActionEvent ae) -> {wind(true);});
@@ -718,5 +977,9 @@ public class MainWindow extends Window {
 		btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), oldGaplistPane);});
 		btnUp.addActionListener((ActionEvent ae) -> {moveTrackUp(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnDown.addActionListener((ActionEvent ae) -> {moveTrackDown(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
-		}
+		btnLoad.addActionListener((ActionEvent ae) -> {loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
+		btnShow.addActionListener((ActionEvent ae) -> {showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
+		btnRemove.addActionListener((ActionEvent ae) -> {removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
+		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textField.getText());});
+	}
 }
