@@ -121,6 +121,7 @@ public class LogIn extends Window {
 		
 		JButton btnConnect = new JButton("Connect");
 		btnConnect.setBounds(10, 278, 131, 40);
+		btnConnect.setToolTipText("Tries to connect to a Server with the given IP and Port.");
 		frame.getContentPane().add(btnConnect);
 		
 		lblFail = new JLabel("");
@@ -129,17 +130,19 @@ public class LogIn extends Window {
 		
 		JButton btnUDPConnect = new JButton("UDP Connect");
 		btnUDPConnect.setBounds(158, 278, 131, 40);
+		btnUDPConnect.setToolTipText("Scans your network for available Servers and connects to them.");
 		frame.getContentPane().add(btnUDPConnect);
 		
 		JButton btnInternServer = new JButton("Create own server");
 		btnInternServer.setBounds(313, 278, 171, 40);
+		btnInternServer.setToolTipText("Creates an own Server with the Port in the Port-Field above.");
 		frame.getContentPane().add(btnInternServer);
 		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
 		btnConnect.addActionListener((ActionEvent ae) -> {collector.connect(txtIp.getText(), txtPort.getText());});
 		btnUDPConnect.addActionListener(new UDPListener(collector));
-		btnInternServer.addActionListener((ActionEvent ae)->{collector.createLocalServer(22222);});
+		btnInternServer.addActionListener((ActionEvent ae)->{collector.createLocalServer(txtPort.getText());});
 
 		txtIp.addKeyListener(new KeyListener() {
 			@Override

@@ -178,10 +178,17 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @param port	The Port, the Server will have.
 	 * @since 1.0
 	 */
-	public void createLocalServer(int port){
-		localServer = ServerFactory.createServer(port);
-		localServer.startUp();
-		this.connect("localhost", ""+port);
+	public void createLocalServer(String port){
+		int iport = -1;
+		try {
+			iport = Integer.parseInt(port);
+			localServer = ServerFactory.createServer(iport);
+			localServer.startUp();
+			this.connect("localhost", ""+port);
+		} catch (NumberFormatException nfe) {
+			showFail(loginScreen, "Please insert a real number at the Port-Field.");
+		}
+		
 	}
 	
 	/**

@@ -412,7 +412,7 @@ public class MainWindow extends Window {
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
-			String [] columnToolTips = {"The Song", "The Votes"};
+			String [] columnToolTips = {"The Name of the Song", "The Votes for this Song"};
 
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
