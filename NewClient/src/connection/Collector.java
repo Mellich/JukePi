@@ -1,10 +1,10 @@
 package connection;
 
+
 import javax.swing.JFrame;
 
 import server.Server;
 import server.ServerFactory;
-import windows.EditTracks;
 import windows.LogIn;
 import windows.MainWindow;
 import windows.Window;
@@ -36,10 +36,6 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	
 	private JFrame visibleScreen;
 	
-	private boolean editTracksOpened;
-	
-	private EditTracks editTracks;
-	
 	private Song[] gaplist;
 	
 	private Song[] wishlist;
@@ -52,13 +48,11 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	*/	wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL);
 		visibleScreen = new JFrame();
 		loginScreen = new LogIn(this, visibleScreen);
-		editTracksOpened = false;
 	}
 	
 	@Override
 	public void onPauseResumeNotify(boolean isPlaying) {
-		// TODO Auto-generated method stub
-		
+		mainScreen.pauseResume(isPlaying);
 	}
 
 	@Override
@@ -69,32 +63,28 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 
 	@Override
 	public void onGapListChangedNotify(String gapListName) {
-		// TODO Auto-generated method stub
-		
+		mainScreen.gaplistChanged(gapListName);
 	}
 
 	@Override
 	public void onGapListUpdatedNotify(Song[] title) {
-		// TODO Auto-generated method stub
-		
+		mainScreen.setGaplist(title);
 	}
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] title) {
-		// TODO Auto-generated method stub
-		
+		mainScreen.setWishlist(title);
 	}
 
 	@Override
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
-		// TODO Auto-generated method stub
-		
+		mainScreen.setNextTrack(title);
 	}
 
 	@Override
 	public void onDisconnect() {
-		// TODO Auto-generated method stub
-		
+		mainScreen.close();
+		loginScreen.show();
 	}
 
 	public boolean connect(String ip, String port) {
@@ -111,7 +101,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
-			mainScreen = new MainWindow(this, visibleScreen, wrapper);
+			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
 			mainScreen.show();
 			mainScreen.setIpAndPort(ip, iport);
 			return true;
@@ -148,12 +138,6 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 
 	public void showUDPFail(String string) {
 		showFail(loginScreen, string);
-	}
-	
-	public void openEditTracks() {
-		editTracksOpened = true;
-		editTracks = new EditTracks(wishlist, gaplist);
-		editTracks.show();
 	}
 	
 	public void setLists(Song[] wishlist, Song[] gaplist) {
