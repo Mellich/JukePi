@@ -119,6 +119,18 @@ public class MainWindow extends Window {
 	private JScrollPane oldPane;
 	
 	/**
+	 * The ScrollPane, that contains the List for the Model for the Gaplist.
+	 * @see JScrollPane
+	 */
+	private JScrollPane gaplistPane;
+	
+	/**
+	 * The List, that contains the Model for the Gaplist.
+	 * @see JList
+	 */
+	private JList<String> gaplistList;
+	
+	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables as well as instantiating a new {@link DefaultListModel} to store the Gaplist.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
@@ -260,11 +272,16 @@ public class MainWindow extends Window {
 	 * @since 1.0
 	 */
 	public void setGaplist(Song[] gaplist) {
+		frame.getContentPane().remove(gaplistPane);
+		
 		this.gaplist = gaplist;
 		gaplistModel.clear();
 		for (Song s : gaplist)
 			gaplistModel.addElement(s.getName());
 		lblNoGaplist.setText(""+gaplist.length);
+		gaplistPane = new JScrollPane(gaplistList);
+		gaplistPane.setBounds(10, 328, 248, 98);
+		frame.getContentPane().add(gaplistPane);
 	}
 	
 	/**
@@ -289,10 +306,12 @@ public class MainWindow extends Window {
 		if (index >=0)
 			wrapper.setGapListTrackUp((String[] s)-> {	if (s[0].equals("true")) {
 															showFail("Moved Track up.");
+															try{Thread.sleep(10);}catch(Exception e) {}
 															list.setSelectedIndex(index-1);
 														}
 														else {
 															showFail("Couldn't move Track up.");
+															try{Thread.sleep(10);}catch(Exception e) {}
 															list.setSelectedIndex(index);
 														}
 													}, gaplist[index].getTrackID());
@@ -309,10 +328,12 @@ public class MainWindow extends Window {
 		if (index >= 0)
 			wrapper.setGapListTrackDown((String[] s) -> {	if (s[0].equals("true")) {
 																showFail("Moved Track down.");
+																try{Thread.sleep(10);}catch(Exception e) {}
 																list.setSelectedIndex(index+1);
 															}
 															else {
 																showFail("Couldn't move Track down");
+																try{Thread.sleep(10);}catch(Exception e) {}
 																list.setSelectedIndex(index);
 															}
 														}, gaplist[index].getTrackID());
@@ -579,12 +600,10 @@ public class MainWindow extends Window {
 		frame.getContentPane().add(chckbxInfront);
 		
 		
-		//TODO Old Edit Track window from here
-		
 		createTable();
 
-		JList<String> gaplistList = new JList<String>(gaplistModel);
-		JScrollPane gaplistPane = new JScrollPane(gaplistList);
+		gaplistList = new JList<String>(gaplistModel);
+		gaplistPane = new JScrollPane(gaplistList);
 		gaplistPane.setBounds(10, 328, 248, 98);
 		frame.getContentPane().add(gaplistPane);
 		
