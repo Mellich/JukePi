@@ -62,7 +62,7 @@ public class TrackScheduler extends Thread {
 	
 	public boolean seekBackward(){
 		ArrayList<String> args = new ArrayList<String>();
-		args.add(""+true);
+		args.add(""+false);
 		server.notifyClients(MessageType.SEEKNOTIFY, args);
 		return player.seekBackward();
 	}
