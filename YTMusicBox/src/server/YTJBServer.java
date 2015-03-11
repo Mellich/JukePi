@@ -155,11 +155,13 @@ public class YTJBServer implements Server {
 			isFirstTrack = true;
 		if (toWishList){
 			if (atFirst){
-				int i = wishList.size() - 1;
-				while(wishList.get(i - 1).getVoteCount() == 0){
-					i--;
-				}
-				wishList.add(i, track);
+				if (!wishList.isEmpty()){
+					int i = wishList.size();
+					while(wishList.get(i - 1).getVoteCount() == 0){
+						i--;
+					}
+					wishList.add(i, track);
+				} else wishList.add(track);
 			}
 			else wishList.add(track);
 			this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));

@@ -141,6 +141,7 @@ public class IO {
 			IO.printlnDebug(null, "Creating new Gap list: "+filename);
 			IO.saveGapListToFile(new LinkedList<MusicTrack>(), filename,server);
 			server.setMaxGapListTrackCount(0);
+			return false;
 		}
 		IO.printlnDebug(null, "finished loading gap list!");
 		return true;
