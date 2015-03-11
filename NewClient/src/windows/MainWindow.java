@@ -28,7 +28,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.2
+ * @version 1.3
  */
 public class MainWindow extends Window {
 	
@@ -763,6 +763,34 @@ public class MainWindow extends Window {
 	}
 	
 	/**
+	 * Votes for the Song at the given index.
+	 * @param index	The index of the Song, that will be voted for.
+	 * @since 1.3
+	 */
+	private void vote(int index) {
+		wrapper.removeVote((String[] s)-> {});
+		wrapper.voteSong((String[] s) -> {	if (s[0].equals("true"))
+												showFail("Voted for the Song");
+											else
+												showFail("Couldn't vote for the Song");
+											createWishlistTable();
+										}, wishlist[index]);
+	}
+	
+	/**
+	 * Removes the Vote.
+	 * @since 1.3
+	 */
+	private void remove() {
+		wrapper.removeVote((String[] s) -> {	if (s[0].equals("true"))
+													showFail("Removed your vote.");
+												else
+													showFail("Couldn't remove your vote.");
+												createWishlistTable();
+											});
+	}
+	
+	/**
 	 * Creates a new Frame.
 	 * @return The created Frame.
 	 * @since 1.0
@@ -927,8 +955,6 @@ public class MainWindow extends Window {
 		btnDown.setBounds(260, 392, 40, 25);
 		frame.getContentPane().add(btnDown);
 		
-		
-		//TODO Open Window from Here
 		createSavedGaplistsTable();
 		createContentTable(null);
 		
@@ -945,27 +971,51 @@ public class MainWindow extends Window {
 		
 		JButton btnLoad = new JButton("Load");
 		btnLoad.setBounds(10, 637, 75, 23);
+		btnLoad.setToolTipText("Loads the selected Gaplist.");
 		frame.getContentPane().add(btnLoad);
 		
 		JButton btnShow = new JButton("Show");
 		btnShow.setBounds(95, 637, 75, 23);
+		btnShow.setToolTipText("Shows the Content of the selected Gaplist.");
 		frame.getContentPane().add(btnShow);
 		
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.setBounds(180, 637, 80, 23);
+		btnRemove.setToolTipText("Removes the selected Gaplist.");
 		frame.getContentPane().add(btnRemove);	
 
 		JButton btnCreate = new JButton("Create");
 		btnCreate.setBounds(320, 637, 80, 23);
+		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
 		frame.getContentPane().add(btnCreate);
 		
 		textField = new JTextField();
 		textField.setBounds(410, 637, 158, 23);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
+
+		JButton btnVote = new JButton("Vote");
+		btnVote.setBounds(320, 437, 120, 23);
+		btnVote.setToolTipText("Click here to vote for the selected Song.");
+		frame.getContentPane().add(btnVote);
+		
+		JButton btnRemoveVote = new JButton("Remove Vote");
+		btnRemoveVote.setBounds(450, 437, 120, 23);
+		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
+		frame.getContentPane().add(btnRemoveVote);
 		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
+		
+		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
+																btnPlayPause.setToolTipText("Click here to Pause the Track.");
+																btnPlayPause.setText("Pause");
+															}
+															else {
+																btnPlayPause.setToolTipText("Click here to resume the Track");
+																btnPlayPause.setText("Play");
+															}
+														});
 	
 		btnDisconnect.addActionListener((ActionEvent ae)->{collector.disconnect();});
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
@@ -981,5 +1031,7 @@ public class MainWindow extends Window {
 		btnShow.addActionListener((ActionEvent ae) -> {showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
 		btnRemove.addActionListener((ActionEvent ae) -> {removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textField.getText());});
+		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
+		btnRemove.addActionListener((ActionEvent ae) -> {remove();});
 	}
 }
