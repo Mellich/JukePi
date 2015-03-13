@@ -269,11 +269,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      timeoutThread.start();
 	      
 	      sendUDPRequest(socket,socketAddress,NETWORK_GROUP_PORT);
-	     System.out.println("Sent UDP request");
 	      while(true){
 		        // Warten auf Nachricht
 		  	    try {
-		  	    	 System.out.println("waiting for response...");
 			        socket.receive(packet);
 			    } catch (IOException e) {
 				     //IO Exception occured while receiving data
@@ -281,7 +279,6 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		        if (packet.getLength() == 0)
 		        	throw new UDPTimeoutException();
 		        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
-		        System.out.println("Received: "+message);
 		        if (!message.equals("REQUEST")){
 					socket.leaveGroup(socketAddress);
 					socket.close();
@@ -582,6 +579,13 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean removeVote() {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.REMOVEVOTE)[0]);
+	}
+
+	@Override
+	public boolean reconnect() {
+		if (this.serverConnection != null)
+			return this.serverConnection.connect();
+		else return false;
 	}
 
 }

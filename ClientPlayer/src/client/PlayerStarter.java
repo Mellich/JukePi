@@ -87,11 +87,11 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	@Override
 	public void onDisconnect() {
 		viewer.showDebugInfo("Disconnect from server...");
+		viewer.resetView();
 		viewer.showIdleScreen(true);
 		if (player != null)
 			player.skip();
 		player = null;
-		viewer.resetView();
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
 	}

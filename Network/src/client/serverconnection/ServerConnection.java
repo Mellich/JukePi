@@ -17,6 +17,8 @@ import client.serverconnection.impl.LoadGapListStatus;
  *Its recommended to use the implementation YTJBClientWrapper to interact with the server
  */
 public interface ServerConnection {
+	
+	public boolean reconnect();
 	/**Adds a notification listener, that will be executed, when the server sends a notification
 	 * 
 	 * @param listener the notification listener that should be added

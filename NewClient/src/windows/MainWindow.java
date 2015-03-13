@@ -524,7 +524,7 @@ public class MainWindow extends Window {
 	 * Creates the Table, that contains the Gaplist.
 	 * @since 1.1
 	 */
-	private void createGaplistTable() {
+	private synchronized void createGaplistTable() {
 		if (oldGaplistPane != null)
 			frame.getContentPane().remove(oldGaplistPane);
 		
@@ -583,7 +583,7 @@ public class MainWindow extends Window {
 	 * Creates a Table with all saved Gaplists in it.
 	 * @since 1.2
 	 */
-	private void createSavedGaplistsTable() {
+	private synchronized void createSavedGaplistsTable() {
 		if (oldSavedGaplistPane != null)
 			frame.getContentPane().remove(oldSavedGaplistPane);
 		
@@ -644,7 +644,7 @@ public class MainWindow extends Window {
 	 * @param content	The Content of the Gaplist, that should be shown.
 	 * @since 1.2
 	 */
-	private void createContentTable(String[] content) {
+	private synchronized void createContentTable(String[] content) {
 		if (oldContentPane != null)
 			frame.getContentPane().remove(oldContentPane);
 		
