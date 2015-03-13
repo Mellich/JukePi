@@ -61,7 +61,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1])).handle();
 			break;
-		case MessageType.GAPLISTTRACKDOWN: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1]) + 1).handle();
+		case MessageType.GAPLISTTRACKDOWN: new GapListTrackDownCommand(out,prompt,server,Integer.parseInt(args[1])).handle();
 			break;	
 		case MessageType.GETAVAILABLEGAPLISTS: new GetGapListsCommand(out,prompt,server).handle();
 			break;

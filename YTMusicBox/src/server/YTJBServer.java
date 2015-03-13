@@ -170,6 +170,8 @@ public class YTJBServer implements Server {
 			if (atFirst)
 				gapList.addFirst(track);
 			else gapList.add(track);
+			if (!track.isFromSavedGapList())
+				this.setMaxGapListTrackCount(this.getMaxLoadedGapListTracksCount() + 1);
 			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
 		if (isFirstTrack){     //if so, notify waiting scheduler
@@ -352,23 +354,28 @@ public class YTJBServer implements Server {
 		return IO.readOutGapList(workingDirectory+filename);
 	}
 	
-	public synchronized boolean switchWithUpper(long trackID){
+	public synchronized boolean switchTrackPosition(long trackID, boolean withUpper){
 		if (trackID > -1L){
-			MusicTrack lower = null;
+			MusicTrack track = null;
 			for (MusicTrack m : gapList){
 				if (trackID == m.getTrackID()){
-					lower = m;
+					track = m;
 					break;
 				}
 			}
-			int upperIndex = gapList.indexOf(lower) - 1;
-			if (upperIndex >= 0){
-				gapList.set(upperIndex + 1, gapList.get(upperIndex));
-				gapList.set(upperIndex, lower);
-				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
-				return true;
-			}
-			return false;
+			int oldTrackIndex = gapList.indexOf(track) ;
+			int newTrackIndex;
+			if (withUpper)
+				newTrackIndex = oldTrackIndex - 1;
+			else newTrackIndex = oldTrackIndex + 1;
+			if (newTrackIndex < 0)
+				newTrackIndex = gapList.size() - 1;
+			if (newTrackIndex >= gapList.size())
+				newTrackIndex = 0;
+			gapList.set(oldTrackIndex, gapList.get(newTrackIndex));
+			gapList.set(newTrackIndex, track);
+			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+			return true;
 		}
 		else return false;
 	}

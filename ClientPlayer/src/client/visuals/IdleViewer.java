@@ -22,11 +22,14 @@ public class IdleViewer implements Visualizer {
 	private Stage stage;
 	private ServerConnection serverConnection;
 	private ImageView imgView;
+	private ImageView playView;
+	private Image pauseImage;
+	private Image playImage;
 	private Text ipAddress;
 	private Text info;
 	private Text currentGapList;
 	private Text currentTrack;
-	private Text playbackStatus;
+	//private Text playbackStatus;
 	//private TextArea debugInfo;
 	private Group root;
 	
@@ -49,12 +52,19 @@ public class IdleViewer implements Visualizer {
 	}
 	
 	private void buildIdleScreen(){
+		playImage = new Image(this.getClass().getResourceAsStream("play.png"));
+		pauseImage = new Image(this.getClass().getResourceAsStream("pause.png"));
 		imgView = new ImageView(new Image(this.getClass().getResourceAsStream("logo.jpg")));
+		playView = new ImageView(pauseImage);
+		playView.setX(500);
+		playView.setY(880);
+		playView.setFitHeight(50);
+		playView.setFitWidth(50);
 		ipAddress = new Text(500,700,"Suche Server...");
 		info = new Text(500,750,"");
 		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.8.12 (Without debug - untested)");
+		Text version = new Text(5,25,"Build version 0.8.13 (Without debug - untested)");
 		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -63,10 +73,10 @@ public class IdleViewer implements Visualizer {
 		currentTrack = new Text(500,850,"");
 		currentTrack.setFont(new Font(FONTFAMILY,30));
 		currentTrack.setFill(Color.WHITE);
-		playbackStatus = new Text(500,900,"");
+		/*playbackStatus = new Text(500,900,"");
 		playbackStatus.setFont(new Font(FONTFAMILY,30));
 		playbackStatus.setFill(Color.WHITE);
-		/*debugInfo = new TextArea();
+		debugInfo = new TextArea();
 		debugInfo.setFont(new Font(FONTFAMILY,15));
 		debugInfo.setWrapText(true);
 		debugInfo.setEditable(false);
@@ -79,10 +89,11 @@ public class IdleViewer implements Visualizer {
 		root.getChildren().add(imgView);
 		root.getChildren().add(ipAddress);
 		root.getChildren().add(info);
+		root.getChildren().add(playView);
 		//root.getChildren().add(debugInfo);
 		root.getChildren().add(currentGapList);
 		root.getChildren().add(currentTrack);
-		root.getChildren().add(playbackStatus);
+		//root.getChildren().add(playbackStatus);
 		root.getChildren().add(version);		
 	}
 	
@@ -138,9 +149,10 @@ public class IdleViewer implements Visualizer {
 		serverConnection.getCurrentGapListName((String[] s) -> {Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+s[0]));});
 		serverConnection.getLoadGapListStatus((String[] s) -> {Platform.runLater(() -> gaplistReadOutStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));});
 		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
-		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playbackStatus.setText("Wiedergabe läuft..."));}
-																	else Platform.runLater(() -> this.playbackStatus.setText("Wiedergabe angehalten/pausiert")); });
-		serverConnection.getCurrentTrackTitle((String[] s) -> Platform.runLater(() -> this.currentTrack.setText(s[0])));
+		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playView.setImage(playImage));}
+																	else Platform.runLater(() -> this.playView.setImage(pauseImage)); });
+		serverConnection.getCurrentTrackTitle((String[] s) -> Platform.runLater(() ->{ if (s[0].length() > 45) this.currentTrack.setText("Jetzt spielt: "+s[0].substring(0, 45)+"...");
+																					else this.currentTrack.setText("Jetzt spielt: "+s[0]);}));
 	}
 
 	@Override
@@ -150,7 +162,8 @@ public class IdleViewer implements Visualizer {
 		info.setText("");
 		currentGapList.setText("");
 		currentTrack.setText("");
-		playbackStatus.setText("");
+		playView.setImage(pauseImage);
+		//playbackStatus.setText("");
 		});
 		this.showDebugInfo("View was reseted!");
 	}

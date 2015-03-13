@@ -30,6 +30,12 @@ public class MusicTrack {
 	private long trackID;
 	private int voteCount = 0;
 	private boolean isVideo = true;
+	private boolean isFromSavedGapList = false;
+	
+	public MusicTrack(TrackType t,String name, String videoURL,String shortURL, boolean isFromSavedGapList) {
+		this(t,name,videoURL,shortURL);
+		this.isFromSavedGapList = isFromSavedGapList;
+	}
 	
 	/**creates a new music track
 	 * 
@@ -78,6 +84,10 @@ public class MusicTrack {
 	
 	public String getVideoURL(){
 		return videoURL;
+	}
+	
+	public boolean isFromSavedGapList(){
+		return this.isFromSavedGapList;
 	}
 
 }

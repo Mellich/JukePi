@@ -17,7 +17,7 @@ public class GapListTrackUpCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		response(""+server.switchWithUpper(trackID));
+		response(""+server.switchTrackPosition(trackID,true));
 		return true;
 	}
 

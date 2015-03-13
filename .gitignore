@@ -15,6 +15,9 @@
 #executables
 *.exe
 
+#windows files
+Thumbs.db
+
 #init file
 init
 
