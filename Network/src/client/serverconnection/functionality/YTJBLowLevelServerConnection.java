@@ -5,11 +5,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.concurrent.Semaphore;
+
 import messages.MessageType;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
@@ -24,11 +27,12 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	private Thread inputListener;
 	private BufferedWriter output;
 	private AliveChecker checker;
+	private boolean isAndroid;
 	
 	private long getMACAddress(){
 		InetAddress ip;
 		try {
-			ip = LowLevelServerConnection.getLocalIPAddress();			 
+			ip = this.getLocalIPAddress();			 
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 			byte[] mac = network.getHardwareAddress(); 
 			long value = 0;
@@ -45,12 +49,13 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	}
 	
 	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port) {
-		this(notifyWrapper,ip,port,0);
+		this(notifyWrapper,ip,port,0,false);
 	}
 	
-	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port,int checkIntervall) {
+	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port,int checkIntervall, boolean isAndroid) {
 		this.port = port;
 		this.ipAddress = ip;
+		this.isAndroid =isAndroid;
 		this.notifyWrapper = notifyWrapper;
 		responses = new ResponseControllerImpl();
 		checker = new AliveChecker(checkIntervall);
@@ -106,14 +111,32 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	}
 
 	@Override
-	public boolean sendMessage(int messageType, String messageArgument) {
-		try {
-			output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
-			output.newLine();
-			output.flush();
+	public boolean sendMessage(final int messageType, final String messageArgument) {
+		if (isAndroid){
+			new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					try {
+						output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
+						output.newLine();
+						output.flush();
+					} catch (IOException | NullPointerException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}).start();
 			return true;
-		} catch (IOException | NullPointerException e) {
-			return false;
+		}else{
+			try {
+				output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
+				output.newLine();
+				output.flush();
+				return true;
+			} catch (IOException | NullPointerException e) {
+				return false;
+			}	
 		}
 	}
 	
@@ -124,9 +147,15 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 
 	@Override
 	public String[] sendBlockingMessage(int messageType, String messageArgument) {
-		Semaphore blockMutex = new Semaphore(0);
-		RequestResult result = new RequestResult();
-		responses.addReponseListener(messageType, (String[] s) -> {result.setResult(s);blockMutex.release(); });
+		final Semaphore blockMutex = new Semaphore(0);
+		final RequestResult result = new RequestResult();
+		responses.addReponseListener(messageType, new ResponseListener(){
+										@Override
+										public void onResponse(String[] s){
+											result.setResult(s);
+											blockMutex.release(); 
+											}
+										});
 		this.sendMessage(messageType, messageArgument);
 		try {
 			blockMutex.acquire();
@@ -208,6 +237,22 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		public String[] getResult(){
 			return result;
 		}
+	}
+
+	private InetAddress getLocalIPAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()&&inetAddress instanceof Inet4Address) {
+                        return inetAddress;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+        }
+        return null; 
 	}
 
 }

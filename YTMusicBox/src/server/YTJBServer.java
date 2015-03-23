@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -95,7 +96,7 @@ public class YTJBServer implements Server {
 			gapListLoader.start();
 			waiter.start();
 			scheduler.start();
-			//ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory+"clientplayer.jar");
+			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
 			IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
@@ -248,7 +249,7 @@ public class YTJBServer implements Server {
 		MusicTrack temp = null;
 		if (!wishList.isEmpty()){
 			temp =  wishList.removeFirst();
-			votingController.removeTrack(temp.getTrackID());//TODO: hier schon fertig?
+			votingController.removeTrack(temp.getTrackID());
 			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 		}
 		else {
@@ -443,8 +444,9 @@ public class YTJBServer implements Server {
 	 * creates new instance of a server
 	 * 
 	 * @param port the port used for the server socket
+	 * @throws BindException is thrown if the port is already in use
 	 */
-	public YTJBServer(int port) {
+	public YTJBServer(int port) throws BindException {
 			try {
 				this.port = port;
 				IO.setServer(this);
@@ -468,6 +470,8 @@ public class YTJBServer implements Server {
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
+			} catch(BindException e){
+				throw new BindException();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -514,8 +518,14 @@ public class YTJBServer implements Server {
 	}
 	
 	public static void main(String[] args) {
-		YTJBServer server = new YTJBServer(22222);
-		server.startUp();
+		YTJBServer server;
+		try {
+			server = new YTJBServer(22222);
+			server.startUp();
+		} catch (BindException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 

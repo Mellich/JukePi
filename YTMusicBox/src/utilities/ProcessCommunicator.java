@@ -28,9 +28,14 @@ public class ProcessCommunicator {
 			result[0] = parseInput.readLine();
 			result[1] = parseInput.readLine();
 			parseInput.close();
-		}else {
-			IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
-		}
+		}else if (System.getProperty("os.name").equals("Linux")){
+			IO.printlnDebug(null, "Using Youtube-dl: "+"youtube-dl");
+			Process parseProcess = new ProcessBuilder("youtube-dl","-e","-g", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result[0] = parseInput.readLine();
+			result[1] = parseInput.readLine();
+			parseInput.close();
+		} else 	IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
 		return result;
 	}
 	
@@ -48,9 +53,13 @@ public class ProcessCommunicator {
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 			result = parseInput.readLine();
 			parseInput.close();
-		}else {
-			IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
-		}
+		}else if (System.getProperty("os.name").equals("Linux")){
+			IO.printlnDebug(null, "Using Youtube-dl: "+"youtube-dl");
+			Process parseProcess = new ProcessBuilder("youtube-dl","-g", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result = parseInput.readLine();
+			parseInput.close();
+		} else 	IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
 		return result;
 	}
 	
@@ -71,7 +80,7 @@ public class ProcessCommunicator {
 				e.printStackTrace();
 			}
 		}else{
-			IO.printlnDebug(null, "youtube-dl.exe could not be found! Put the program in the same directory as the server! Without this file, no lists can be loaded and no tracks can be added to a list!");
+			IO.printlnDebug(null, "youtube-dl could not be found in the working directory!");
 		}
 	}
 
@@ -92,9 +101,10 @@ public class ProcessCommunicator {
 		return null;
 	}
 	
-	static public Process startPlayer(String ownIPAddress,int port,String file){
+	static public Process startPlayer(String ownIPAddress,int port,String workingDir){
 		try {
-			return new ProcessBuilder("java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true",file,ownIPAddress,""+port).start();
+			if (new File(workingDir+"clientplayer.jar").exists() && System.getProperty("os.name").equals("Linux"))
+				return new ProcessBuilder("sudo","java","-jar","-Dcom.sun.javafx.transparentFramebuffer=true",workingDir+"clientplayer.jar",ownIPAddress,""+port).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

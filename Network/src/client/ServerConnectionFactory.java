@@ -26,4 +26,8 @@ public class ServerConnectionFactory {
 	public static ServerConnection createServerConnection(int checkIntervall){
 		return new YTJBServerConnection(checkIntervall);
 	}
+	
+	public static ServerConnection createServerConnection(int checkIntervall, boolean isAndroid){
+		return new YTJBServerConnection(checkIntervall,isAndroid);
+	}
 }

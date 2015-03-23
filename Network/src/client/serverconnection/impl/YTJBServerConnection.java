@@ -32,21 +32,27 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	private LowLevelServerConnection serverConnection;
 	private boolean connected = false;
 	private int checkIntervall = 0;
+	private boolean isAndroid;
 	
 	public YTJBServerConnection() {
-		this(0);
+		this(0,false);
 	}
 	
-	public YTJBServerConnection(int checkIntervall) {
+	public YTJBServerConnection(int checkIntervall,boolean isAndroid) {
 		defaultNotificationListener = new ArrayList<DefaultNotificationListener>();
 		debugNotificationListener = new ArrayList<DebugNotificationListener>();
 		seekNotificationListener = new ArrayList<SeekNotificationListener>();
 		gapListNotificationListener = new ArrayList<GapListNotificationListener>();
 		pauseResumeNotificationListener = new ArrayList<PauseResumeNotificationListener>();
 		connected = false;
+		this.isAndroid = isAndroid;
 		this.checkIntervall = checkIntervall;
 	}
 	
+	public YTJBServerConnection(int checkIntervall2) {
+		this(checkIntervall2,false);
+	}
+
 	private Song[] stringArrayToSongArray(String[] table){
 		long ownVote = Long.parseLong(table[0]);
 		int i = 0;
@@ -202,7 +208,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean connect(String ipAddress, int port) {
-		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkIntervall);
+		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkIntervall,isAndroid);
 		if (serverConnection.connect()){
 			connected = true;
 			if (!defaultNotificationListener.isEmpty())
@@ -242,14 +248,14 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	    // Nachrichten-Codierung
 	    String TEXT_ENCODING = "UTF8";
 	    
-	    int TIMEOUT = 6000;
+	    final int TIMEOUT = 6000;
 	   
-	    MulticastSocket socket;
+	    final MulticastSocket socket;
 	 
 	      // Gruppe anlegen
 	     try {
 			socket = new MulticastSocket(NETWORK_GROUP_PORT);
-		      InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
+		      final InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
 		      socket.joinGroup(socketAddress);
 
 	   
@@ -257,7 +263,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      byte[] bytes = new byte[65536];
 	      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 	      
-	      Thread timeoutThread = new Thread(() -> {
+	      Thread timeoutThread = new Thread(){
+	    	  public void run(){
 	    	  try {
 				Thread.sleep(TIMEOUT);
 				socket.leaveGroup(socketAddress);
@@ -265,7 +272,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			} catch (Exception e) {
 				//timeout was not necessary
 			}
-	      });
+	      }};
 	      timeoutThread.start();
 	      
 	      sendUDPRequest(socket,socketAddress,NETWORK_GROUP_PORT);

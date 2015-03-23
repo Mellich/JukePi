@@ -14,7 +14,13 @@ public class ResponseControllerImpl implements ResponseController {
 	public synchronized void addReponseListener(int messageType,
 			ResponseListener responseListener) {
 		if (responseListener == null)
-			responseListener = (String[] s) -> {};
+			responseListener = new ResponseListener(){
+
+				@Override
+				public void onResponse(String[] response) {				
+				}
+			
+		};
 		if (data.containsKey(messageType)){
 			Deque<ResponseListener> temp = data.get(messageType);
 			temp.addLast(responseListener);
