@@ -318,6 +318,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      // Create the Group
 	     try {
 			socket = new MulticastSocket(NETWORK_GROUP_PORT);
+			socket.setTimeToLive(3);
 		      final InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
 		      socket.joinGroup(socketAddress);
 

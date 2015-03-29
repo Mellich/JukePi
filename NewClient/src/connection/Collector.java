@@ -193,6 +193,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		} catch (BindException e) {
 			showFail(loginScreen, "Port is already in use, please enter another Port.");
 		}
+		catch (BindException e){
+			showFail(loginScreen, "The specified port is already in use. Please choose another port.");
+		}
 		
 	}
 	
