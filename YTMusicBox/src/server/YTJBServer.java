@@ -391,6 +391,7 @@ public class YTJBServer implements Server {
 	
 	public synchronized void registerPlayer(Connection c){
 		player.add(c);
+		c.setIsPlayer(true);
 		if (player.size() == 1)
 			scheduler.notifyPlayerAvailable();
 		ArrayList<String> s = new ArrayList<String>();
@@ -402,6 +403,7 @@ public class YTJBServer implements Server {
 	public synchronized void removePlayer(Connection c){
 		if(player.contains(c)){
 			player.remove(c);
+			c.setIsPlayer(false);
 			playerFinished.release();
 			ArrayList<String> s = new ArrayList<String>();
 			s.add(""+player.size());

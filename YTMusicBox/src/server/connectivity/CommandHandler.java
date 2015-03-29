@@ -75,7 +75,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETNEXTVIDEOURL: new GetNextVideoURLCommand(out,prompt, server.getScheduler()).handle();
 			break;
-		case MessageType.PLAYERFINISHED: new PlayerFinishedCommand(out,prompt, server).handle();
+		case MessageType.PLAYERFINISHED: if (parent.isPlayer()) new PlayerFinishedCommand(out,prompt, server).handle();
 			break;
 		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, prompt,server, args[1]).handle();
 			break;

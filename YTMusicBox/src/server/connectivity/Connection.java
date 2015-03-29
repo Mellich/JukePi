@@ -27,6 +27,7 @@ public class Connection extends Thread {
 	private boolean isDefaultListener = false;
 	private boolean isSeekListener = false;
 	private boolean isGapListListener = false;
+	private boolean isPlayer = false;
 	private long macAddress = -1L;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
@@ -63,6 +64,14 @@ public class Connection extends Thread {
 			server.removeNotifiable(this);
 			server.removePlayer(this);
 		}
+	}
+	
+	public void setIsPlayer(boolean b){
+		isPlayer = true;
+	}
+	
+	public boolean isPlayer(){
+		return isPlayer;
 	}
 	
 	public void setMACAddress(long mac){

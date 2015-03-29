@@ -293,6 +293,7 @@ public class MainWindow extends Window {
 		this.gaplist = gaplist;
 		lblNoGaplist.setText(""+gaplist.length);
 		createGaplistTable();
+		setNextTrack();
 	}
 	
 	
@@ -317,7 +318,6 @@ public class MainWindow extends Window {
 	public void setGaplists(String[] gaplists) {
 		this.gaplists = gaplists;
 		createSavedGaplistsTable();
-		setNextTrack();
 	}
 	
 	/**
