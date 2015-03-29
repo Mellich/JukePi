@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -35,7 +35,7 @@ public class MainWindow extends Window {
 	/**
 	 * The {@link Collector}, that will perform Actions with extern needed information.
 	 */
-	private Collector collector;
+	private final Collector collector;
 	
 	/**
 	 * The TextField that contains the Link.
@@ -58,7 +58,7 @@ public class MainWindow extends Window {
 	/**
 	 * The {@link ServerConnection}, that will send the Messages.
 	 */
-	private ServerConnection wrapper;
+	private final ServerConnection wrapper;
 
 	/**
 	 * The Gaplist, that contains all {@link Song}s in the Gaplist.
@@ -139,11 +139,20 @@ public class MainWindow extends Window {
 	 * @see JScrollPane
 	 */
 	private JScrollPane oldContentPane;
-	private JTextField textField;
+	
+	/**
+	 * The Icon, that will be displayed instead of "Pause" as a String.
+	 */
+	private ImageIcon playIcon = new ImageIcon("pause.png");
+	
+	/**
+	 * The Icon, that will be displayed instead of "Play" as a String.
+	 */
+	private ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
-	 * variables as well as instantiating a new {@link DefaultListModel} to store the Gaplist.
+	 * variables.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
 	 * information.
 	 * @param frame	The Frame, this Screen will display.
@@ -225,25 +234,25 @@ public class MainWindow extends Window {
 	}
 	
 	/**
-	 * Winds 30 seconds either forward or backward.
-	 * @param forward	Determines, whether the Server should wind forward({@code true}) or 
+	 * Seeks 30 seconds either forward or backward.
+	 * @param forward	Determines, whether the Server should seek forward({@code true}) or 
 	 * backward({@code false}).
 	 * @see ServerConnection#seekForward(ResponseListener)
 	 * @see ServerConnection#seekBackward(ResponseListener)
 	 * @since 1.0
 	 */
-	private void wind(boolean forward) {
+	private void seek(boolean forward) {
 		if (forward)
 			wrapper.seekForward((String[] s) -> {	if (s[0].equals("true")) 
-														showFail("Successfully wound forward!");
+														showFail("Successfully seeked forward!");
 													else
-														showFail("Couldn't wind forward!");
+														showFail("Couldn't seek forward!");
 												});
 		else
 			wrapper.seekBackward((String[] s) -> {	if (s[0].equals("true"))
-														showFail("Successfully wound backwards!");
+														showFail("Successfully seeked backwards!");
 													else
-														showFail("Couldn't wind backwards!");
+														showFail("Couldn't seek backwards!");
 												});
 	}
 	
@@ -416,11 +425,11 @@ public class MainWindow extends Window {
 	 */
 	public void pauseResume(boolean isPlaying) {
 		if (isPlaying) {
-			btnPlayPause.setText("Pause");
+			btnPlayPause.setIcon(pauseIcon);
 			btnPlayPause.setToolTipText("Click here to pause the Track.");
 		}
 		else {
-			btnPlayPause.setText("Play");
+			btnPlayPause.setIcon(playIcon);
 			btnPlayPause.setToolTipText("Click here to resume the Track.");
 		}
 	}
@@ -477,11 +486,20 @@ public class MainWindow extends Window {
 		
 		JTable table = new JTable(data, columns) {
 			/**
-			 * 
+			 * The Serial Version ID.
 			 */
 			private static final long serialVersionUID = 1L;
-			String [] columnToolTips = {"The Name of the Song", "The Votes for this Song"};
+			
+			/**
+			 * The ToolTips for the TableHeaders.
+			 */
+			private String [] columnToolTips = {"The Name of the Song", "The Votes for this Song"};
 
+			/**
+			 * Returns the ToolTip for the Cell at the given Position of the Cursor.
+			 * @param e	The MouseEvent.
+			 * @return	The ToolTip for the Cell at the Cursor's Position.
+			 */
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
@@ -493,17 +511,32 @@ public class MainWindow extends Window {
 				return tip;
 			}
 			
+			/**
+			 * Returns, if the Cell at the given Position is editable.
+			 * @param row	The row-index of the Cell.
+			 * @param column	The column-index of the Cell.
+			 * @return false by default, as these Cells shouldn't be editable.
+			 */
 			public boolean isCellEditable(int row, int column){  
 				return false;  
 			}
 	
+			/**
+			 * Creates a new TableHeader.
+			 * @return the new TableHeader.
+			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
 					/**
-					 * 
+					 * The Serial Version ID.
 					 */
 					private static final long serialVersionUID = 1L;
 
+					/**
+					 * Returns the ToolTip for the column at the given Cursor's Position.
+					 * @param e	The MouseEvent.
+					 * @return the ToolTip for the column at the Position of the Cursor.
+					 */
 					public String getToolTipText(MouseEvent e) {
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
@@ -537,11 +570,20 @@ public class MainWindow extends Window {
 		
 		JTable table = new JTable(data, columns) {
 			/**
-			 * 
+			 * The Serial Version ID.
 			 */
 			private static final long serialVersionUID = 1L;
-			String [] columnToolTips = {"The Name of the Song in the Gaplist"};
+			
+			/**
+			 * The ToolTip for the column.
+			 */
+			private String [] columnToolTips = {"The Name of the Song in the Gaplist"};
 
+			/**
+			 * Returns the ToolTip for the Cell at the Cursor's Position.
+			 * @param e	The MouseEvent.
+			 * @return The ToolTip for the Cell at the Position of the Cursor.
+			 */
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
@@ -553,17 +595,32 @@ public class MainWindow extends Window {
 				return tip;
 			}
 			
+			/**
+			 * Returns, if the Cell at the given index is editable.
+			 * @param row	The row-index of the Cell.
+			 * @param column	The column-index of the Cell.
+			 * @return false by default, as these Cells shouldn't be editable.
+			 */
 			public boolean isCellEditable(int row, int column){  
 				return false;  
 			}
 	
+			/**
+			 * Creates a new TableHeader.
+			 * @return	The new TableHeader.
+			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
 					/**
-					 * 
+					 * The Serial Version ID.
 					 */
 					private static final long serialVersionUID = 1L;
 
+					/**
+					 * Returns the ToolTip for the column at the Cursor's Position.
+					 * @param e	The MouseEvent.
+					 * @return	The ToolTip for the given column.
+					 */
 					public String getToolTipText(MouseEvent e) {
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
@@ -596,11 +653,20 @@ public class MainWindow extends Window {
 		
 		JTable table = new JTable(data, columns) {
 			/**
-			 * 
+			 * The serial Version ID.
 			 */
 			private static final long serialVersionUID = 1L;
-			String [] columnToolTips = {"The Name of the Gaplist"};
+			
+			/**
+			 * The Tooltip of the column.
+			 */
+			private String [] columnToolTips = {"The Name of the Gaplist"};
 
+			/**
+			 * Returns the ToolTip for the Cell at the Position of the Cursor.
+			 * @param e	The MouseEvent.
+			 * @return	The ToolTip for the Cell at the Cursor's Position.
+			 */
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
@@ -612,17 +678,32 @@ public class MainWindow extends Window {
 				return tip;
 			}
 			
+			/**
+			 * Returns, if the Cell at the Row and column is editable.
+			 * @param row	The row index of the Cell.
+			 * @param column The column index of the Cell.
+			 * @return	false as default value, since these Cells shouldn't be edited.
+			 */
 			public boolean isCellEditable(int row, int column){  
 				return false;  
 			}
 	
+			/**
+			 * Creates a new TableHeader.
+			 * @return The new TableHeader.
+			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
 					/**
-					 * 
+					 * The Serial Version ID.
 					 */
 					private static final long serialVersionUID = 1L;
 
+					/**
+					 * Returns the ToolTip for the column at the Cursor's Position
+					 * @param e	The MouseEvent.
+					 * @return The ToolTip for the column at the given Position of the Cursor.
+					 */
 					public String getToolTipText(MouseEvent e) {
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
@@ -660,11 +741,20 @@ public class MainWindow extends Window {
 		
 		JTable table = new JTable(data, columns) {
 			/**
-			 * 
+			 * The Serial Version ID.
 			 */
 			private static final long serialVersionUID = 1L;
-			String [] columnToolTips = {"The Name of the Song in the selected Gaplist."};
+			
+			/**
+			 * The ToolTip for the column.
+			 */
+			private String [] columnToolTips = {"The Name of the Song in the selected Gaplist."};
 
+			/**
+			 * Returns the ToolTip of the Cell at the Cursor's Position.
+			 * @param e	The MouseEvent.
+			 * @return The ToolTip of the Cell at the Position of the Cursor.
+			 */
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
@@ -676,17 +766,32 @@ public class MainWindow extends Window {
 				return tip;
 			}
 			
+			/**
+			 * Returns, if the Cell at the given index is editable.
+			 * @param row	The row-Index.
+			 * @param column	The column-Index.
+			 * @return	false by default, as these Cells shouldn't be editable.
+			 */
 			public boolean isCellEditable(int row, int column){  
 				return false;  
 			}
 	
+			/**
+			 * Creates a new TableHeader.
+			 * @return The new TableHeader.
+			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
 					/**
-					 * 
+					 * The Serial Version ID.
 					 */
 					private static final long serialVersionUID = 1L;
 
+					/**
+					 * Returns the ToolTip for the column at the Cursor's Position.
+					 * @param e	The MouseEvent.
+					 * @return	The ToolTip for the column at the Position of the Cursor.
+					 */
 					public String getToolTipText(MouseEvent e) {
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
@@ -731,6 +836,11 @@ public class MainWindow extends Window {
 											  }, name);
 	}
 	
+	/**
+	 * Creates a Gaplist with the given Name.
+	 * @param name	The Name of the new Gaplist.
+	 * @since 1.2
+	 */
 	private void createGaplist(String name) {
 		if (name != null) {
 			String newName = replaceSpecials(name);
@@ -887,7 +997,9 @@ public class MainWindow extends Window {
 		else
 			lblTrackNext.setText(wishlist[0].getName());
 		
-		btnPlayPause = new JButton("Play");
+		ImageIcon icon = new ImageIcon("play.png");
+		
+		btnPlayPause = new JButton(icon);
 		btnPlayPause.setBounds(140, 194, 120, 45);
 		frame.getContentPane().add(btnPlayPause);
 		
@@ -989,7 +1101,7 @@ public class MainWindow extends Window {
 		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
 		frame.getContentPane().add(btnCreate);
 		
-		textField = new JTextField();
+		JTextField textField = new JTextField();
 		textField.setBounds(410, 637, 158, 23);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
@@ -1009,19 +1121,19 @@ public class MainWindow extends Window {
 		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
-																btnPlayPause.setText("Pause");
+																btnPlayPause.setIcon(pauseIcon);
 															}
 															else {
 																btnPlayPause.setToolTipText("Click here to resume the Track");
-																btnPlayPause.setText("Play");
+																btnPlayPause.setIcon(playIcon);
 															}
 														});
 	
 		btnDisconnect.addActionListener((ActionEvent ae)->{collector.disconnect();});
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
-		btnSeekForward.addActionListener((ActionEvent ae) -> {wind(true);});
-		btnSeekBackwards.addActionListener((ActionEvent ae) -> {wind(false);});
+		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
+		btnSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), rdbtnWishlist.isSelected(), chckbxInfront.isSelected(), txtLink);});
 		btnSave.addActionListener((ActionEvent ae) -> {saveGaplist();});
 		btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), oldGaplistPane);});

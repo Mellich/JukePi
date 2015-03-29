@@ -24,7 +24,7 @@ public class LogIn extends Window {
 	/**
 	 * The {@link Collector} that will send the Messages.
 	 */
-	private Collector collector;
+	private final Collector collector;
 	
 	/**
 	 * The TextField, where the User can insert the IP.
@@ -42,7 +42,7 @@ public class LogIn extends Window {
 	 * The Frame of the Login-Screen.
 	 * @see JFrame
 	 */
-	private JFrame frame;
+	private final JFrame frame;
 	
 	/**
 	 * The Label, that will display possible Messages.
@@ -177,6 +177,5 @@ public class LogIn extends Window {
 			public void keyTyped(KeyEvent arg0) {
 			}
 		});
-	//	return frame;
 	}
 }

@@ -1,6 +1,8 @@
 package connection;
 
 
+import java.net.BindException;
+
 import javax.swing.JFrame;
 
 import server.Server;
@@ -32,7 +34,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * The wrapper, that will send the Messages.
 	 * @see ServerConnection
 	 */
-	private ServerConnection wrapper;
+	private final ServerConnection wrapper;
 	
 	/**
 	 * The Login-Screen, that will be shown, when starting the Client.
@@ -188,6 +190,8 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 			this.connect("localhost", ""+port);
 		} catch (NumberFormatException nfe) {
 			showFail(loginScreen, "Please insert a real number at the Port-Field.");
+		} catch (BindException e) {
+			showFail(loginScreen, "Port is already in use, please enter another Port.");
 		}
 		
 	}

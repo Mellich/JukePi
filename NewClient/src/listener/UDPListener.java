@@ -18,12 +18,12 @@ public class UDPListener implements ActionListener{
 	 * The {@link Collector}, that will perform the {@link Collector#connect(String, String)}
 	 * - Method after finding a Server by UDP-scanning.
 	 */
-	private Collector collector;
+	private final Collector collector;
 	
 	/**
 	 * The {@link ServerConnection}, that will scan the network.
 	 */
-	private ServerConnection serverConnection;
+	private final ServerConnection serverConnection;
 	
 	/**
 	 * The Constructor for the UDP-Listener. Creates a new {@link ServerConnection}.

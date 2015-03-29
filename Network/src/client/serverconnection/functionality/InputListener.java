@@ -9,14 +9,46 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection.AliveC
 import client.serverconnection.functionality.handler.NotificationHandler;
 import client.serverconnection.functionality.handler.ResponseHandler;
 
+/**
+ * The Listener for the Input.
+ * @author Mellich
+ * @version 1.0
+ */
 public class InputListener implements Runnable {
 
+	/**
+	 * Determines, if the Listener is running. Will be {@code true} at any time.
+	 */
 	private boolean running = true;
+	
+	/**
+	 * The {@link BufferedReader}, that delivers the Input.
+	 */
 	private BufferedReader input;
+	
+	/**
+	 * The Wrapper that will be added to the {@link NotificationHandler}.
+	 */
 	private ServerConnectionNotifier notifyWrapper;
+	
+	/**
+	 * The Controller, that will be added to the {@link ResponseHandler}.
+	 */
 	private ResponseController responses;
+	
+	/**
+	 * The Checker, that will check, if the Connection is still alive.
+	 */
 	private AliveChecker checker;
 	
+	/**
+	 * Creates a new Listener for the Input.
+	 * @param input	The {@link BufferedReader} for the InputStream.
+	 * @param notifyWrapper	The Wrapper, that will be added to the {@link NotificationHandler}.
+	 * @param responses	The Controller, that will be added to the {@link ResponseHandler}.
+	 * @param checker	The Checker, that will check, if the Connection is still established.
+	 * @since 1.0
+	 */
 	public InputListener(BufferedReader input, ServerConnectionNotifier notifyWrapper,ResponseController responses, AliveChecker checker) {
 		this.input = input;
 		this.notifyWrapper = notifyWrapper;

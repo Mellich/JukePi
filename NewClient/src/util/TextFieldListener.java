@@ -17,13 +17,13 @@ public class TextFieldListener implements MouseListener{
 	 * The Array, that will save the Strings, that will be deleted, when selecting the 
 	 * TextField.
 	 */
-	private String[] delete;
+	private final String[] delete;
 	
 	/**
 	 * The TextField, this Listener will be added to.
 	 * @see JTextField
 	 */
-	private JTextField tf;
+	private final JTextField tf;
 	
 	/**
 	 * The Constructor for the Listener.

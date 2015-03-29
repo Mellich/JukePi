@@ -6,8 +6,17 @@ import java.util.HashMap;
 
 import client.listener.ResponseListener;
 
+/**
+ * The Implementation of {@link ResponseController}.
+ * @author Mellich
+ * @version 1.0
+ */
 public class ResponseControllerImpl implements ResponseController {
 	
+	/**
+	 * A Hashmap of the Message Type and a {@link Deque} of {@link ResponseListener}, that are 
+	 * listening to that Message Type.
+	 */
 	private HashMap<Integer,Deque<ResponseListener>> data = new HashMap<Integer,Deque<ResponseListener>>();
 
 	@Override

@@ -13,17 +13,17 @@ public abstract class Window {
 	 * @param text	The text, that will be displayed.
 	 * @since 1.0
 	 */
-	public void showFail(String text) {}
+	public abstract void showFail(String text);
 	
 	/**
 	 * Sets the Frame visible and enabled.
 	 * @since 1.0
 	 */
-	public void show() {}
+	public abstract void show();
 	
 	/**
 	 * Sets the Frame invisible and disabled.
 	 * @since 1.0
 	 */
-	public void close() {}
+	public abstract void close();
 }

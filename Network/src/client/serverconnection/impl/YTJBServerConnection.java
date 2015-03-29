@@ -22,23 +22,74 @@ import client.serverconnection.UDPTimeoutException;
 import client.serverconnection.functionality.LowLevelServerConnection;
 import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 
+/**
+ * The Implementation of {@link ServerConnection} and {@link ServerConnectionNotifier}.
+ * @author Mellich
+ * @version 1.0
+ */
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
+	/**
+	 * The Listeners for seekNotifications.
+	 */
 	private List<SeekNotificationListener> seekNotificationListener;
+	
+	/**
+	 * The Listeners for gapListNotifications.
+	 */
 	private List<GapListNotificationListener> gapListNotificationListener;
+	
+	/**
+	 * The Listeners for pauseResumeNotifications.
+	 */
 	private List<PauseResumeNotificationListener> pauseResumeNotificationListener;
+	
+	/**
+	 * The Listeners for defaultNotifications.
+	 */
 	private List<DefaultNotificationListener> defaultNotificationListener;
+	
+	/**
+	 * The Listeners for debugNotifications.
+	 */
 	private List<DebugNotificationListener> debugNotificationListener;
+	
+	/**
+	 * The {@link LowLevelServerConnection} to the Server.
+	 */
 	private LowLevelServerConnection serverConnection;
+	
+	/**
+	 * Determines, if the Connection was established.
+	 */
 	private boolean connected = false;
-	private int checkIntervall = 0;
+	
+	/**
+	 * The interval between each connectivity check.
+	 */
+	private int checkInterval = 0;
+	
+	/**
+	 * Determines, if the Client is an Android Application.
+	 */
 	private boolean isAndroid;
 	
+	/**
+	 * Creates a new Instance of the ServerConnection with default values of 
+	 * {@link #checkInterval} ({@code 0}) and {@link #isAndroid} ({@code false}).
+	 * @since 1.0
+	 */
 	public YTJBServerConnection() {
 		this(0,false);
 	}
 	
-	public YTJBServerConnection(int checkIntervall,boolean isAndroid) {
+	/**
+	 * Creates a new ServerConnection with the given Parameters.
+	 * @param checkInterval	The Interval between each connectivity check.
+	 * @param isAndroid	Determines, if the Client is an Android Application.
+	 * @since 1.0
+	 */
+	public YTJBServerConnection(int checkInterval,boolean isAndroid) {
 		defaultNotificationListener = new ArrayList<DefaultNotificationListener>();
 		debugNotificationListener = new ArrayList<DebugNotificationListener>();
 		seekNotificationListener = new ArrayList<SeekNotificationListener>();
@@ -46,13 +97,25 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		pauseResumeNotificationListener = new ArrayList<PauseResumeNotificationListener>();
 		connected = false;
 		this.isAndroid = isAndroid;
-		this.checkIntervall = checkIntervall;
+		this.checkInterval = checkInterval;
 	}
 	
-	public YTJBServerConnection(int checkIntervall2) {
-		this(checkIntervall2,false);
+	/**
+	 * Creates a new ServerConnection with the given checkInterval and {@code false} as value
+	 * of {@link #isAndroid}.
+	 * @param checkInterval2	The Interval between each connectivity check.
+	 * @since 1.0
+	 */
+	public YTJBServerConnection(int checkInterval2) {
+		this(checkInterval2,false);
 	}
 
+	/**
+	 * Converts the String-Array of Song-Names to an Array of Songs.
+	 * @param table	The String-Array with the names of the Songs.
+	 * @return	The Songs as an Array.
+	 * @since 1.0
+	 */
 	private Song[] stringArrayToSongArray(String[] table){
 		long ownVote = Long.parseLong(table[0]);
 		int i = 0;
@@ -208,7 +271,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean connect(String ipAddress, int port) {
-		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkIntervall,isAndroid);
+		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid);
 		if (serverConnection.connect()){
 			connected = true;
 			if (!defaultNotificationListener.isEmpty())
@@ -240,19 +303,19 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public ServerAddress udpScanning() throws UDPTimeoutException {
-	    // Netzwerk-Gruppe
+	    // Network-Group
 	    String NETWORK_GROUP = "230.0.0.1";
-	    // Netzwerk-Gruppen Port
+	    // The Port of the Network-Group
 	    int NETWORK_GROUP_PORT = 4447;
 	   
-	    // Nachrichten-Codierung
+	    // Coding of the Messages
 	    String TEXT_ENCODING = "UTF8";
 	    
 	    final int TIMEOUT = 6000;
 	   
 	    final MulticastSocket socket;
 	 
-	      // Gruppe anlegen
+	      // Create the Group
 	     try {
 			socket = new MulticastSocket(NETWORK_GROUP_PORT);
 		      final InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
@@ -277,7 +340,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      
 	      sendUDPRequest(socket,socketAddress,NETWORK_GROUP_PORT);
 	      while(true){
-		        // Warten auf Nachricht
+		        // Waiting for Messages
 		  	    try {
 			        socket.receive(packet);
 			    } catch (IOException e) {
@@ -297,11 +360,18 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	     }catch (UDPTimeoutException e){
 		    	 throw new UDPTimeoutException();
 		     } catch (IOException e1) {
-				//fehler beim erstellen des sockets etc
+				//Error at creating the Socket etc.
 		}
 	    return null;
 	}
 	
+	/**
+	 * Sends an UDPRequest.
+	 * @param socket	The Socket, that will send the request.
+	 * @param group	The Group, that will receive the Message.
+	 * @param port	The Port of the Group, that will receive the Message.
+	 * @throws IOException	If an I/O error occurs while sending.
+	 */
 	private void sendUDPRequest(MulticastSocket socket,InetAddress group, int port) throws IOException{
 		byte[] byteMessage;
 		byteMessage = "REQUEST".getBytes("UTF8");

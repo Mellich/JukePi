@@ -14,18 +14,18 @@ public class ShowLabelThread extends Thread{
 	 * The Label, that displays the Message.
 	 * @see JLabel
 	 */
-	private JLabel fail;
+	private final JLabel fail;
 	
 	/**
 	 * The Frame, that contains the Fail-Label.
 	 * @see JFrame
 	 */
-	private JFrame frame;
+	private final JFrame frame;
 	
 	/**
 	 * The Message to be shown.
 	 */
-	private String text;
+	private final String text;
 	
 	/**
 	 * The Constructor for the {@link Thread}.

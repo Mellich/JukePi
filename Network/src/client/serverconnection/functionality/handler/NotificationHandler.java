@@ -2,13 +2,34 @@ package client.serverconnection.functionality.handler;
 
 import client.serverconnection.ServerConnectionNotifier;
 
-
+/**
+ * A Handler for Notifications.
+ * @author Mellich
+ * @version 1.0
+ */
 public class NotificationHandler implements Runnable {
 
+	/**
+	 * The Notifier for the ServerConnection.
+	 */
 	private ServerConnectionNotifier notifyListener;
+	
+	/**
+	 * The Message Type of the Notification.
+	 */
 	private int messageType;
+	
+	/**
+	 * The arguments of the notification.
+	 */
 	private String[] args;
 
+	/**
+	 * Creates a new Handler.
+	 * @param notifyListener	The Notifier for the ServerConnection.
+	 * @param messageType	The Message Type of the Notification.
+	 * @param args	The arguments of the notification.
+	 */
 	public NotificationHandler(ServerConnectionNotifier notifyListener,int messageType, String[] args) {
 		this.notifyListener = notifyListener;
 		this.messageType = messageType;

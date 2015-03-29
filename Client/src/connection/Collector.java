@@ -1,5 +1,7 @@
 package connection;
 
+import java.net.BindException;
+
 import gui.DisconnectButtonListener;
 import gui.EditTrackListener;
 
@@ -151,7 +153,11 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	}
 	
 	public void createLocalServer(int port){
-		localServer = ServerFactory.createServer(port);
+		try {
+			localServer = ServerFactory.createServer(port);
+		} catch (BindException e) {
+			e.printStackTrace();
+		}
 		localServer.startUp();
 		this.connect("localhost", ""+port);
 	}

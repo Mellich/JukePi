@@ -3,11 +3,29 @@ package client.serverconnection.functionality.handler;
 import client.listener.ResponseListener;
 import client.serverconnection.functionality.ResponseController;
 
+/**
+ * A Handler for Responses.
+ * @author Mellich
+ * @version 1.0
+ */
 public class ResponseHandler implements Runnable {
 	
-	private ResponseController responses ;
+	/**
+	 * The Controller for Responses.
+	 */
+	private ResponseController responses;
+	
+	/**
+	 * The message, as an Array of Strings.
+	 */
 	private String[] message;
 
+	/**
+	 * Creates a new Handler.
+	 * @param responses	The Controller for Responses.
+	 * @param message	The message, as an Array of Strings.
+	 * @since 1.0
+	 */
 	public ResponseHandler(ResponseController responses,String[] message ) {
 		this.responses = responses;
 		this.message = message;
