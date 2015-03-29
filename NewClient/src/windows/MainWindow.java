@@ -244,13 +244,13 @@ public class MainWindow extends Window {
 	private void seek(boolean forward) {
 		if (forward)
 			wrapper.seekForward((String[] s) -> {	if (s[0].equals("true")) 
-														showFail("Successfully seeked forward!");
+														showFail("Successfully sought forward!");
 													else
 														showFail("Couldn't seek forward!");
 												});
 		else
 			wrapper.seekBackward((String[] s) -> {	if (s[0].equals("true"))
-														showFail("Successfully seeked backwards!");
+														showFail("Successfully sought backwards!");
 													else
 														showFail("Couldn't seek backwards!");
 												});
@@ -832,7 +832,7 @@ public class MainWindow extends Window {
 		wrapper.deleteGapList((String[] s) -> {	if (s[0].equals("true"))
 													showFail("Removed the Gaplist.");
 												else
-													showFail("Coudln't remove the Gaplist");
+													showFail("Couldn't remove the Gaplist");
 											  }, name);
 	}
 	
@@ -1003,9 +1003,9 @@ public class MainWindow extends Window {
 		btnPlayPause.setBounds(140, 194, 120, 45);
 		frame.getContentPane().add(btnPlayPause);
 		
-		JButton btnSeekBackwards = new JButton("<html><body>Wind<br>Backward</body></html>");
+		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
 		btnSeekBackwards.setBounds(10, 194, 120, 45);
-		btnSeekBackwards.setToolTipText("Click here to wind 30 seconds backward.");
+		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
 		frame.getContentPane().add(btnSeekBackwards);
 		
 		JButton btnSkip = new JButton("Skip");
@@ -1013,9 +1013,9 @@ public class MainWindow extends Window {
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		frame.getContentPane().add(btnSkip);
 		
-		JButton btnSeekForward = new JButton("<html><body>Wind<br>Forward</body></html>");
+		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
 		btnSeekForward.setBounds(320, 194, 120, 45);
-		btnSeekForward.setToolTipText("Click here to wind 30 seconds forward.");
+		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
 		frame.getContentPane().add(btnSeekForward);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
@@ -1121,11 +1121,13 @@ public class MainWindow extends Window {
 		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
-																btnPlayPause.setIcon(pauseIcon);
+															//	btnPlayPause.setIcon(pauseIcon);
+																btnPlayPause.setText("Pause");
 															}
 															else {
 																btnPlayPause.setToolTipText("Click here to resume the Track");
-																btnPlayPause.setIcon(playIcon);
+															//	btnPlayPause.setIcon(playIcon);
+																btnPlayPause.setText("Play");
 															}
 														});
 	
