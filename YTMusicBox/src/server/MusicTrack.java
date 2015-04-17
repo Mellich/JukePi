@@ -54,8 +54,16 @@ public class MusicTrack {
 			isVideo = false;
 	}
 	
+	public MusicTrack(TrackType t, String name, String shortURL,boolean isFromSavedGapList){
+		this(t,name,"",shortURL,isFromSavedGapList);
+	}
+	
 	public void setVoteCount(int count){
 		voteCount = count;
+	}
+	
+	public void setVideoURL(String videoURL){
+		this.videoURL = videoURL;
 	}
 	
 	public int getVoteCount(){

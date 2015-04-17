@@ -83,6 +83,8 @@ public class YTJBServer implements Server {
 	private Thread connectionBroadcast = null;
 	
 	private VotingController votingController;
+
+	private URLParser urlParser;
 	
 	
 	/**
@@ -91,7 +93,9 @@ public class YTJBServer implements Server {
 	public void startUp(){
 			ProcessCommunicator.updateYoutubeDL(workingDirectory);
 			currentGapList = initFile.getStartUpGapList();
-			searchGapLists();				
+			searchGapLists();	
+			this.urlParser = new URLParser(this,scheduler);
+			urlParser.start();
 			gapListLoader = new GapListLoader(this);
 			gapListLoader.start();
 			waiter.start();
@@ -132,6 +136,7 @@ public class YTJBServer implements Server {
 			result.add(""+list.get(i).getTrackID());
 			result.add(list.get(i).getTitle());
 			result.add(""+list.get(i).getVoteCount());
+			result.add(""+((list.get(i).getVideoURL().equals("") || list.get(i).getVideoURL().equals("PARSING")) ? false : true));
 		}
 		return result;
 	}
@@ -151,9 +156,7 @@ public class YTJBServer implements Server {
 	 * @param atFirst if true, track will be added at the beginning of the list and at the and, if the value is false
 	 */
 	public synchronized void addToList(MusicTrack track,boolean toWishList, boolean atFirst){
-		boolean isFirstTrack = false;		//are the lists empty before this track is added?
-		if (gapList.isEmpty() && wishList.isEmpty())
-			isFirstTrack = true;
+		boolean existsParsed = this.existsParsedURL();
 		if (toWishList){
 			if (atFirst){
 				if (!wishList.isEmpty()){
@@ -173,11 +176,11 @@ public class YTJBServer implements Server {
 			else gapList.add(track);
 			if (!track.isFromSavedGapList())
 				this.setMaxGapListTrackCount(this.getMaxLoadedGapListTracksCount() + 1);
-			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+			if (this.getMaxLoadedGapListTracksCount() == gapList.size())
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
-		if (isFirstTrack){     //if so, notify waiting scheduler
+		if (!existsParsed && this.existsParsedURL()){
 			scheduler.notifyPlayableTrack();
-			IO.printlnDebug(this, "First element in the lists");
 		}
 	}
 	
@@ -262,6 +265,34 @@ public class YTJBServer implements Server {
 		return temp;
 	}
 	
+	public synchronized MusicTrack getNextNotParsedURL(){
+		for (MusicTrack m : wishList){
+			if (m.getVideoURL().equals("") || m.getVideoURL().equals("PARSING")){
+				return m;
+			}
+		}
+		for (MusicTrack m : gapList){
+			if (m.getVideoURL().equals("") || m.getVideoURL().equals("PARSING")){
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	public synchronized boolean existsParsedURL(){
+		for (MusicTrack m : wishList){
+			if (!m.getVideoURL().equals("")){
+				return true;
+			}
+		}
+		for (MusicTrack m : wishList){
+			if (!m.getVideoURL().equals("")){
+				return true;
+			}
+		}
+		return false;		
+	}
+	
 	/**
 	 * loads current gap list from a file
 	 */
@@ -274,6 +305,9 @@ public class YTJBServer implements Server {
 		if(!IO.loadGapListFromFile(workingDirectory+currentGapList, this)){
 			this.searchGapLists();
 			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY, gapLists);
+		}
+		else{
+			urlParser.notifyNewURL(this.existsParsedURL());
 		}
 	}
 	
@@ -440,7 +474,19 @@ public class YTJBServer implements Server {
 		for (Connection h: notifiables){
 			h.notify(messageType,arrayList);
 		}
+		if (messageType == MessageType.GAPLISTUPDATEDNOTIFY ||
+			messageType == MessageType.WISHLISTUPDATEDNOTIFY){		
+			urlParser.notifyNewURL(existsParsedURL());			
+		}
 	}	
+	
+	public void notifyListUpdate(MusicTrack track){
+		if (wishList.contains(track)){
+			notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(this.wishList));
+		}else{
+			notifyClients(MessageType.GAPLISTUPDATEDNOTIFY, this.listToArray(gapList));
+		}
+	}
 	
 	/**
 	 * creates new instance of a server
@@ -475,7 +521,7 @@ public class YTJBServer implements Server {
 			} catch(BindException e){
 				throw new BindException();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				IO.printlnDebug(this, "Error while initiating  the server!");
 				e.printStackTrace();
 			}
 	}
@@ -525,7 +571,7 @@ public class YTJBServer implements Server {
 			server = new YTJBServer(22222);
 			server.startUp();
 		} catch (BindException e) {
-			// TODO Auto-generated catch block
+			IO.printlnDebug(null, "given port is in use!");
 			e.printStackTrace();
 		}
 	}

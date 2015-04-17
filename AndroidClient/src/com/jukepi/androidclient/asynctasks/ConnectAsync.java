@@ -44,5 +44,12 @@ public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
 			context.startActivity(intent);
 		}
 	}
+	
+	@Override
+	protected void onCancelled() {
+		// TODO Auto-generated method stub
+		super.onCancelled();
+		progress.dismiss();
+	}
 
 }

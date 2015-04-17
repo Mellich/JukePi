@@ -8,13 +8,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jukepi.androidclient.MainActivity" >
 
-    <GridView
-        android:id="@+id/wishListView"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:numColumns="1" >
-    </GridView>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="123dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

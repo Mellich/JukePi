@@ -119,12 +119,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	private Song[] stringArrayToSongArray(String[] table){
 		long ownVote = Long.parseLong(table[0]);
 		int i = 0;
-		Song[] result = new Song[(table.length - 1) / 3];
+		Song[] result = new Song[(table.length - 1) / 4];
 		while (i < result.length){
-			long trackID = Long.parseLong(table[3*i + 1]);
+			long trackID = Long.parseLong(table[4*i + 1]);
 			if (ownVote == trackID)
-				result[i] = new Song(trackID,table[3*i + 2],Integer.parseInt(table[3*i + 3]),true);
-			else result[i] = new Song(trackID,table[3*i + 2],Integer.parseInt(table[3*i + 3]),false);
+				result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),true,Boolean.parseBoolean(table[4*i + 4]));
+			else result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),false,Boolean.parseBoolean(table[4*i + 4]));
 			i++;
 		}
 		return result;
@@ -311,7 +311,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	    // Coding of the Messages
 	    String TEXT_ENCODING = "UTF8";
 	    
-	    final int TIMEOUT = 6000;
+	    final int TIMEOUT = 15000;
 	   
 	    final MulticastSocket socket;
 	 

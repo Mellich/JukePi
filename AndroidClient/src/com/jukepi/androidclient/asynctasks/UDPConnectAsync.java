@@ -31,6 +31,8 @@ public class UDPConnectAsync extends AsyncTask<Void, Integer, Boolean> {
 			return false;
 		} catch (UDPTimeoutException e) {
 			return false;
+		} catch (NullPointerException e){
+			return false;
 		}
 		
 	}

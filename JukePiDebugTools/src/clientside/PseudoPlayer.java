@@ -49,6 +49,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 			}
 			System.out.println("Verbinde zu "+sa.getIPAddress() +" auf Port: "+sa.getPort());
 			if (server.connect(sa)){
+				System.out.println("Verbunden!");
 				server.setMeAsPlayer();
 				while(true){
 					String input = reader.readLine();
@@ -83,6 +84,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 	@Override
 	public void onDisconnect() {
 		System.out.println("Disconnect!");
+		System.exit(0);
 		
 	}
 

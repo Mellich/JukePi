@@ -89,7 +89,7 @@ public class TrackScheduler extends Thread {
 				current = server.chooseNextTrack();
 				ArrayList<String> args = new ArrayList<String>();
 				while (current == null){
-					IO.printlnDebug(this, "waiting for a track added to a list...");
+					IO.printlnDebug(this, "waiting for a track parsed...");
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
 				}
@@ -97,19 +97,21 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				ArrayList<String> argsNext = new ArrayList<String>();
-				argsNext.add(current.getTitle());
-				argsNext.add(current.getVideoURL());
-				argsNext.add(""+current.getIsVideo());
-				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
-				args.add(""+true);
-				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
-				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-				player = new ClientPlayer(server,this);
-				player.play(current);
-				player = null;
-				args.set(0,""+false);
-				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+				if (!current.getVideoURL().equals("")){
+					ArrayList<String> argsNext = new ArrayList<String>();
+					argsNext.add(current.getTitle());
+					argsNext.add(current.getVideoURL());
+					argsNext.add(""+current.getIsVideo());
+					server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
+					args.add(""+true);
+					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+					IO.printlnDebug(this,"Playing next track: "+current.getTitle());
+					player = new ClientPlayer(server,this);
+					player.play(current);
+					player = null;
+					args.set(0,""+false);
+					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+				}
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");

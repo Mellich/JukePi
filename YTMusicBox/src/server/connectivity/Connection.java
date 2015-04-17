@@ -115,6 +115,10 @@ public class Connection extends Thread {
 	
 	
 	public void notify(int messageType,List<String> args){
+		StringBuilder builder = new StringBuilder();
+		for (String s: args){
+			builder.append(s+MessageType.SEPERATOR);
+		}
 		if (messageType == MessageType.DEBUGOUTPUTNOTIFY && isDebugListener ||
 				messageType == MessageType.PLAYERCOUNTCHANGEDNOTIFY && isDebugListener ||
 				messageType == MessageType.CLIENTCOUNTCHANGEDNOTIFY && isDebugListener ||
@@ -126,10 +130,9 @@ public class Connection extends Thread {
 				messageType == MessageType.SEEKNOTIFY && isSeekListener ||
 				messageType == MessageType.GAPLISTCHANGEDNOTIFY && isGapListListener) {
 			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
-				args.add(0, ""+server.getVote(macAddress));
-			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,args.toArray(new String[args.size()])).handle();
-			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
-				args.remove(0);		
+				builder.insert(0, ""+server.getVote(macAddress)+MessageType.SEPERATOR);
+			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,builder.toString()).handle();
+			System.out.println(builder.toString());
 		}
 	}
 

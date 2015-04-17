@@ -72,6 +72,7 @@ public class ServerOutputStreamer implements DefaultNotificationListener, DebugN
 	public void onDisconnect() {
 		System.out.println();
 		System.out.println("Disconnected!");
+		System.exit(0);
 
 	}
 

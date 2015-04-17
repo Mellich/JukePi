@@ -7,10 +7,10 @@ import messages.MessageType;
 public class NotifyClientCommand extends Command {
 
 	private int notification;
-	private String[] args;
+	private String args;
 	private static volatile int nextTrackNotifyCount = 0;
 	
-	public NotifyClientCommand(BufferedWriter out,int messageType,int notification,String[] args) {
+	public NotifyClientCommand(BufferedWriter out,int messageType,int notification,String args) {
 		super(out, notification);
 		this.notification = notification;
 		this.args = args;
@@ -20,24 +20,19 @@ public class NotifyClientCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		StringBuilder builder = new StringBuilder();
-		for (String s : args){
-			builder.append(MessageType.SEPERATOR+s);
-		}
 		if (notification == MessageType.NEXTTRACKNOTIFY){
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (nextTrackNotifyCount == 1)
-				notify(notification,builder.toString());
+				notify(notification,args);
 			if (notification == MessageType.NEXTTRACKNOTIFY)
-				nextTrackNotifyCount--;
+				nextTrackNotifyCount--;			//TODO: unsafe edit. maybe semaphore necessary?
 		}
 		else{
-			notify(notification,builder.toString());			
+			notify(notification,args);			
 		}
 		return true;
 	}

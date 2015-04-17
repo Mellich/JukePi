@@ -25,6 +25,8 @@ public class Song {
 	 * Determines, if the Song is the own Vote of the Client.
 	 */
 	private boolean ownVote;
+
+	private boolean parsed;
 	
 	/**
 	 * Creates a new Song-Instance.
@@ -34,12 +36,12 @@ public class Song {
 	 * @param ownVote	Determines, if the Track is the own Vote of the Client.
 	 * @since 1.0
 	 */
-	public Song(long trackID, String name, int votes, boolean ownVote){
+	public Song(long trackID, String name, int votes, boolean ownVote,boolean parsed){
 		this.trackID = trackID;
 		this.name = name;
 		this.votes = votes;
 		this.ownVote = ownVote;
-	}
+		this.parsed = parsed;	}
 	
 	/**
 	 * Returns, if the Song is the own Vote of the Client.
@@ -75,5 +77,9 @@ public class Song {
 	 */
 	public int getVotes(){
 		return votes;
+	}
+	
+	public boolean isParsed(){
+		return parsed;
 	}
 }

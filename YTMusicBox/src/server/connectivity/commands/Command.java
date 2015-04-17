@@ -40,7 +40,7 @@ public abstract class Command {
 	 * @param notify the type of the notification
 	 */
 	protected void notify(int notify,String arguments){
-		sendMessage(""+notify+arguments);
+		sendMessage(""+notify+MessageType.SEPERATOR+arguments);
 	}
 	
 	/**sends a string to the client

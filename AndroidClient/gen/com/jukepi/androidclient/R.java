@@ -30,7 +30,7 @@ public final class R {
         public static final int button_udpconnect=0x7f080002;
         public static final int edit_ip=0x7f080001;
         public static final int edit_port=0x7f080000;
-        public static final int wishListView=0x7f080004;
+        public static final int scrollView1=0x7f080004;
     }
     public static final class layout {
         public static final int activity_login=0x7f030000;
