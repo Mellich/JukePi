@@ -86,6 +86,14 @@ public class MusicTrack {
 		return trackID;
 	}
 	
+	public boolean isReady(){
+		return !(this.videoURL.equals("") || this.isParsing());
+	}
+	
+	public boolean isParsing(){
+		return this.videoURL.equals("PARSING");
+	}
+	
 	public String getShortURL(){
 		return shortURL;
 	}

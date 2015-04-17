@@ -38,10 +38,6 @@ public class NotificationHandler implements Runnable {
 	
 	@Override
 	public void run() {
-		for (String s: args){
-			System.out.print(s+", ");
-		}
-		System.out.println();
 		String[] arguments = new String[args.length - 1];
 		for (int i = 1; i < args.length;i++){
 			arguments[i-1] = args[i];

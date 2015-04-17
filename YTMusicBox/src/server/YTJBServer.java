@@ -262,17 +262,19 @@ public class YTJBServer implements Server {
 				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
+		if (temp != null && !temp.isReady())
+			return null;
 		return temp;
 	}
 	
 	public synchronized MusicTrack getNextNotParsedURL(){
 		for (MusicTrack m : wishList){
-			if (m.getVideoURL().equals("") || m.getVideoURL().equals("PARSING")){
+			if (!m.isReady()){
 				return m;
 			}
 		}
 		for (MusicTrack m : gapList){
-			if (m.getVideoURL().equals("") || m.getVideoURL().equals("PARSING")){
+			if (!m.isReady()){
 				return m;
 			}
 		}
@@ -281,12 +283,12 @@ public class YTJBServer implements Server {
 	
 	public synchronized boolean existsParsedURL(){
 		for (MusicTrack m : wishList){
-			if (!m.getVideoURL().equals("")){
+			if (m.isReady()){
 				return true;
 			}
 		}
 		for (MusicTrack m : wishList){
-			if (!m.getVideoURL().equals("")){
+			if (m.isReady()){
 				return true;
 			}
 		}
