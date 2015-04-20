@@ -41,8 +41,14 @@ public class URLParser extends Thread {
 					if (m != null){
 						try {
 							m.setVideoURL("PARSING");
-							m.setVideoURL(ProcessCommunicator.parseShortURLToVideoURL(m.getShortURL(), server.getWorkingDir()));
-							IO.printlnDebug(this, "Track parsed: "+m.getTitle());
+							String out = ProcessCommunicator.parseShortURLToVideoURL(m.getShortURL(), server.getWorkingDir());
+							if (out != null){
+								IO.printlnDebug(this, "Track parsed: "+m.getTitle());
+								m.setVideoURL(out);
+							}else{
+								IO.printlnDebug(this, "Track couldn't be parsed: "+m.getTitle());
+								m.setVideoURL("ERROR");								
+							}
 							server.notifyListUpdate(m);
 							if (!existsParsedURL){
 								scheduler.notifyPlayableTrack();

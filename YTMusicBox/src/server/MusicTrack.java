@@ -25,7 +25,7 @@ public class MusicTrack {
 	
 	private String shortURL;
 	private String title;
-	private String videoURL;
+	private String videoURL = "";
 	private TrackType type;
 	private long trackID;
 	private int voteCount = 0;
@@ -91,7 +91,7 @@ public class MusicTrack {
 	}
 	
 	public boolean isParsing(){
-		return this.videoURL.equals("PARSING");
+		return this.videoURL.equals("PARSING") || this.videoURL.equals("ERROR");
 	}
 	
 	public String getShortURL(){

@@ -136,7 +136,7 @@ public class YTJBServer implements Server {
 			result.add(""+list.get(i).getTrackID());
 			result.add(list.get(i).getTitle());
 			result.add(""+list.get(i).getVoteCount());
-			result.add(""+((list.get(i).getVideoURL().equals("") || list.get(i).getVideoURL().equals("PARSING")) ? false : true));
+			result.add(""+list.get(i).isReady());
 		}
 		return result;
 	}
@@ -176,7 +176,7 @@ public class YTJBServer implements Server {
 			else gapList.add(track);
 			if (!track.isFromSavedGapList())
 				this.setMaxGapListTrackCount(this.getMaxLoadedGapListTracksCount() + 1);
-			if (this.getMaxLoadedGapListTracksCount() == gapList.size())
+			if (this.getMaxLoadedGapListTracksCount() <= gapList.size())
 				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
 		if (!existsParsed && this.existsParsedURL()){
@@ -235,11 +235,11 @@ public class YTJBServer implements Server {
 		StringBuilder response = new StringBuilder();
 		if (fromWishList)
 			for (MusicTrack m: wishList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.isReady()+MessageType.SEPERATOR);
 			}
 		else
 			for (MusicTrack m: gapList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.isReady()+MessageType.SEPERATOR);
 			}
 		return response.toString();
 	}
@@ -269,12 +269,12 @@ public class YTJBServer implements Server {
 	
 	public synchronized MusicTrack getNextNotParsedURL(){
 		for (MusicTrack m : wishList){
-			if (!m.isReady()){
+			if (!m.isParsing() && !m.isReady()){
 				return m;
 			}
 		}
 		for (MusicTrack m : gapList){
-			if (!m.isReady()){
+			if (!m.isReady() && !m.isParsing()){
 				return m;
 			}
 		}
