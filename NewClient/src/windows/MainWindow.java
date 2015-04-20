@@ -6,10 +6,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -24,8 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
@@ -35,7 +31,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.3
+ * @version 1.4
  */
 public class MainWindow extends Window {
 	
@@ -157,6 +153,8 @@ public class MainWindow extends Window {
 	 */
 	private ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
+	private boolean loadComplete;
+	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
@@ -172,6 +170,7 @@ public class MainWindow extends Window {
 		this.collector = collector;
 		this.frame = frame;
 		frame.getContentPane().removeAll();
+		loadComplete = false;
 		this.wrapper = wrapper;
 		
 		this.gaplist = gaplist;
@@ -478,7 +477,7 @@ public class MainWindow extends Window {
 	 * Creates the Table, that displays the Wishlist and the Votes for each Song in it.
 	 * @since 1.0
 	 */
-	private void createWishlistTable() {	
+	private synchronized void createWishlistTable() {	
 		if(oldPane != null)
 			frame.getContentPane().remove(oldPane);
 		
@@ -638,15 +637,26 @@ public class MainWindow extends Window {
             }
         };
         
-        for (int i = 0; i < table.getColumnCount(); i++) {
-        	table.getColumnModel().getColumn(i).setCellRenderer(new TableRenderer());
-        		
-        }
+        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
+        if (loadComplete)
+        	showLabel();
         
 		JScrollPane gaplistPane = new JScrollPane(table);
 		gaplistPane.setBounds(10, 328, 250, 102);
 		frame.getContentPane().add(gaplistPane);
 		oldGaplistPane = gaplistPane;
+	}
+	
+	/**
+	 * @since 1.4
+	 */
+	private void showLabel() {
+		JLabel lblExplanation = new JLabel("<html><body>Songs with white background are parsed and ready for play.<br>"
+				+"Songs with grey Background are not yet parsed and will be parsed soon.<br>"
+				+ "If a song isn't parsed, eventhough all others are parsed, check for availability.</body></html>");
+		lblExplanation.setBounds(10, 435, 500, 102);
+		lblExplanation.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		frame.getContentPane().add(lblExplanation);
 	}
 	
 	/**
@@ -891,6 +901,8 @@ public class MainWindow extends Window {
 	 * @since 1.3
 	 */
 	private void vote(int index) {
+		if (index == -1)
+			return;
 		wrapper.removeVote((String[] s)-> {});
 		wrapper.voteSong((String[] s) -> {	if (s[0].equals("true"))
 												showFail("Voted for the Song");
@@ -904,7 +916,7 @@ public class MainWindow extends Window {
 	 * Removes the Vote.
 	 * @since 1.3
 	 */
-	private void remove() {
+	private void removeVote() {
 		wrapper.removeVote((String[] s) -> {	if (s[0].equals("true"))
 													showFail("Removed your vote.");
 												else
@@ -1159,7 +1171,7 @@ public class MainWindow extends Window {
 		btnRemove.addActionListener((ActionEvent ae) -> {removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));});
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textField.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
-		btnRemove.addActionListener((ActionEvent ae) -> {remove();});
+		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 	}
 	
 	
@@ -1173,10 +1185,13 @@ public class MainWindow extends Window {
 		@Override
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	        if (gaplist[row].isParsed())
+	        loadComplete = true;
+	    	if (gaplist[row].isParsed())
 	        	c.setBackground(Color.WHITE);
-	        else
+	        else {
 	        	c.setBackground(Color.LIGHT_GRAY);
+	        	loadComplete = false;
+	        }
 	        return c;
 	    }
 	}
