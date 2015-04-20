@@ -2,10 +2,14 @@ package windows;
 
 import util.TextFieldListener;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -18,7 +22,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
@@ -630,6 +637,12 @@ public class MainWindow extends Window {
 				};
             }
         };
+        
+        for (int i = 0; i < table.getColumnCount(); i++) {
+        	table.getColumnModel().getColumn(i).setCellRenderer(new TableRenderer());
+        		
+        }
+        
 		JScrollPane gaplistPane = new JScrollPane(table);
 		gaplistPane.setBounds(10, 328, 250, 102);
 		frame.getContentPane().add(gaplistPane);
@@ -1147,5 +1160,24 @@ public class MainWindow extends Window {
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textField.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemove.addActionListener((ActionEvent ae) -> {remove();});
+	}
+	
+	
+	private class TableRenderer extends DefaultTableCellRenderer {
+
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1386922222679555490L;
+
+		@Override
+	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	        if (gaplist[row].isParsed())
+	        	c.setBackground(Color.WHITE);
+	        else
+	        	c.setBackground(Color.LIGHT_GRAY);
+	        return c;
+	    }
 	}
 }
