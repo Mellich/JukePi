@@ -127,7 +127,7 @@ public class IO {
 				MusicTrack yURL = new MusicTrack(TrackType.valueOf(splitted[0]),splitted[1],splitted[2],true);
 				if (Thread.interrupted())
 					break;
-				server.addToList(yURL, false, true);
+				server.addToList(yURL, false, false);
 				url = reader.readLine();
 			}
 			reader.close();
