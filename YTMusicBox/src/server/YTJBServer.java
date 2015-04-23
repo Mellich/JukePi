@@ -84,7 +84,14 @@ public class YTJBServer implements Server {
 	
 	private VotingController votingController;
 
-	private URLParser urlParser;
+	private URLParser[] urlParser;
+	
+	
+	private void notifyParser(){
+		for (URLParser p : urlParser){
+			p.notifyNewURL();
+		}
+	}
 	
 	
 	/**
@@ -94,8 +101,11 @@ public class YTJBServer implements Server {
 			ProcessCommunicator.updateYoutubeDL(workingDirectory);
 			currentGapList = initFile.getStartUpGapList();
 			searchGapLists();	
-			this.urlParser = new URLParser(this,scheduler);
-			urlParser.start();
+			urlParser = new URLParser[Runtime.getRuntime().availableProcessors()];
+			for (int i = 0; i < urlParser.length; i++){
+				this.urlParser[i] = new URLParser(this,scheduler,i);
+				urlParser[i].start();
+			}
 			gapListLoader = new GapListLoader(this);
 			gapListLoader.start();
 			waiter.start();
@@ -309,7 +319,7 @@ public class YTJBServer implements Server {
 			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY, gapLists);
 		}
 		else{
-			urlParser.notifyNewURL(this.existsParsedURL());
+			this.notifyParser();
 		}
 	}
 	
@@ -478,7 +488,7 @@ public class YTJBServer implements Server {
 		}
 		if (messageType == MessageType.GAPLISTUPDATEDNOTIFY ||
 			messageType == MessageType.WISHLISTUPDATEDNOTIFY){		
-			urlParser.notifyNewURL(existsParsedURL());			
+			this.notifyParser();		
 		}
 	}	
 	
@@ -561,6 +571,9 @@ public class YTJBServer implements Server {
 			scheduler.join();
 			waiter.join();
 			connectionBroadcast.interrupt();
+			for (URLParser p : urlParser){
+				p.interrupt();
+			}
 			IO.printlnDebug(this, "Server was shut down");
 		} catch (IOException | InterruptedException e) {
 			IO.printlnDebug(this, "Error while closing server");

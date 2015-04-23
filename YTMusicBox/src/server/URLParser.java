@@ -9,21 +9,22 @@ import utilities.ProcessCommunicator;
 
 public class URLParser extends Thread {
 	
+	private static Semaphore nextURLMutex = new Semaphore(1);
 	private Semaphore newNotParsedURL = new Semaphore(0);
 	private boolean notParsedURLExists = true;
 	private YTJBServer server;
-	private volatile boolean existsParsedURL = false;
 	private volatile boolean restartRequired = false;
 	private TrackScheduler scheduler;
+	private int number;
 	
-	public URLParser(YTJBServer server,TrackScheduler scheduler) {
+	public URLParser(YTJBServer server,TrackScheduler scheduler, int i) {
 		this.server = server;
 		this.scheduler = scheduler;
+		this.number = i;
 	}
 	
-	public void notifyNewURL(boolean existsParsedURL){
+	public void notifyNewURL(){
 		notParsedURLExists = true;
-		this.existsParsedURL = existsParsedURL;
 		if (restartRequired){
 			newNotParsedURL.release();
 		}
@@ -32,41 +33,44 @@ public class URLParser extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		IO.printlnDebug(this, "Started extra parse thread");
+		IO.printlnDebug(this, "Parse thread "+ number+" started!");
 		try {
 			while(true){
 				while(notParsedURLExists){
-					IO.printlnDebug(this, "check for not parsed URLs");
+					nextURLMutex.acquire();
+					IO.printlnDebug(this, number+": check for not parsed URLs");
 					MusicTrack m = server.getNextNotParsedURL();
 					if (m != null){
 						try {
 							m.setVideoURL("PARSING");
+							nextURLMutex.release();
 							String out = ProcessCommunicator.parseShortURLToVideoURL(m.getShortURL(), server.getWorkingDir());
 							if (out != null){
-								IO.printlnDebug(this, "Track parsed: "+m.getTitle());
+								IO.printlnDebug(this, number+": Track parsed: "+m.getTitle());
 								m.setVideoURL(out);
 							}else{
-								IO.printlnDebug(this, "Track couldn't be parsed: "+m.getTitle());
+								IO.printlnDebug(this, number+": Track couldn't be parsed: "+m.getTitle());
 								m.setVideoURL("ERROR");								
 							}
 							server.notifyListUpdate(m);
-							if (!existsParsedURL){
+							if (!server.existsParsedURL()){
 								scheduler.notifyPlayableTrack();
 							}
 						} catch (IOException e) {
-							IO.printlnDebug(this, "Error while parsing URL: "+m.getShortURL());
+							IO.printlnDebug(this, number+": Error while parsing URL: "+m.getShortURL());
 							e.printStackTrace();
 						}
 					}else{
+						nextURLMutex.release();
 						notParsedURLExists = false;
-						IO.printlnDebug(this, "No not parsed URL found!");
+						IO.printlnDebug(this, number+": No not parsed URL found!");
 					}
 				}
 				this.restartRequired = true;
 				newNotParsedURL.acquire();
 			}
 		} catch (InterruptedException e) {
-			IO.printlnDebug(this, "Closed because of interrupt");
+			IO.printlnDebug(this, number+": Closed because of interrupt");
 		}
 	}
 }
