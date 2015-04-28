@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import messages.MessageType;
+import messages.ParseStatus;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
@@ -123,8 +124,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		while (i < result.length){
 			long trackID = Long.parseLong(table[4*i + 1]);
 			if (ownVote == trackID)
-				result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),true,Boolean.parseBoolean(table[4*i + 4]));
-			else result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),false,Boolean.parseBoolean(table[4*i + 4]));
+				result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),true,ParseStatus.valueOf(table[4*i + 4]));
+			else result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),false,ParseStatus.valueOf(table[4*i + 4]));
 			i++;
 		}
 		return result;

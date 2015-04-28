@@ -1,5 +1,7 @@
 package server;
 
+import messages.ParseStatus;
+
 
 
 /**a music track that can be played by the server
@@ -87,11 +89,15 @@ public class MusicTrack {
 	}
 	
 	public boolean isReady(){
-		return !(this.videoURL.equals("") || this.isParsing());
+		return !(this.videoURL.equals("") || this.isParsing() || isError());
 	}
 	
 	public boolean isParsing(){
-		return this.videoURL.equals("PARSING") || this.videoURL.equals("ERROR");
+		return this.videoURL.equals("PARSING");
+	}
+	
+	public boolean isError(){
+		return this.videoURL.equals("ERROR");
 	}
 	
 	public String getShortURL(){
@@ -104,6 +110,14 @@ public class MusicTrack {
 	
 	public boolean isFromSavedGapList(){
 		return this.isFromSavedGapList;
+	}
+
+	public String getParseStatus() {
+		if (!this.isReady())
+			if (this.isError())
+				return ParseStatus.ERROR.toString();
+			else return ParseStatus.NOT_PARSED.toString();
+		else return ParseStatus.PARSED.toString();
 	}
 
 }

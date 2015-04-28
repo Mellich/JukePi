@@ -596,10 +596,13 @@ public class MainWindow extends Window {
 				int colIndex = columnAtPoint(p);
 				
 				if (colIndex == 0) {
-					if (gaplist[rowIndex].isParsed())
-						tip = "Parsed - ";
-					else
-						tip = "Not Parsed - ";
+					switch (gaplist[rowIndex].getParseStatus()){
+					case PARSED: tip = "Parsed - ";
+						break;
+					case NOT_PARSED: tip = "Not Parsed - ";
+						break;
+					default: tip = "Error while parsing: Check the URL! - ";
+					}
 					tip = tip.concat(""+ getValueAt(rowIndex, colIndex));
 				}
 				return tip;
@@ -1175,11 +1178,13 @@ public class MainWindow extends Window {
 		@Override
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	    	if (gaplist[row].isParsed())
-	        	c.setBackground(Color.WHITE);
-	        else {
-	        	c.setBackground(Color.LIGHT_GRAY);
-	        }
+	    	switch (gaplist[row].getParseStatus()){
+	    	case PARSED: c.setBackground(Color.WHITE);
+	    		break;
+	    	case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY);
+	    		break;
+	    	default: c.setBackground(Color.RED);
+	    	}
 	        return c;
 	    }
 	}

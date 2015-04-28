@@ -1,5 +1,7 @@
 package client.serverconnection;
 
+import messages.ParseStatus;
+
 /**
  * The Class, that displays a Song with all it's properties.
  * @author Mellich
@@ -26,7 +28,7 @@ public class Song {
 	 */
 	private boolean ownVote;
 
-	private boolean parsed;
+	private ParseStatus status;
 	
 	/**
 	 * Creates a new Song-Instance.
@@ -36,12 +38,12 @@ public class Song {
 	 * @param ownVote	Determines, if the Track is the own Vote of the Client.
 	 * @since 1.0
 	 */
-	public Song(long trackID, String name, int votes, boolean ownVote,boolean parsed){
+	public Song(long trackID, String name, int votes, boolean ownVote,ParseStatus status){
 		this.trackID = trackID;
 		this.name = name;
 		this.votes = votes;
 		this.ownVote = ownVote;
-		this.parsed = parsed;	}
+		this.status = status;	}
 	
 	/**
 	 * Returns, if the Song is the own Vote of the Client.
@@ -79,7 +81,7 @@ public class Song {
 		return votes;
 	}
 	
-	public boolean isParsed(){
-		return parsed;
+	public ParseStatus getParseStatus(){
+		return status;
 	}
 }

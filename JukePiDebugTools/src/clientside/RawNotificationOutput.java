@@ -77,7 +77,7 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
 		for (Song s: songs){
-			System.out.println(s.getName()+", "+s.getVotes()+", "+s.getTrackID()+", "+s.isParsed()+", "+s.isOwnVote());
+			System.out.println(s.getName()+", "+s.getVotes()+", "+s.getTrackID()+", "+s.getParseStatus()+", "+s.isOwnVote());
 		}
 	}
 

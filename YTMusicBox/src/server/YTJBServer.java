@@ -146,7 +146,7 @@ public class YTJBServer implements Server {
 			result.add(""+list.get(i).getTrackID());
 			result.add(list.get(i).getTitle());
 			result.add(""+list.get(i).getVoteCount());
-			result.add(""+list.get(i).isReady());
+			result.add(""+list.get(i).getParseStatus());
 		}
 		return result;
 	}
@@ -245,11 +245,11 @@ public class YTJBServer implements Server {
 		StringBuilder response = new StringBuilder();
 		if (fromWishList)
 			for (MusicTrack m: wishList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.isReady()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR);
 			}
 		else
 			for (MusicTrack m: gapList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.isReady()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR);
 			}
 		return response.toString();
 	}
@@ -279,12 +279,12 @@ public class YTJBServer implements Server {
 	
 	public synchronized MusicTrack getNextNotParsedURL(){
 		for (MusicTrack m : wishList){
-			if (!m.isParsing() && !m.isReady()){
+			if (!m.isParsing() && !m.isReady() && !m.isError()){
 				return m;
 			}
 		}
 		for (MusicTrack m : gapList){
-			if (!m.isReady() && !m.isParsing()){
+			if (!m.isReady() && !m.isParsing() && !m.isError()){
 				return m;
 			}
 		}
