@@ -1,12 +1,14 @@
 package windows;
 
 import util.TextFieldListener;
+import util.TextTransfer;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
@@ -15,11 +17,14 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -597,11 +602,9 @@ public class MainWindow extends Window {
 				
 				if (colIndex == 0) {
 					switch (gaplist[rowIndex].getParseStatus()){
-					case PARSED: tip = "Parsed - ";
-						break;
-					case NOT_PARSED: tip = "Not Parsed - ";
-						break;
-					default: tip = "Error while parsing: Check the URL! - ";
+						case PARSED: tip = "Parsed - "; break;
+						case NOT_PARSED: tip = "Not Parsed - "; break;
+						default: tip = "Error while parsing: Check the URL! - "; break;
 					}
 					tip = tip.concat(""+ getValueAt(rowIndex, colIndex));
 				}
@@ -965,6 +968,7 @@ public class MainWindow extends Window {
 		txtLink = new JTextField();
 		txtLink.setBounds(10, 60, 362, 20);
 		txtLink.setText("Insert a Link here.");
+		txtLink.addMouseListener(new PopClickListener(txtLink));
 		frame.getContentPane().add(txtLink);
 		
 		JButton btnAdd = new JButton("Add");
@@ -1179,13 +1183,63 @@ public class MainWindow extends Window {
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	    	switch (gaplist[row].getParseStatus()){
-	    	case PARSED: c.setBackground(Color.WHITE);
-	    		break;
-	    	case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY);
-	    		break;
-	    	default: c.setBackground(Color.RED);
+	    		case PARSED: c.setBackground(Color.WHITE); break;
+	    		case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY); break;
+	    		default: c.setBackground(Color.RED); break;
 	    	}
 	        return c;
 	    }
 	}
+}
+
+class PopUpDemo extends JPopupMenu {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4884891507561461361L;
+	TextTransfer tt = new TextTransfer();
+    JMenuItem copy;
+    JMenuItem paste;
+    JMenuItem markAll;
+    public PopUpDemo(JTextField txtLink){
+        copy = new JMenuItem("Copy");
+        copy.setAccelerator(KeyStroke.getKeyStroke('c'));
+        copy.addActionListener((ActionEvent ae) -> {tt.setClipboardContents(txtLink.getSelectedText());});
+        add(copy);
+        
+        paste = new JMenuItem("Paste");
+        paste.setAccelerator(KeyStroke.getKeyStroke('v'));
+        paste.addActionListener((ActionEvent ae) -> {txtLink.setText(tt.getClipboardContents());});
+        add(paste);
+        
+        addSeparator();
+        
+        markAll = new JMenuItem("Mark All");
+        markAll.setAccelerator(KeyStroke.getKeyStroke('m'));
+        markAll.addActionListener((ActionEvent ae) -> {txtLink.setSelectionStart(0);txtLink.setSelectionEnd(txtLink.getText().length());});
+        add(markAll);
+    }
+}
+
+class PopClickListener extends MouseAdapter {
+	
+	JTextField txtLink;
+	public PopClickListener(JTextField txtLink) {
+		this.txtLink = txtLink;
+	}
+	
+    public void mousePressed(MouseEvent e){
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    public void mouseReleased(MouseEvent e){
+        if (e.isPopupTrigger())
+            doPop(e);
+    }
+
+    private void doPop(MouseEvent e){
+        PopUpDemo menu = new PopUpDemo(txtLink);
+        menu.show(e.getComponent(), e.getX(), e.getY());
+    }
 }
