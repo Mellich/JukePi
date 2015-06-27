@@ -1,5 +1,6 @@
 package windows;
 
+import util.PopClickListener;
 import util.TextFieldListener;
 
 import java.awt.Dimension;
@@ -96,6 +97,7 @@ public class LogIn extends Window {
 //TODO	txtIp.setText("IP");
 		txtIp.setText("192.168.178.20");
 		txtIp.setBounds(151, 110, 186, 20);
+		txtIp.addMouseListener(new PopClickListener(txtIp));
 		frame.getContentPane().add(txtIp);
 		txtIp.setColumns(10);
 		
@@ -103,6 +105,7 @@ public class LogIn extends Window {
 //TODO	txtPort.setText("Port");
 		txtPort.setText("22222");
 		txtPort.setBounds(151, 184, 45, 20);
+		txtPort.addMouseListener(new PopClickListener(txtPort));
 		frame.getContentPane().add(txtPort);
 		txtPort.setColumns(10);
 		
