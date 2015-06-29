@@ -22,7 +22,7 @@ public class PopUpMenu extends JPopupMenu {
 	/**
 	 * The {@link TextTransfer}, that will handle the Transfer with the Clipboard.
 	 */
-	private TextTransfer tt = new TextTransfer();
+	private TextTransfer tt;
     
 	/**
 	 * The MenuItem for the Copy-Action.
@@ -46,6 +46,7 @@ public class PopUpMenu extends JPopupMenu {
 	 * @since 1.0
 	 */
     public PopUpMenu(JTextField txtLink){
+    	tt = new TextTransfer();
         copy = new JMenuItem("Copy");
         copy.setAccelerator(KeyStroke.getKeyStroke('c'));
         copy.addActionListener((ActionEvent ae) -> {tt.setClipboardContents(txtLink.getSelectedText());});
@@ -53,7 +54,15 @@ public class PopUpMenu extends JPopupMenu {
         
         paste = new JMenuItem("Paste");
         paste.setAccelerator(KeyStroke.getKeyStroke('v'));
-        paste.addActionListener((ActionEvent ae) -> {txtLink.setText(tt.getClipboardContents());});
+        paste.addActionListener((ActionEvent ae) -> {	if (txtLink.getText().equals(""))
+        													txtLink.setText(tt.getClipboardContents());
+        												else {
+        														String txt = txtLink.getText().substring(0,txtLink.getSelectionStart());
+        														txt = txt.concat(tt.getClipboardContents());
+        														txt = txt.concat(txtLink.getText().substring(txtLink.getSelectionEnd(), txtLink.getText().length()));
+        														txtLink.setText(txt);
+        												}
+        											});
         add(paste);
         
         addSeparator();
