@@ -1167,7 +1167,11 @@ public class MainWindow extends Window {
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 	}
 	
-	
+	/**
+	 * 
+	 * @author Frederic
+	 *
+	 */
 	private class TableRenderer extends DefaultTableCellRenderer {
 
 	    /**
