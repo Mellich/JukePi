@@ -7,15 +7,44 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+/**
+ * The PopupMenu for the TextFields, so they have a Rightclick-Menu.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class PopUpMenu extends JPopupMenu {
+	
 	/**
-	 * 
+	 * The serial Version UID.
 	 */
 	private static final long serialVersionUID = 4884891507561461361L;
-	TextTransfer tt = new TextTransfer();
-    JMenuItem copy;
-    JMenuItem paste;
-    JMenuItem markAll;
+	
+	/**
+	 * The {@link TextTransfer}, that will handle the Transfer with the Clipboard.
+	 */
+	private TextTransfer tt = new TextTransfer();
+    
+	/**
+	 * The MenuItem for the Copy-Action.
+	 */
+	private JMenuItem copy;
+    
+	/**
+	 * The MenuItem for the Paste-Action.
+	 */
+	private JMenuItem paste;
+    
+	/**
+	 * The MenuItem for the "Mark All"-Action.
+	 */
+	private JMenuItem markAll;
+	
+	/**
+	 * The Constructor for the Menu, that will initialize all MenuItems and link their 
+	 * Listeners to them.
+	 * @param txtLink	The TextField, this Menu will be linked to.
+	 * @since 1.0
+	 */
     public PopUpMenu(JTextField txtLink){
         copy = new JMenuItem("Copy");
         copy.setAccelerator(KeyStroke.getKeyStroke('c'));
