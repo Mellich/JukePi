@@ -13,16 +13,38 @@ import javax.swing.JTextArea;
 
 import client.listener.DebugNotificationListener;
 
+/**
+ * The Window, that will display the Debug-Messages
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class DebugWindow extends Window implements DebugNotificationListener{
 
+	/**
+	 * The Frame, this Class will be working on.
+	 */
 	private JFrame frame;
 	
+	/**
+	 * The Debug-Messages as an {@link ArrayList}.
+	 */
 	private ArrayList<String> messages;
 	
+	/**
+	 * The TextArea for the Messages.
+	 * @see JTextArea
+	 */
 	private JTextArea txtDebugs;
 	
+	/**
+	 * Determines, if the Window should record the Messages and print them on the Frame or not.
+	 */
 	private boolean recording;
 	
+	/**
+	 * The Constructor for the Window.
+	 * @since 1.0
+	 */
 	public DebugWindow() {
 		messages = new ArrayList<String>();
 		txtDebugs = new JTextArea();
@@ -46,12 +68,12 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 
 	@Override
 	public void onClientCountChangedNotify(int newClientCount) {
-		addNewMessage("New Client Count: " + newClientCount);
+	//	addNewMessage("New Client Count: " + newClientCount);
 	}
 
 	@Override
 	public void onPlayerCountChangedNotify(int newPlayerCount) {
-		addNewMessage("New Player Count: " + newPlayerCount);
+	//	addNewMessage("New Player Count: " + newPlayerCount);
 	}
 
 	@Override
@@ -59,6 +81,11 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		addNewMessage(output);
 	}
 	
+	/**
+	 * Adds a new Message to {@link #messages}, if {@link #recording} is {@code true}.
+	 * @param message	The Message, that might be added.
+	 * @since 1.0
+	 */
 	private synchronized void addNewMessage(String message) {
 		if (recording) {
 			if (messages.size() < 200)
@@ -75,6 +102,10 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		}
 	}
 	
+	/**
+	 * Creates the Frame for the DebugWindow.
+	 * @since 1.0
+	 */
 	private void createFrame() {
 		frame = new JFrame();
 		frame.setSize(new Dimension(800, 400));
@@ -108,6 +139,4 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		
 		frame.setVisible(true);
 	}
-
-
 }

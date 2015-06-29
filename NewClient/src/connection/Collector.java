@@ -12,7 +12,6 @@ import windows.LogIn;
 import windows.MainWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
-import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
 import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
@@ -22,7 +21,7 @@ import client.serverconnection.Song;
 /**
  * The Collector, that will start the Client. Also provides all necessary information for each Frame, to work properly.
  * @author Haeldeus
- * @version 1.0
+ * @version 1.1
  */
 public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener {
 
@@ -168,6 +167,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @since 1.0
 	 */
 	public void disconnect() {
+		debugScreen.close();
 		mainScreen.close();
 		wrapper.close();
 		if (localServer != null)
@@ -234,6 +234,10 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		this.gaplist = gaplist;
 	}
 
+	/**
+	 * Shows the DebugWindow.
+	 * @since 1.1
+	 */
 	public void showDebugWindow() {
 		debugScreen.show();
 	}
