@@ -27,6 +27,8 @@ public class Song {
 	 * Determines, if the Song is the own Vote of the Client.
 	 */
 	private boolean ownVote;
+	
+	private String url;
 
 	private ParseStatus status;
 	
@@ -38,12 +40,14 @@ public class Song {
 	 * @param ownVote	Determines, if the Track is the own Vote of the Client.
 	 * @since 1.0
 	 */
-	public Song(long trackID, String name, int votes, boolean ownVote,ParseStatus status){
+	public Song(long trackID, String name, int votes, boolean ownVote,ParseStatus status,String url){
 		this.trackID = trackID;
 		this.name = name;
 		this.votes = votes;
 		this.ownVote = ownVote;
-		this.status = status;	}
+		this.status = status;
+		this.url = url;
+	}
 	
 	/**
 	 * Returns, if the Song is the own Vote of the Client.
@@ -83,5 +87,9 @@ public class Song {
 	
 	public ParseStatus getParseStatus(){
 		return status;
+	}
+	
+	public String getURL(){
+		return url;
 	}
 }

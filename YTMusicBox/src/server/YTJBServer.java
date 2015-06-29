@@ -32,6 +32,8 @@ public class YTJBServer implements Server {
 	 */
 	public static final int PORT = 12345;
 	
+	private long version = 813L;
+	
 	public String workingDirectory;
 	
 	/**
@@ -147,6 +149,7 @@ public class YTJBServer implements Server {
 			result.add(list.get(i).getTitle());
 			result.add(""+list.get(i).getVoteCount());
 			result.add(""+list.get(i).getParseStatus());
+			result.add(""+list.get(i).getShortURL());
 		}
 		return result;
 	}
@@ -245,11 +248,11 @@ public class YTJBServer implements Server {
 		StringBuilder response = new StringBuilder();
 		if (fromWishList)
 			for (MusicTrack m: wishList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR+m.getShortURL()+MessageType.SEPERATOR);
 			}
 		else
 			for (MusicTrack m: gapList){
-				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR);
+				response.append(m.getTrackID()+MessageType.SEPERATOR+m.getTitle()+MessageType.SEPERATOR+m.getVoteCount()+MessageType.SEPERATOR+m.getParseStatus()+MessageType.SEPERATOR+m.getShortURL()+MessageType.SEPERATOR);
 			}
 		return response.toString();
 	}
@@ -589,6 +592,11 @@ public class YTJBServer implements Server {
 			IO.printlnDebug(null, "given port is in use!");
 			e.printStackTrace();
 		}
+	}
+
+
+	public long getVersion() {
+		return version;
 	}
 	
 

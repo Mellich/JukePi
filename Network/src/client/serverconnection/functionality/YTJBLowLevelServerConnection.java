@@ -29,6 +29,10 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 */
 	private ServerConnectionNotifier notifyWrapper;
 	
+	private long serverVersion = 0L;
+	
+	private long version = 813L;
+	
 	/**
 	 * The {@link Socket} to the Server.
 	 */
@@ -130,9 +134,10 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker));
 			inputListener.start();
 			checker.start();
-			this.sendMessage(MessageType.REGISTERCLIENT,""+getMACAddress());
+			String[] response = this.sendBlockingMessage(MessageType.REGISTERCLIENT,""+getMACAddress()+MessageType.SEPERATOR+version);
+			serverVersion = Long.parseLong(response[0]);
 			return true;
-		} catch (IOException | NullPointerException e) {
+		} catch (IOException | NumberFormatException | NullPointerException e) {
 			System.out.println("Fehler beim Verbinden!");
 			e.printStackTrace();
 			return false;
@@ -363,6 +368,16 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
         } catch (SocketException ex) {
         }
         return null; 
+	}
+
+	@Override
+	public long getServerVersion() {
+		return serverVersion;
+	}
+
+	@Override
+	public long getVersion() {
+		return version;
 	}
 
 }

@@ -57,7 +57,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GAPBEGINNINGYOUTUBE: new YoutubeCommand(out,prompt,server,false,true,args[1]).handle();
 			break;
-		case MessageType.REGISTERCLIENT: server.registerNotifiable(parent);parent.setMACAddress(Long.parseLong(args[1]));
+		case MessageType.REGISTERCLIENT: new RegisterCommand(out, prompt,parent,server,args).handle();
 			break;
 		case MessageType.GAPLISTTRACKUP: new GapListTrackUpCommand(out,prompt,server,Integer.parseInt(args[1])).handle();
 			break;
@@ -103,6 +103,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.REMOVEVOTE: new RemoveVoteCommand(out, prompt, server, parent.getMACAddress()).handle();
 		break;
+		//TODO: neue commands implementieren
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}

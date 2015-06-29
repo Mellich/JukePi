@@ -29,6 +29,7 @@ public class Connection extends Thread {
 	private boolean isGapListListener = false;
 	private boolean isPlayer = false;
 	private long macAddress = -1L;
+	private long version = -1L;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
@@ -76,6 +77,14 @@ public class Connection extends Thread {
 	
 	public void setMACAddress(long mac){
 		macAddress = mac;
+	}
+	
+	public void setVersion(long v){
+		version = v;
+	}
+	
+	public long getVersion(){
+		return version;
 	}
 
 	public long getMACAddress(){

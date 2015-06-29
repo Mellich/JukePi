@@ -90,4 +90,8 @@ public interface LowLevelServerConnection {
 	 * @since 1.0
 	 */
 	public String[] sendBlockingMessage(int messageType,String messageArgument);
+	
+	public long getServerVersion();
+	
+	public long getVersion();
 }

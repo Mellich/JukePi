@@ -119,13 +119,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 */
 	private Song[] stringArrayToSongArray(String[] table){
 		long ownVote = Long.parseLong(table[0]);
+		int itemCount = 5;
 		int i = 0;
-		Song[] result = new Song[(table.length - 1) / 4];
+		Song[] result = new Song[(table.length - 1) / itemCount];
 		while (i < result.length){
-			long trackID = Long.parseLong(table[4*i + 1]);
-			if (ownVote == trackID)
-				result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),true,ParseStatus.valueOf(table[4*i + 4]));
-			else result[i] = new Song(trackID,table[4*i + 2],Integer.parseInt(table[4*i + 3]),false,ParseStatus.valueOf(table[4*i + 4]));
+			long trackID = Long.parseLong(table[itemCount*i + 1]);
+			result[i] = new Song(trackID,table[itemCount*i + 2],Integer.parseInt(table[itemCount*i + 3]),(ownVote == trackID),ParseStatus.valueOf(table[itemCount*i + 4]),table[itemCount*i + 5]);
 			i++;
 		}
 		return result;
