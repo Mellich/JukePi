@@ -7,10 +7,12 @@ import javax.swing.JFrame;
 
 import server.Server;
 import server.ServerFactory;
+import windows.DebugWindow;
 import windows.LogIn;
 import windows.MainWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
+import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
 import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
@@ -22,7 +24,7 @@ import client.serverconnection.Song;
  * @author Haeldeus
  * @version 1.0
  */
-public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
+public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener {
 
 	/**
 	 * Time in ms, when the wrapper should check the connectivity of the server, if no response 
@@ -47,6 +49,12 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @see MainWindow
 	 */
 	private MainWindow mainScreen;
+	
+	/**
+	 * The Debug-Screen, that will keep track of Debug Notifications from the Server.
+	 * @see DebugWindow
+	 */
+	private DebugWindow debugScreen;
 	
 	/**
 	 * The possible Server, that runs locally. Will be null if connecting to another Server, 
@@ -145,6 +153,8 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
 			mainScreen.show();
 			mainScreen.setIpAndPort(ip, iport);
+			debugScreen = new DebugWindow();
+			wrapper.addDebugNotificationListener(debugScreen);
 			return true;
 		}
 		else {
@@ -222,5 +232,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	public void setLists(Song[] wishlist, Song[] gaplist) {
 		this.wishlist = wishlist;
 		this.gaplist = gaplist;
+	}
+
+	public void showDebugWindow() {
+		debugScreen.show();
 	}
 }

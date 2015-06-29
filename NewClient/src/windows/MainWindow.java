@@ -9,7 +9,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
@@ -1163,6 +1162,11 @@ public class MainWindow extends Window {
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
 		
+		JButton btnDebugMode = new JButton("Debug Mode");
+		btnDebugMode.setBounds(450, 32, 120, 23);
+		btnDebugMode.setToolTipText("Click here to open the Debug Window.");
+		frame.getContentPane().add(btnDebugMode);
+		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
 															//	btnPlayPause.setIcon(pauseIcon);
@@ -1191,6 +1195,7 @@ public class MainWindow extends Window {
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textName.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
+		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
 	}
 	
 	/**
