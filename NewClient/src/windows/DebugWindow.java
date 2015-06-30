@@ -63,7 +63,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 
 	@Override
 	public void close() {
-		frame.setVisible(false);
+		if (frame != null)
+			frame.setVisible(false);
 	}
 
 	@Override

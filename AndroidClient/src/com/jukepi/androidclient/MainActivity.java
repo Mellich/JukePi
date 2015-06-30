@@ -3,18 +3,24 @@ package com.jukepi.androidclient;
 import client.listener.DefaultNotificationListener;
 import client.serverconnection.Song;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
 
 public class MainActivity extends Activity implements DefaultNotificationListener {
 
+	private Song[] list;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		GridView wishList = (GridView) this.findViewById(R.id.wishListView);
+		this.setTitle("JukePi");
+	//	GridView wishList = (GridView) this.findViewById(R.id.wishListView);
 	}
 
 	@Override
@@ -36,6 +42,13 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void showFullName(View v) {
+		ProgressDialog progress = new ProgressDialog(this,ProgressDialog.STYLE_HORIZONTAL);
+		progress.setMessage(v.toString());
+		progress.setCancelable(true);
+		progress.show();
+	} 
+	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
 		// TODO Auto-generated method stub
