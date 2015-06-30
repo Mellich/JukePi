@@ -93,7 +93,7 @@ public class IO {
 		try {
 			long max = reader.lines().count();
 			reader.close();
-			String[] title = new String[(int)max];
+			String[] title = new String[(int)max*2];
 			IO.printlnDebug(null, "Titles to output: "+max);
 			reader = getFileOutput(filename);
 			int current = 0;
@@ -101,6 +101,8 @@ public class IO {
 			while (url != null || url == ""){
 				String[] splitted = url.split(";");
 				title[current] = splitted[1];
+				current++;
+				title[current] = splitted[2];
 				current++;
 				url = reader.readLine();
 			}

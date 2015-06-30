@@ -331,7 +331,7 @@ public interface ServerConnection {
 	 * @return	The Tracks saved in the Gaplist.
 	 * @since 1.0
 	 */
-	public String[] getTitleFromGapList(String name);
+	public Song[] getTitleFromGapList(String name);
 	
 	/**
 	 * Gets the current Playback status of the Server.

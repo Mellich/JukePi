@@ -32,7 +32,7 @@ public class YTJBServer implements Server {
 	 */
 	public static final int PORT = 12345;
 	
-	private long version = 813L;
+	private long version = 816L;
 	
 	public String workingDirectory;
 	

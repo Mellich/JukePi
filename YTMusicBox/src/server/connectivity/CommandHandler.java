@@ -69,7 +69,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.GETCURRENTGAPLISTNAME: new GetCurrentGapListNameCommand(out,prompt,server).handle();
 			break;
-		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,prompt,server,args[1]).handle();
+		case MessageType.GETTITLEFROMGAPLIST: new GetTitleOfGapListCommand(out,prompt,server,args[1],parent.getVersion()).handle();
 			break;
 		case MessageType.SETMEASPLAYER: new SetAsPlayerCommand(out,prompt,server,parent).handle();
 			break;

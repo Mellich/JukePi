@@ -488,8 +488,13 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public String[] getTitleFromGapList(String name) {
-		return this.serverConnection.sendBlockingMessage(MessageType.GETTITLEFROMGAPLIST);
+	public Song[] getTitleFromGapList(String name) {
+		String[] result =  this.serverConnection.sendBlockingMessage(MessageType.GETTITLEFROMGAPLIST);
+		Song[] songList = new Song[result.length / 2];
+		for (int i = 0; i < result.length; i = i +2){
+			songList[i/2] = new Song(-1L, result[i], -1, false, null, result[i + 1]);
+		}
+		return songList;
 	}
 
 	@Override
