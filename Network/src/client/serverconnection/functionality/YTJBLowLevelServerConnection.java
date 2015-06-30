@@ -31,7 +31,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	
 	private long serverVersion = 0L;
 	
-	private long version = 813L;
+	private long version = 815L;
 	
 	/**
 	 * The {@link Socket} to the Server.

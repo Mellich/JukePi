@@ -103,7 +103,8 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.REMOVEVOTE: new RemoveVoteCommand(out, prompt, server, parent.getMACAddress()).handle();
 		break;
-		//TODO: neue commands implementieren
+		case MessageType.ADDTOOTHERLIST: new AddSongToOtherListCommand(out,prompt,server,Long.parseLong(args[1])).handle();
+		break;
 		default: new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+prompt).handle();
 		}		
 	}

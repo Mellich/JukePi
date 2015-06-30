@@ -666,4 +666,15 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		else return false;
 	}
 
+	@Override
+	public void addSongToOtherList(ResponseListener response, Song song) {
+		this.serverConnection.sendMessage(response, MessageType.ADDTOOTHERLIST,""+song.getTrackID());
+		
+	}
+
+	@Override
+	public boolean addSongToOtherList(Song song) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.ADDTOOTHERLIST, ""+song.getTrackID())[0]);
+	}
+
 }

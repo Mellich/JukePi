@@ -229,6 +229,7 @@ public class YTJBServer implements Server {
 					}
 				}
 				gapList.remove(temp);
+				this.setMaxGapListTrackCount(this.getMaxLoadedGapListTracksCount() - 1);
 				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
@@ -402,6 +403,22 @@ public class YTJBServer implements Server {
 	public String[] readOutGapList(String filename){
 		IO.printlnDebug(this, "Reading out gap list: "+filename);
 		return IO.readOutGapList(workingDirectory+filename);
+	}
+	
+	public boolean addSongToOtherList(long trackID){
+		for (MusicTrack m : gapList){
+			if (m.getTrackID() == trackID){
+				wishList.add(new MusicTrack(m));
+				return true;
+			}
+		}
+		for (MusicTrack m : wishList){
+			if (m.getTrackID() == trackID){
+				gapList.add(new MusicTrack(m));
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public synchronized boolean switchTrackPosition(long trackID, boolean withUpper){
@@ -599,6 +616,5 @@ public class YTJBServer implements Server {
 		return version;
 	}
 	
-
 	
 }

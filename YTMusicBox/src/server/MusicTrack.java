@@ -34,6 +34,10 @@ public class MusicTrack {
 	private boolean isVideo = true;
 	private boolean isFromSavedGapList = false;
 	
+	public MusicTrack(MusicTrack m){
+		this(m.getMusicType(),m.getTitle(),m.getVideoURL(),m.getShortURL(),m.isFromSavedGapList());
+	}
+	
 	public MusicTrack(TrackType t,String name, String videoURL,String shortURL, boolean isFromSavedGapList) {
 		this(t,name,videoURL,shortURL);
 		this.isFromSavedGapList = isFromSavedGapList;

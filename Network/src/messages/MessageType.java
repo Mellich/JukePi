@@ -274,9 +274,7 @@ public class MessageType {
 	 */
 	public static final int REMOVEVOTE = 53;
 	
-	public static final int FROMGAPTOWISHLIST = 54;
-	
-	public static final int FROMWISHTOGAPLIST = 55;
+	public static final int ADDTOOTHERLIST = 54;
 	
 	/**
 	 * The Seperator for the arguments of a command.

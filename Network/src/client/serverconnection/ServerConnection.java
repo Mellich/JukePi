@@ -590,4 +590,8 @@ public interface ServerConnection {
 	 * @since 1.0
 	 */
 	public boolean removeVote();
+	
+	public void addSongToOtherList(ResponseListener response,Song song);
+	
+	public boolean addSongToOtherList(Song song);
 }
