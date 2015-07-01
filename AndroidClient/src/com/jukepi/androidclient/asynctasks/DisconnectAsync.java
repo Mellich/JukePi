@@ -1,32 +1,28 @@
 package com.jukepi.androidclient.asynctasks;
 
-import com.jukepi.androidclient.GlobalAccess;
-import com.jukepi.androidclient.MainActivity;
-import com.jukepi.androidclient.ServerConnectionContainer;
+import com.jukepi.androidclient.LoginActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
-	
+public class DisconnectAsync extends AsyncTask<String, Integer, Boolean>{
+
 	private Context context;
 	private ProgressDialog progress;
 
-	public ConnectAsync(Context context) {
+	public DisconnectAsync(Context context) {
 		progress = new ProgressDialog(context,ProgressDialog.STYLE_SPINNER);
-		progress.setMessage("Connecting to server...");
+		progress.setMessage("Server was shut down. Going Back to Login-Screen!");
 		progress.setCancelable(false);
 		this.context = context;
 	}
-
+	
 	@Override
-	protected Boolean doInBackground(String... arg0) {
-		GlobalAccess.con = ServerConnectionContainer.getServerConnection();
-		if (GlobalAccess.con.connect(arg0[0], Integer.parseInt(arg0[1])))
-			return true;
-		return false;
+	protected Boolean doInBackground(String... params) {
+		try {Thread.sleep(1000);} catch (Exception e) {}
+		return true;
 	}
 	
 	@Override
@@ -40,7 +36,7 @@ public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
 		super.onPostExecute(result);
 		progress.dismiss();
 		if (result){
-			Intent intent = new Intent(context, MainActivity.class);
+			Intent intent = new Intent(context, LoginActivity.class);
 			context.startActivity(intent);
 		}
 	}
@@ -51,5 +47,4 @@ public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
 		super.onCancelled();
 		progress.dismiss();
 	}
-
 }

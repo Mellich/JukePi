@@ -4,7 +4,6 @@ import com.jukepi.androidclient.asynctasks.ConnectAsync;
 import com.jukepi.androidclient.asynctasks.UDPConnectAsync;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;

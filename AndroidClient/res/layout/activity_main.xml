@@ -1,212 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
-    <LinearLayout 
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_weight="1">	
-        	<TextView
-            	android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:layout_weight="1"
-            	android:gravity="center"
-                    android:text="Now playing:"/>
-        	<TextView 
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="wrap_content"
-            	android:layout_weight="1"
-            	android:gravity="center"
-                    android:text="Call me Manana"/>
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_weight="1">	
-        	<TextView
-            	android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:layout_weight="1"
-            	android:gravity="center"
-                    android:text="Next Track:"/>
-        	<TextView 
-        	    android:layout_width="wrap_content"
-        	    android:layout_height="wrap_content"
-            	android:layout_weight="1"
-            	android:gravity="center"
-                    android:text="Don't call me Manana"/>
-        	</LinearLayout>
-    </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="showFullName"
-                    android:text="Name"/>
+            android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="showFullName"
-                android:text="#Votes" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.21"
-                android:gravity="center"
-                android:onClick="showFullName"
-                android:text="Vote" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="ButtonText" />
+                android:orientation="vertical" >
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
 
-        </LinearLayout>    
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
+                    <TextView
+                        android:id="@+id/nowPlaying"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Now playing:" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
+                    <TextView
+                        android:id="@+id/playingTrack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Call me Manana" />
+                </LinearLayout>
 
-        </LinearLayout> 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
+                    <TextView
+                        android:id="@+id/nextTrack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Next Track:" />
 
-        </LinearLayout> 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
+                    <TextView
+                        android:id="@+id/nextTrackName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Don&apos;t call me Manana" />
+                </LinearLayout>
+            </LinearLayout>
+			<LinearLayout
+            	android:orientation="horizontal"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_weight="1">
+            	<TextView
+                	android:id="@+id/name"
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:layout_weight="1"
+            		android:gravity="center"
+            		android:onClick="showFullName"
+                    	android:text="Name"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
+            	<TextView
+                	android:id="@+id/voteNumbers"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:gravity="center"
+                	android:onClick="showFullName"
+                	android:text="#Votes" />
 
-        </LinearLayout> 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
-
-        </LinearLayout> 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
-
-        </LinearLayout> 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
-
+            	<TextView
+                	android:id="@+id/vote"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="0.21"
+                	android:gravity="center"
+                	android:onClick="showFullName"
+                	android:text="Vote" />
+        	</LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-                    android:text="ButtonText"/>
+        <ScrollView android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        	android:layout_weight="1">
+        
+        	<ListView
+        	android:id="@android:id/list"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:drawSelectorOnTop="false" />
+   		</ScrollView>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vote" />
-
-        </LinearLayout>
 </LinearLayout>

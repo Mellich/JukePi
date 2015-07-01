@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 import client.listener.DebugNotificationListener;
 
@@ -41,6 +42,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	 */
 	private boolean recording;
 	
+	private JScrollPane scrollPane;
+	
 	/**
 	 * The Constructor for the Window.
 	 * @since 1.0
@@ -48,6 +51,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	public DebugWindow() {
 		messages = new ArrayList<String>();
 		txtDebugs = new JTextArea();
+		DefaultCaret caret = (DefaultCaret)txtDebugs.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		recording = true;
 	}
 	
@@ -116,7 +121,7 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		Container pane = new Container();
 		pane.setLayout(new BorderLayout());
 		
-		JScrollPane scrollPane = new JScrollPane(txtDebugs);
+		scrollPane = new JScrollPane(txtDebugs);
 		
 		JButton btnStop = new JButton("Stop");
 		btnStop.setToolTipText("Stops recording Debug Data");
