@@ -420,7 +420,7 @@ public class MainWindow extends Window {
 	 * @since 1.2
 	 */
 	private void showGaplist(String name) {
-		wrapper.getTitleFromGapList((String[] s) -> {createContentTable(s);}, name);
+		createContentTable(wrapper.getTitleFromGapList(name));
 	}
 	
 	/**
@@ -764,7 +764,7 @@ public class MainWindow extends Window {
 	 * @param content	The Content of the Gaplist, that should be shown.
 	 * @since 1.2
 	 */
-	private synchronized void createContentTable(String[] content) {
+	private synchronized void createContentTable(Song[] content) {
 		if (oldContentPane != null)
 			frame.getContentPane().remove(oldContentPane);
 		
@@ -775,7 +775,7 @@ public class MainWindow extends Window {
 			data = new String[content.length][1];
 		
 			for (int i = 0; i < content.length; i++)
-				data[i][0] = content[i];
+				data[i][0] = content[i].getName();
 		}
 		
 		JTable table = new JTable(data, columns) {
@@ -840,6 +840,7 @@ public class MainWindow extends Window {
 				};
             }
         };
+        table.addMouseListener(new TablePopClickListener(table, content));
 		JScrollPane contentPane = new JScrollPane(table);
 		contentPane.setBounds(320, 528, 248, 102);
 		frame.getContentPane().add(contentPane);
