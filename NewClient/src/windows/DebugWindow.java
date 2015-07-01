@@ -6,10 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,11 +31,6 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	private JFrame frame;
 	
 	/**
-	 * The Debug-Messages as an {@link ArrayList}.
-	 */
-	private ArrayList<String> messages;
-	
-	/**
 	 * The TextArea for the Messages.
 	 * @see JTextArea
 	 */
@@ -63,7 +54,6 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	 * @since 1.0
 	 */
 	public DebugWindow(ServerConnection serverConnection) {
-		messages = new ArrayList<String>();
 		txtDebugs = new JTextArea();
 		playerCount = new JLabel(""+serverConnection.getCurrentPlayerCount());
 		clientCount = new JLabel(""+serverConnection.getCurrentClientCount());
@@ -120,7 +110,6 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 				try {
 					txtDebugs.replaceRange("", 0, txtDebugs.getLineEndOffset(diff - 1));
 				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
