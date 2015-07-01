@@ -6,13 +6,18 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 
 import client.listener.DebugNotificationListener;
 import client.serverconnection.ServerConnection;
@@ -51,6 +56,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	
 	private JLabel clientCount;
 	
+	private StringBuilder buffer;
+	
 	/**
 	 * The Constructor for the Window.
 	 * @since 1.0
@@ -61,6 +68,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		playerCount = new JLabel(""+serverConnection.getCurrentPlayerCount());
 		clientCount = new JLabel(""+serverConnection.getCurrentClientCount());
 		recording = true;
+		((DefaultCaret) txtDebugs.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		buffer = new StringBuilder("");
 	}
 	
 	@Override
@@ -90,8 +99,11 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	}
 
 	@Override
-	public void onNewOutput(String output) {
-		addNewMessage(output);
+	public synchronized void onNewOutput(String output) {
+		buffer.append(output+"\n");
+		if (recording){ 
+			addNewMessage();
+		}
 	}
 	
 	/**
@@ -99,15 +111,19 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	 * @param message	The Message, that might be added.
 	 * @since 1.0
 	 */
-	private synchronized void addNewMessage(String message) {
-		if (recording) {
-			messages.add(0,message);
-			if (messages.size() > 200)
-				messages.set(200, null);
-		
-			txtDebugs.setText(messages.get(messages.size()-1));
-			for (int i = messages.size()-2; i >= 0; i--)
-				txtDebugs.setText(txtDebugs.getText() + "\n"+messages.get(i));
+	private synchronized void addNewMessage() {	
+		if (buffer.length() > 0){
+			txtDebugs.append(buffer.toString());
+			buffer.setLength(0);
+			if (txtDebugs.getLineCount() > 200){
+				int diff = txtDebugs.getLineCount() - 200;
+				try {
+					txtDebugs.replaceRange("", 0, txtDebugs.getLineEndOffset(diff - 1));
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -163,6 +179,7 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 																recording = true;
 																btnStop.setText("Stop");
 																btnStop.setToolTipText("Stops recording Debug Data");
+																addNewMessage();
 															}
 														});
 		
