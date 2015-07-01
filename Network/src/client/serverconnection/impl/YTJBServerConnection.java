@@ -30,6 +30,8 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection;
  */
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
+	private static final long CURRENT_VERSION = 816L;
+	
 	/**
 	 * The Listeners for seekNotifications.
 	 */
@@ -75,13 +77,15 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 */
 	private boolean isAndroid;
 	
+	private long version = -1L;
+	
 	/**
 	 * Creates a new Instance of the ServerConnection with default values of 
 	 * {@link #checkInterval} ({@code 0}) and {@link #isAndroid} ({@code false}).
 	 * @since 1.0
 	 */
 	public YTJBServerConnection() {
-		this(0,false);
+		this(0,false,CURRENT_VERSION);
 	}
 	
 	/**
@@ -90,13 +94,14 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * @param isAndroid	Determines, if the Client is an Android Application.
 	 * @since 1.0
 	 */
-	public YTJBServerConnection(int checkInterval,boolean isAndroid) {
+	public YTJBServerConnection(int checkInterval,boolean isAndroid, long version) {
 		defaultNotificationListener = new ArrayList<DefaultNotificationListener>();
 		debugNotificationListener = new ArrayList<DebugNotificationListener>();
 		seekNotificationListener = new ArrayList<SeekNotificationListener>();
 		gapListNotificationListener = new ArrayList<GapListNotificationListener>();
 		pauseResumeNotificationListener = new ArrayList<PauseResumeNotificationListener>();
 		connected = false;
+		this.version = version;
 		this.isAndroid = isAndroid;
 		this.checkInterval = checkInterval;
 	}
@@ -108,7 +113,15 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * @since 1.0
 	 */
 	public YTJBServerConnection(int checkInterval2) {
-		this(checkInterval2,false);
+		this(checkInterval2,false,CURRENT_VERSION);
+	}
+	
+	public YTJBServerConnection(int checkIntervall, boolean isAndroid){
+		this(checkIntervall,isAndroid,CURRENT_VERSION);
+	}
+	
+	public YTJBServerConnection(int checkIntervall, long version){
+		this(checkIntervall,false,version);
 	}
 
 	/**
@@ -271,7 +284,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean connect(String ipAddress, int port) {
-		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid);
+		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid,version);
 		if (serverConnection.connect()){
 			connected = true;
 			if (!defaultNotificationListener.isEmpty())

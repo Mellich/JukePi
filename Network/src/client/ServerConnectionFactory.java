@@ -42,4 +42,12 @@ public class ServerConnectionFactory {
 	public static ServerConnection createServerConnection(int checkInterval, boolean isAndroid){
 		return new YTJBServerConnection(checkInterval,isAndroid);
 	}
+	
+	public static ServerConnection createServerConnection(int checkInterval, boolean isAndroid,long version){
+		return new YTJBServerConnection(checkInterval,isAndroid,version);
+	}
+	
+	public static ServerConnection createServerConnection(int checkInterval, long version){
+		return new YTJBServerConnection(checkInterval,version);
+	}
 }

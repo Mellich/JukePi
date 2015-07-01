@@ -31,7 +31,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	
 	private long serverVersion = 0L;
 	
-	private long version = 815L;
+	private long version = 816L;
 	
 	/**
 	 * The {@link Socket} to the Server.
@@ -104,8 +104,8 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 * @param port	The Port of the Server.
 	 * @since 1.0
 	 */
-	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port) {
-		this(notifyWrapper,ip,port,0,false);
+	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port,long version) {
+		this(notifyWrapper,ip,port,0,false,version);
 	}
 	
 	/**
@@ -117,13 +117,14 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 * @param isAndroid	Determines, if the Client is an Android Application.
 	 * @since 1.0
 	 */
-	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port,int checkInterval, boolean isAndroid) {
+	public YTJBLowLevelServerConnection(ServerConnectionNotifier notifyWrapper,String ip, int port,int checkInterval, boolean isAndroid, long version) {
 		this.port = port;
 		this.ipAddress = ip;
 		this.isAndroid =isAndroid;
 		this.notifyWrapper = notifyWrapper;
 		responses = new ResponseControllerImpl();
 		checker = new AliveChecker(checkInterval);
+		this.version = version;
 	}
 
 	@Override

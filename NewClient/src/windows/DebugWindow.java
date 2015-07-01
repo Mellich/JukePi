@@ -3,16 +3,19 @@ package windows;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
 
 import client.listener.DebugNotificationListener;
+import client.serverconnection.ServerConnection;
 
 /**
  * The Window, that will display the Debug-Messages
@@ -44,13 +47,19 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	
 	private JScrollPane scrollPane;
 	
+	private JLabel playerCount;
+	
+	private JLabel clientCount;
+	
 	/**
 	 * The Constructor for the Window.
 	 * @since 1.0
 	 */
-	public DebugWindow() {
+	public DebugWindow(ServerConnection serverConnection) {
 		messages = new ArrayList<String>();
 		txtDebugs = new JTextArea();
+		playerCount = new JLabel(""+serverConnection.getCurrentPlayerCount());
+		clientCount = new JLabel(""+serverConnection.getCurrentClientCount());
 		recording = true;
 	}
 	
@@ -72,12 +81,12 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 
 	@Override
 	public void onClientCountChangedNotify(int newClientCount) {
-	//	addNewMessage("New Client Count: " + newClientCount);
+		clientCount.setText(""+newClientCount);
 	}
 
 	@Override
 	public void onPlayerCountChangedNotify(int newPlayerCount) {
-	//	addNewMessage("New Player Count: " + newPlayerCount);
+		playerCount.setText(""+newPlayerCount);
 	}
 
 	@Override
@@ -97,7 +106,7 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 				messages.set(200, null);
 		
 			txtDebugs.setText(messages.get(messages.size()-1));
-			for (int i = messages.size()-1; i >= 0; i--)
+			for (int i = messages.size()-2; i >= 0; i--)
 				txtDebugs.setText(txtDebugs.getText() + "\n"+messages.get(i));
 		}
 	}
@@ -122,6 +131,26 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		
 		pane.add(scrollPane, BorderLayout.CENTER);
 		pane.add(btnStop, BorderLayout.SOUTH);
+		
+		Container clientCounts = new Container();
+		clientCounts.setLayout(new GridLayout(1,2));
+		
+		Container left = new Container();
+		left.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		left.add(new JLabel("Connected clients: "));
+		left.add(clientCount);
+		
+		Container right = new Container();
+		right.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		right.add(new JLabel("Connected player: "));
+		right.add(playerCount);
+		
+		clientCounts.add(left);
+		clientCounts.add(right);
+		
+		pane.add(clientCounts,BorderLayout.NORTH);
 		
 		frame.setContentPane(pane);
 		

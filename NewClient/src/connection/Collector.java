@@ -31,6 +31,8 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	*/
 	private static final int CONNECTIONCHECKINTERVALL = 15000;
 	
+	private static final long CURRENT_VERSION = 816L;
+	
 	/**
 	 * The wrapper, that will send the Messages.
 	 * @see ServerConnection
@@ -86,7 +88,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	 * @since 1.0
 	 */
 	public Collector() {
-		wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL);
+		wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL,CURRENT_VERSION);
 		visibleScreen = new JFrame();
 		loginScreen = new LogIn(this, visibleScreen);
 	}
@@ -152,7 +154,7 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
 			mainScreen.show();
 			mainScreen.setIpAndPort(ip, iport);
-			debugScreen = new DebugWindow();
+			debugScreen = new DebugWindow(wrapper);
 			wrapper.addDebugNotificationListener(debugScreen);
 			return true;
 		}
