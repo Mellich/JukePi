@@ -117,6 +117,8 @@ public class MusicTrack {
 	}
 
 	public String getParseStatus() {
+		if (this.isParsing())
+			return ParseStatus.PARSING.toString();
 		if (!this.isReady())
 			if (this.isError())
 				return ParseStatus.ERROR.toString();

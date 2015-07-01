@@ -505,7 +505,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		String[] result =  this.serverConnection.sendBlockingMessage(MessageType.GETTITLEFROMGAPLIST,name);
 		Song[] songList = new Song[result.length / 2];
 		for (int i = 0; i < result.length; i = i +2){
-			songList[i/2] = new Song(-1L, result[i], -1, false, null, result[i + 1]);
+			songList[i/2] = new Song(-1L, result[i], -1, false, ParseStatus.NOT_PARSED, result[i + 1]);
 		}
 		return songList;
 	}

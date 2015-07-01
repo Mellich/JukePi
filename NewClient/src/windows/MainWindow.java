@@ -1216,6 +1216,7 @@ public class MainWindow extends Window {
 	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	    	switch (gaplist[row].getParseStatus()){
 	    		case PARSED: c.setBackground(Color.WHITE); break;
+	    		case PARSING: c.setBackground(Color.YELLOW);break;
 	    		case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY); break;
 	    		default: c.setBackground(Color.RED); break;
 	    	}

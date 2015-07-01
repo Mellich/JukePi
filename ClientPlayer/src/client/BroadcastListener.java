@@ -27,8 +27,8 @@ public class BroadcastListener implements Runnable {
 				if (server.connect(address)){
 					IO.printlnDebug(this, "Connected!");
 					server.addDefaultNotificationListener(starter);
-					server.addDebugNotificationListener(starter);
-					server.addGapListNotificationListener(starter);
+					//server.addDebugNotificationListener(starter);
+					//server.addGapListNotificationListener(starter);
 					server.addPauseResumeNotificationListener(starter);
 					server.addSeekNotificationListener(starter);
 					server.setMeAsPlayer();
