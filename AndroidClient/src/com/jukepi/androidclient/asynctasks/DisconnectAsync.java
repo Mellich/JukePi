@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-public class DisconnectAsync extends AsyncTask<String, Integer, Boolean>{
+public class DisconnectAsync extends AsyncTask<Void, Void, Void>{
 
 	private Context context;
 	private ProgressDialog progress;
@@ -20,9 +20,9 @@ public class DisconnectAsync extends AsyncTask<String, Integer, Boolean>{
 	}
 	
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected Void doInBackground(Void... params) {
 		try {Thread.sleep(1000);} catch (Exception e) {}
-		return true;
+		return null;
 	}
 	
 	@Override
@@ -32,14 +32,12 @@ public class DisconnectAsync extends AsyncTask<String, Integer, Boolean>{
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
+	protected void onPostExecute(Void result) {
 		progress.dismiss();
-		if (result){
-			Intent intent = new Intent(context, LoginActivity.class);
-			context.startActivity(intent);
-		}
+		Intent intent = new Intent(context, LoginActivity.class);
+		context.startActivity(intent);
 	}
+	
 	
 	@Override
 	protected void onCancelled() {
@@ -47,4 +45,5 @@ public class DisconnectAsync extends AsyncTask<String, Integer, Boolean>{
 		super.onCancelled();
 		progress.dismiss();
 	}
+
 }

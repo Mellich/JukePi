@@ -8,6 +8,7 @@ import client.listener.DefaultNotificationListener;
 import client.serverconnection.Song;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ public class MainActivity extends Activity implements DefaultNotificationListene
     ArrayList<String> listItems=new ArrayList<String>();
     
     ArrayAdapter<String> adapter;
+    
+    ListView view;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		
 		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
 		
-		ListView view = (ListView)findViewById(android.R.id.list);
+		view = (ListView)findViewById(android.R.id.list);
 		view.setAdapter(adapter);
 	}
 
@@ -65,15 +68,20 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		System.out.println("New Wishlist");
+		
+	/*	System.out.println("New Wishlist");
 		list = songs;
 		
 		System.out.println("Size :" + list.length);
 		
+		listItems.clear();
+		
 		for (int i = 0; i < list.length; i++) {
 			listItems.add(list[i].getName());
 		}
-	//	adapter.notifyDataSetChanged();
+		adapter.notifyDataSetChanged(); */
+		System.out.println("Size :" + songs.length);
+		new SetWishlist(songs, listItems, adapter).execute();
 	}
 
 	@Override
@@ -87,5 +95,31 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		// TODO Auto-generated method stub
 		System.out.println("Called");
 		new DisconnectAsync(this).execute();
+	}
+	
+	private class SetWishlist extends AsyncTask<Void, Void, Void>{
+		Song[] songs;
+		ArrayList<String> listItems;
+		ArrayAdapter<String> adapter;
+		
+		public SetWishlist(Song[] songs, ArrayList<String> listItems, ArrayAdapter<String> adapter) {
+			this.songs = songs;
+			this.listItems = listItems;
+			this.adapter = adapter;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			listItems.clear();
+			for (Song i : songs) {
+				listItems.add(i.getName());
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			adapter.notifyDataSetChanged();
+		}
 	}
 }

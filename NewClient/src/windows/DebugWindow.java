@@ -51,8 +51,6 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	public DebugWindow() {
 		messages = new ArrayList<String>();
 		txtDebugs = new JTextArea();
-		DefaultCaret caret = (DefaultCaret)txtDebugs.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		recording = true;
 	}
 	
@@ -94,16 +92,12 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	 */
 	private synchronized void addNewMessage(String message) {
 		if (recording) {
-			if (messages.size() < 200)
-				messages.add(message);
-			else {
-				for (int i = 1; i <= messages.size()-1; i++)
-					messages.set(i-1, messages.get(i));
-				messages.set(messages.size()-1, message);
-			}
+			messages.add(0,message);
+			if (messages.size() > 200)
+				messages.set(200, null);
 		
-			txtDebugs.setText(messages.get(0));
-			for (int i = 1; i <= messages.size()-1; i++)
+			txtDebugs.setText(messages.get(messages.size()-1));
+			for (int i = messages.size()-1; i >= 0; i--)
 				txtDebugs.setText(txtDebugs.getText() + "\n"+messages.get(i));
 		}
 	}
