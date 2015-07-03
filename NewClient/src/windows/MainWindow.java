@@ -149,12 +149,12 @@ public class MainWindow extends Window {
 	/**
 	 * The Icon, that will be displayed instead of "Pause" as a String.
 	 */
-	private ImageIcon playIcon = new ImageIcon("pause.png");
+	private final ImageIcon playIcon = new ImageIcon("pause.png");
 	
 	/**
 	 * The Icon, that will be displayed instead of "Play" as a String.
 	 */
-	private ImageIcon pauseIcon = new ImageIcon("pause.png");
+	private final ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
@@ -420,7 +420,13 @@ public class MainWindow extends Window {
 	 * @since 1.2
 	 */
 	private void showGaplist(String name) {
-		createContentTable(wrapper.getTitleFromGapList(name));
+		wrapper.getTitleFromGapList((String[] s) -> {	Song[] songs = new Song[s.length/2];
+														for (int i = 0; i < s.length; i = i+2) {
+															songs[i/2] = new Song(-1, s[i], 0, false, null, s[i+1]);
+														}
+														createContentTable(songs);
+													}, name);
+	//	createContentTable(wrapper.getTitleFromGapList(name));
 	}
 	
 	/**

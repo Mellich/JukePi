@@ -15,16 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements DefaultNotificationListener {
 
 	private Song[] list;
 	
-    ArrayList<String> listItems=new ArrayList<String>();
+    private ArrayList<String> listItems=new ArrayList<String>();
     
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> listAdapter;
     
-    ListView view;
+    private ListView view;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +34,14 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		this.setTitle("JukePi");
 		GlobalAccess.con.addDefaultNotificationListener(this);
 		
-		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
+		listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
+		onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 		view = (ListView)findViewById(android.R.id.list);
-		view.setAdapter(adapter);
+		view.setAdapter(listAdapter);
+		
+		String actual = GlobalAccess.con.getCurrentTrackTitle();
+		this.onNextTrackNotify(actual, "", false);
 	}
 
 	@Override
@@ -68,26 +73,28 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		
-	/*	System.out.println("New Wishlist");
-		list = songs;
-		
-		System.out.println("Size :" + list.length);
-		
-		listItems.clear();
-		
-		for (int i = 0; i < list.length; i++) {
-			listItems.add(list[i].getName());
-		}
-		adapter.notifyDataSetChanged(); */
-		System.out.println("Size :" + songs.length);
-		new SetWishlist(songs, listItems, adapter).execute();
+		this.list = songs;
+		new SetWishlist(songs, listItems, listAdapter).execute();
 	}
 
 	@Override
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
-		// TODO Auto-generated method stub
+		TextView view = (TextView)this.findViewById(R.id.playingTrack);
+	//	new SetNowPlaying(view, title).execute();
+		view.setText(title);
 		
+		TextView view2 = (TextView)this.findViewById(R.id.nextTrackName);
+		String nextName;
+		if (list.length == 0)
+			if (GlobalAccess.con.getGapList().length == 0)
+				nextName = getString(R.string.nothing);
+			else
+				nextName = GlobalAccess.con.getGapList()[0].getName();
+		else
+			nextName = list[0].getName();
+		
+	//	new SetNextTrack(view2, nextName).execute();
+		view2.setText(nextName);
 	}
 
 	@Override
@@ -97,7 +104,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		new DisconnectAsync(this).execute();
 	}
 	
-	private class SetWishlist extends AsyncTask<Void, Void, Void>{
+	private class SetWishlist extends AsyncTask<Void, Void, Void> {
 		Song[] songs;
 		ArrayList<String> listItems;
 		ArrayAdapter<String> adapter;
@@ -121,5 +128,41 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		protected void onPostExecute(Void result) {
 			adapter.notifyDataSetChanged();
 		}
+	}
+	
+	private class SetNowPlaying extends AsyncTask<Void, Void, Void> {
+
+		private TextView nowPlaying;
+		private String name;
+		
+		public SetNowPlaying(TextView nowPlaying, String name) {
+			this.name = name;
+			this.nowPlaying = nowPlaying;
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			nowPlaying.setText(name);
+			return null;
+		}
+		
+	}
+	
+	private class SetNextTrack extends AsyncTask<Void, Void, Void> {
+		
+		private TextView nextTrack;
+		private String name;
+		
+		public SetNextTrack(TextView nextTrack, String name) {
+			this.name = name;
+			this.nextTrack = nextTrack;
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			nextTrack.setText(name);
+			return null;
+		}
+		
 	}
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
@@ -64,7 +65,7 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	
 	@Override
 	public void showFail(String text) {
-		
+		//Nothing to do here
 	}
 
 	@Override
@@ -130,6 +131,8 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		pane.setLayout(new BorderLayout());
 		
 		scrollPane = new JScrollPane(txtDebugs);
+		JScrollBar sb = scrollPane.getVerticalScrollBar();
+		sb.setValue(sb.getMaximum());
 		
 		JButton btnStop = new JButton("Stop");
 		btnStop.setToolTipText("Stops recording Debug Data");

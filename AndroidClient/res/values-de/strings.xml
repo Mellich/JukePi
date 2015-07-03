@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string name="app_name">JukePi</string>
+    <string name="action_settings">Optionen</string>
+    <string name="string_connect">Verbinden</string>
+    <string name="string_udpconnect">UDP Verbindung</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="now_Playing">Aktuell:</string>
+    <string name ="Next_Track">Nächster:</string>
+    <string name ="Name">Name:</string>
+    <string name ="Count_Votes">#Stimmen:</string>
+    <string name ="Vote">Abstimmen</string>
+    
+</resources>
