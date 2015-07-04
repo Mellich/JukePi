@@ -174,7 +174,7 @@ public class YTJBServer implements Server {
 			if (atFirst){
 				if (!wishList.isEmpty()){
 					int i = wishList.size();
-					while(wishList.get(i - 1).getVoteCount() == 0){
+					while(i > 0 && wishList.get(i - 1).getVoteCount() == 0){
 						i--;
 					}
 					wishList.add(i, track);
