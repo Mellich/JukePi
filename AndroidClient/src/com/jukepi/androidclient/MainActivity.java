@@ -13,19 +13,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements DefaultNotificationListener {
 
-	private Song[] list;
+	private ArrayList<Song> list;
 	
-    private ArrayList<String> listItems=new ArrayList<String>();
-    
-    private ArrayAdapter<String> listAdapter;
+	private Song[] songlist;
+	
+  //  private ArrayList<String> listItems=new ArrayList<String>();
     
     private ListView view;
+    
+    private CustomList adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +36,42 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		setContentView(R.layout.activity_main);
 		this.setTitle("JukePi");
 		GlobalAccess.con.addDefaultNotificationListener(this);
+		list = new ArrayList<Song>();
 		
-		listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
+		songlist = GlobalAccess.con.getWishList();
+		
+		for (Song s : songlist)
+			list.add(s);
+		
+		adapter = new
+                CustomList(MainActivity.this, list);
+        view=(ListView)findViewById(android.R.id.list);
+        view.setAdapter(adapter);
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        Toast.makeText(MainActivity.this, "You Clicked at 3", Toast.LENGTH_SHORT).show();
+ 
+                    }
+                });
+        onWishListUpdatedNotify(GlobalAccess.con.getWishList());
+		
+	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
 		onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 		view = (ListView)findViewById(android.R.id.list);
 		view.setAdapter(listAdapter);
-		
+		view.setOnItemClickListener(new OnItemClickListener() {
+			  @Override
+			  public void onItemClick(AdapterView<?> parent, View view,
+			    int position, long id) {
+			    Toast.makeText(getApplicationContext(),
+			      "Click ListItem Number " + position, Toast.LENGTH_LONG)
+			      .show();
+			  }
+			}); 
+		*/
 		String actual = GlobalAccess.con.getCurrentTrackTitle();
 		this.onNextTrackNotify(actual, "", false);
 	}
@@ -73,8 +105,8 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		this.list = songs;
-		new SetWishlist(songs, listItems, listAdapter).execute();
+		this.songlist = songs;
+		new SetWishlist(songs, adapter).execute();
 	}
 
 	@Override
@@ -85,13 +117,13 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		
 		TextView view2 = (TextView)this.findViewById(R.id.nextTrackName);
 		String nextName;
-		if (list.length == 0)
+		if (list.size() == 0)
 			if (GlobalAccess.con.getGapList().length == 0)
 				nextName = getString(R.string.nothing);
 			else
 				nextName = GlobalAccess.con.getGapList()[0].getName();
 		else
-			nextName = list[0].getName();
+			nextName = list.get(0).getName();
 		
 	//	new SetNextTrack(view2, nextName).execute();
 		view2.setText(nextName);
@@ -106,21 +138,33 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	
 	private class SetWishlist extends AsyncTask<Void, Void, Void> {
 		Song[] songs;
-		ArrayList<String> listItems;
-		ArrayAdapter<String> adapter;
+		CustomList adapter;
 		
-		public SetWishlist(Song[] songs, ArrayList<String> listItems, ArrayAdapter<String> adapter) {
+		public SetWishlist(Song[] songs, CustomList adapter) {
 			this.songs = songs;
-			this.listItems = listItems;
 			this.adapter = adapter;
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			listItems.clear();
-			for (Song i : songs) {
-				listItems.add(i.getName());
+		/*	listItems.clear();
+			
+			String[] names = new String[songs.length];
+			Integer[] votes = new Integer[songs.length];
+			for (int i = 0; i < songs.length; i++) {
+				listItems.add(songs[i].getName());
+				names[i] = songs[i].getName();
+				votes[i] = songs[i].getVotes();
 			}
+			*/
+			
+			list.clear();
+			adapter.setEmpty(false);
+			for (Song s : songs)
+				list.add(s);
+			
+			if (list.size() == 0)
+				adapter.setEmpty(true);
 			return null;
 		}
 		
@@ -130,7 +174,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		}
 	}
 	
-	private class SetNowPlaying extends AsyncTask<Void, Void, Void> {
+/*	private class SetNowPlaying extends AsyncTask<Void, Void, Void> {
 
 		private TextView nowPlaying;
 		private String name;
@@ -165,4 +209,5 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		}
 		
 	}
+*/
 }

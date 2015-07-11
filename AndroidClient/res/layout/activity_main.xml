@@ -34,8 +34,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Call me Manana" />
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -57,8 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Don&apos;t call me Manana" />
+                        android:gravity="center" />
                 </LinearLayout>
             </LinearLayout>
 			<LinearLayout
@@ -68,7 +66,7 @@
             	android:layout_weight="1">
             	<TextView
                 	android:id="@+id/name"
-            		android:layout_width="wrap_content"
+            		android:layout_width="175dp"
             		android:layout_height="wrap_content"
             		android:layout_weight="1"
             		android:gravity="center"
@@ -77,7 +75,7 @@
 
             	<TextView
                 	android:id="@+id/voteNumbers"
-                	android:layout_width="wrap_content"
+                	android:layout_width="50dp"
                 	android:layout_height="wrap_content"
                 	android:gravity="center"
                 	android:onClick="showFullName"
@@ -85,7 +83,7 @@
 
             	<TextView
                 	android:id="@+id/vote"
-                	android:layout_width="wrap_content"
+                	android:layout_width="75dp"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="0.21"
                 	android:gravity="center"
@@ -97,6 +95,7 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="fill"
             android:drawSelectorOnTop="false" >
 		</ListView>
 
