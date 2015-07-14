@@ -8,6 +8,7 @@ import client.listener.DefaultNotificationListener;
 import client.serverconnection.Song;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -92,6 +93,9 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		if (id == R.id.action_settings) {
 			return true;
 		}
+		else if (id == R.id.add_settings) {
+			changeToAdd();
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -172,6 +176,11 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		protected void onPostExecute(Void result) {
 			adapter.notifyDataSetChanged();
 		}
+	}
+	
+	public void changeToAdd() {
+		Intent intent = new Intent(this, MainActivity.class);
+		this.startActivity(intent);
 	}
 	
 /*	private class SetNowPlaying extends AsyncTask<Void, Void, Void> {

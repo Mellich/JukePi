@@ -13,5 +13,7 @@
     <string name ="Count_Votes">#Stimmen:</string>
     <string name ="Vote">Abstimmen</string>
     <string name ="nothing">Nichts</string>
-    
+    <string name ="add">Hinzufügen</string>
+    <string name ="clipboardAdd">Aus Zwischenablage einfügen</string>
+    <string name ="add_settings">Titel hinzufügen</string>   
 </resources>
