@@ -14,6 +14,7 @@
     <string name ="Vote">Abstimmen</string>
     <string name ="nothing">Nichts</string>
     <string name ="add">Hinzufügen</string>
-    <string name ="clipboardAdd">Aus Zwischenablage einfügen</string>
-    <string name ="add_settings">Titel hinzufügen</string>   
+    <string name ="backButton">Zurück</string>
+    <string name ="add_settings">Titel hinzufügen</string>
+    <string name ="removeVote">Stimme löschen</string> 
 </resources>

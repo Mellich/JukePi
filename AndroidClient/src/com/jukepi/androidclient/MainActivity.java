@@ -7,7 +7,6 @@ import com.jukepi.androidclient.asynctasks.DisconnectAsync;
 import client.listener.DefaultNotificationListener;
 import client.serverconnection.Song;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,12 +29,19 @@ public class MainActivity extends Activity implements DefaultNotificationListene
     private ListView view;
     
     private CustomList adapter;
+    
+    private boolean backPressed;
+    
+    private String title;
+    
+    private String url;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		this.setTitle("JukePi");
+		backPressed = false;
 		GlobalAccess.con.addDefaultNotificationListener(this);
 		list = new ArrayList<Song>();
 		
@@ -56,6 +62,8 @@ public class MainActivity extends Activity implements DefaultNotificationListene
  
                     }
                 });
+        String actual = GlobalAccess.con.getCurrentTrackTitle();
+		onNextTrackNotify(actual, "", false);
         onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
@@ -73,8 +81,6 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			  }
 			}); 
 		*/
-		String actual = GlobalAccess.con.getCurrentTrackTitle();
-		this.onNextTrackNotify(actual, "", false);
 	}
 
 	@Override
@@ -96,16 +102,14 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		else if (id == R.id.add_settings) {
 			changeToAdd();
 		}
+		else if (id == R.id.removeVote_settings) {
+			if (GlobalAccess.con.removeVote())
+				Toast.makeText(MainActivity.this, "Removed Vote", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(MainActivity.this, "Failed to remove Vote", Toast.LENGTH_SHORT).show();
+		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	public void showFullName(View v) {
-		System.out.println("Called");
-		ProgressDialog progress = new ProgressDialog(this,ProgressDialog.STYLE_HORIZONTAL);
-		progress.setMessage(v.toString());
-		progress.setCancelable(true);
-		progress.show();
-	} 
 	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
@@ -115,6 +119,9 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 
 	@Override
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
+/*		this.title = title;
+		this.url = url;
+		
 		TextView view = (TextView)this.findViewById(R.id.playingTrack);
 	//	new SetNowPlaying(view, title).execute();
 		view.setText(title);
@@ -130,14 +137,13 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			nextName = list.get(0).getName();
 		
 	//	new SetNextTrack(view2, nextName).execute();
-		view2.setText(nextName);
+		view2.setText(nextName); */
 	}
 
 	@Override
 	public void onDisconnect() {
-		// TODO Auto-generated method stub
-		System.out.println("Called");
-		new DisconnectAsync(this).execute();
+		if (!backPressed)
+			new DisconnectAsync(this).execute();
 	}
 	
 	private class SetWishlist extends AsyncTask<Void, Void, Void> {
@@ -179,7 +185,15 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	}
 	
 	public void changeToAdd() {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, AddActivity.class);
+		this.startActivity(intent);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		backPressed = true;
+		GlobalAccess.con.close();
+		Intent intent = new Intent(this, LoginActivity.class);
 		this.startActivity(intent);
 	}
 	

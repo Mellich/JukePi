@@ -17,6 +17,7 @@ public class AddActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
+		this.setTitle("Add a Track");
 		
 		link = (EditText)this.findViewById(R.id.add);
 		add = (Button)this.findViewById(R.id.addButton);
@@ -30,7 +31,7 @@ public class AddActivity extends Activity{
 			Toast.makeText(this, "Failed to add the Song", Toast.LENGTH_LONG).show();
 	}
 	
-	public void clipboardClick(View v) {
-		
+	public void backClick(View v) {
+		this.onBackPressed();
 	}
 }

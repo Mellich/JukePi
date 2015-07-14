@@ -14,7 +14,8 @@
     <string name ="Vote">Vote</string>
     <string name ="nothing">Nothing</string>
     <string name ="add">Add</string>
-    <string name ="clipboardAdd">Add from Clipboard</string>
+    <string name ="backButton">Back</string>
     <string name ="add_settings">Add a Track</string>
+    <string name ="removeVote">Remove Your Vote</string>
 
 </resources>

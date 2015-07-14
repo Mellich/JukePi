@@ -29,13 +29,13 @@
         android:onClick="addClick"
         android:text="@string/add"/>
     
-<!--      <Button
-        android:id="@+id/clipboardPaste"
+    <Button
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/addButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
-        android:onClick="clipboardClick"
-        android:text="@string/clipboardAdd" /> -->
+        android:onClick="backClick"
+        android:text="@string/backButton" />
 </RelativeLayout>

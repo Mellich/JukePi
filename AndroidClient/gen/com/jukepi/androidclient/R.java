@@ -25,24 +25,26 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080010;
+        public static final int action_settings=0x7f080011;
         public static final int add=0x7f080000;
         public static final int addButton=0x7f080001;
-        public static final int add_settings=0x7f080011;
-        public static final int button_connect=0x7f080005;
-        public static final int button_udpconnect=0x7f080004;
-        public static final int cell_button=0x7f08000f;
-        public static final int cell_name=0x7f08000d;
-        public static final int cell_votes=0x7f08000e;
-        public static final int edit_ip=0x7f080003;
-        public static final int edit_port=0x7f080002;
-        public static final int name=0x7f08000a;
-        public static final int nextTrack=0x7f080008;
-        public static final int nextTrackName=0x7f080009;
-        public static final int nowPlaying=0x7f080006;
-        public static final int playingTrack=0x7f080007;
-        public static final int vote=0x7f08000c;
-        public static final int voteNumbers=0x7f08000b;
+        public static final int add_settings=0x7f080012;
+        public static final int backButton=0x7f080002;
+        public static final int button_connect=0x7f080006;
+        public static final int button_udpconnect=0x7f080005;
+        public static final int cell_button=0x7f080010;
+        public static final int cell_name=0x7f08000e;
+        public static final int cell_votes=0x7f08000f;
+        public static final int edit_ip=0x7f080004;
+        public static final int edit_port=0x7f080003;
+        public static final int name=0x7f08000b;
+        public static final int nextTrack=0x7f080009;
+        public static final int nextTrackName=0x7f08000a;
+        public static final int nowPlaying=0x7f080007;
+        public static final int playingTrack=0x7f080008;
+        public static final int removeVote_settings=0x7f080013;
+        public static final int vote=0x7f08000d;
+        public static final int voteNumbers=0x7f08000c;
     }
     public static final class layout {
         public static final int activity_add=0x7f030000;
@@ -63,10 +65,11 @@ public final class R {
         public static final int add=0x7f05000c;
         public static final int add_settings=0x7f05000e;
         public static final int app_name=0x7f050000;
-        public static final int clipboardAdd=0x7f05000d;
+        public static final int backButton=0x7f05000d;
         public static final int hello_world=0x7f050005;
         public static final int nothing=0x7f05000b;
         public static final int now_Playing=0x7f050006;
+        public static final int removeVote=0x7f05000f;
         public static final int string_connect=0x7f050002;
         public static final int string_udpconnect=0x7f050003;
         public static final int title_activity_main=0x7f050004;
