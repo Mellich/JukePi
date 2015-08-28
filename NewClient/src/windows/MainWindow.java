@@ -3,6 +3,7 @@ package windows;
 import util.TablePopClickListener;
 import util.TextFieldListener;
 import util.PopClickListener;
+import util.ClientLayout;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -569,9 +570,9 @@ public class MainWindow extends Window {
         table.addMouseListener(new TablePopClickListener(table, wishlist));
         
         table.getColumnModel().getColumn(0).setMinWidth(210);
+        table.getColumnModel().getColumn(1).setMaxWidth(40);
 		JScrollPane wishlistPane = new JScrollPane(table);
-		wishlistPane.setBounds(320,328,250,102);
-		frame.getContentPane().add(wishlistPane);
+		frame.getContentPane().add(wishlistPane, ClientLayout.WISHLIST_SCROLL);
 		if (notFirst)
 			wishlistPane.getViewport().setViewPosition(p);
 		oldPane = wishlistPane;
@@ -673,8 +674,7 @@ public class MainWindow extends Window {
         table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
         
 		JScrollPane gaplistPane = new JScrollPane(table);
-		gaplistPane.setBounds(10, 328, 250, 102);
-		frame.getContentPane().add(gaplistPane);
+		frame.getContentPane().add(gaplistPane, ClientLayout.GAPLIST_SCROLL);
 		
 		if (notFirst) 
 			gaplistPane.getViewport().setViewPosition(p);
@@ -759,8 +759,7 @@ public class MainWindow extends Window {
             }
         };
 		JScrollPane gaplistsPane = new JScrollPane(table);
-		gaplistsPane.setBounds(10, 528, 248, 102);
-		frame.getContentPane().add(gaplistsPane);
+		frame.getContentPane().add(gaplistsPane, ClientLayout.SAVED_GAPLIST_SCROLL);
 		oldSavedGaplistPane = gaplistsPane;
 	}
 	
@@ -848,8 +847,7 @@ public class MainWindow extends Window {
         };
         table.addMouseListener(new TablePopClickListener(table, content));
 		JScrollPane contentPane = new JScrollPane(table);
-		contentPane.setBounds(320, 528, 248, 102);
-		frame.getContentPane().add(contentPane);
+		frame.getContentPane().add(contentPane, ClientLayout.CONTENT_SCROLL);
 		oldContentPane = contentPane;
 	}
 	
@@ -960,78 +958,64 @@ public class MainWindow extends Window {
 		gaplists = wrapper.getAvailableGapLists();
 		
 		frame = new JFrame();
-		frame.setSize(new Dimension(600, 700));
 		frame.setTitle("JukePi");
+		frame.setSize(new Dimension(620,700));
+		frame.getContentPane().setLayout(new ClientLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setResizable(false);
+		frame.setMinimumSize(new Dimension(617,695));
 		/*Delete till here*/		
 		
 		lblFail = new JLabel("");
-		lblFail.setBounds(143, 278, 189, 14);
-		frame.getContentPane().add(lblFail);
+		frame.getContentPane().add(lblFail, ClientLayout.FAIL_LABEL);
 		
 		
 		JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblGaplist.setBounds(10, 11, 123, 14);
-		frame.getContentPane().add(lblGaplist);
+		frame.getContentPane().add(lblGaplist, ClientLayout.GAPLIST_LABEL);
 		
 		JLabel lblWishlist = new JLabel("Tracks in the Wishlist:");
 		lblWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblWishlist.setBounds(10, 36, 123, 14);
-		frame.getContentPane().add(lblWishlist);
+		frame.getContentPane().add(lblWishlist, ClientLayout.WISHLIST_LABEL);
 		
 		lblNoGaplist = new JLabel(""+ gaplist.length);
 		lblNoGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNoGaplist.setBounds(143, 11, 68, 14);
-		frame.getContentPane().add(lblNoGaplist);
+		frame.getContentPane().add(lblNoGaplist, ClientLayout.COUNT_GAPLIST_LABEL);
 		
 		lblNoWishlist = new JLabel("" + wishlist.length);
 		lblNoWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNoWishlist.setBounds(143, 36, 46, 14);
-		frame.getContentPane().add(lblNoWishlist);
+		frame.getContentPane().add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
 		
-		txtLink = new JTextField();
-		txtLink.setBounds(10, 60, 362, 20);
-		txtLink.setText("Insert a Link here.");
+		txtLink = new JTextField("Insert a Link here.");
 		txtLink.addMouseListener(new PopClickListener(txtLink));
-		frame.getContentPane().add(txtLink);
+		frame.getContentPane().add(txtLink, ClientLayout.LINK_TEXT);
 		
 		JButton btnAdd = new JButton("Add");
-		btnAdd.setBounds(10, 91, 62, 20);
 		btnAdd.setToolTipText("Adds the YouTube-Link in the upper Textfield either to the Gaplist or the Wishlist, whatever is selected on the right.");
-		frame.getContentPane().add(btnAdd);
+		frame.getContentPane().add(btnAdd, ClientLayout.ADD_BUTTON);
 		
 		JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
-		rdbtnWishlist.setBounds(78, 90, 75, 23);
-		frame.getContentPane().add(rdbtnWishlist);
+		frame.getContentPane().add(rdbtnWishlist, ClientLayout.WISHLIST_RADIO);
 		rdbtnWishlist.setSelected(true);
 		
 		JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
-		rdbtnGaplist.setBounds(155, 90, 75, 23);
-		frame.getContentPane().add(rdbtnGaplist);
+		frame.getContentPane().add(rdbtnGaplist, ClientLayout.GAPLIST_RADIO);
 		
 		JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNowPlaying.setBounds(10, 144, 68, 14);
-		frame.getContentPane().add(lblNowPlaying);
+		frame.getContentPane().add(lblNowPlaying, ClientLayout.NOW_PLAYING_LABEL);
 		
 		JLabel lblNextTrack = new JLabel("Next Track:");
 		lblNextTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNextTrack.setBounds(10, 169, 68, 14);
-		frame.getContentPane().add(lblNextTrack);
+		frame.getContentPane().add(lblNextTrack, ClientLayout.NEXT_TRACK_LABEL);
 		
 		lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblPlayingTrack.setBounds(88, 144, 244, 14);
-		frame.getContentPane().add(lblPlayingTrack);
+		frame.getContentPane().add(lblPlayingTrack, ClientLayout.NAME_NOW_PLAYING_LABEL);
 		wrapper.getCurrentTrackTitle((String[] s) -> {lblPlayingTrack.setText(s[0]);});		
 		
 		lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblTrackNext.setBounds(88, 169, 244, 14);
-		frame.getContentPane().add(lblTrackNext);
+		frame.getContentPane().add(lblTrackNext, ClientLayout.NAME_NEXT_TRACK_LABEL);
 		
 		Song[] wishlist = wrapper.getWishList();
 		Song[] gaplist = wrapper.getGapList();
@@ -1046,36 +1030,32 @@ public class MainWindow extends Window {
 		else
 			lblTrackNext.setText(wishlist[0].getName());
 		
+		
+		//TODO:
 		ImageIcon icon = new ImageIcon("play.png");
 		
 		btnPlayPause = new JButton(icon);
-		btnPlayPause.setBounds(140, 194, 120, 45);
-		frame.getContentPane().add(btnPlayPause);
+		frame.getContentPane().add(btnPlayPause, ClientLayout.PLAY_PAUSE_BUTTON);
 		
 		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
-		btnSeekBackwards.setBounds(10, 194, 120, 45);
 		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
-		frame.getContentPane().add(btnSeekBackwards);
+		frame.getContentPane().add(btnSeekBackwards, ClientLayout.SEEK_BACK_BUTTON);
 		
 		JButton btnSkip = new JButton("Skip");
-		btnSkip.setBounds(450, 194, 120, 45);
 		btnSkip.setToolTipText("Click here to skip the current track.");
-		frame.getContentPane().add(btnSkip);
+		frame.getContentPane().add(btnSkip, ClientLayout.SKIP_BUTTON);
 		
 		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
-		btnSeekForward.setBounds(320, 194, 120, 45);
 		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
-		frame.getContentPane().add(btnSeekForward);
+		frame.getContentPane().add(btnSeekForward, ClientLayout.SEEK_FORWARD_BUTTON);
 		
 		JButton btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.setBounds(450, 7, 120, 23);
 		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
-		frame.getContentPane().add(btnDisconnect);
+		frame.getContentPane().add(btnDisconnect, ClientLayout.DISCONNECT_BUTTON);
 		
 		JCheckBox chckbxInfront = new JCheckBox("Add in Front");
-		chckbxInfront.setBounds(232, 90, 97, 23);
 		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
-		frame.getContentPane().add(chckbxInfront);
+		frame.getContentPane().add(chckbxInfront, ClientLayout.FRONT_CHECK);
 		
 		
 		createWishlistTable();
@@ -1083,38 +1063,32 @@ public class MainWindow extends Window {
 		
 		lblGaplistName = new JLabel("");
 		lblGaplistName.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblGaplistName.setBounds(10, 303, 250, 14);
 		lblGaplistName.setVerticalAlignment(JLabel.CENTER);
 		lblGaplistName.setHorizontalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblGaplistName);
+		frame.getContentPane().add(lblGaplistName, ClientLayout.GAPLIST_NAME_LABEL);
 		
 		wrapper.getCurrentGapListName((String[] s) -> {lblGaplistName.setText("Gaplist - "+ s[0]);});
 		
 		JLabel lblWishlist2 = new JLabel("Wishlist");
 		lblWishlist2.setHorizontalAlignment(JLabel.CENTER);
 		lblWishlist2.setVerticalAlignment(JLabel.CENTER);
-		lblWishlist2.setBounds(320, 303, 250, 14);
-		frame.getContentPane().add(lblWishlist2);
+		frame.getContentPane().add(lblWishlist2, ClientLayout.WISHLIST_SHOW_LABEL);
 		
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(10, 437, 120, 23);
 		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
-		frame.getContentPane().add(btnDelete);
+		frame.getContentPane().add(btnDelete, ClientLayout.DELETE_BUTTON);
 		
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(140, 437, 120, 23);
 		btnSave.setToolTipText("Click here to save the current Gaplist on the Server.");
-		frame.getContentPane().add(btnSave);
+		frame.getContentPane().add(btnSave, ClientLayout.SAVE_BUTTON);
 		
 		JButton btnUp = new JButton("/\\");
 		btnUp.setToolTipText("Click here to move the selected track upwards.");
-		btnUp.setBounds(260, 341, 40, 25);
-		frame.getContentPane().add(btnUp);
+		frame.getContentPane().add(btnUp, ClientLayout.TRACK_UP_BUTTON);
 		
 		JButton btnDown = new JButton("\\/");
 		btnDown.setToolTipText("Click here to move the selected track downwards.");
-		btnDown.setBounds(260, 392, 40, 25);
-		frame.getContentPane().add(btnDown);
+		frame.getContentPane().add(btnDown, ClientLayout.TRACK_DOWN_BUTTON);
 		
 		createSavedGaplistsTable();
 		createContentTable(null);
@@ -1124,55 +1098,46 @@ public class MainWindow extends Window {
 		bg.add(rdbtnWishlist);
 		
 		JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
-		lblSavedGaplists.setBounds(10, 501, 250, 20);
 		lblSavedGaplists.setVerticalAlignment(JLabel.CENTER);
 		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblSavedGaplists);
+		frame.getContentPane().add(lblSavedGaplists, ClientLayout.SAVED_GAPLIST_LABEL);
 		
 		
 		JButton btnLoad = new JButton("Load");
-		btnLoad.setBounds(10, 637, 75, 23);
 		btnLoad.setToolTipText("Loads the selected Gaplist.");
-		frame.getContentPane().add(btnLoad);
+		frame.getContentPane().add(btnLoad, ClientLayout.LOAD_BUTTON);
 		
 		JButton btnShow = new JButton("Show");
-		btnShow.setBounds(95, 637, 75, 23);
 		btnShow.setToolTipText("Shows the Content of the selected Gaplist.");
-		frame.getContentPane().add(btnShow);
+		frame.getContentPane().add(btnShow, ClientLayout.SHOW_BUTTON);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(180, 637, 80, 23);
 		btnRemove.setToolTipText("Removes the selected Gaplist.");
-		frame.getContentPane().add(btnRemove);	
+		frame.getContentPane().add(btnRemove, ClientLayout.REMOVE_BUTTON);	
 
 		JButton btnCreate = new JButton("Create");
-		btnCreate.setBounds(320, 637, 80, 23);
 		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
-		frame.getContentPane().add(btnCreate);
+		frame.getContentPane().add(btnCreate, ClientLayout.CREATE_BUTTON);
 		
 		JTextField textName = new JTextField();
-		textName.setBounds(410, 637, 158, 23);
 		textName.addMouseListener(new PopClickListener(textName));
-		frame.getContentPane().add(textName);
+		frame.getContentPane().add(textName, ClientLayout.GAPLIST_TEXT);
 		textName.setColumns(10);
 
 		JButton btnVote = new JButton("Vote");
-		btnVote.setBounds(320, 437, 120, 23);
 		btnVote.setToolTipText("Click here to vote for the selected Song.");
-		frame.getContentPane().add(btnVote);
+		frame.getContentPane().add(btnVote, ClientLayout.VOTE_BUTTON);
 		
 		JButton btnRemoveVote = new JButton("Remove Vote");
-		btnRemoveVote.setBounds(450, 437, 120, 23);
 		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
-		frame.getContentPane().add(btnRemoveVote);
+		frame.getContentPane().add(btnRemoveVote, ClientLayout.REMOVE_VOTE_BUTTON);
 		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
 		
 		JButton btnDebugMode = new JButton("Debug Mode");
-		btnDebugMode.setBounds(450, 32, 120, 23);
 		btnDebugMode.setToolTipText("Click here to open the Debug Window.");
-		frame.getContentPane().add(btnDebugMode);
+		frame.getContentPane().add(btnDebugMode, ClientLayout.DEBUG_BUTTON);
 		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
