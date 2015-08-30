@@ -3,7 +3,7 @@ package windows;
 import util.TablePopClickListener;
 import util.TextFieldListener;
 import util.PopClickListener;
-import util.ClientLayout;
+import util.layouts.ClientLayout;
 
 import java.awt.Color;
 import java.awt.Component;

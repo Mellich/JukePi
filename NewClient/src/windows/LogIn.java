@@ -2,6 +2,7 @@ package windows;
 
 import util.PopClickListener;
 import util.TextFieldListener;
+import util.layouts.LoginLayout;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -88,60 +89,51 @@ public class LogIn extends Window {
 	 */
 	private void constructFrame() {
 		frame.setSize(new Dimension(500, 400));
+		frame.setMinimumSize(new Dimension(500,400));
 		frame.setTitle("JukePi");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.getContentPane().setLayout(null);
+		frame.getContentPane().setLayout(new LoginLayout());
 		
 		txtIp = new JTextField();
 //TODO	txtIp.setText("IP");
 		txtIp.setText("192.168.178.20");
-		txtIp.setBounds(151, 110, 186, 20);
 		txtIp.addMouseListener(new PopClickListener(txtIp));
-		frame.getContentPane().add(txtIp);
+		frame.getContentPane().add(txtIp, LoginLayout.IP_TEXT);
 		txtIp.setColumns(10);
 		
 		txtPort = new JTextField();
 //TODO	txtPort.setText("Port");
 		txtPort.setText("22222");
-		txtPort.setBounds(151, 184, 45, 20);
 		txtPort.addMouseListener(new PopClickListener(txtPort));
-		frame.getContentPane().add(txtPort);
+		frame.getContentPane().add(txtPort, LoginLayout.PORT_TEXT);
 		txtPort.setColumns(10);
 		
 		JLabel lblWelcomescreen = new JLabel("<html><body>Welcome to the RaspberryPi Jukebox.<br>" +
 											"Please enter IP-Address and Port below and click on \"Connect\".<br>" + 
 											"You could also scan your network for possible Servers by clicking \"UDP Connect\", <br>" +
 											"or you create your own Server by clicking on \"Create own Server\".</body></html>");
-		lblWelcomescreen.setBounds(10, 11, 492, 80);
-		frame.getContentPane().add(lblWelcomescreen);
+		frame.getContentPane().add(lblWelcomescreen, LoginLayout.WELCOME_LABEL);
 		
 		JLabel lblIPAddress = new JLabel("IP-Address:");
-		lblIPAddress.setBounds(33, 113, 76, 14);
-		frame.getContentPane().add(lblIPAddress);
+		frame.getContentPane().add(lblIPAddress, LoginLayout.IP_LABEL);
 		
 		JLabel lblPort = new JLabel("Port:");
-		lblPort.setBounds(33, 187, 46, 14);
-		frame.getContentPane().add(lblPort);
+		frame.getContentPane().add(lblPort, LoginLayout.PORT_LABEL);
 		
 		JButton btnConnect = new JButton("Connect");
-		btnConnect.setBounds(10, 278, 131, 40);
 		btnConnect.setToolTipText("Tries to connect to a Server with the given IP and Port.");
-		frame.getContentPane().add(btnConnect);
+		frame.getContentPane().add(btnConnect, LoginLayout.CONNECT_BUTTON);
 		
 		lblFail = new JLabel("");
-		lblFail.setBounds(49, 234, 374, 14);
-		frame.getContentPane().add(lblFail);
+		frame.getContentPane().add(lblFail, LoginLayout.FAIL_LABEL);
 		
 		JButton btnUDPConnect = new JButton("UDP Connect");
-		btnUDPConnect.setBounds(158, 278, 131, 40);
 		btnUDPConnect.setToolTipText("Scans your network for available Servers and connects to them.");
-		frame.getContentPane().add(btnUDPConnect);
+		frame.getContentPane().add(btnUDPConnect, LoginLayout.UDP_BUTTON);
 		
 		JButton btnInternServer = new JButton("Create own server");
-		btnInternServer.setBounds(313, 278, 171, 40);
 		btnInternServer.setToolTipText("Creates an own Server with the Port in the Port-Field above.");
-		frame.getContentPane().add(btnInternServer);
+		frame.getContentPane().add(btnInternServer, LoginLayout.INTERN_SERVER_BUTTON);
 		
 		txtIp.addMouseListener(new TextFieldListener(new String[] {"IP"}, txtIp));
 		txtPort.addMouseListener(new TextFieldListener(new String[] {"Port"}, txtPort));
