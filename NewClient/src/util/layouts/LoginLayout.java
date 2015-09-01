@@ -6,22 +6,72 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.util.HashMap;
 
+/**
+ * The Layout, that will be used for the LogIn-Screen.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class LoginLayout implements LayoutManager{
 
+	/**
+	 * The String, that declares the TextField for the IP.
+	 * @see windows.LogIn#txtIp
+	 */
 	public static final String IP_TEXT = "Ip_Text";
+	
+	/**
+	 * The String, that declares the TextField for the Port.
+	 * @see windows.LogIn#txtPort
+	 */
 	public static final String PORT_TEXT = "Port_Text";
 	
+	
+	/**
+	 * The String, that declares the Label, that contains the Welcome-Message.
+	 */
 	public static final String WELCOME_LABEL = "Welcome_Label";
+	
+	/**
+	 * The String, that declares the Label, that contains {@code "IP:"}.
+	 */
 	public static final String IP_LABEL = "Ip_Label";
+	
+	/**
+	 * The String, that declares the Label, that contains {@code "Port:"}.
+	 */
 	public static final String PORT_LABEL = "Port_Label";
+	
+	/**
+	 * The String, that declares the Label, that displays responses from the Server.
+	 */
 	public static final String FAIL_LABEL = "Fail_Label";
 	
+	
+	/**
+	 * The String, that declares the Connect_Button.
+	 */
 	public static final String CONNECT_BUTTON = "Connect_Button";
+	
+	/**
+	 * The String, that declares the UDP_Connect_Button.
+	 */
 	public static final String UDP_BUTTON = "Udp_Button";
+	
+	/**
+	 * The String, that declares the Intern_Server_Button.
+	 */
 	public static final String INTERN_SERVER_BUTTON = "Intern_Server_Button";
 	
+	/**
+	 * All Components, that were added to this Layout as a {@link HashMap} with String-Keys 
+	 * and Component-Values.
+	 */
 	private HashMap<String, Component> components;
 	
+	/**
+	 * The Constructor for this Layout.
+	 * @since 1.0
+	 */
 	public LoginLayout() {
 		components = new HashMap<String, Component>();
 	}
@@ -35,7 +85,6 @@ public class LoginLayout implements LayoutManager{
 
 	@Override
 	public void layoutContainer(Container parent) {
-		// TODO Auto-generated method stub
 		int height = parent.getHeight();
 		int width = parent.getWidth();
 		
@@ -68,14 +117,12 @@ public class LoginLayout implements LayoutManager{
 
 	@Override
 	public Dimension minimumLayoutSize(Container arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Dimension(500,400);
 	}
 
 	@Override
 	public Dimension preferredLayoutSize(Container arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Dimension(500,400);
 	}
 
 	@Override
@@ -85,6 +132,12 @@ public class LoginLayout implements LayoutManager{
 		}
 	}
 
+	/**
+	 * Checks, if the given {@code regex} is a String-Key for this Layout.
+	 * @param regex	The String, that will be checked.
+	 * @return	{@code true}, if {@code regex} is a Key for this Layout, {@code false} else.
+	 * @since 1.0
+	 */
 	private boolean checkLayoutComponent(String regex) {
 		if (regex.equals(IP_TEXT) || regex.equals(PORT_TEXT) || regex.equals(WELCOME_LABEL) ||
 				regex.equals(IP_LABEL) || regex.equals(PORT_LABEL) || 
@@ -95,34 +148,37 @@ public class LoginLayout implements LayoutManager{
 			return false;
 	}
 	
+	/**
+	 * Removes the given Component {@code comp} from the Layout.
+	 * @param comp	The Component, that will be removed.
+	 * @since 1.0
+	 */
 	private void remove(Component comp) {
 		if (components.get(IP_TEXT).equals(comp))
 			components.put(IP_TEXT, null);
 		
-		if (components.get(PORT_TEXT).equals(comp))
+		else if (components.get(PORT_TEXT).equals(comp))
 			components.put(PORT_TEXT, null);
 		
-		if (components.get(WELCOME_LABEL).equals(comp))
+		else if (components.get(WELCOME_LABEL).equals(comp))
 			components.put(WELCOME_LABEL, null);
 		
-		if (components.get(IP_LABEL).equals(comp))
+		else if (components.get(IP_LABEL).equals(comp))
 			components.put(IP_LABEL, null);
 		
-		if (components.get(PORT_LABEL).equals(comp))
+		else if (components.get(PORT_LABEL).equals(comp))
 			components.put(PORT_LABEL, null);
 		
-		if (components.get(FAIL_LABEL).equals(comp))
+		else if (components.get(FAIL_LABEL).equals(comp))
 			components.put(FAIL_LABEL, null);
 		
-		if (components.get(CONNECT_BUTTON).equals(comp))
+		else if (components.get(CONNECT_BUTTON).equals(comp))
 			components.put(CONNECT_BUTTON, null);
 		
-		if (components.get(UDP_BUTTON).equals(comp))
+		else if (components.get(UDP_BUTTON).equals(comp))
 			components.put(UDP_BUTTON, null);
 		
-		if (components.get(INTERN_SERVER_BUTTON).equals(comp))
+		else if (components.get(INTERN_SERVER_BUTTON).equals(comp))
 			components.put(INTERN_SERVER_BUTTON, null);
-		
-		
 	}
 }

@@ -171,7 +171,6 @@ public class MainWindow extends Window {
 	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist) {
 		this.collector = collector;
 		this.frame = frame;
-		frame.getContentPane().removeAll();
 		this.wrapper = wrapper;
 		
 		this.gaplist = gaplist;
@@ -567,7 +566,7 @@ public class MainWindow extends Window {
             }
         };
         
-        table.addMouseListener(new TablePopClickListener(table, wishlist));
+        table.addMouseListener(new TablePopClickListener(table, wishlist, wrapper, this));
         
         table.getColumnModel().getColumn(0).setMinWidth(210);
         table.getColumnModel().getColumn(1).setMaxWidth(40);
@@ -669,7 +668,7 @@ public class MainWindow extends Window {
             }
         };
         
-        table.addMouseListener(new TablePopClickListener(table, gaplist));
+        table.addMouseListener(new TablePopClickListener(table, gaplist, wrapper, this));
         
         table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
         

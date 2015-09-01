@@ -8,8 +8,15 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import windows.MainWindow;
+import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 
+/**
+ * The Class for the MouseListener, that will be added to the Tables.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class TablePopClickListener extends MouseAdapter {
 	
 	/**
@@ -23,13 +30,49 @@ public class TablePopClickListener extends MouseAdapter {
 	private Song[] list;
 	
 	/**
-	 * The Constructor for all Adapters.
-	 * @param txtLink	The TextField for this Adapter.
+	 * The {@link ServerConnection}, that will send possible messages to the Server.
+	 */
+	private ServerConnection wrapper;
+	
+	/**
+	 * The Boolean value, that determines, if a Listener is added to the ContentTable or to the 
+	 * Wishlist- or GaplistTable.
+	 */
+	private boolean contentTable;
+	
+	/**
+	 * The MainWindow, that will display possible Responses from the Server.
+	 */
+	private MainWindow mw;
+	
+
+	/**
+	 * The Constructor for the Wishlist- and GaplistTable.
+	 * @param table	The Table of Songs as a JTable.
+	 * @param list	The List of Songs as an Array.
+	 * @param wrapper	The {@link ServerConnection}, that will send possible Messages to the 
+	 * 					Server.
+	 * @param mw	The MainWindow, that will display possible responses from the Server.
+	 * @since 1.0
+	 */
+	public TablePopClickListener(JTable table, Song[] list, ServerConnection wrapper, MainWindow mw) {
+		this.list = list;
+		this.table = table;
+		this.wrapper = wrapper;
+		this.contentTable = false;
+		this.mw = mw;
+	}
+	
+	/**
+	 * The Constructor for the ContentTable.
+	 * @param table	The Table of Songs as a JTable.
+	 * @param list	The List of Songs as an Array.
 	 * @since 1.0
 	 */
 	public TablePopClickListener(JTable table, Song[] list) {
 		this.list = list;
 		this.table = table;
+		this.contentTable = true;
 	}
 	
 	@Override
@@ -59,7 +102,11 @@ public class TablePopClickListener extends MouseAdapter {
      * @since 1.0
      */
     private void doPop(MouseEvent e){
-        TablePopUpMenu menu = new TablePopUpMenu(table, list);
+    	TablePopUpMenu menu;
+    	if (contentTable)
+    		menu = new TablePopUpMenu(table, list);
+    	else
+    		menu = new TablePopUpMenu(table, list, wrapper, mw);
         menu.show(e.getComponent(), e.getX(), e.getY());
     }
 }

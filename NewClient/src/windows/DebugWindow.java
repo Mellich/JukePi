@@ -42,12 +42,27 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	 */
 	private boolean recording;
 	
+	/**
+	 * The ScrollPane, that contains the TextArea for the Debug-Messages.
+	 * @see DebugWindow#txtDebugs
+	 * @see JTextArea
+	 */
 	private JScrollPane scrollPane;
 	
+	/**
+	 * The Label, that displays the amount of current connected players.
+	 */
 	private JLabel playerCount;
 	
+	/**
+	 * The Label, that displays the amount pf current connected Clients.
+	 */
 	private JLabel clientCount;
 	
+	/**
+	 * The StringBuilder, that will buffer the Messages to maintain functionality and 
+	 * correctness of the Messages.
+	 */
 	private StringBuilder buffer;
 	
 	/**
