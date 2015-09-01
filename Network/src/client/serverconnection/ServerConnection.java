@@ -13,7 +13,7 @@ import client.serverconnection.impl.LoadGapListStatus;
  * Interface for client side communication with the YTJBServer.
  * Its recommended to use the implementation YTJBClientWrapper to interact with the server 
  * @author Mellich
- * @version 1.0
+ * @version 1.1
  */
 public interface ServerConnection {
 	
@@ -591,7 +591,19 @@ public interface ServerConnection {
 	 */
 	public boolean removeVote();
 	
+	/**
+	 * Adds the given Song to the other List.
+	 * @param response	The response listener, that will be executed, when the server
+	 * responses to the command.
+	 * @param song	The Song to be moved.
+	 * @since 1.1
+	 */
 	public void addSongToOtherList(ResponseListener response,Song song);
 	
+	/**
+	 * Adds the given Song to the other List.
+	 * @param song	The Song to be moved.
+	 * @return	{@code true}, if the Song was moved, {@code false} else.
+	 */
 	public boolean addSongToOtherList(Song song);
 }

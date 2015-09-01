@@ -20,7 +20,7 @@ import client.serverconnection.ServerConnectionNotifier;
 /**
  * Implements the {@link LowLevelServerConnection} for the YouTubeJukeBox.
  * @author Mellich
- * @version 1.0
+ * @version 1.1
  */
 public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	
@@ -29,8 +29,14 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 */
 	private ServerConnectionNotifier notifyWrapper;
 	
+	/**
+	 * The Version of the Network-Interface, the Server is using.
+	 */
 	private long serverVersion = 0L;
 	
+	/**
+	 * The Version of this Network-Interface.
+	 */
 	private long version = 816L;
 	
 	/**

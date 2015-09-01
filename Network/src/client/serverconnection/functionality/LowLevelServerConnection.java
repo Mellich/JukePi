@@ -5,7 +5,7 @@ import client.listener.ResponseListener;
 /**
  * A ServerConnection on the lowest possible level.
  * @author Mellich
- * @version 1.0
+ * @version 1.1
  */
 public interface LowLevelServerConnection {
 	/**
@@ -91,7 +91,16 @@ public interface LowLevelServerConnection {
 	 */
 	public String[] sendBlockingMessage(int messageType,String messageArgument);
 	
+	/**
+	 * Returns the Version of the Network-Interface, the Server is using.
+	 * @return	The Version of the used Network-Interface as a long-Value.
+	 * @since 1.1
+	 */
 	public long getServerVersion();
 	
+	/**
+	 * Returns the Version of the Network-Interface.
+	 * @return	The Version of the Network-Interface as a long-Value.
+	 */
 	public long getVersion();
 }

@@ -26,10 +26,13 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 /**
  * The Implementation of {@link ServerConnection} and {@link ServerConnectionNotifier}.
  * @author Mellich
- * @version 1.0
+ * @version 1.1
  */
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
+	/**
+	 * The Current Version.
+	 */
 	private static final long CURRENT_VERSION = 816L;
 	
 	/**
@@ -77,6 +80,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 */
 	private boolean isAndroid;
 	
+	/**
+	 * The Version of the Network-Interface the Server is using.
+	 */
 	private long version = -1L;
 	
 	/**
@@ -92,7 +98,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * Creates a new ServerConnection with the given Parameters.
 	 * @param checkInterval	The Interval between each connectivity check.
 	 * @param isAndroid	Determines, if the Client is an Android Application.
-	 * @since 1.0
+	 * @param version The Version as a long-Value, this ServerConnection will use.
+	 * @since 1.1
 	 */
 	public YTJBServerConnection(int checkInterval,boolean isAndroid, long version) {
 		defaultNotificationListener = new ArrayList<DefaultNotificationListener>();
@@ -107,8 +114,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 	
 	/**
-	 * Creates a new ServerConnection with the given checkInterval and {@code false} as value
-	 * of {@link #isAndroid}.
+	 * Creates a new ServerConnection with the given checkInterval.
 	 * @param checkInterval2	The Interval between each connectivity check.
 	 * @since 1.0
 	 */
@@ -116,10 +122,21 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		this(checkInterval2,false,CURRENT_VERSION);
 	}
 	
+	/**
+	 * Creates a new ServerConnection with the given checkInterval and boolean value.
+	 * @param checkIntervall	The Interval between each connectivity check.
+	 * @param isAndroid	The boolean Value, if the Client is an Android Client or not.
+	 * @since 1.0
+	 */
 	public YTJBServerConnection(int checkIntervall, boolean isAndroid){
 		this(checkIntervall,isAndroid,CURRENT_VERSION);
 	}
 	
+	/**
+	 * Creates a new ServerConnection with the given CheckInterval and Version-Number.
+	 * @param checkIntervall	The Interval between each connectivity check.
+	 * @param version	The Version as a long-Value, this ServerConnection will use.
+	 */
 	public YTJBServerConnection(int checkIntervall, long version){
 		this(checkIntervall,false,version);
 	}
@@ -385,6 +402,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * @param group	The Group, that will receive the Message.
 	 * @param port	The Port of the Group, that will receive the Message.
 	 * @throws IOException	If an I/O error occurs while sending.
+	 * @since 1.0
 	 */
 	private void sendUDPRequest(MulticastSocket socket,InetAddress group, int port) throws IOException{
 		byte[] byteMessage;
@@ -694,5 +712,4 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public boolean addSongToOtherList(Song song) {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.ADDTOOTHERLIST, ""+song.getTrackID())[0]);
 	}
-
 }

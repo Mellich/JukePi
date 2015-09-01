@@ -8,7 +8,11 @@ package messages;
  */
 public class MessageType {
 	
+	/**
+	 * A Disconnect-Command.
+	 */
 	public static final int DISCONNECT = 0;
+	
 	/**
 	 * A link to a video.
 	 */
@@ -274,6 +278,9 @@ public class MessageType {
 	 */
 	public static final int REMOVEVOTE = 53;
 	
+	/**
+	 * Adds a Track to the other List.
+	 */
 	public static final int ADDTOOTHERLIST = 54;
 	
 	/**

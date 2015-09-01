@@ -5,7 +5,7 @@ import messages.ParseStatus;
 /**
  * The Class, that displays a Song with all it's properties.
  * @author Mellich
- * @version 1.0
+ * @version 1.1
  */
 public class Song {
 	/**
@@ -28,8 +28,14 @@ public class Song {
 	 */
 	private boolean ownVote;
 	
+	/**
+	 * The URL of this Song as a String.
+	 */
 	private String url;
 
+	/**
+	 * The {@link ParseStatus} of this Song.
+	 */
 	private ParseStatus status;
 	
 	/**
@@ -85,10 +91,23 @@ public class Song {
 		return votes;
 	}
 	
+	/**
+	 * Returns the {@link ParseStatus} of this Song.
+	 * @return	The {@link ParseStatus} of this Song.
+	 * @since 1.1
+	 * @see Song#status
+	 * @see ParseStatus
+	 */
 	public ParseStatus getParseStatus(){
 		return status;
 	}
 	
+	/**
+	 * Returns the URL of this Song as a String.
+	 * @return	The URL of this Song as a String.
+	 * @since 1.1
+	 * @see Song#url
+	 */
 	public String getURL(){
 		return url;
 	}
