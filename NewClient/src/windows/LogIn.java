@@ -108,30 +108,30 @@ public class LogIn extends Window {
 		frame.getContentPane().add(txtPort, LoginLayout.PORT_TEXT);
 		txtPort.setColumns(10);
 		
-		JLabel lblWelcomescreen = new JLabel("<html><body>Welcome to the RaspberryPi Jukebox.<br>" +
+		final JLabel lblWelcomescreen = new JLabel("<html><body>Welcome to the RaspberryPi Jukebox.<br>" +
 											"Please enter IP-Address and Port below and click on \"Connect\".<br>" + 
 											"You could also scan your network for possible Servers by clicking \"UDP Connect\", <br>" +
 											"or you create your own Server by clicking on \"Create own Server\".</body></html>");
 		frame.getContentPane().add(lblWelcomescreen, LoginLayout.WELCOME_LABEL);
 		
-		JLabel lblIPAddress = new JLabel("IP-Address:");
+		final JLabel lblIPAddress = new JLabel("IP-Address:");
 		frame.getContentPane().add(lblIPAddress, LoginLayout.IP_LABEL);
 		
-		JLabel lblPort = new JLabel("Port:");
+		final JLabel lblPort = new JLabel("Port:");
 		frame.getContentPane().add(lblPort, LoginLayout.PORT_LABEL);
 		
-		JButton btnConnect = new JButton("Connect");
+		final JButton btnConnect = new JButton("Connect");
 		btnConnect.setToolTipText("Tries to connect to a Server with the given IP and Port.");
 		frame.getContentPane().add(btnConnect, LoginLayout.CONNECT_BUTTON);
 		
 		lblFail = new JLabel("");
 		frame.getContentPane().add(lblFail, LoginLayout.FAIL_LABEL);
 		
-		JButton btnUDPConnect = new JButton("UDP Connect");
+		final JButton btnUDPConnect = new JButton("UDP Connect");
 		btnUDPConnect.setToolTipText("Scans your network for available Servers and connects to them.");
 		frame.getContentPane().add(btnUDPConnect, LoginLayout.UDP_BUTTON);
 		
-		JButton btnInternServer = new JButton("Create own server");
+		final JButton btnInternServer = new JButton("Create own server");
 		btnInternServer.setToolTipText("Creates an own Server with the Port in the Port-Field above.");
 		frame.getContentPane().add(btnInternServer, LoginLayout.INTERN_SERVER_BUTTON);
 		

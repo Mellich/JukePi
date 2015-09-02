@@ -250,18 +250,18 @@ public class ClientLayout implements LayoutManager{
 	@Override
 	public void layoutContainer(Container parent) {
 		
-		int height = parent.getHeight();
-		int width = parent.getWidth();
+		final int height = parent.getHeight();
+		final int width = parent.getWidth();
 		
-		int lblHeight = (int)(height*0.02);
-		int spacer = (int)(width*0.016);
+		final int lblHeight = (int)(height*0.02);
+		final int spacer = (int)(width*0.016);
 		
-		int manButtonHeight = (int)(height*0.064);
-		int manButtonWidth = (int)(width*0.2);
-		int buttonHeight = (int)(height*0.032);
+		final int manButtonHeight = (int)(height*0.064);
+		final int manButtonWidth = (int)(width*0.2);
+		final int buttonHeight = (int)(height*0.032);
 		
-		int secondButtonY = (int)(height*0.624);
-		int thirdButtonY = (int)(height*0.91);
+		final int secondButtonY = (int)(height*0.624);
+		final int thirdButtonY = (int)(height*0.91);
 		
 		/***********************************Labels***************************************/
 		if (components.get(GAPLIST_LABEL) != null)

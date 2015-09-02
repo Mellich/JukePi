@@ -952,6 +952,7 @@ public class MainWindow extends Window {
 	 * @wbp.parser.entryPoint
 	 */
 	private void constructFrame() {
+		long start = System.currentTimeMillis();
 		gaplist = wrapper.getGapList();
 		wishlist = wrapper.getWishList();
 		gaplists = wrapper.getAvailableGapLists();
@@ -968,11 +969,11 @@ public class MainWindow extends Window {
 		frame.getContentPane().add(lblFail, ClientLayout.FAIL_LABEL);
 		
 		
-		JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
+		final JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		frame.getContentPane().add(lblGaplist, ClientLayout.GAPLIST_LABEL);
 		
-		JLabel lblWishlist = new JLabel("Tracks in the Wishlist:");
+		final JLabel lblWishlist = new JLabel("Tracks in the Wishlist:");
 		lblWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
 		frame.getContentPane().add(lblWishlist, ClientLayout.WISHLIST_LABEL);
 		
@@ -988,22 +989,22 @@ public class MainWindow extends Window {
 		txtLink.addMouseListener(new PopClickListener(txtLink));
 		frame.getContentPane().add(txtLink, ClientLayout.LINK_TEXT);
 		
-		JButton btnAdd = new JButton("Add");
+		final JButton btnAdd = new JButton("Add");
 		btnAdd.setToolTipText("Adds the YouTube-Link in the upper Textfield either to the Gaplist or the Wishlist, whatever is selected on the right.");
 		frame.getContentPane().add(btnAdd, ClientLayout.ADD_BUTTON);
 		
-		JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
+		final JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
 		frame.getContentPane().add(rdbtnWishlist, ClientLayout.WISHLIST_RADIO);
 		rdbtnWishlist.setSelected(true);
 		
-		JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
+		final JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
 		frame.getContentPane().add(rdbtnGaplist, ClientLayout.GAPLIST_RADIO);
 		
-		JLabel lblNowPlaying = new JLabel("Now Playing:");
+		final JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(lblNowPlaying, ClientLayout.NOW_PLAYING_LABEL);
 		
-		JLabel lblNextTrack = new JLabel("Next Track:");
+		final JLabel lblNextTrack = new JLabel("Next Track:");
 		lblNextTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(lblNextTrack, ClientLayout.NEXT_TRACK_LABEL);
 		
@@ -1036,23 +1037,23 @@ public class MainWindow extends Window {
 		btnPlayPause = new JButton(icon);
 		frame.getContentPane().add(btnPlayPause, ClientLayout.PLAY_PAUSE_BUTTON);
 		
-		JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
+		final JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
 		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
 		frame.getContentPane().add(btnSeekBackwards, ClientLayout.SEEK_BACK_BUTTON);
 		
-		JButton btnSkip = new JButton("Skip");
+		final JButton btnSkip = new JButton("Skip");
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		frame.getContentPane().add(btnSkip, ClientLayout.SKIP_BUTTON);
 		
-		JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
+		final JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
 		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
 		frame.getContentPane().add(btnSeekForward, ClientLayout.SEEK_FORWARD_BUTTON);
 		
-		JButton btnDisconnect = new JButton("Disconnect");
+		final JButton btnDisconnect = new JButton("Disconnect");
 		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
 		frame.getContentPane().add(btnDisconnect, ClientLayout.DISCONNECT_BUTTON);
 		
-		JCheckBox chckbxInfront = new JCheckBox("Add in Front");
+		final JCheckBox chckbxInfront = new JCheckBox("Add in Front");
 		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
 		frame.getContentPane().add(chckbxInfront, ClientLayout.FRONT_CHECK);
 		
@@ -1068,53 +1069,53 @@ public class MainWindow extends Window {
 		
 		wrapper.getCurrentGapListName((String[] s) -> {lblGaplistName.setText("Gaplist - "+ s[0]);});
 		
-		JLabel lblWishlist2 = new JLabel("Wishlist");
+		final JLabel lblWishlist2 = new JLabel("Wishlist");
 		lblWishlist2.setHorizontalAlignment(JLabel.CENTER);
 		lblWishlist2.setVerticalAlignment(JLabel.CENTER);
 		frame.getContentPane().add(lblWishlist2, ClientLayout.WISHLIST_SHOW_LABEL);
 		
-		JButton btnDelete = new JButton("Delete");
+		final JButton btnDelete = new JButton("Delete");
 		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
 		frame.getContentPane().add(btnDelete, ClientLayout.DELETE_BUTTON);
 		
-		JButton btnSave = new JButton("Save");
+		final JButton btnSave = new JButton("Save");
 		btnSave.setToolTipText("Click here to save the current Gaplist on the Server.");
 		frame.getContentPane().add(btnSave, ClientLayout.SAVE_BUTTON);
 		
-		JButton btnUp = new JButton("/\\");
+		final JButton btnUp = new JButton("/\\");
 		btnUp.setToolTipText("Click here to move the selected track upwards.");
 		frame.getContentPane().add(btnUp, ClientLayout.TRACK_UP_BUTTON);
 		
-		JButton btnDown = new JButton("\\/");
+		final JButton btnDown = new JButton("\\/");
 		btnDown.setToolTipText("Click here to move the selected track downwards.");
 		frame.getContentPane().add(btnDown, ClientLayout.TRACK_DOWN_BUTTON);
 		
 		createSavedGaplistsTable();
 		createContentTable(null);
 		
-		ButtonGroup bg = new ButtonGroup();
+		final ButtonGroup bg = new ButtonGroup();
 		bg.add(rdbtnGaplist);
 		bg.add(rdbtnWishlist);
 		
-		JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
+		final JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
 		lblSavedGaplists.setVerticalAlignment(JLabel.CENTER);
 		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
 		frame.getContentPane().add(lblSavedGaplists, ClientLayout.SAVED_GAPLIST_LABEL);
 		
 		
-		JButton btnLoad = new JButton("Load");
+		final JButton btnLoad = new JButton("Load");
 		btnLoad.setToolTipText("Loads the selected Gaplist.");
 		frame.getContentPane().add(btnLoad, ClientLayout.LOAD_BUTTON);
 		
-		JButton btnShow = new JButton("Show");
+		final JButton btnShow = new JButton("Show");
 		btnShow.setToolTipText("Shows the Content of the selected Gaplist.");
 		frame.getContentPane().add(btnShow, ClientLayout.SHOW_BUTTON);
 		
-		JButton btnRemove = new JButton("Remove");
+		final JButton btnRemove = new JButton("Remove");
 		btnRemove.setToolTipText("Removes the selected Gaplist.");
 		frame.getContentPane().add(btnRemove, ClientLayout.REMOVE_BUTTON);	
 
-		JButton btnCreate = new JButton("Create");
+		final JButton btnCreate = new JButton("Create");
 		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
 		frame.getContentPane().add(btnCreate, ClientLayout.CREATE_BUTTON);
 		
@@ -1123,18 +1124,18 @@ public class MainWindow extends Window {
 		frame.getContentPane().add(textName, ClientLayout.GAPLIST_TEXT);
 		textName.setColumns(10);
 
-		JButton btnVote = new JButton("Vote");
+		final JButton btnVote = new JButton("Vote");
 		btnVote.setToolTipText("Click here to vote for the selected Song.");
 		frame.getContentPane().add(btnVote, ClientLayout.VOTE_BUTTON);
 		
-		JButton btnRemoveVote = new JButton("Remove Vote");
+		final JButton btnRemoveVote = new JButton("Remove Vote");
 		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
 		frame.getContentPane().add(btnRemoveVote, ClientLayout.REMOVE_VOTE_BUTTON);
 		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
 		
-		JButton btnDebugMode = new JButton("Debug Mode");
+		final JButton btnDebugMode = new JButton("Debug Mode");
 		btnDebugMode.setToolTipText("Click here to open the Debug Window.");
 		frame.getContentPane().add(btnDebugMode, ClientLayout.DEBUG_BUTTON);
 		
@@ -1167,6 +1168,8 @@ public class MainWindow extends Window {
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
+		long end = System.currentTimeMillis();
+		System.out.println(end-start);
 	}
 	
 	/**

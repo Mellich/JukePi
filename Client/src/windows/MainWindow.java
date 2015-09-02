@@ -955,6 +955,7 @@ public class MainWindow extends Window {
 	 * @wbp.parser.entryPoint
 	 */
 	private void constructFrame() {
+		long start = System.currentTimeMillis();
 		gaplist = wrapper.getGapList();
 		wishlist = wrapper.getWishList();
 		gaplists = wrapper.getAvailableGapLists();
@@ -1203,6 +1204,8 @@ public class MainWindow extends Window {
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
+		long end = System.currentTimeMillis();
+		System.out.println(end-start);
 	}
 	
 	/**

@@ -85,13 +85,13 @@ public class LoginLayout implements LayoutManager{
 
 	@Override
 	public void layoutContainer(Container parent) {
-		int height = parent.getHeight();
-		int width = parent.getWidth();
+		final int height = parent.getHeight();
+		final int width = parent.getWidth();
 		
-		int textHeight = (int)(height*0.05);
-		int labelHeight = (int)(height*0.035);
-		int buttonY = (int)(height*0.7);
-		int buttonHeight = (int)(height*0.1);
+		final int textHeight = (int)(height*0.05);
+		final int labelHeight = (int)(height*0.035);
+		final int buttonY = (int)(height*0.7);
+		final int buttonHeight = (int)(height*0.1);
 		
 		/******************************TextFields*****************************/
 		if (components.get(IP_TEXT) != null)
