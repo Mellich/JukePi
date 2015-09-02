@@ -94,25 +94,34 @@ public class LoginLayout implements LayoutManager{
 		int buttonHeight = (int)(height*0.1);
 		
 		/******************************TextFields*****************************/
-		components.get(IP_TEXT).setBounds((int)(width*0.3), (int)(height*0.275), (int)(width*0.37), textHeight);
+		if (components.get(IP_TEXT) != null)
+			components.get(IP_TEXT).setBounds((int)(width*0.3), (int)(height*0.275), (int)(width*0.37), textHeight);
 		
-		components.get(PORT_TEXT).setBounds((int)(width*0.3), (int)(height*0.4625), (int)(width*0.09), textHeight);
+		if (components.get(PORT_TEXT) != null)
+			components.get(PORT_TEXT).setBounds((int)(width*0.3), (int)(height*0.4625), (int)(width*0.09), textHeight);
 		
 		/*****************************Labels*********************************/
-		components.get(WELCOME_LABEL).setBounds((int)(width*0.02), (int)(height*0.025), (int)(width*0.96), (int)(height*0.2));
+		if (components.get(WELCOME_LABEL) != null)
+			components.get(WELCOME_LABEL).setBounds((int)(width*0.02), (int)(height*0.025), (int)(width*0.96), (int)(height*0.2));
 		
-		components.get(IP_LABEL).setBounds((int)(width*0.06), (int)(height*0.275), (int)(width*0.152), labelHeight);
+		if (components.get(IP_LABEL) != null)
+			components.get(IP_LABEL).setBounds((int)(width*0.06), (int)(height*0.275), (int)(width*0.152), labelHeight);
 		
-		components.get(PORT_LABEL).setBounds((int)(width*0.06), (int)(height*0.4625), (int)(width*0.09), labelHeight);
+		if (components.get(PORT_LABEL) != null)
+			components.get(PORT_LABEL).setBounds((int)(width*0.06), (int)(height*0.4625), (int)(width*0.09), labelHeight);
 		
-		components.get(FAIL_LABEL).setBounds((int)(width*0.1), (int)(height*0.5875), (int)(width*0.75), labelHeight);
+		if (components.get(FAIL_LABEL) != null)
+			components.get(FAIL_LABEL).setBounds((int)(width*0.1), (int)(height*0.5875), (int)(width*0.75), labelHeight);
 		
 		/******************************Buttons******************************/
-		components.get(CONNECT_BUTTON).setBounds((int)(width*0.02), buttonY, (int)(width*0.26), buttonHeight);
+		if (components.get(CONNECT_BUTTON) != null)
+			components.get(CONNECT_BUTTON).setBounds((int)(width*0.02), buttonY, (int)(width*0.26), buttonHeight);
 		
-		components.get(UDP_BUTTON).setBounds((int)(width*0.32), buttonY, (int)(width*0.26), buttonHeight);
+		if (components.get(UDP_BUTTON) != null)
+			components.get(UDP_BUTTON).setBounds((int)(width*0.32), buttonY, (int)(width*0.26), buttonHeight);
 		
-		components.get(INTERN_SERVER_BUTTON).setBounds((int)(width*0.62), buttonY, (int)(width*0.34), buttonHeight);
+		if (components.get(INTERN_SERVER_BUTTON) != null)
+			components.get(INTERN_SERVER_BUTTON).setBounds((int)(width*0.62), buttonY, (int)(width*0.34), buttonHeight);
 	}
 
 	@Override
@@ -154,31 +163,58 @@ public class LoginLayout implements LayoutManager{
 	 * @since 1.0
 	 */
 	private void remove(Component comp) {
-		if (components.get(IP_TEXT).equals(comp))
-			components.put(IP_TEXT, null);
+		if (components.get(IP_TEXT) != null)
+			if (components.get(IP_TEXT).equals(comp)) {
+				components.put(IP_TEXT, null);
+				return;
+			}
 		
-		else if (components.get(PORT_TEXT).equals(comp))
-			components.put(PORT_TEXT, null);
+		if (components.get(PORT_TEXT) != null)
+			if (components.get(PORT_TEXT).equals(comp)) {
+				components.put(PORT_TEXT, null);
+				return;
+			}
 		
-		else if (components.get(WELCOME_LABEL).equals(comp))
-			components.put(WELCOME_LABEL, null);
+		if (components.get(WELCOME_LABEL) != null)
+			if (components.get(WELCOME_LABEL).equals(comp)) {
+				components.put(WELCOME_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(IP_LABEL).equals(comp))
-			components.put(IP_LABEL, null);
+		if (components.get(IP_LABEL) != null)
+			if (components.get(IP_LABEL).equals(comp)) {
+				components.put(IP_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(PORT_LABEL).equals(comp))
-			components.put(PORT_LABEL, null);
+		if (components.get(PORT_LABEL) != null)
+			if (components.get(PORT_LABEL).equals(comp)) {
+				components.put(PORT_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(FAIL_LABEL).equals(comp))
-			components.put(FAIL_LABEL, null);
+		if (components.get(FAIL_LABEL) != null)
+			if (components.get(FAIL_LABEL).equals(comp)) {
+				components.put(FAIL_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(CONNECT_BUTTON).equals(comp))
-			components.put(CONNECT_BUTTON, null);
+		if (components.get(CONNECT_BUTTON) != null)
+			if (components.get(CONNECT_BUTTON).equals(comp)) {
+				components.put(CONNECT_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(UDP_BUTTON).equals(comp))
-			components.put(UDP_BUTTON, null);
+		if (components.get(UDP_BUTTON) != null)
+			if (components.get(UDP_BUTTON).equals(comp)) {
+				components.put(UDP_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(INTERN_SERVER_BUTTON).equals(comp))
-			components.put(INTERN_SERVER_BUTTON, null);
+		if (components.get(INTERN_SERVER_BUTTON) != null)
+			if (components.get(INTERN_SERVER_BUTTON).equals(comp)) {
+				components.put(INTERN_SERVER_BUTTON, null);
+				return;
+			}
 	}
 }

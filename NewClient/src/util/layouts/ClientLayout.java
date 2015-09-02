@@ -249,7 +249,6 @@ public class ClientLayout implements LayoutManager{
 
 	@Override
 	public void layoutContainer(Container parent) {
-		// TODO Auto-generated method stub
 		
 		int height = parent.getHeight();
 		int width = parent.getWidth();
@@ -265,90 +264,125 @@ public class ClientLayout implements LayoutManager{
 		int thirdButtonY = (int)(height*0.91);
 		
 		/***********************************Labels***************************************/
+		if (components.get(GAPLIST_LABEL) != null)
+			components.get(GAPLIST_LABEL).setBounds(10, 10, Math.min((int)(width*0.205),123), lblHeight);
 		
-		components.get(GAPLIST_LABEL).setBounds(10, 10, Math.min((int)(width*0.205),123), lblHeight);
+		if(components.get(WISHLIST_LABEL) != null)
+			components.get(WISHLIST_LABEL).setBounds(10, 10+ (int)(height*0.037), Math.min((int)(width*0.205), 123), lblHeight);
 		
-		components.get(WISHLIST_LABEL).setBounds(10, 10+ (int)(height*0.037), Math.min((int)(width*0.205), 123), lblHeight);
+		if (components.get(COUNT_GAPLIST_LABEL) != null)
+			components.get(COUNT_GAPLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 10, (int)(width*0.1133), lblHeight);
 		
-		components.get(COUNT_GAPLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 10, (int)(width*0.1133), lblHeight);
+		if (components.get(COUNT_WISHLIST_LABEL) != null)
+			components.get(COUNT_WISHLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer,10+(int)(height*0.037),(int)(width*0.1133),lblHeight);
 		
-		components.get(COUNT_WISHLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer,10+(int)(height*0.037),(int)(width*0.1133),lblHeight);
+		if (components.get(NOW_PLAYING_LABEL) != null)
+			components.get(NOW_PLAYING_LABEL).setBounds(10, (int)(height*0.205), Math.min(68,(int)(width*0.1133)),lblHeight);
 		
-		components.get(NOW_PLAYING_LABEL).setBounds(10, (int)(height*0.205), Math.min(68,(int)(width*0.1133)),lblHeight);
+		if (components.get(NEXT_TRACK_LABEL) != null)
+			components.get(NEXT_TRACK_LABEL).setBounds(10, (int)(height*0.241), Math.min(68,(int)(width*0.1133)),lblHeight);
 		
-		components.get(NEXT_TRACK_LABEL).setBounds(10, (int)(height*0.241), Math.min(68,(int)(width*0.1133)),lblHeight);
+		if (components.get(NAME_NOW_PLAYING_LABEL) != null)
+			components.get(NAME_NOW_PLAYING_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.205), (int)(width*0.6406), lblHeight);
 		
-		components.get(NAME_NOW_PLAYING_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.205), (int)(width*0.6406), lblHeight);
+		if (components.get(NAME_NEXT_TRACK_LABEL) != null)
+			components.get(NAME_NEXT_TRACK_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.241), (int)(width*0.6406), lblHeight);
 		
-		components.get(NAME_NEXT_TRACK_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.241), (int)(width*0.6406), lblHeight);
+		if (components.get(GAPLIST_NAME_LABEL) != null)
+			components.get(GAPLIST_NAME_LABEL).setBounds(10, (int)(height*0.428), (int)(width*0.416), lblHeight);
 		
-		components.get(GAPLIST_NAME_LABEL).setBounds(10, (int)(height*0.428), (int)(width*0.416), lblHeight);
+		if (components.get(WISHLIST_SHOW_LABEL) != null)
+			components.get(WISHLIST_SHOW_LABEL).setBounds((int)(width*0.533), (int)(height*0.428), (int)(width*0.416), lblHeight);
 		
-		components.get(WISHLIST_SHOW_LABEL).setBounds((int)(width*0.533), (int)(height*0.428), (int)(width*0.416), lblHeight);
+		if (components.get(SAVED_GAPLIST_LABEL) != null)
+			components.get(SAVED_GAPLIST_LABEL).setBounds(10, (int)(height*0.714), (int)(width*0.416), lblHeight);
 		
-		components.get(SAVED_GAPLIST_LABEL).setBounds(10, (int)(height*0.714), (int)(width*0.416), lblHeight);
-
-		components.get(FAIL_LABEL).setBounds((int)(width*0.29), (int)(height*0.4), (int)(width*19.0/60.0), lblHeight);
+		if (components.get(FAIL_LABEL) != null)
+			components.get(FAIL_LABEL).setBounds((int)(width*0.29), (int)(height*0.4), (int)(width*19.0/60.0), lblHeight);
 		
 		/**************************Buttons**************************/
+		if (components.get(ADD_BUTTON) != null)
+			components.get(ADD_BUTTON).setBounds(10, (int)(height*0.13), (int)(width*0.1), (int)(height*0.04));
 		
-		components.get(ADD_BUTTON).setBounds(10, (int)(height*0.13), (int)(width*0.1), (int)(height*0.04));
+		if (components.get(SEEK_BACK_BUTTON) != null)
+			components.get(SEEK_BACK_BUTTON).setBounds(10, (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
-		components.get(SEEK_BACK_BUTTON).setBounds(10, (int)(height*0.277), manButtonWidth, manButtonHeight);
+		if (components.get(PLAY_PAUSE_BUTTON) != null)
+			components.get(PLAY_PAUSE_BUTTON).setBounds(manButtonWidth+10+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
-		components.get(PLAY_PAUSE_BUTTON).setBounds(manButtonWidth+10+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
+		if (components.get(SEEK_FORWARD_BUTTON) != null)
+			components.get(SEEK_FORWARD_BUTTON).setBounds((int)(width*0.533), (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
-		components.get(SEEK_FORWARD_BUTTON).setBounds((int)(width*0.533), (int)(height*0.277), manButtonWidth, manButtonHeight);
+		if (components.get(SKIP_BUTTON) != null)
+			components.get(SKIP_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
-		components.get(SKIP_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
+		if (components.get(DISCONNECT_BUTTON) != null)
+			components.get(DISCONNECT_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10, manButtonWidth, buttonHeight);
 		
-		components.get(DISCONNECT_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10, manButtonWidth, buttonHeight);
-		
-		components.get(DEBUG_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10+(int)(height*0.032+height*0.01), manButtonWidth, buttonHeight);
+		if (components.get(DEBUG_BUTTON) != null)
+			components.get(DEBUG_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10+(int)(height*0.032+height*0.01), manButtonWidth, buttonHeight);
 
-		components.get(DELETE_BUTTON).setBounds(10, secondButtonY, manButtonWidth, buttonHeight);
+		if (components.get(DELETE_BUTTON) != null)
+			components.get(DELETE_BUTTON).setBounds(10, secondButtonY, manButtonWidth, buttonHeight);
 		
-		components.get(SAVE_BUTTON).setBounds(10+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
+		if (components.get(SAVE_BUTTON) != null)
+			components.get(SAVE_BUTTON).setBounds(10+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
 		
-		components.get(TRACK_UP_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.487), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
+		if (components.get(TRACK_UP_BUTTON) != null)
+			components.get(TRACK_UP_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.487), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
 		
-		components.get(TRACK_DOWN_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.56), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
+		if (components.get(TRACK_DOWN_BUTTON) != null)
+			components.get(TRACK_DOWN_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.56), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
 		
-		components.get(LOAD_BUTTON).setBounds(10, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
+		if (components.get(LOAD_BUTTON) != null)
+			components.get(LOAD_BUTTON).setBounds(10, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
 		
-		components.get(SHOW_BUTTON).setBounds(10+(int)((2*manButtonWidth+spacer)*0.3)+spacer, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
+		if (components.get(SHOW_BUTTON) != null)
+			components.get(SHOW_BUTTON).setBounds(10+(int)((2*manButtonWidth+spacer)*0.3)+spacer, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
 		
-		components.get(REMOVE_BUTTON).setBounds(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer, thirdButtonY, (int)((2*manButtonWidth+spacer+10)-(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer)), buttonHeight);
+		if (components.get(REMOVE_BUTTON) != null)
+			components.get(REMOVE_BUTTON).setBounds(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer, thirdButtonY, (int)((2*manButtonWidth+spacer+10)-(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer)), buttonHeight);
 		
-		components.get(CREATE_BUTTON).setBounds((int)(width*0.533), thirdButtonY, (int)(width*2/15), buttonHeight);
+		if (components.get(CREATE_BUTTON) != null) 
+			components.get(CREATE_BUTTON).setBounds((int)(width*0.533), thirdButtonY, (int)(width*2/15), buttonHeight);
 		
-		components.get(VOTE_BUTTON).setBounds((int)(width*0.533), secondButtonY, manButtonWidth, buttonHeight);
+		if (components.get(VOTE_BUTTON) != null)
+			components.get(VOTE_BUTTON).setBounds((int)(width*0.533), secondButtonY, manButtonWidth, buttonHeight);
 		
-		components.get(REMOVE_VOTE_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
+		if (components.get(REMOVE_VOTE_BUTTON) != null)
+			components.get(REMOVE_VOTE_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
 		
 		/************************************Panes**********************************/
-		components.get(GAPLIST_SCROLL).setBounds(10, (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
+		if (components.get(GAPLIST_SCROLL) != null)
+			components.get(GAPLIST_SCROLL).setBounds(10, (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
 		
-		components.get(WISHLIST_SCROLL).setBounds((int)(width*0.533), (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
+		if (components.get(WISHLIST_SCROLL) != null)
+			components.get(WISHLIST_SCROLL).setBounds((int)(width*0.533), (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
 		
-		components.get(SAVED_GAPLIST_SCROLL).setBounds(10, (int)(height*0.754), 2*manButtonWidth+spacer, height/7);
+		if (components.get(SAVED_GAPLIST_SCROLL) != null)
+			components.get(SAVED_GAPLIST_SCROLL).setBounds(10, (int)(height*0.754), 2*manButtonWidth+spacer, height/7);
 		
-		components.get(CONTENT_SCROLL).setBounds((int)(width*0.533), (int)(height*0.753), 2*manButtonWidth+spacer, height/7);
+		if (components.get(CONTENT_SCROLL) != null)
+			components.get(CONTENT_SCROLL).setBounds((int)(width*0.533), (int)(height*0.753), 2*manButtonWidth+spacer, height/7);
 		
 		/******************************TextFields********************************/
-		components.get(LINK_TEXT).setBounds(10, (int)(height*3/35), (int)(width*0.533)-10, (int)(height/35));
+		if (components.get(LINK_TEXT) != null)
+			components.get(LINK_TEXT).setBounds(10, (int)(height*3/35), (int)(width*0.533)-10, (int)(height/35));
 		
-		components.get(GAPLIST_TEXT).setBounds((int)(width*0.533)+(int)(width*2/15)+spacer, thirdButtonY, (2*manButtonWidth)-((int)(width*2/15)), buttonHeight);
+		if (components.get(GAPLIST_TEXT) != null)
+			components.get(GAPLIST_TEXT).setBounds((int)(width*0.533)+(int)(width*2/15)+spacer, thirdButtonY, (2*manButtonWidth)-((int)(width*2/15)), buttonHeight);
 		
 		/*****************************RadioButtons********************************/
-		components.get(WISHLIST_RADIO).setBounds((int)(width*13/100), (int)(height*9/70), (int)(width*0.125), buttonHeight);
+		if (components.get(WISHLIST_RADIO) != null)
+			components.get(WISHLIST_RADIO).setBounds((int)(width*13/100), (int)(height*9/70), (int)(width*0.125), buttonHeight);
 		
-		components.get(GAPLIST_RADIO).setBounds((int)(width*13/100)+(int)(width*0.125)+2, (int)(height*9/70), (int)(width*0.125), buttonHeight);
+		if (components.get(GAPLIST_RADIO) != null)
+			components.get(GAPLIST_RADIO).setBounds((int)(width*13/100)+(int)(width*0.125)+2, (int)(height*9/70), (int)(width*0.125), buttonHeight);
 		
 		/***************************CheckBox***********************************/
-		components.get(FRONT_CHECK).setBounds((int)(width*13/100)+(int)(width*0.25)+4, (int)(height*9/70), (int)(width*97/600), buttonHeight);
-		
-		System.out.println((int)(width*13/100) + " + " +  (int)(width*0.25) + " + " + 4 + " = " + ((int)(width*13/100)+(int)(width*0.25)+4));
+		if (components.get(FRONT_CHECK) != null)
+			components.get(FRONT_CHECK).setBounds((int)(width*13/100)+(int)(width*0.25)+4, (int)(height*9/70), (int)(width*97/600), buttonHeight);
+
 	}
 
 	@Override
@@ -406,118 +440,232 @@ public class ClientLayout implements LayoutManager{
 	 * @see Component
 	 */
 	private void remove(Component comp) {
-		if (components.get(GAPLIST_LABEL).equals(comp))
-			components.put(GAPLIST_LABEL, null);
+		if (components.get(GAPLIST_LABEL) != null)
+			if (components.get(GAPLIST_LABEL).equals(comp)) {
+				components.put(GAPLIST_LABEL, null);
+				return;
+			}
 
-		else if (components.get(WISHLIST_LABEL).equals(comp))
-			components.put(WISHLIST_LABEL, null);
+		if (components.get(WISHLIST_LABEL) != null)
+			if (components.get(WISHLIST_LABEL).equals(comp)) {
+				components.put(WISHLIST_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(NOW_PLAYING_LABEL).equals(comp))
-			components.put(NOW_PLAYING_LABEL, null);
+		if (components.get(NOW_PLAYING_LABEL) != null)
+			if (components.get(NOW_PLAYING_LABEL).equals(comp)) {
+				components.put(NOW_PLAYING_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(NEXT_TRACK_LABEL).equals(comp))
-			components.put(NEXT_TRACK_LABEL, null);
+		if (components.get(NEXT_TRACK_LABEL) != null)
+			if (components.get(NEXT_TRACK_LABEL).equals(comp)) {
+				components.put(NEXT_TRACK_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(COUNT_GAPLIST_LABEL).equals(comp))
-			components.put(COUNT_GAPLIST_LABEL, null);
+		if (components.get(COUNT_GAPLIST_LABEL) != null)
+			if (components.get(COUNT_GAPLIST_LABEL).equals(comp)) {
+				components.put(COUNT_GAPLIST_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(COUNT_WISHLIST_LABEL).equals(comp))
-			components.put(COUNT_WISHLIST_LABEL, null);
+		if (components.get(COUNT_WISHLIST_LABEL) != null)
+			if (components.get(COUNT_WISHLIST_LABEL).equals(comp)) {
+				components.put(COUNT_WISHLIST_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(NAME_NOW_PLAYING_LABEL).equals(comp))
-			components.put(NAME_NOW_PLAYING_LABEL, null);
+		if (components.get(NAME_NOW_PLAYING_LABEL) != null)
+			if (components.get(NAME_NOW_PLAYING_LABEL).equals(comp)) {
+				components.put(NAME_NOW_PLAYING_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(NAME_NEXT_TRACK_LABEL).equals(comp))
-			components.put(WISHLIST_LABEL, null);
+		if (components.get(NAME_NEXT_TRACK_LABEL) != null)
+			if (components.get(NAME_NEXT_TRACK_LABEL).equals(comp)) {
+				components.put(WISHLIST_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(GAPLIST_NAME_LABEL).equals(comp))
-			components.put(GAPLIST_NAME_LABEL, null);
+		if (components.get(GAPLIST_NAME_LABEL) != null)
+			if (components.get(GAPLIST_NAME_LABEL).equals(comp)) {
+				components.put(GAPLIST_NAME_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(WISHLIST_SHOW_LABEL).equals(comp))
-			components.put(WISHLIST_SHOW_LABEL, null);
+		if (components.get(WISHLIST_SHOW_LABEL) != null)
+			if (components.get(WISHLIST_SHOW_LABEL).equals(comp)) {
+				components.put(WISHLIST_SHOW_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(SAVED_GAPLIST_LABEL).equals(comp))
-			components.put(SAVED_GAPLIST_LABEL, null);
+		if (components.get(SAVED_GAPLIST_LABEL) != null)
+			if (components.get(SAVED_GAPLIST_LABEL).equals(comp)) {
+				components.put(SAVED_GAPLIST_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(FAIL_LABEL).equals(comp))
-			components.put(FAIL_LABEL, null);
+		if (components.get(FAIL_LABEL) != null)
+			if (components.get(FAIL_LABEL).equals(comp)) {
+				components.put(FAIL_LABEL, null);
+				return;
+			}
 		
-		else if (components.get(ADD_BUTTON).equals(comp))
-			components.put(ADD_BUTTON, null);
+		if (components.get(ADD_BUTTON) != null)
+			if (components.get(ADD_BUTTON).equals(comp)) {
+				components.put(ADD_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(DISCONNECT_BUTTON).equals(comp))
-			components.put(DISCONNECT_BUTTON, null);
+		if (components.get(DISCONNECT_BUTTON) != null)
+			if (components.get(DISCONNECT_BUTTON).equals(comp)) {
+				components.put(DISCONNECT_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(DEBUG_BUTTON).equals(comp))
-			components.put(DEBUG_BUTTON, null);
+		if (components.get(DEBUG_BUTTON) != null)
+			if (components.get(DEBUG_BUTTON).equals(comp)) {
+				components.put(DEBUG_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(SEEK_BACK_BUTTON).equals(comp))
-			components.put(SEEK_BACK_BUTTON, null);
+		if (components.get(SEEK_BACK_BUTTON) != null)
+			if (components.get(SEEK_BACK_BUTTON).equals(comp)) {
+				components.put(SEEK_BACK_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(PLAY_PAUSE_BUTTON).equals(comp))
-			components.put(PLAY_PAUSE_BUTTON, null);
+		if (components.get(PLAY_PAUSE_BUTTON) != null)
+			if (components.get(PLAY_PAUSE_BUTTON).equals(comp)) {
+				components.put(PLAY_PAUSE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(SEEK_FORWARD_BUTTON).equals(comp))
-			components.put(SEEK_FORWARD_BUTTON, null);
+		if (components.get(SEEK_FORWARD_BUTTON) != null)
+			if (components.get(SEEK_FORWARD_BUTTON).equals(comp)) {
+				components.put(SEEK_FORWARD_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(SKIP_BUTTON).equals(comp))
-			components.put(SKIP_BUTTON, null);
+		if (components.get(SKIP_BUTTON) != null)
+			if (components.get(SKIP_BUTTON).equals(comp)) {
+				components.put(SKIP_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(TRACK_UP_BUTTON).equals(comp))
-			components.put(TRACK_UP_BUTTON, null);
+		if (components.get(TRACK_UP_BUTTON) != null)
+			if (components.get(TRACK_UP_BUTTON).equals(comp)) {
+				components.put(TRACK_UP_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(TRACK_DOWN_BUTTON).equals(comp))
-			components.put(TRACK_DOWN_BUTTON, null);
+		if (components.get(TRACK_DOWN_BUTTON) != null)
+			if (components.get(TRACK_DOWN_BUTTON).equals(comp)) {
+				components.put(TRACK_DOWN_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(DELETE_BUTTON).equals(comp))
-			components.put(DELETE_BUTTON, null);
+		if (components.get(DELETE_BUTTON) != null)
+			if (components.get(DELETE_BUTTON).equals(comp)) {
+				components.put(DELETE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(SAVE_BUTTON).equals(comp))
-			components.put(SAVE_BUTTON, null);
+		if (components.get(SAVE_BUTTON) != null)
+			if (components.get(SAVE_BUTTON).equals(comp)) {
+				components.put(SAVE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(VOTE_BUTTON).equals(comp))
-			components.put(VOTE_BUTTON, null);
+		if (components.get(VOTE_BUTTON) != null)
+			if (components.get(VOTE_BUTTON).equals(comp)) {
+				components.put(VOTE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(REMOVE_VOTE_BUTTON).equals(comp))
-			components.put(REMOVE_VOTE_BUTTON, null);
+		if (components.get(REMOVE_VOTE_BUTTON) != null)
+			if (components.get(REMOVE_VOTE_BUTTON).equals(comp)) {
+				components.put(REMOVE_VOTE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(LOAD_BUTTON).equals(comp))
-			components.put(LOAD_BUTTON, null);
+		if (components.get(LOAD_BUTTON) != null)
+			if (components.get(LOAD_BUTTON).equals(comp)) {
+				components.put(LOAD_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(SHOW_BUTTON).equals(comp))
-			components.put(SHOW_BUTTON, null);
+		if (components.get(SHOW_BUTTON) != null)
+			if (components.get(SHOW_BUTTON).equals(comp)) {
+				components.put(SHOW_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(REMOVE_BUTTON).equals(comp))
-			components.put(REMOVE_BUTTON, null);
+		if (components.get(REMOVE_BUTTON) != null)
+			if (components.get(REMOVE_BUTTON).equals(comp)) {
+				components.put(REMOVE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(CREATE_BUTTON).equals(comp))
-			components.put(CREATE_BUTTON, null);
+		if (components.get(CREATE_BUTTON) != null)
+			if (components.get(CREATE_BUTTON).equals(comp)) {
+				components.put(CREATE_BUTTON, null);
+				return;
+			}
 		
-		else if (components.get(LINK_TEXT).equals(comp))
-			components.put(LINK_TEXT, null);
+		if (components.get(LINK_TEXT) != null)
+			if (components.get(LINK_TEXT).equals(comp)) {
+				components.put(LINK_TEXT, null);
+				return;
+			}
 		
-		else if (components.get(GAPLIST_TEXT).equals(comp))
-			components.put(GAPLIST_TEXT, null);
+		if (components.get(GAPLIST_TEXT) != null)
+			if (components.get(GAPLIST_TEXT).equals(comp)) {
+				components.put(GAPLIST_TEXT, null);
+				return;
+			}
 		
-		else if (components.get(GAPLIST_RADIO).equals(comp))
-			components.put(GAPLIST_RADIO, null);
+		if (components.get(GAPLIST_RADIO) != null)
+			if (components.get(GAPLIST_RADIO).equals(comp)) {
+				components.put(GAPLIST_RADIO, null);
+				return;
+			}
 		
-		else if (components.get(WISHLIST_RADIO).equals(comp))
-			components.put(WISHLIST_RADIO, null);
+		if (components.get(WISHLIST_RADIO) != null)
+			if (components.get(WISHLIST_RADIO).equals(comp)) {
+				components.put(WISHLIST_RADIO, null);
+				return;
+			}
 		
-		else if (components.get(FRONT_CHECK).equals(comp))
-			components.put(FRONT_CHECK, null);
+		if (components.get(FRONT_CHECK) != null)
+			if (components.get(FRONT_CHECK).equals(comp)) {
+				components.put(FRONT_CHECK, null);
+				return;
+			}
 		
-		else if (components.get(GAPLIST_SCROLL).equals(comp))
-			components.put(GAPLIST_SCROLL, null);
+		if (components.get(GAPLIST_SCROLL) != null)
+			if (components.get(GAPLIST_SCROLL).equals(comp)) {
+				components.put(GAPLIST_SCROLL, null);
+				return;
+			}
 		
-		else if (components.get(WISHLIST_SCROLL).equals(comp))
-			components.put(WISHLIST_SCROLL, null);
+		if (components.get(WISHLIST_SCROLL) != null)
+			if (components.get(WISHLIST_SCROLL).equals(comp)) {
+				components.put(WISHLIST_SCROLL, null);
+				return;
+			}
 		
-		else if (components.get(SAVED_GAPLIST_SCROLL).equals(comp))
-			components.put(SAVED_GAPLIST_SCROLL, null);
+		if (components.get(SAVED_GAPLIST_SCROLL) != null)
+			if (components.get(SAVED_GAPLIST_SCROLL).equals(comp)) {
+				components.put(SAVED_GAPLIST_SCROLL, null);
+				return;
+			}
 		
-		else if (components.get(CONTENT_SCROLL).equals(comp))
-			components.put(CONTENT_SCROLL, null);
+		if (components.get(CONTENT_SCROLL) != null)
+			if (components.get(CONTENT_SCROLL).equals(comp)) {
+				components.put(CONTENT_SCROLL, null);
+				return;
+			}
 	}
 }
