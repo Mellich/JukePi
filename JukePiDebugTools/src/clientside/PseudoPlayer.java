@@ -11,18 +11,27 @@ import client.listener.SeekNotificationListener;
 import client.serverconnection.Song;
 import client.serverconnection.impl.YTJBServerConnection;
 
-/**A client that signals the server that it is a player.
+/**
+ * A client that signals the server that it is a player.
  * Execute the main method of this class to run the program.
  * When connected to a server, press ENTER to send a player finished notify or 
  * type 'close' to exit the program.
  * 
  * @author mellich
- *
+ * @version 1.0
  */
 public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNotificationListener, SeekNotificationListener  {
 
+	/**
+	 * The ServerConnection-Instance.
+	 */
 	private static YTJBServerConnection server;
 
+	/**
+	 * Runs the PseudoPlayer.
+	 * @param args	Just a stub.
+	 * @since 1.0
+	 */
 	public static void main(String[] args) {
 		PseudoPlayer l = new PseudoPlayer();
 		server = new YTJBServerConnection(15000);
@@ -57,6 +66,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 						break;
 					}else if (input.equals("")){
 						server.notifyPlayerFinished();
+						System.out.println("Notification sent!");
 					}
 					
 				}				

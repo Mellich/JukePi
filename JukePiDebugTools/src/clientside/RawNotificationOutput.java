@@ -11,9 +11,19 @@ import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 import client.serverconnection.impl.YTJBServerConnection;
 
+/**
+ * A NotificationListener, that will print the Responses into the Console.
+ * @author Mellich
+ * @version 1.0
+ */
 public class RawNotificationOutput implements DefaultNotificationListener,
 		GapListNotificationListener {
 	
+	/**
+	 * Runs the Listener.
+	 * @param args	Just a stub.
+	 * @since 1.0
+	 */
 	public static void main(String[] args) {
 		RawNotificationOutput l = new RawNotificationOutput();
 		ServerConnection server;

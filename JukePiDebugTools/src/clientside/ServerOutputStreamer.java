@@ -12,16 +12,25 @@ import client.serverconnection.Song;
 import client.serverconnection.impl.YTJBServerConnection;
 
 
-/**Streams the output of a server to the console. Nice for debugging purposes.
+/**
+ * Streams the output of a server to the console. Nice for debugging purposes.
  * Simply execute the main method of this class to start the program.
  * 
- * @author mellich
- *
+ * @author Mellich
+ * @version 1.0
  */
 public class ServerOutputStreamer implements DefaultNotificationListener, DebugNotificationListener {
 	
+	/**
+	 * The ServerConnection-Instance
+	 */
 	private static ServerConnection server;	
 	
+	/**
+	 * Runs the OutputStreamer.
+	 * @param args	Just a stub.
+	 * @since 1.0
+	 */
 	public static void main(String[] args) {
 		ServerOutputStreamer l = new ServerOutputStreamer();
 		server = new YTJBServerConnection(15000);
