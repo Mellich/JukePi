@@ -31,6 +31,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	*/
 	private static final int CONNECTIONCHECKINTERVALL = 15000;
 	
+	/**
+	 * The Current Interface-Version, that is implemented.
+	 */
 	private static final long CURRENT_VERSION = 816L;
 	
 	/**
