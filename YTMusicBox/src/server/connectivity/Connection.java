@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import messages.MessageType;
+import messages.Permission;
 import server.YTJBServer;
 import server.connectivity.commands.NotifyClientCommand;
 import server.connectivity.commands.UnknownCommand;
@@ -30,11 +32,13 @@ public class Connection extends Thread {
 	private boolean isPlayer = false;
 	private long macAddress = -1L;
 	private long version = -1L;
+	private List<Permission> permissions;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
 		this.socket = s;
 		this.server = server;
 		this.waiter = waiter;
+		this.permissions = new ArrayList<Permission>();
 	}
 	
 	@Override
@@ -43,6 +47,7 @@ public class Connection extends Thread {
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			permissions.add(Permission.STANDARD);
 			while (running){
 				String message = receiveMessage();
 				if (message == null || this.isInterrupted())		//if connection is lost, close connection. if not handled here
@@ -52,7 +57,7 @@ public class Connection extends Thread {
 					newCommand.start();
 				}
 				catch (NumberFormatException | IndexOutOfBoundsException e){
-					IO.printlnDebug(this, "Wrong command format was sendet by client:"+message);
+					IO.printlnDebug(this, "Wrong command format was sent by client:"+message);
 					new UnknownCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,""+message).handle();
 				}
 			}
@@ -65,6 +70,19 @@ public class Connection extends Thread {
 			server.removeNotifiable(this);
 			server.removePlayer(this);
 		}
+	}
+	
+	public boolean checkPermission(Permission p){
+		return permissions.contains(p);
+	}
+	
+	public void addPermission(Permission p){
+		if (!permissions.contains(p))
+			permissions.add(p);
+	}
+	
+	public void removePermission(Permission p){
+		permissions.remove(p);
 	}
 	
 	public void setIsPlayer(boolean b){

@@ -284,6 +284,17 @@ public class MessageType {
 	public static final int ADDTOOTHERLIST = 54;
 	
 	/**
+	 * returns the permissions of the current track
+	 */
+	public static final int GETPERMISSIONS = 55;
+	
+	/**
+	 * adds a new permission for the client
+	 */
+	public static final int SETPERMISSION = 56;
+	
+	
+	/**
 	 * The Seperator for the arguments of a command.
 	 */
 	public static final String SEPERATOR = ";\t;";

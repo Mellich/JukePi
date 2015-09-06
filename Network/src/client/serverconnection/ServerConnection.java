@@ -1,5 +1,6 @@
 package client.serverconnection;
 
+import messages.Permission;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
@@ -606,4 +607,13 @@ public interface ServerConnection {
 	 * @return	{@code true}, if the Song was moved, {@code false} else.
 	 */
 	public boolean addSongToOtherList(Song song);
+	
+	/**
+	 * adds a permission to the client
+	 * @param p permission that shall be added
+	 * @param passphrase the pass phrase to authorize the permission addition
+	 * @return true, if permission was added
+	 */
+	public boolean setPermission(Permission p, String passphrase);
+	
 }

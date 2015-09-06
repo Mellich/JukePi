@@ -9,6 +9,7 @@ import java.util.List;
 
 import messages.MessageType;
 import messages.ParseStatus;
+import messages.Permission;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
@@ -711,5 +712,10 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean addSongToOtherList(Song song) {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.ADDTOOTHERLIST, ""+song.getTrackID())[0]);
+	}
+
+	@Override
+	public boolean setPermission(Permission p, String passphrase) {
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION, passphrase)[0]);
 	}
 }
