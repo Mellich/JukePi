@@ -34,7 +34,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	/**
 	 * The Current Version.
 	 */
-	private static final long CURRENT_VERSION = 816L;
+	private static final long CURRENT_VERSION = 900L;
 	
 	/**
 	 * The Listeners for seekNotifications.
@@ -716,6 +716,6 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean setPermission(Permission p, String passphrase) {
-		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION, passphrase)[0]);
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION, p.name()+MessageType.SEPERATOR + passphrase)[0]);
 	}
 }

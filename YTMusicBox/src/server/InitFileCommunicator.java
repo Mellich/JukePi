@@ -11,12 +11,24 @@ public class InitFileCommunicator {
 	private static String INITFILENAME = "init";
 	
 	public static final String DEFAULTGAPLISTNAME  = "gaplist.jb";
+	private static final String DEFAULTPLAYERPW = "player";
+	private static final String DEFAULTPLAYBACKPW = "playback";
+	private static final String DEFAULTDEBUGPW = "debug";
+	private static final String DEFAULTGAPLISTPW = "gaplist";
 	
+	private static final String PLAYERPWROW = "PLAYERPW";
+	private static final String PLAYBACKPWROW = "PLAYBACKPW";
+	private static final String DEBUGPWROW = "DEBUGPW";
+	private static final String GAPLISTPWROW = "GAPLISTPW";
 	private static final String STARTUPGAPLISTROW = "STARTUPGAPLIST";
 	private static final String AUTOPLAYROW = "AUTOPLAY";
 	
 	private String startUpGapList = DEFAULTGAPLISTNAME;
 	private boolean autoPlay = true;
+	private String playerPW = DEFAULTPLAYERPW;
+	private String playbackPW = DEFAULTPLAYBACKPW;
+	private String debugPW = DEFAULTDEBUGPW;
+	private String gaplistPW = DEFAULTGAPLISTPW;
 	private String dir;
 	
 	public void setStartUpGapList(String filename){
@@ -34,6 +46,38 @@ public class InitFileCommunicator {
 		return this.startUpGapList;
 	}
 	
+	public String getPlayerPW(){
+		return playerPW;
+	}
+	
+	public String getPlaybackPW(){
+		return playbackPW;
+	}
+	
+	public String getDebugPW(){
+		return debugPW;
+	}
+	
+	public String getGaplistPW(){
+		return gaplistPW;
+	}
+	
+	public void setPlayerPW(String pw){
+		this.playerPW = pw;
+	}
+	
+	public void setPlaybackPW(String pw){
+		this.playbackPW = pw;
+	}
+	
+	public void setDebugPW(String pw){
+		this.debugPW = pw;
+	}
+	
+	public void setGaplistPW(String pw){
+		this.gaplistPW = pw;
+	}
+	
 	public void setAutoPlay(boolean autoPlay){
 		this.autoPlay = autoPlay;
 		saveInitFile();
@@ -47,6 +91,14 @@ public class InitFileCommunicator {
 		BufferedWriter file = IO.getFileInput(dir+INITFILENAME);
 		try {
 			file.write(STARTUPGAPLISTROW+"="+this.startUpGapList);
+			file.newLine();
+			file.write(PLAYERPWROW+"="+this.playerPW);
+			file.newLine();
+			file.write(PLAYBACKPWROW+"="+this.playbackPW);
+			file.newLine();
+			file.write(DEBUGPWROW+"="+this.debugPW);
+			file.newLine();
+			file.write(GAPLISTPWROW+"="+this.gaplistPW);
 			file.newLine();
 			file.write(AUTOPLAYROW+"="+this.autoPlay);
 			file.close();
@@ -62,11 +114,21 @@ public class InitFileCommunicator {
 			line = file.readLine();
 			while (line != null){
 				line.replace(" ", "");
-				String[] splitted = line.split("=");
-				if (splitted[0].equals(STARTUPGAPLISTROW))
-					this.startUpGapList = splitted[1];
-				else if (splitted[0].equals(AUTOPLAYROW))
-					this.autoPlay = Boolean.getBoolean(splitted[1]);
+				int equalPos = line.indexOf("=");
+				String call = line.substring(0,equalPos);
+				String input = line.substring(equalPos + 1);
+				if (call.equals(STARTUPGAPLISTROW))
+					this.startUpGapList = input;
+				else if (call.equals(AUTOPLAYROW))
+					this.autoPlay = Boolean.getBoolean(input);
+				else if (call.equals(PLAYERPWROW))
+					this.playerPW = input;
+				else if (call.equals(PLAYBACKPWROW))
+					this.playbackPW = input;
+				else if (call.equals(DEBUGPWROW))
+					this.debugPW = input;
+				else if (call.equals(GAPLISTPWROW))
+					this.gaplistPW = input;
 				line = file.readLine();
 			}
 			file.close();

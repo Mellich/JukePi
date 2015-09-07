@@ -124,7 +124,8 @@ public class CommandHandler extends Thread {
 			return false;
 		}
 		switch (prompt){
-		//TODO: add permission message handler
+		case MessageType.SETPERMISSION: new SetPermissionCommand(out,prompt,server,args[1],args[2],this.parent).handle();
+		break;
 		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
 		break;
 		case MessageType.SETMEASPLAYER: new SetAsPlayerCommand(out,prompt,server,parent).handle();

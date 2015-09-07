@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
+import messages.Permission;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
@@ -32,7 +33,7 @@ public class YTJBServer implements Server {
 	 */
 	public static final int PORT = 12345;
 	
-	private long version = 816L;
+	private long version = 900L;
 	
 	public String workingDirectory;
 	
@@ -92,6 +93,16 @@ public class YTJBServer implements Server {
 	private void notifyParser(){
 		for (URLParser p : urlParser){
 			p.notifyNewURL();
+		}
+	}
+	
+	public String getPW(Permission p){
+		switch (p){
+		case PLAYER: return initFile.getPlayerPW();
+		case PLAYBACK: return initFile.getPlaybackPW();
+		case DEBUGGING: return initFile.getDebugPW();
+		case GAPLIST: return initFile.getGaplistPW();
+		default: return "";
 		}
 	}
 	
@@ -600,11 +611,45 @@ public class YTJBServer implements Server {
 		}
 	}
 	
+	private boolean parseArguments(String[] args){
+		for (String s: args){
+			int equalPos = s.indexOf("=");
+			String input = "";
+			if (equalPos < s.length())
+				input = s.substring(equalPos + 1);
+			String call = s.substring(0, equalPos);
+			if (call.equals("-playerPW")){
+				initFile.setPlayerPW(input);
+			}else if (call.equals("-debugPW")){
+				initFile.setDebugPW(input);
+			}else if (call.equals("-gaplistPW")){
+				initFile.setGaplistPW(input);
+			}else if (call.equals("-playbackPW")){
+				initFile.setPlaybackPW(input);
+			}else if (call.equals("-help")){
+				printHelp();
+				return false;
+			}else{
+				IO.printlnDebug(this, "Unknown argument: "+call+". Aborting...");
+				printHelp();
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private static void printHelp() {
+		System.out.println("Here you can see the help info of this program soon. ;)");
+	}
+
+
 	public static void main(String[] args) {
 		YTJBServer server;
 		try {
 			server = new YTJBServer(22222);
-			server.startUp();
+			if (server.parseArguments(args)){
+				server.startUp();
+			}
 		} catch (BindException e) {
 			IO.printlnDebug(null, "given port is in use!");
 			e.printStackTrace();

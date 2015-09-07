@@ -5,6 +5,7 @@ import java.net.BindException;
 
 import javax.swing.JFrame;
 
+import messages.Permission;
 import server.Server;
 import server.ServerFactory;
 import windows.DebugWindow;
@@ -153,6 +154,9 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		wrapper.addPauseResumeNotificationListener(this);
 		
 		if (wrapper.connect(ip, iport)) {
+			System.out.println(this.wrapper.setPermission(Permission.GAPLIST, "gaplist"));
+			System.out.println(this.wrapper.setPermission(Permission.PLAYBACK, "playback"));
+			System.out.println(this.wrapper.setPermission(Permission.DEBUGGING, "debug"));
 			loginScreen.close();
 			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
 			mainScreen.show();
