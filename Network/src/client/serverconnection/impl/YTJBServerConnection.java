@@ -86,6 +86,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 */
 	private long version = -1L;
 	
+	private List<PermissionTuple> permissions;
+	
 	/**
 	 * Creates a new Instance of the ServerConnection with default values of 
 	 * {@link #checkInterval} ({@code 0}) and {@link #isAndroid} ({@code false}).
@@ -305,6 +307,15 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid,version);
 		if (serverConnection.connect()){
 			connected = true;
+			List<PermissionTuple> failedPermissions = new ArrayList<PermissionTuple>();
+			for (PermissionTuple pt: permissions){
+				if (!Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,pt.getPermission().name()+ MessageType.SEPERATOR+pt.getPassphrase())[0])){
+					failedPermissions.add(pt);
+				}
+			}
+			for (PermissionTuple pt : failedPermissions){
+				permissions.remove(pt);
+			}
 			if (!defaultNotificationListener.isEmpty())
 				this.serverConnection.sendMessage(MessageType.SWITCHDEFAULTNOTIFY);
 			if (!gapListNotificationListener.isEmpty())
@@ -713,9 +724,48 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public boolean addSongToOtherList(Song song) {
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.ADDTOOTHERLIST, ""+song.getTrackID())[0]);
 	}
+	
+	private class PermissionTuple{
+		private Permission p;
+		private String pass;
+		
+		public PermissionTuple(Permission p,String pass) {
+			this.p = p;
+			this.pass = pass;
+		}
+		
+		public Permission getPermission() {
+			return p;
+		}
+
+		public String getPassphrase() {
+			return pass;
+		}
+		
+		
+	}
 
 	@Override
-	public boolean setPermission(Permission p, String passphrase) {
-		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION, p.name()+MessageType.SEPERATOR + passphrase)[0]);
+	public boolean addPermission(Permission p, String passphrase) {
+		if (connected){
+			if (Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,p.name()+ MessageType.SEPERATOR+passphrase)[0])){
+				permissions.add(new PermissionTuple(p,passphrase));
+				return true;
+			}else return false;
+		}else{
+			permissions.add(new PermissionTuple(p,passphrase));
+			return true;
+		}
+	}
+
+	@Override
+	public Permission[] getPermissions() {
+		Permission[] result = new Permission[permissions.size()];
+		int i = 0;
+		for (PermissionTuple pt: permissions){
+			result[i] = pt.getPermission();
+			i++;
+		}
+		return result;
 	}
 }

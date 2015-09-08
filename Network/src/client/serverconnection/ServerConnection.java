@@ -614,6 +614,12 @@ public interface ServerConnection {
 	 * @param passphrase the pass phrase to authorize the permission addition
 	 * @return true, if permission was added
 	 */
-	public boolean setPermission(Permission p, String passphrase);
+	public boolean addPermission(Permission p, String passphrase);
+	
+	/**
+	 * returns a list of the granted permissions for the client
+	 * @return the granted permissions
+	 */
+	public Permission[] getPermissions();
 	
 }

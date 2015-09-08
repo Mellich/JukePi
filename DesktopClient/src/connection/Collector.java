@@ -152,11 +152,11 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
 		wrapper.addPauseResumeNotificationListener(this);
+		wrapper.addPermission(Permission.GAPLIST, "gaplist");
+		wrapper.addPermission(Permission.PLAYBACK, "playback");
+		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		
 		if (wrapper.connect(ip, iport)) {
-			System.out.println(this.wrapper.setPermission(Permission.GAPLIST, "gaplist"));
-			System.out.println(this.wrapper.setPermission(Permission.PLAYBACK, "playback"));
-			System.out.println(this.wrapper.setPermission(Permission.DEBUGGING, "debug"));
 			loginScreen.close();
 			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
 			mainScreen.show();
