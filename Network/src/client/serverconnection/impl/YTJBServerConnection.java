@@ -17,6 +17,7 @@ import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
 import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
+import client.serverconnection.PermissionDeniedException;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
@@ -110,6 +111,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		seekNotificationListener = new ArrayList<SeekNotificationListener>();
 		gapListNotificationListener = new ArrayList<GapListNotificationListener>();
 		pauseResumeNotificationListener = new ArrayList<PauseResumeNotificationListener>();
+		permissions = new ArrayList<PermissionTuple>();
 		connected = false;
 		this.version = version;
 		this.isAndroid = isAndroid;
@@ -303,7 +305,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean connect(String ipAddress, int port) {
+	public boolean connect(String ipAddress, int port)  throws PermissionDeniedException {
 		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid,version);
 		if (serverConnection.connect()){
 			connected = true;
@@ -326,6 +328,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 				this.serverConnection.sendMessage(MessageType.SWITCHSEEKNOTIFY);
 			if (!debugNotificationListener.isEmpty())
 				this.serverConnection.sendMessage(MessageType.SWITCHDEBUGNOTIFY);
+			
+			if (!failedPermissions.isEmpty())
+				throw new PermissionDeniedException(failedPermissions.toArray(new PermissionTuple[failedPermissions.size()]));
 			return true;
 		}else{
 			connected = false;
@@ -443,7 +448,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean connect(ServerAddress serverAddress) {
+	public boolean connect(ServerAddress serverAddress) throws PermissionDeniedException {
 		return connect(serverAddress.getIPAddress(),serverAddress.getPort());
 	}
 
@@ -708,10 +713,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean reconnect() {
-		if (this.serverConnection != null)
-			return this.serverConnection.connect();
-		else return false;
+	public boolean reconnect() throws PermissionDeniedException {
+		return this.connect(this.getIPAddress(), this.getPort());
 	}
 
 	@Override
@@ -725,7 +728,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.ADDTOOTHERLIST, ""+song.getTrackID())[0]);
 	}
 	
-	private class PermissionTuple{
+	public class PermissionTuple{
 		private Permission p;
 		private String pass;
 		
@@ -741,19 +744,30 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		public String getPassphrase() {
 			return pass;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o.getClass() == PermissionTuple.class)
+				return this.getPermission().equals(((PermissionTuple)o).getPermission());
+			else return false;
+		}
 		
 		
 	}
 
 	@Override
-	public boolean addPermission(Permission p, String passphrase) {
+	public boolean addPermission(Permission p, String passphrase) throws PermissionDeniedException{
+		PermissionTuple pt = new PermissionTuple(p, passphrase);
+		permissions.remove(pt); //remove eventually existing tuple with same permission
 		if (connected){
 			if (Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,p.name()+ MessageType.SEPERATOR+passphrase)[0])){
-				permissions.add(new PermissionTuple(p,passphrase));
+				permissions.add(pt);
 				return true;
-			}else return false;
+			}else{
+				throw new PermissionDeniedException(pt);
+			}
 		}else{
-			permissions.add(new PermissionTuple(p,passphrase));
+			permissions.add(pt);
 			return true;
 		}
 	}

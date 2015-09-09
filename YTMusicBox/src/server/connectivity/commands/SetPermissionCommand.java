@@ -27,9 +27,12 @@ public class SetPermissionCommand extends Command {
 			connection.addPermission(permission);
 			response(""+true);
 			return true;
+		}else {
+			connection.removePermission(permission);
+			response(""+false);
+			return false;
+			
 		}
-		response(""+false);
-		return false;
 	}
 
 }

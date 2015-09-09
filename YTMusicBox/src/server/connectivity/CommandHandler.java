@@ -88,8 +88,6 @@ public class CommandHandler extends Thread {
 			return false;
 		}
 		switch (prompt){
-		case MessageType.SWITCHPAUSERESUMENOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
-		break;
 		case MessageType.PAUSERESUME: new PauseResumeCommand(out,prompt,server).handle();
 			break;
 		case MessageType.SKIP: new SkipCommand(out,prompt,server.getScheduler()).handle();
@@ -124,6 +122,8 @@ public class CommandHandler extends Thread {
 			return false;
 		}
 		switch (prompt){
+		case MessageType.SWITCHPAUSERESUMENOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
 		case MessageType.SETPERMISSION: new SetPermissionCommand(out,prompt,server,args[1],args[2],this.parent).handle();
 		break;
 		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();

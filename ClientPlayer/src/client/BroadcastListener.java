@@ -1,5 +1,6 @@
 package client;
 
+import messages.Permission;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.UDPTimeoutException;
 import client.visuals.Visualizer;
@@ -27,6 +28,7 @@ public class BroadcastListener implements Runnable {
 				if (server.connect(address)){
 					IO.printlnDebug(this, "Connected!");
 					server.addDefaultNotificationListener(starter);
+					server.addPermission(Permission.PLAYER, "player");
 					//server.addDebugNotificationListener(starter);
 					//server.addGapListNotificationListener(starter);
 					server.addPauseResumeNotificationListener(starter);

@@ -21,9 +21,10 @@ public interface ServerConnection {
 	/**
 	 * Tries to reconnect to the Server.
 	 * @return	{@code true}, if the Connection was reestablished, {@code false} else.
+	 * @throws PermissionDeniedException thrown if one ore more permissions were denied by the server
 	 * @since 1.0
 	 */
-	public boolean reconnect();
+	public boolean reconnect()  throws PermissionDeniedException;
 	
 	/**
 	 * Adds a notification listener, that will be executed, when the Server sends a 
@@ -450,16 +451,18 @@ public interface ServerConnection {
 	 * @param port	The Port of the Server.
 	 * @return	{@code true}, if the Connection was established, {@code false} else.
 	 * @since 1.0
+	 * @throws PermissionDeniedExeption throws this exception, if a permission was denied by the server
 	 */
-	public boolean connect(String ipAddress, int port);
+	public boolean connect(String ipAddress, int port) throws PermissionDeniedException;
 	
 	/**
 	 * Tries to connect to the given {@link ServerAddress}.
 	 * @param serverAddress	The Address of the Server.
 	 * @return	{@code true}, if the Connection was established, {@code false} else.
 	 * @since 1.0
+	 * @throws PermissionDeniedExeption throws this exception, if a permission was denied by the server
 	 */
-	public boolean connect(ServerAddress serverAddress);
+	public boolean connect(ServerAddress serverAddress) throws PermissionDeniedException;
 	
 	/**
 	 * Returns, if a Connection is established.
@@ -613,8 +616,9 @@ public interface ServerConnection {
 	 * @param p permission that shall be added
 	 * @param passphrase the pass phrase to authorize the permission addition
 	 * @return true, if permission was added
+	 * @throws PermissionDeniedExeption throws this exception, if a permission was denied by the server
 	 */
-	public boolean addPermission(Permission p, String passphrase);
+	public boolean addPermission(Permission p, String passphrase) throws PermissionDeniedException;
 	
 	/**
 	 * returns a list of the granted permissions for the client

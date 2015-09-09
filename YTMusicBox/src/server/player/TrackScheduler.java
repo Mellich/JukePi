@@ -90,7 +90,7 @@ public class TrackScheduler extends Thread {
 				ArrayList<String> args = new ArrayList<String>();
 				args.add(""+false); //TODO hier weiter
 				while (current == null){
-					IO.printlnDebug(this, "waiting for a track parsed...");
+					IO.printlnDebug(this, "waiting for a parsed track...");
 					args.set(0, ""+false);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 					playableTrack.acquire();
@@ -102,6 +102,7 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
+				
 				if (!current.getVideoURL().equals("")){
 					args.set(0,""+true);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
