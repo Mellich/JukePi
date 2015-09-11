@@ -62,6 +62,8 @@ public class LoginLayout implements LayoutManager{
 	 */
 	public static final String INTERN_SERVER_BUTTON = "Intern_Server_Button";
 	
+	public static final String LOW_CLIENT_BUTTON = "Low_Client_Button";
+	
 	/**
 	 * All Components, that were added to this Layout as a {@link HashMap} with String-Keys 
 	 * and Component-Values.
@@ -122,6 +124,9 @@ public class LoginLayout implements LayoutManager{
 		
 		if (components.get(INTERN_SERVER_BUTTON) != null)
 			components.get(INTERN_SERVER_BUTTON).setBounds((int)(width*0.62), buttonY, (int)(width*0.34), buttonHeight);
+		
+		if (components.get(LOW_CLIENT_BUTTON) != null)
+			components.get(LOW_CLIENT_BUTTON).setBounds((int)(width*0.02), buttonY+buttonHeight+5, (int)(width*0.94), buttonHeight);
 	}
 
 	@Override
@@ -151,7 +156,8 @@ public class LoginLayout implements LayoutManager{
 		if (regex.equals(IP_TEXT) || regex.equals(PORT_TEXT) || regex.equals(WELCOME_LABEL) ||
 				regex.equals(IP_LABEL) || regex.equals(PORT_LABEL) || 
 				regex.equals(FAIL_LABEL) || regex.equals(CONNECT_BUTTON) ||
-				regex.equals(UDP_BUTTON) || regex.equals(INTERN_SERVER_BUTTON))
+				regex.equals(UDP_BUTTON) || regex.equals(INTERN_SERVER_BUTTON) || 
+				regex.equals(LOW_CLIENT_BUTTON))
 			return true;
 		else
 			return false;
@@ -214,6 +220,12 @@ public class LoginLayout implements LayoutManager{
 		if (components.get(INTERN_SERVER_BUTTON) != null)
 			if (components.get(INTERN_SERVER_BUTTON).equals(comp)) {
 				components.put(INTERN_SERVER_BUTTON, null);
+				return;
+			}
+		
+		if (components.get(LOW_CLIENT_BUTTON) != null)
+			if (components.get(LOW_CLIENT_BUTTON).equals(comp)) {
+				components.put(LOW_CLIENT_BUTTON, null);
 				return;
 			}
 	}
