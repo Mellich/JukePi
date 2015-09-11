@@ -27,6 +27,10 @@ import javax.swing.JViewport;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+import messages.Permission;
+import client.listener.DefaultNotificationListener;
+import client.listener.GapListNotificationListener;
+import client.listener.PauseResumeNotificationListener;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 import connection.Collector;
@@ -35,9 +39,9 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.4
+ * @version 1.5
  */
-public class MainWindow extends Window {
+public class MainWindow extends Window implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
 	
 	/**
 	 * The {@link Collector}, that will perform Actions with extern needed information.
@@ -148,6 +152,11 @@ public class MainWindow extends Window {
 	private JScrollPane oldContentPane;
 	
 	/**
+	 * The title of the Frame.
+	 */
+	private String title;
+	
+	/**
 	 * The Icon, that will be displayed instead of "Pause" as a String.
 	 */
 	private final ImageIcon playIcon = new ImageIcon("pause.png");
@@ -168,13 +177,22 @@ public class MainWindow extends Window {
 	 * @param wishlist	The Wishlist as an Array of {@link Song}s.
 	 * @since 1.0
 	 */
-	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist) {
+	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport) {
 		this.collector = collector;
 		this.frame = frame;
 		this.wrapper = wrapper;
 		
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
+		
+		wrapper.addDefaultNotificationListener(this);
+		wrapper.addGapListNotificationListener(this);
+		wrapper.addPauseResumeNotificationListener(this);
+		wrapper.addPermission(Permission.GAPLIST, "gaplist");
+		wrapper.addPermission(Permission.PLAYBACK, "playback");
+		wrapper.addPermission(Permission.DEBUGGING, "debug");
+		
+		setIpAndPort(ip, iport);
 	}
 	
 	@Override
@@ -198,6 +216,7 @@ public class MainWindow extends Window {
 	 */
 	public void setIpAndPort(String ip, int port) {
 		frame.setTitle("JukePi - "+ip+":"+port);
+		title = "JukePi - "+ip+":"+port;
 	}
 	
 	@Override
@@ -958,7 +977,7 @@ public class MainWindow extends Window {
 		gaplists = wrapper.getAvailableGapLists();
 		
 		frame = new JFrame();
-		frame.setTitle("JukePi");
+		frame.setTitle(title);
 		frame.setSize(new Dimension(620,700));
 		frame.getContentPane().setLayout(new ClientLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1198,5 +1217,41 @@ public class MainWindow extends Window {
 	    	}
 	        return c;
 	    }
+	}
+
+	@Override
+	public void onGapListCountChangedNotify(String[] gapLists) {
+		setGaplists(gapLists);
+	}
+
+	@Override
+	public void onGapListChangedNotify(String gapListName) {
+		gaplistChanged(gapListName);
+	}
+
+	@Override
+	public void onGapListUpdatedNotify(Song[] songs) {
+		setGaplist(songs);
+	}
+
+	@Override
+	public void onPauseResumeNotify(boolean isPlaying) {
+		pauseResume(isPlaying);
+	}
+
+	@Override
+	public void onWishListUpdatedNotify(Song[] songs) {
+		setWishlist(songs);
+	}
+
+	@Override
+	public void onNextTrackNotify(String title, String url, boolean isVideo) {
+		setNowPlaying(title);
+		setNextTrack();
+	}
+
+	@Override
+	public void onDisconnect() {
+		collector.disconnect();
 	}
 }

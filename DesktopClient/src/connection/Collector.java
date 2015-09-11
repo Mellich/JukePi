@@ -5,26 +5,23 @@ import java.net.BindException;
 
 import javax.swing.JFrame;
 
-import messages.Permission;
 import server.Server;
 import server.ServerFactory;
 import windows.DebugWindow;
 import windows.LogIn;
+import windows.LowClientWindow;
 import windows.MainWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
-import client.listener.DefaultNotificationListener;
-import client.listener.GapListNotificationListener;
-import client.listener.PauseResumeNotificationListener;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 
 /**
  * The Collector, that will start the Client. Also provides all necessary information for each Frame, to work properly.
  * @author Haeldeus
- * @version 1.1
+ * @version 1.2
  */
-public class Collector implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener {
+public class Collector {
 
 	/**
 	 * Time in ms, when the wrapper should check the connectivity of the server, if no response 
@@ -51,9 +48,11 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	
 	/**
 	 * The Main-Screen, that will be shown after logging in to a Server.
+	 * @see Window
 	 * @see MainWindow
+	 * @see LowClientWindow
 	 */
-	private MainWindow mainScreen;
+	private Window mainScreen;
 	
 	/**
 	 * The Debug-Screen, that will keep track of Debug Notifications from the Server.
@@ -96,42 +95,6 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		visibleScreen = new JFrame();
 		loginScreen = new LogIn(this, visibleScreen);
 	}
-	
-	@Override
-	public void onPauseResumeNotify(boolean isPlaying) {
-		mainScreen.pauseResume(isPlaying);
-	}
-
-	@Override
-	public void onGapListCountChangedNotify(String[] gapLists) {
-		mainScreen.setGaplists(gapLists);
-	}
-
-	@Override
-	public void onGapListChangedNotify(String gapListName) {
-		mainScreen.gaplistChanged(gapListName);
-	}
-
-	@Override
-	public void onGapListUpdatedNotify(Song[] title) {
-		mainScreen.setGaplist(title);
-	}
-
-	@Override
-	public void onWishListUpdatedNotify(Song[] title) {
-		mainScreen.setWishlist(title);
-	}
-
-	@Override
-	public void onNextTrackNotify(String title, String url, boolean isVideo) {
-		mainScreen.setNowPlaying(title);
-		mainScreen.setNextTrack();
-	}
-
-	@Override
-	public void onDisconnect() {
-		disconnect();
-	}
 
 	/**
 	 * Connects to the given IP and Port. Also hides the Login-Screen and opens the 
@@ -149,18 +112,11 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		wrapper.addDefaultNotificationListener(this);
-		wrapper.addGapListNotificationListener(this);
-		wrapper.addPauseResumeNotificationListener(this);
-		wrapper.addPermission(Permission.GAPLIST, "gaplist");
-		wrapper.addPermission(Permission.PLAYBACK, "playback");
-		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
-			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist);
+			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
 			mainScreen.show();
-			mainScreen.setIpAndPort(ip, iport);
 			debugScreen = new DebugWindow(wrapper);
 			wrapper.addDebugNotificationListener(debugScreen);
 			return true;
@@ -172,11 +128,40 @@ public class Collector implements DefaultNotificationListener, PauseResumeNotifi
 	}
 	
 	/**
+	 * Connects with the LowClient.
+	 * @param ip	The IP of the Server as a String Value.
+	 * @param port	The Port of the Server as a String Value.
+	 * @return	{@code true}, if the Connection was established, {@code false} else.
+	 * @since 1.2
+	 */
+	public boolean lowConnect(String ip, String port) {
+		showFail(loginScreen, "Pending IP, please wait!");
+		int iport = -1;
+		try {
+			iport = Integer.parseInt(port);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		
+		if (wrapper.connect(ip, iport)) {
+			loginScreen.close();
+			mainScreen = new LowClientWindow(this, visibleScreen, wrapper, wishlist, ip, iport);
+			mainScreen.show();
+			return true;
+		}
+		else {
+			showFail(loginScreen, "Incorrect Server Information. Please try another IP-Address");
+			return false;
+		}
+	}
+	
+	/**
 	 * Disconnects from the Server and displays the Login-Screen.
 	 * @since 1.0
 	 */
 	public void disconnect() {
-		debugScreen.close();
+		if (debugScreen != null)
+			debugScreen.close();
 		mainScreen.close();
 		wrapper.close();
 		if (localServer != null)

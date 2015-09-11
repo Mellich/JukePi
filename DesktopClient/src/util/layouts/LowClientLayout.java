@@ -38,6 +38,21 @@ public class LowClientLayout implements LayoutManager{
 	 */
 	public final static String WISHLIST_SHOW_LABEL = "Wishlist_Show_Label";
 	
+	/**
+	 * The String, that defines the Fail-Label.
+	 */
+	public final static String FAIL_LABEL = "Fail_Label";
+	
+	/**
+	 * The String, that defines the Current_Track_Label.
+	 */
+	public final static String CURRENT_TRACK_LABEL = "Current_Track_Label";
+	
+	/**
+	 * The String, that defines the Label, that displays the Current Track.
+	 */
+	public final static String NAME_CURRENT_TRACK_LABEL = "Name_Current_Track_Label";
+	
 	
 	/**
 	 * The String, that defines the Link-TextField.
@@ -100,10 +115,11 @@ public class LowClientLayout implements LayoutManager{
 	private boolean isLayoutComponent(String regex) {
 		if (regex.equals(GAPLIST_LABEL) || regex.equals(COUNT_GAPLIST_LABEL) || 
 				regex.equals(WISHLIST_LABEL) || regex.equals(COUNT_WISHLIST_LABEL) || 
-				regex.equals(WISHLIST_SHOW_LABEL) || regex.equals(LINK_TEXT) || 
-				regex.equals(ADD_BUTTON) || regex.equals(DISCONNECT_BUTTON) || 
-				regex.equals(VOTE_BUTTON) || regex.equals(REMOVE_BUTTON) || 
-				regex.equals(WISHLIST_PANE))
+				regex.equals(WISHLIST_SHOW_LABEL) || regex.equals(FAIL_LABEL) || 
+				regex.equals(CURRENT_TRACK_LABEL) || regex.equals(NAME_CURRENT_TRACK_LABEL) || 
+				regex.equals(LINK_TEXT) || regex.equals(ADD_BUTTON) || 
+				regex.equals(DISCONNECT_BUTTON) || regex.equals(VOTE_BUTTON) || 
+				regex.equals(REMOVE_BUTTON) || regex.equals(WISHLIST_PANE))
 			return true;
 		else
 			return false;
@@ -133,7 +149,16 @@ public class LowClientLayout implements LayoutManager{
 			components.get(COUNT_WISHLIST_LABEL).setBounds(inset + (int)(width*0.325) + 5, inset + labelHeight + 5, (int)(width*0.125), labelHeight);
 		
 		if (components.get(WISHLIST_SHOW_LABEL) != null)
-			components.get(WISHLIST_SHOW_LABEL).setBounds(inset, (int)(height*0.275), width-2*inset, labelHeight);
+			components.get(WISHLIST_SHOW_LABEL).setBounds(inset, (int)(height*0.275)+vSpacer+labelHeight, width-2*inset, labelHeight);
+		
+		if (components.get(CURRENT_TRACK_LABEL) != null)
+			components.get(CURRENT_TRACK_LABEL).setBounds(inset, (int)(height*0.275), (int)(width*0.175), labelHeight);
+		
+		if (components.get(NAME_CURRENT_TRACK_LABEL) != null)
+			components.get(NAME_CURRENT_TRACK_LABEL).setBounds(inset + (int)(width*0.175)+hSpacer, (int)(height*0.275), width-2*inset-(int)(width*0.175)-hSpacer, labelHeight);
+		
+		if (components.get(FAIL_LABEL) != null)
+			components.get(FAIL_LABEL).setBounds((int)(width*0.1875) + inset + hSpacer, (int)(height*0.125) + (int)(height*0.05) + 5, width- ((int)(width*0.1875) + inset + hSpacer) - inset, (int)(height*0.0625));
 		
 		/***********************TextFields***************************/
 		if (components.get(LINK_TEXT) != null)
@@ -154,7 +179,7 @@ public class LowClientLayout implements LayoutManager{
 		
 		/***********************Panes*******************************/
 		if (components.get(WISHLIST_PANE) != null)
-			components.get(WISHLIST_PANE).setBounds(inset, (int)(height*0.275) + vSpacer + labelHeight, width-2*inset, (int)(height*0.525));
+			components.get(WISHLIST_PANE).setBounds(inset, (int)(height*0.275) + 2*vSpacer + 2*labelHeight, width-2*inset, (int)(height*0.525)-labelHeight-vSpacer);
 	}
 
 	@Override
@@ -206,6 +231,24 @@ public class LowClientLayout implements LayoutManager{
 		if (components.get(WISHLIST_SHOW_LABEL) != null)
 			if (components.get(WISHLIST_SHOW_LABEL).equals(comp)) {
 				components.put(WISHLIST_SHOW_LABEL, null);
+				return;
+			}
+		
+		if (components.get(FAIL_LABEL) != null)
+			if (components.get(FAIL_LABEL).equals(comp)) {
+				components.put(FAIL_LABEL, null);
+				return;
+			}
+		
+		if (components.get(CURRENT_TRACK_LABEL) != null)
+			if (components.get(CURRENT_TRACK_LABEL).equals(comp)) {
+				components.put(CURRENT_TRACK_LABEL, null);
+				return;
+			}
+		
+		if (components.get(NAME_CURRENT_TRACK_LABEL) != null)
+			if (components.get(NAME_CURRENT_TRACK_LABEL).equals(comp)) {
+				components.put(NAME_CURRENT_TRACK_LABEL, null);
 				return;
 			}
 		
