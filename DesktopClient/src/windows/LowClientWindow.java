@@ -87,6 +87,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		this.frame = frame;
 		collector = c;
 		this.wrapper = wrapper;
+		wrapper.addDefaultNotificationListener(this);
 		this.wishlist = wishlist;
 		frame.setTitle("JukePi - "+ip+":"+iport);
 	}
