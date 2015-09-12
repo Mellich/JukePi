@@ -11,12 +11,37 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
  
+/**
+ * A customized ArrayAdapter for the Wishlist.
+ * @author Haeldeus
+ * @version 1.0
+ * @see ArrayAdapter
+ */
 public class CustomList extends ArrayAdapter<Song>{
  
+	/**
+	 * The Activity, the Adapter is working on.
+	 */
 	private Activity context;
+	
+	/**
+	 * The Wishlist as an ArrayList of Songs.
+	 * @see ArrayList
+	 * @see Song
+	 */
 	private ArrayList<Song> songs;
+	
+	/**
+	 * The boolean Value, that determines, if the Wishlist is empty.
+	 */
 	private boolean isEmpty;
 	
+	/**
+	 * The Constructor for this Adapter.
+	 * @param context	The Activity, this Adapter is working on.
+	 * @param songs	The Wishlist as an {@link ArrayList} of {@link Song}s
+	 * @since 1.0
+	 */
 	public CustomList(Activity context, ArrayList<Song> songs) {
 		super(context, R.layout.list_single, songs);
 		this.context = context;
@@ -24,6 +49,11 @@ public class CustomList extends ArrayAdapter<Song>{
 		this.isEmpty = false;
 	}
 	
+	/**
+	 * Sets {@link #isEmpty} to the given boolean Value.
+	 * @param isEmpty	The boolean Value, whether the Wishlist is empty or not.
+	 * @since 1.0
+	 */
 	public void setEmpty(boolean isEmpty) {
 		this.isEmpty = isEmpty;
 	}

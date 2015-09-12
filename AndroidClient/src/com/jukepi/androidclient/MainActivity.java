@@ -18,20 +18,44 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * The Activity, that is the Main-Screen for the User, where almost every important Information 
+ * is shown.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class MainActivity extends Activity implements DefaultNotificationListener {
 
+	/**
+	 * The Wishlist as an ArrayList of Songs.
+	 * @see ArrayList
+	 * @see Song
+	 */
 	private ArrayList<Song> list;
-	
-	private Song[] songlist;
 	
   //  private ArrayList<String> listItems=new ArrayList<String>();
     
+	/**
+	 * The ListView, that involves the Wishlist.
+	 * @see ListView
+	 */
     private ListView view;
     
-    private TextView textView;
+    /**
+     * The TextView, that contains the Name of the current Track.
+     * @see TextView
+     */
+    private TextView currentTrack;
     
+    /**
+     * The Adapter for the Wishlist.
+     * @see CustomList
+     */
     private CustomList adapter;
     
+    /**
+     * A boolean value, that determines, if the BackButton was pressed.
+     */
     private boolean backPressed;
     
   //  private String title;
@@ -47,13 +71,10 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		GlobalAccess.con.addDefaultNotificationListener(this);
 		list = new ArrayList<Song>();
 		
-		songlist = GlobalAccess.con.getWishList();
-		
-		for (Song s : songlist)
+		for (Song s : GlobalAccess.con.getWishList())
 			list.add(s);
 		
-		adapter = new
-                CustomList(MainActivity.this, list);
+		adapter = new CustomList(MainActivity.this, list);
         view=(ListView)findViewById(android.R.id.list);
         view.setAdapter(adapter);
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -114,7 +135,6 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		this.songlist = songs;
 		new SetWishlist(songs, adapter).execute();
 	}
 
@@ -143,12 +163,12 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	//	this.title = title;
 		final String lTitle = title;
 	//	this.url = url;
-		textView = (TextView)findViewById(R.id.playingTrack);
+		currentTrack = (TextView)findViewById(R.id.playingTrack);
 	//	new SetNowPlaying(textView, title).execute();
 		
-		textView.post(new Runnable() {
+		currentTrack.post(new Runnable() {
 		    public void run() {
-		        textView.setText(lTitle);
+		        currentTrack.setText(lTitle);
 		    } 
 		});
 	}
@@ -159,6 +179,12 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			new DisconnectAsync(this).execute();
 	}
 	
+	/**
+	 * The AsyncTask, that will perform Changes to the Wishlist.
+	 * @author Haeldeus
+	 * @version 1.0
+	 * @see AsyncTask
+	 */
 	private class SetWishlist extends AsyncTask<Void, Void, Void> {
 		Song[] songs;
 		CustomList adapter;
@@ -197,6 +223,10 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		}
 	}
 	
+	/**
+	 * The Method, that will change the current visible Activity to the Add-Activity.
+	 * @since 1.0
+	 */
 	public void changeToAdd() {
 		Intent intent = new Intent(this, AddActivity.class);
 		this.startActivity(intent);

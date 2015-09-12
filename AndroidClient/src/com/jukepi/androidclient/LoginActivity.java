@@ -11,11 +11,26 @@ import android.view.View;
 //import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * The Activity, that is used to log into the Server.
+ * @author Haeldeus, Mellich
+ * @version 1.0
+ */
 public class LoginActivity extends Activity {
 	
 //	private Button connect;
 //	private Button udpConnect;
+	
+	/**
+	 * The EditText Field, that is used to enter the IP-Address.
+	 * @see EditText
+	 */
 	private EditText ipAddress;
+	
+	/**
+	 * The EditText Field, that is used to enter the Port.
+	 * @see EditText
+	 */
 	private EditText port;
 	
 	
@@ -29,12 +44,23 @@ public class LoginActivity extends Activity {
 		port = (EditText) this.findViewById(R.id.edit_port);	
 	}
 	
+	/**
+	 * The Method, that is called, when the Connection to the given Server shall be established.
+	 * @param v	The View, this Method was called from.
+	 * @since 1.0
+	 */
 	public void Connect_Click(View v){
 		String ip = ipAddress.getText().toString();
 		String p = port.getText().toString();
 		new ConnectAsync(this).execute(ip,p);
 	}
 	
+	/**
+	 * The Method, that is called, when the Connection to a Server in the network shall be 
+	 * established.
+	 * @param v	The View, this Method was called from.
+	 * @since 1.0
+	 */
 	public void UDPConnectClick(View v){
 		new UDPConnectAsync(this).execute();
 	}
