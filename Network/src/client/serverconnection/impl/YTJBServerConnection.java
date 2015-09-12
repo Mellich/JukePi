@@ -213,7 +213,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public void getCurrentTrackTitle(ResponseListener response) {
+	public void getCurrentSong(ResponseListener response) {
 		this.serverConnection.sendMessage(response, MessageType.GETCURRENTTRACK);
 		
 	}
@@ -484,8 +484,14 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public String getCurrentTrackTitle() {
-		return this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
+	public Song getCurrentSong() {
+		Song result = null;
+		String input = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
+		String[] values = input.split(MessageType.SEPERATOR);
+		if (!input.equals("NOTHING")){
+			result = new Song(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),false,ParseStatus.valueOf(values[3]),values[4]);
+		}
+		return result;
 	}
 
 	@Override

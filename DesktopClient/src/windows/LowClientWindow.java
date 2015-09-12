@@ -127,7 +127,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		contentPane.add(lblCurrentTrack, LowClientLayout.CURRENT_TRACK_LABEL);
 		
 		lblNameCurrentTrack = new JLabel();
-		lblNameCurrentTrack.setText(wrapper.getCurrentTrackTitle());
+		lblNameCurrentTrack.setText(wrapper.getCurrentSong().getName());
 		contentPane.add(lblNameCurrentTrack, LowClientLayout.NAME_CURRENT_TRACK_LABEL);
 		
 		JTextField txtLink = new JTextField("Enter a Link to a Video here");

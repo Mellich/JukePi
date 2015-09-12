@@ -166,14 +166,14 @@ public interface ServerConnection {
 	 * responses to the command.
 	 * @since 1.0
 	 */
-	public void getCurrentTrackTitle(ResponseListener response);
+	public void getCurrentSong(ResponseListener response);
 	
 	/**
 	 * Returns the Title of the Current Track.
 	 * @return	The Title of the Current Track.
 	 * @since 1.0
 	 */
-	public String getCurrentTrackTitle();
+	public Song getCurrentSong();
 	
 	/**
 	 * Gets all Songs in the Gaplist.
