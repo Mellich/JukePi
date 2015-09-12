@@ -48,7 +48,6 @@ public class TextFieldListener implements MouseListener{
 				return;
 			}
 		}
-		
 	}
 
 	/**

@@ -16,6 +16,9 @@ import javax.swing.JViewport;
 import javax.swing.table.JTableHeader;
 
 import connection.Collector;
+import util.PopClickListener;
+import util.TablePopClickListener;
+import util.TextFieldListener;
 import util.layouts.ClientLayout;
 import util.layouts.LowClientLayout;
 import client.listener.DefaultNotificationListener;
@@ -56,6 +59,11 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	private JLabel lblNameCurrentTrack;
 	
 	/**
+	 * The TextField for the Link.
+	 */
+	private JTextField txtLink;
+	
+	/**
 	 * The {@link Collector}, that performs Off-Actions, like connecting and disconnecting 
 	 * to/from the Server.
 	 */
@@ -89,6 +97,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		this.wrapper = wrapper;
 		wrapper.addDefaultNotificationListener(this);
 		this.wishlist = wishlist;
+		wrapper.addDefaultNotificationListener(this);
 		frame.setTitle("JukePi - "+ip+":"+iport);
 	}
 	
@@ -130,7 +139,9 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		lblNameCurrentTrack.setText(wrapper.getCurrentSong().getName());
 		contentPane.add(lblNameCurrentTrack, LowClientLayout.NAME_CURRENT_TRACK_LABEL);
 		
-		JTextField txtLink = new JTextField("Enter a Link to a Video here");
+		txtLink = new JTextField("Enter a Link to a Video here");
+		txtLink.addMouseListener(new TextFieldListener(new String[] {"Enter a Link to a Video here", }, txtLink));
+		txtLink.addMouseListener(new PopClickListener(txtLink));
 		contentPane.add(txtLink, LowClientLayout.LINK_TEXT);
 		
 		JButton btnAdd = new JButton("Add");
@@ -181,6 +192,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 				showFail("Added the Song to the List");
 			else
 				showFail("Couldn't add the Song to the List");
+			txtLink.setText("Enter a Link to a Video here");
 		}, url, toWishList, atBack);
 	}
 
@@ -282,7 +294,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
             }
         };
         
-     //   table.addMouseListener(new TablePopClickListener(table, wishlist, wrapper, this));
+        table.addMouseListener(new TablePopClickListener(table, wishlist));
         
         table.getColumnModel().getColumn(0).setMinWidth(210);
         table.getColumnModel().getColumn(1).setMaxWidth(40);
