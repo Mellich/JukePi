@@ -19,7 +19,6 @@ import connection.Collector;
 import util.PopClickListener;
 import util.TablePopClickListener;
 import util.TextFieldListener;
-import util.layouts.ClientLayout;
 import util.layouts.LowClientLayout;
 import client.listener.DefaultNotificationListener;
 import client.serverconnection.ServerConnection;
@@ -97,7 +96,6 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		this.wrapper = wrapper;
 		wrapper.addDefaultNotificationListener(this);
 		this.wishlist = wishlist;
-		wrapper.addDefaultNotificationListener(this);
 		frame.setTitle("JukePi - "+ip+":"+iport);
 	}
 	
@@ -136,7 +134,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		contentPane.add(lblCurrentTrack, LowClientLayout.CURRENT_TRACK_LABEL);
 		
 		lblNameCurrentTrack = new JLabel();
-		lblNameCurrentTrack.setText(wrapper.getCurrentSong().getName());
+		wrapper.getCurrentSong((String[] s) -> {lblNameCurrentTrack.setText(s[0]);});	
 		contentPane.add(lblNameCurrentTrack, LowClientLayout.NAME_CURRENT_TRACK_LABEL);
 		
 		txtLink = new JTextField("Enter a Link to a Video here");
@@ -163,7 +161,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), true, true);});
 		btnDisc.addActionListener((ActionEvent ae) -> {collector.disconnect();});
-		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) wishlistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
+		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 	}
 	
@@ -299,7 +297,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
         table.getColumnModel().getColumn(0).setMinWidth(210);
         table.getColumnModel().getColumn(1).setMaxWidth(40);
 		JScrollPane wishlistPane = new JScrollPane(table);
-		frame.getContentPane().add(wishlistPane, ClientLayout.WISHLIST_SCROLL);
+		frame.getContentPane().add(wishlistPane, LowClientLayout.WISHLIST_PANE);
 		if (notFirst)
 			wishlistPane.getViewport().setViewPosition(p);
 		oldPane = wishlistPane;

@@ -1030,7 +1030,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(lblPlayingTrack, ClientLayout.NAME_NOW_PLAYING_LABEL);
-		wrapper.getCurrentTrackTitle((String[] s) -> {lblPlayingTrack.setText(s[0]);});		
+		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[0]);});		
 		
 		lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
