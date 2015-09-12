@@ -151,8 +151,8 @@ public class IdleViewer implements Visualizer {
 		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
 		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playView.setImage(playImage));}
 																	else Platform.runLater(() -> this.playView.setImage(pauseImage)); });
-		serverConnection.getCurrentTrackTitle((String[] s) -> Platform.runLater(() ->{ if (s[0].length() > 45) this.currentTrack.setText("Jetzt spielt: "+s[0].substring(0, 45)+"...");
-																					else this.currentTrack.setText("Jetzt spielt: "+s[0]);}));
+		serverConnection.getCurrentSong((String[] s) -> Platform.runLater(() ->{ if (s[1].length() > 45) this.currentTrack.setText("Jetzt spielt: "+s[1].substring(0, 45)+"...");
+																					else this.currentTrack.setText("Jetzt spielt: "+s[1]);}));
 	}
 
 	@Override
