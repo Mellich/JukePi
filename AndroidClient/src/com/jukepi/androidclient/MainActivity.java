@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements DefaultNotificationListener {
@@ -27,13 +28,15 @@ public class MainActivity extends Activity implements DefaultNotificationListene
     
     private ListView view;
     
+    private TextView textView;
+    
     private CustomList adapter;
     
     private boolean backPressed;
     
-    private String title;
+  //  private String title;
     
-    private String url;
+  //  private String url;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
  
                     }
                 });
-        String actual = GlobalAccess.con.getCurrentTrackTitle();
-		onNextTrackNotify(actual, "", false);
+        onNextTrackNotify(GlobalAccess.con.getCurrentTrackTitle(), "", false);
         onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
@@ -137,6 +139,18 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		
 	//	new SetNextTrack(view2, nextName).execute();
 		view2.setText(nextName); */
+		
+	//	this.title = title;
+		final String lTitle = title;
+	//	this.url = url;
+		textView = (TextView)findViewById(R.id.playingTrack);
+	//	new SetNowPlaying(textView, title).execute();
+		
+		textView.post(new Runnable() {
+		    public void run() {
+		        textView.setText(lTitle);
+		    } 
+		});
 	}
 
 	@Override
@@ -214,7 +228,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		
 	}
 	
-	private class SetNextTrack extends AsyncTask<Void, Void, Void> {
+/*	private class SetNextTrack extends AsyncTask<Void, Void, Void> {
 		
 		private TextView nextTrack;
 		private String name;

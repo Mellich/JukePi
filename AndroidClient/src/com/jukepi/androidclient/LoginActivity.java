@@ -8,22 +8,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+//import android.widget.Button;
 import android.widget.EditText;
 
 public class LoginActivity extends Activity {
-	Button connect;
-	Button udpConnect;
-	EditText ipAddress;
-	EditText port;
+	
+//	private Button connect;
+//	private Button udpConnect;
+	private EditText ipAddress;
+	private EditText port;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		connect = (Button) this.findViewById(R.id.button_connect);
-		udpConnect = (Button) this.findViewById(R.id.button_udpconnect);
+	//	connect = (Button) this.findViewById(R.id.button_connect);
+	//	udpConnect = (Button) this.findViewById(R.id.button_udpconnect);
 		ipAddress = (EditText) this.findViewById(R.id.edit_ip);
 		port = (EditText) this.findViewById(R.id.edit_port);	
 	}
