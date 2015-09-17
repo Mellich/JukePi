@@ -314,9 +314,11 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 				if (!Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,pt.getPermission().name()+ MessageType.SEPERATOR+pt.getPassphrase())[0])){
 					failedPermissions.add(pt);
 				}
+				System.out.println("Permission erfragt: "+pt.getPermission());
 			}
 			for (PermissionTuple pt : failedPermissions){
 				permissions.remove(pt);
+				System.out.println("Permission verloren: "+pt.getPermission());
 			}
 			if (!defaultNotificationListener.isEmpty())
 				this.serverConnection.sendMessage(MessageType.SWITCHDEFAULTNOTIFY);
@@ -489,7 +491,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		String input = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
 		String[] values = input.split(MessageType.SEPERATOR);
 		if (!input.equals("NOTHING")){
-			result = new Song(Integer.parseInt(values[0]),values[1],Integer.parseInt(values[2]),false,ParseStatus.valueOf(values[3]),values[4]);
+			result = new Song(Integer.parseInt(values[0]),values[1],0,false,ParseStatus.PARSED,values[2]);
 		}
 		return result;
 	}

@@ -112,6 +112,8 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.PLAYERFINISHED: if (parent.isPlayer()) new PlayerFinishedCommand(out,prompt, server).handle();
 			break;
+		case MessageType.SETMEASPLAYER: new SetAsPlayerCommand(out,prompt,server,parent).handle();
+		break;
 		default:return false;
 		}	
 		return true;
@@ -127,8 +129,6 @@ public class CommandHandler extends Thread {
 		case MessageType.SETPERMISSION: new SetPermissionCommand(out,prompt,server,args[1],args[2],this.parent).handle();
 		break;
 		case MessageType.GETLOADGAPLISTSTATUS: new GetLoadGapListStatusCommand(out, prompt, server).handle();
-		break;
-		case MessageType.SETMEASPLAYER: new SetAsPlayerCommand(out,prompt,server,parent).handle();
 		break;
 		case MessageType.GETGAPLIST: new GetListCommand(out,prompt, server,parent.getMACAddress(),false).handle();
 			break;

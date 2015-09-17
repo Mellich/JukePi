@@ -102,7 +102,6 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				
 				if (!current.getVideoURL().equals("")){
 					args.set(0,""+true);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import messages.Permission;
 import client.ServerAddress;
 import client.listener.DefaultNotificationListener;
 import client.listener.GapListNotificationListener;
@@ -28,6 +29,7 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 		RawNotificationOutput l = new RawNotificationOutput();
 		ServerConnection server;
 		server = new YTJBServerConnection(15000);
+		server.addPermission(Permission.GAPLIST, "gaplist");
 		server.addDefaultNotificationListener(l);
 		server.addGapListNotificationListener(l);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -86,6 +88,7 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
+		System.out.println("GapList update:");
 		for (Song s: songs){
 			System.out.println(s.getName()+", "+s.getVotes()+", "+s.getTrackID()+", "+s.getParseStatus()+", "+s.isOwnVote());
 		}
@@ -93,8 +96,9 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
+		System.out.println("WishList update:");
 		for (Song s: songs){
-			System.out.println(s.getName());
+			System.out.println(s.getName()+", "+s.getVotes()+", "+s.getTrackID()+", "+s.getParseStatus()+", "+s.isOwnVote());
 		}
 
 	}

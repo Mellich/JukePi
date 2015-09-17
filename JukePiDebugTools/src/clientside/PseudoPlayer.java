@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import messages.Permission;
 import client.ServerAddress;
 import client.listener.DefaultNotificationListener;
 import client.listener.PauseResumeNotificationListener;
@@ -38,6 +39,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 		server.addPauseResumeNotificationListener(l);
 		server.addSeekNotificationListener(l);
 		server.addDefaultNotificationListener(l);
+		server.addPermission(Permission.PLAYER, "player");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			ServerAddress sa;
@@ -47,7 +49,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 				sa = server.udpScanning();
 			}
 			else{
-				System.out.print("Port: ");
+				System.out.print("Port (leer lassen für Standard): ");
 				String port = reader.readLine();
 				if (ip.equals(""))
 					ip = "localhost";
@@ -60,6 +62,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 			if (server.connect(sa)){
 				System.out.println("Verbunden!");
 				server.setMeAsPlayer();
+				System.out.println("Drücke 'Enter', um Wiedergabeende zu simulieren.");
 				while(true){
 					String input = reader.readLine();
 					if (input.equals("close")){

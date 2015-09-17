@@ -205,6 +205,7 @@ public class YTJBServer implements Server {
 		}
 		if (!existsParsed && this.existsParsedURL()){
 			scheduler.notifyPlayableTrack();
+			IO.printlnDebug(this, "Neuer track verfügbar");
 		}
 	}
 	
@@ -312,7 +313,7 @@ public class YTJBServer implements Server {
 				return true;
 			}
 		}
-		for (MusicTrack m : wishList){
+		for (MusicTrack m : gapList){
 			if (m.isReady()){
 				return true;
 			}

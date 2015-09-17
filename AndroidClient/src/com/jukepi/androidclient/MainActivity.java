@@ -85,7 +85,11 @@ public class MainActivity extends Activity implements DefaultNotificationListene
  
                     }
                 });
-        onNextTrackNotify(GlobalAccess.con.getCurrentSong().getName(), "", false);
+        String title;
+        if (GlobalAccess.con.getCurrentSong() != null)
+        title = GlobalAccess.con.getCurrentSong().getName();
+        else title = this.getString(R.string.nothing);
+        onNextTrackNotify(title, "", false);
         onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
