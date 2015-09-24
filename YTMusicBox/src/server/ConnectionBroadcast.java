@@ -41,7 +41,7 @@ public class ConnectionBroadcast implements Runnable {
 	    	sendSocket.setInterface(InetAddress.getByName(server.getIpAddress()));
 	    	sendSocket.joinGroup(group);
 	    	
-	    	byte[] bytes = new byte[65536];
+	    	byte[] bytes = new byte[200];
 		      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 		      
 			while(true){

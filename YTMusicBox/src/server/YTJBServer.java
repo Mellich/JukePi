@@ -34,7 +34,9 @@ public class YTJBServer implements Server {
 	 */
 	public static final int PORT = 12345;
 	
-	private long version = 900L;
+	public static final long CURRENT_VERSION = 901L;
+	
+	private long version = -1L;
 	
 	public String workingDirectory;
 	
@@ -579,6 +581,7 @@ public class YTJBServer implements Server {
 				server = new ServerSocket(port);
 				scheduler = new TrackScheduler(this);
 				waiter = new ConnectionWaiter(this);
+				version = CURRENT_VERSION;
 			} catch(BindException e){
 				throw new BindException();
 			} catch (IOException e) {

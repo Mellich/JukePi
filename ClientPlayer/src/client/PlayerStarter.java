@@ -24,7 +24,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
-		server = ServerConnectionFactory.createServerConnection(15000);
+		server = ServerConnectionFactory.createServerConnection(15000,900);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));

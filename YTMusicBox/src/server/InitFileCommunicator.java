@@ -64,6 +64,7 @@ public class InitFileCommunicator {
 	
 	public void setValue(ColumnType type, String value){
 		fileValues.put(type, value);
+		saveInitFile();
 	}
 	
 	private void saveInitFile(){
@@ -74,6 +75,7 @@ public class InitFileCommunicator {
 				file.newLine();
 			}
 			file.close();
+			IO.printlnDebug(this, "saved init file changes!");
 		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(this, "ERROR: Could not save the init file!");
 		}

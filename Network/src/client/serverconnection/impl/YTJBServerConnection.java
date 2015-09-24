@@ -17,6 +17,7 @@ import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
 import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
+import client.serverconnection.NotSupportedByNetworkException;
 import client.serverconnection.PermissionDeniedException;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
@@ -35,7 +36,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	/**
 	 * The Current Version.
 	 */
-	private static final long CURRENT_VERSION = 900L;
+	private static final long CURRENT_VERSION = 901L;
 	
 	/**
 	 * The Listeners for seekNotifications.
@@ -83,9 +84,11 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	private boolean isAndroid;
 	
 	/**
-	 * The Version of the Network-Interface the Server is using.
+	 * The Version of the Network-Interface that should be used.
 	 */
 	private long version = -1L;
+	
+	private long usedVersion = -1L;
 	
 	private List<PermissionTuple> permissions;
 	
@@ -309,6 +312,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		this.serverConnection = new YTJBLowLevelServerConnection(this,ipAddress,port,checkInterval,isAndroid,version);
 		if (serverConnection.connect()){
 			connected = true;
+			usedVersion = Math.min(serverConnection.getServerVersion(),version);
 			List<PermissionTuple> failedPermissions = new ArrayList<PermissionTuple>();
 			for (PermissionTuple pt: permissions){
 				if (!Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,pt.getPermission().name()+ MessageType.SEPERATOR+pt.getPassphrase())[0])){
@@ -370,10 +374,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			socket.setTimeToLive(3);
 		      final InetAddress socketAddress = InetAddress.getByName(NETWORK_GROUP);
 		      socket.joinGroup(socketAddress);
-
 	   
 	     
-	      byte[] bytes = new byte[65536];
+	      byte[] bytes = new byte[200];
 	      DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 	      
 	      Thread timeoutThread = new Thread(){
@@ -491,7 +494,10 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		String input = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
 		String[] values = input.split(MessageType.SEPERATOR);
 		if (!input.equals("NOTHING")){
-			result = new Song(Integer.parseInt(values[0]),values[1],0,false,ParseStatus.PARSED,values[2]);
+			if (this.usedVersion < 901L){
+				result = new Song(0,values[0],0,false,ParseStatus.PARSED,"");
+			}
+			else result = new Song(Integer.parseInt(values[0]),values[1],0,false,ParseStatus.PARSED,values[2]);
 		}
 		return result;
 	}
@@ -765,6 +771,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean addPermission(Permission p, String passphrase) throws PermissionDeniedException{
+		if (this.usedVersion < 900L)
+			throw new NotSupportedByNetworkException(this.usedVersion, 900L);
 		PermissionTuple pt = new PermissionTuple(p, passphrase);
 		permissions.remove(pt); //remove eventually existing tuple with same permission
 		if (connected){
@@ -782,6 +790,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public Permission[] getPermissions() {
+		if (this.usedVersion < 900L)
+			throw new NotSupportedByNetworkException(this.usedVersion, 900L);
 		Permission[] result = new Permission[permissions.size()];
 		int i = 0;
 		for (PermissionTuple pt: permissions){

@@ -32,7 +32,7 @@ public class Collector {
 	/**
 	 * The Current Interface-Version, that is implemented.
 	 */
-	private static final long CURRENT_VERSION = 816L;
+	private static final long CURRENT_VERSION = 901L;
 	
 	/**
 	 * The wrapper, that will send the Messages.

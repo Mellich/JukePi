@@ -4,6 +4,7 @@ package client.visuals;
 //import java.sql.Timestamp;
 
 import client.serverconnection.ServerConnection;
+import client.serverconnection.Song;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -64,7 +65,7 @@ public class IdleViewer implements Visualizer {
 		info = new Text(500,750,"");
 		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.9 (Without debug - untested)");
+		Text version = new Text(5,25,"Build version 0.9.1 (Without debug - untested)");
 		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");
@@ -151,8 +152,11 @@ public class IdleViewer implements Visualizer {
 		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
 		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playView.setImage(playImage));}
 																	else Platform.runLater(() -> this.playView.setImage(pauseImage)); });
-		serverConnection.getCurrentSong((String[] s) -> Platform.runLater(() ->{ if (s[1].length() > 45) this.currentTrack.setText("Jetzt spielt: "+s[1].substring(0, 45)+"...");
-																					else this.currentTrack.setText("Jetzt spielt: "+s[1]);}));
+		Platform.runLater(() ->{Song s = serverConnection.getCurrentSong(); 
+								if (s != null && s.getName().length() > 45)
+									this.currentTrack.setText("Jetzt spielt: "+s.getName().substring(0, 42)+"...");
+								else if (s != null ) this.currentTrack.setText("Jetzt spielt: "+s.getName());
+								else this.currentTrack.setText("Jetzt spielt: -");});
 	}
 
 	@Override

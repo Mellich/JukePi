@@ -138,7 +138,7 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.ISREADY: new CheckIfReadyCommand(out,prompt).handle();
 			break;
-		case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommand(out,prompt,server.getScheduler()).handle();
+		case MessageType.GETCURRENTTRACK: new GetCurrentTrackCommand(out,prompt,server.getScheduler(),parent).handle();
 			break;
 		case MessageType.GETCURRENTPLAYBACKSTATUS: new GetCurrentPlaybackStatusCommand(out,prompt,server.getScheduler()).handle();
 			break;

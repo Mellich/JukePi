@@ -1,5 +1,7 @@
 package client.serverconnection.functionality;
 
+import java.net.InetAddress;
+
 import client.listener.ResponseListener;
 
 /**
@@ -28,6 +30,8 @@ public interface LowLevelServerConnection {
 	 * @since 1.0
 	 */
 	public String getIPAddress();
+	
+	public InetAddress getLocalIPAddress();
 	
 	/**
 	 * Gets the Port of the Server, the Connection was established to.

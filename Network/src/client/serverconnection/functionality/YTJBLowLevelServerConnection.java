@@ -37,7 +37,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	/**
 	 * The Version of this Network-Interface.
 	 */
-	private long version = 816L;
+	private long version = -1L;
 	
 	/**
 	 * The {@link Socket} to the Server.
@@ -361,7 +361,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 * @return	The local IP-Address.
 	 * @since 1.0
 	 */
-	private InetAddress getLocalIPAddress() {
+	public InetAddress getLocalIPAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
