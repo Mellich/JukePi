@@ -53,9 +53,8 @@ public class URLParser extends Thread {
 								m.setVideoURL("ERROR");								
 							}
 							server.notifyListUpdate(m);
-							if (!server.existsParsedURL()){
+							if (out != null)
 								scheduler.notifyPlayableTrack();
-							}
 						} catch (IOException e) {
 							IO.printlnDebug(this, number+": Error while parsing URL: "+m.getShortURL());
 							e.printStackTrace();

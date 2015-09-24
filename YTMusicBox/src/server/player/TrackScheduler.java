@@ -18,13 +18,18 @@ public class TrackScheduler extends Thread {
 	private Semaphore playableTrack = new Semaphore(0);
 	private Semaphore playerAvailable = new Semaphore(0);
 	
+	private volatile boolean playableTrackAquired = false;
+	
 	public TrackScheduler(YTJBServer server) {
 		this.server = server;
 		running = true;
 	}
 	
-	public void notifyPlayableTrack(){
-		playableTrack.release();
+	public synchronized void notifyPlayableTrack(){
+		if (playableTrackAquired){
+			playableTrack.release();
+			playableTrackAquired = false;
+		}
 	}
 	
 	public void notifyPlayerAvailable(){
@@ -93,6 +98,7 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "waiting for a parsed track...");
 					args.set(0, ""+false);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+					playableTrackAquired = true;
 					playableTrack.acquire();
 					current = server.chooseNextTrack();
 				}
@@ -102,19 +108,20 @@ public class TrackScheduler extends Thread {
 					IO.printlnDebug(this, "Waiting for available player...");
 					playerAvailable.acquire();
 				}
-				if (!current.getVideoURL().equals("")){
-					args.set(0,""+true);
-					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
-					ArrayList<String> argsNext = new ArrayList<String>();
-					argsNext.add(current.getTitle());
-					argsNext.add(current.getVideoURL());
-					argsNext.add(""+current.getIsVideo());
-					server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
-					IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-					player = new ClientPlayer(server,this);
-					player.play(current);
-					player = null;
+				while (!current.isReady()){
+					Thread.sleep(100);
 				}
+				args.set(0,""+true);
+				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+				ArrayList<String> argsNext = new ArrayList<String>();
+				argsNext.add(current.getTitle());
+				argsNext.add(current.getVideoURL());
+				argsNext.add(""+current.getIsVideo());
+				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
+				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
+				player = new ClientPlayer(server,this);
+				player.play(current);
+				player = null;
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");
