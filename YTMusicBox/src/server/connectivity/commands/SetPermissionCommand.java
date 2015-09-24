@@ -23,7 +23,7 @@ public class SetPermissionCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		if (server.getPW(permission).equals(pw)){
+		if (server.getPW(permission) != null && server.getPW(permission).equals(pw)){
 			connection.addPermission(permission);
 			response(""+true);
 			return true;

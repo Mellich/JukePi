@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
 import messages.Permission;
+import server.InitFileCommunicator.ColumnType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
@@ -97,12 +98,28 @@ public class YTJBServer implements Server {
 	}
 	
 	public String getPW(Permission p){
+		if (p.equals(Permission.GAPLIST)){
+			int adminCount = 0;
+			for (Connection c : notifiables){
+				if (c.checkPermission(p)){
+					adminCount++;
+				}
+			}
+			if (adminCount >= Long.valueOf(initFile.getValue(ColumnType.MAXADMINCOUNT))){
+				IO.printlnDebug(this, "Maximal Admin count reached! Permission denied! Admin count: "+adminCount);
+				return null;
+			}
+		}
+		if (p.equals(Permission.PLAYER) && player.size() >= Long.valueOf(initFile.getValue(ColumnType.MAXPLAYERCOUNT))){
+			IO.printlnDebug(this, "Maximal Player count reached! Permission denied! Player count: "+player.size());
+			return null;
+		}
 		switch (p){
-		case PLAYER: return initFile.getPlayerPW();
-		case PLAYBACK: return initFile.getPlaybackPW();
-		case DEBUGGING: return initFile.getDebugPW();
-		case GAPLIST: return initFile.getGaplistPW();
-		default: return "";
+		case PLAYER: return initFile.getValue(ColumnType.PLAYERPW);
+		case PLAYBACK: return initFile.getValue(ColumnType.PLAYBACKPW);
+		case DEBUGGING: return initFile.getValue(ColumnType.DEBUGPW);
+		case GAPLIST: return initFile.getValue(ColumnType.GAPLISTPW);
+		default: return null;
 		}
 	}
 	
@@ -112,7 +129,7 @@ public class YTJBServer implements Server {
 	 */
 	public void startUp(){
 			ProcessCommunicator.updateYoutubeDL(workingDirectory);
-			currentGapList = initFile.getStartUpGapList();
+			currentGapList = initFile.getValue(ColumnType.STARTUPGAPLIST);
 			searchGapLists();	
 			urlParser = new URLParser[Runtime.getRuntime().availableProcessors()];
 			for (int i = 0; i < urlParser.length; i++){
@@ -397,7 +414,7 @@ public class YTJBServer implements Server {
 		IO.printlnDebug(this, "Setting as new gap list");
 		filename = filename+".jb";
 		currentGapList = filename;
-		initFile.setStartUpGapList(currentGapList);
+		initFile.setValue(ColumnType.STARTUPGAPLIST,currentGapList);
 		IO.printlnDebug(this, "Start loading new gaplist");
 		if (gapListLoader.isAlive()){
 			gapListLoader.interrupt(); 
@@ -620,13 +637,13 @@ public class YTJBServer implements Server {
 				input = s.substring(equalPos + 1);
 			String call = s.substring(0, equalPos);
 			if (call.equals("-playerPW")){
-				initFile.setPlayerPW(input);
+				initFile.setValue(ColumnType.PLAYERPW, input);
 			}else if (call.equals("-debugPW")){
-				initFile.setDebugPW(input);
+				initFile.setValue(ColumnType.DEBUGPW, input);
 			}else if (call.equals("-gaplistPW")){
-				initFile.setGaplistPW(input);
+				initFile.setValue(ColumnType.GAPLISTPW, input);
 			}else if (call.equals("-playbackPW")){
-				initFile.setPlaybackPW(input);
+				initFile.setValue(ColumnType.PLAYBACKPW, input);
 			}else if (call.equals("-help")){
 				printHelp();
 				return false;
