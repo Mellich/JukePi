@@ -45,8 +45,8 @@ public class Connection extends Thread {
 	public void run() {
 		super.run();
 		try {
-			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 			permissions.add(Permission.STANDARD);
 			while (running){
 				String message = receiveMessage();

@@ -137,7 +137,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	public boolean connect() {
 		try {
 			socket = new Socket(ipAddress,port);
-			output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
 			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker));
 			inputListener.start();
 			checker.start();
