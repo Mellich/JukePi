@@ -644,6 +644,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 					switch (gaplist[rowIndex].getParseStatus()){
 						case PARSED: tip = "Parsed - "; break;
 						case NOT_PARSED: tip = "Not Parsed - "; break;
+						case PARSING: tip = "Currently Parsing - "; break;
 						default: tip = "Error while parsing: Check the URL! - "; break;
 					}
 					tip = tip.concat(""+ getValueAt(rowIndex, colIndex));
