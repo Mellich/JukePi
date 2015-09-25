@@ -697,6 +697,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		if (notFirst) 
 			gaplistPane.getViewport().setViewPosition(p);
 		oldGaplistPane = gaplistPane;
+		System.gc();
 	}
 	
 	/**
