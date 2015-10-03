@@ -1,5 +1,6 @@
 package com.jukepi.androidclient.asynctasks;
 
+import com.jukepi.androidclient.GlobalAccess;
 import com.jukepi.androidclient.MainActivity;
 import com.jukepi.androidclient.ServerConnectionContainer;
 
@@ -43,9 +44,9 @@ public class UDPConnectAsync extends AsyncTask<Void, Integer, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
-		ServerConnection con = ServerConnectionContainer.getServerConnection();
+		GlobalAccess.con = ServerConnectionContainer.getServerConnection();
 		try {
-			if (con.connect(con.udpScanning()))
+			if (GlobalAccess.con.connect(GlobalAccess.con.udpScanning()))
 				return true;
 			return false;
 		} catch (UDPTimeoutException e) {
