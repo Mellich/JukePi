@@ -159,7 +159,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		
 		frame.setContentPane(contentPane);
 		
-		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), true, true);});
+		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText());});
 		btnDisc.addActionListener((ActionEvent ae) -> {collector.disconnect();});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
@@ -178,20 +178,18 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	}
 
 	/**
-	 * Adds the given Link to the List.
-	 * @param url	The url of the Video.
-	 * @param toWishlist	The boolean Value, if the Song should be added to the Wishlist.
-	 * @param atBack	The boolean Value, if the Song should be added at the End of the List.
+	 * Adds the given Link to the end of the WishList.
+	 * @param url	The URL of the Video.
 	 * @since 1.1
 	 */
-	private void add(String url, boolean toWishList, boolean atBack) {
+	private void add(String url) {
 		wrapper.addToList((String[] s) -> {
 			if (s[0].equals("true"))
 				showFail("Added the Song to the List");
 			else
 				showFail("Couldn't add the Song to the List");
 			txtLink.setText("Enter a Link to a Video here");
-		}, url, toWishList, atBack);
+		}, url, true, true);
 	}
 
 	/**
@@ -208,7 +206,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	}
 
 	/**
-	 * Creates the Table, that displays the Wishlist and the Votes for each Song in it.
+	 * Creates the Table, that displays the WishList and the Votes for each Song in it.
 	 * @since 1.0
 	 */
 	private synchronized JScrollPane createWishlistTable() {
@@ -302,15 +300,6 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 			wishlistPane.getViewport().setViewPosition(p);
 		oldPane = wishlistPane;
 		return wishlistPane;
-	}
-	
-	/**
-	 * The Main-Method to build the Frame.
-	 * @param args	Just a stub.
-	 * @since 1.0
-	 */
-	public static void main(String[] args) {
-		new LowClientWindow(new Collector(), new JFrame(), null, new Song[] {}, "", 0).show();
 	}
 
 	@Override

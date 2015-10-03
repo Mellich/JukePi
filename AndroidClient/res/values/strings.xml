@@ -17,5 +17,7 @@
     <string name ="backButton">Back</string>
     <string name ="add_settings">Add a Track</string>
     <string name ="removeVote">Remove Your Vote</string>
+    <string name ="currentURL">Copy current Song-URL</string>
+    <string name ="savedSongList">View your Saved Songs</string>
 
 </resources>
