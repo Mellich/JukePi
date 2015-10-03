@@ -1,5 +1,8 @@
 package com.jukepi.androidclient;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.jukepi.androidclient.asynctasks.DisconnectAsync;
@@ -7,6 +10,9 @@ import com.jukepi.androidclient.asynctasks.DisconnectAsync;
 import client.listener.DefaultNotificationListener;
 import client.serverconnection.Song;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,9 +64,12 @@ public class MainActivity extends Activity implements DefaultNotificationListene
      */
     private boolean backPressed;
     
-  //  private String title;
+    /**
+     * The URL of the current playing Song.
+     */
+    private String url;
     
-  //  private String url;
+    private boolean firstPressedSave;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +96,11 @@ public class MainActivity extends Activity implements DefaultNotificationListene
                 });
         String title;
         if (GlobalAccess.con.getCurrentSong() != null)
-        title = GlobalAccess.con.getCurrentSong().getName();
-        else title = this.getString(R.string.nothing);
+        	title = GlobalAccess.con.getCurrentSong().getName();
+        else 
+        	title = this.getString(R.string.nothing);
+        
+        firstPressedSave = true;
         onNextTrackNotify(title, "", false);
         onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
@@ -134,6 +146,31 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			else
 				Toast.makeText(MainActivity.this, "Failed to remove Vote", Toast.LENGTH_SHORT).show();
 		}
+		else if (id == R.id.currentURL_settings) {
+			ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			ClipData clip = ClipData.newPlainText(url, url);
+			clipboard.setPrimaryClip(clip);
+			
+			String FILENAME = "saved_songs";
+			String text = "";
+			if (GlobalAccess.con.getCurrentSong() != null) {
+				text = GlobalAccess.con.getCurrentSong().getName();
+				text = text.concat(System.getProperty("line.separator") + GlobalAccess.con.getCurrentSong().getURL());
+			}
+
+			FileOutputStream fos;
+			try {
+				fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+				fos.write(text.getBytes());
+				fos.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if (id == R.id.SavedSongList_settings) {
+			changeToSavedSongs();
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -166,7 +203,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		
 	//	this.title = title;
 		final String lTitle = title;
-	//	this.url = url;
+		this.url = url;
 		currentTrack = (TextView)findViewById(R.id.playingTrack);
 	//	new SetNowPlaying(textView, title).execute();
 		
@@ -233,6 +270,15 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	 */
 	public void changeToAdd() {
 		Intent intent = new Intent(this, AddActivity.class);
+		this.startActivity(intent);
+	}
+	
+	/**
+	 * The Method, that will change the cureent visible Activity to the SavedSong-Activity.
+	 * @since 1.0
+	 */
+	public void changeToSavedSongs() {
+		Intent intent = new Intent();
 		this.startActivity(intent);
 	}
 	

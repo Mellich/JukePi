@@ -17,4 +17,6 @@
     <string name ="backButton">Zurück</string>
     <string name ="add_settings">Titel hinzufügen</string>
     <string name ="removeVote">Stimme löschen</string> 
+    <string name ="currentURL">Kopiere momentane Song-URL</string>
+    <string name ="savedSongList">Deine gespeicherten Songs</string>
 </resources>

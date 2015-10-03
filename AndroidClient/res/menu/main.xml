@@ -20,5 +20,17 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/removeVote"/>
+    
+    <item
+        android:id="@+id/currentURL_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/currentURL"/>
+    
+    <item 
+        android:id="@+id/SavedSongList_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/savedSongList"/>
 
 </menu>
