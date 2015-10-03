@@ -79,6 +79,11 @@ public class Connection extends Thread {
 	public void addPermission(Permission p){
 		if (!permissions.contains(p))
 			permissions.add(p);
+		StringBuilder sb  =new StringBuilder();
+		for (Permission temp : permissions){
+			sb.append(temp+", ");
+		}
+		IO.printlnDebug(this, "Connection permissions: "+sb);
 	}
 	
 	public void removePermission(Permission p){

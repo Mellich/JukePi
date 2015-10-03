@@ -185,13 +185,17 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		
-		wrapper.addDefaultNotificationListener(this);
-		wrapper.addGapListNotificationListener(this);
-		wrapper.addPauseResumeNotificationListener(this);
 		wrapper.addPermission(Permission.GAPLIST, "gaplist");
 		wrapper.addPermission(Permission.PLAYBACK, "playback");
 		wrapper.addPermission(Permission.DEBUGGING, "debug");
-		
+		wrapper.addDefaultNotificationListener(this);
+		wrapper.addGapListNotificationListener(this);
+		wrapper.addPauseResumeNotificationListener(this);
+		Permission[] p = wrapper.getPermissions();
+		for (Permission temp : p){
+			System.out.print(temp+", ");
+		}
+		System.out.println();
 		setIpAndPort(ip, iport);
 	}
 	

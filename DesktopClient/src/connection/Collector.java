@@ -113,10 +113,11 @@ public class Collector {
 			return false;
 		}
 
-		mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
+//		mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
+			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
 			mainScreen.show();
 			debugScreen = new DebugWindow(wrapper);
 			wrapper.addDebugNotificationListener(debugScreen);
