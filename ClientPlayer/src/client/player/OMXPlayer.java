@@ -1,13 +1,14 @@
-package client;
+package client.player;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import client.PlayerStarter;
 import utilities.IO;
 import utilities.ProcessCommunicator;
 
-public class OMXPlayer implements Runnable{
+public class OMXPlayer implements Runnable, Player{
 	
 	private final static long SKIPWAITDURATION = 1000;
 	
@@ -19,6 +20,10 @@ public class OMXPlayer implements Runnable{
 	private volatile Thread playThread;
 	private volatile long lastSkipAction = 0;
 
+	/* (non-Javadoc)
+	 * @see client.Player#play(java.lang.String)
+	 */
+	@Override
 	public void play(String track) {
 		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
 		if (playerProcess != null)
@@ -40,6 +45,10 @@ public class OMXPlayer implements Runnable{
 		return wasSkipped;
 	}
 
+	/* (non-Javadoc)
+	 * @see client.Player#skip()
+	 */
+	@Override
 	public boolean skip() {
 		try {
 			setSkipped();
@@ -61,6 +70,10 @@ public class OMXPlayer implements Runnable{
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see client.Player#pauseResume()
+	 */
+	@Override
 	public synchronized boolean pauseResume() {
 		try {
 			out.write(' ');
@@ -73,10 +86,18 @@ public class OMXPlayer implements Runnable{
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see client.Player#isPlaying()
+	 */
+	@Override
 	public boolean isPlaying() {
 		return playing;
 	}
 	
+	/* (non-Javadoc)
+	 * @see client.Player#seekForward()
+	 */
+	@Override
 	public synchronized boolean seekForward(){
 		try {
 			out.write("^[[C");
@@ -88,6 +109,10 @@ public class OMXPlayer implements Runnable{
 		return false;		
 	}
 	
+	/* (non-Javadoc)
+	 * @see client.Player#seekBackward()
+	 */
+	@Override
 	public synchronized boolean seekBackward(){
 		try {
 			out.write("^[[D");

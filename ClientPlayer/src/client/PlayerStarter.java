@@ -2,7 +2,12 @@ package client;
 
 import java.util.concurrent.Semaphore;
 
+import utilities.IO;
 import client.listener.*;
+import client.player.OMXPlayerFactory;
+import client.player.Player;
+import client.player.PlayerFactory;
+import client.player.VLCPlayerFactory;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 import client.visuals.IdleViewer;
@@ -13,7 +18,12 @@ import javafx.stage.Stage;
 public class PlayerStarter extends Application implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener, SeekNotificationListener, DebugNotificationListener {
 	
 	private ServerConnection server;
-	private volatile OMXPlayer player = null;
+	
+	/**
+	 * set the used player here
+	 */
+	private PlayerFactory playerFactory = new VLCPlayerFactory();
+	private volatile Player player = null;
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;
 	private Thread listenBroadcast;
@@ -68,7 +78,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			if (player != null){
 					player.skip();
 			}
-			player = new OMXPlayer(this);
+			player = playerFactory.newInstance(this);
 			player.play(videoURL);
 			if (skipWaitingCount == 1){
 				if (videoMode)
@@ -114,6 +124,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	
 	public void trackIsFinished(boolean wasSkipped){
 		viewer.showIdleScreen(true);
+		IO.printlnDebug(this, "Track finished!");
 		if (!wasSkipped)
 			server.notifyPlayerFinished((String[] s) -> {viewer.updateInfos();});
 	}

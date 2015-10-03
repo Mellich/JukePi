@@ -525,6 +525,7 @@ public class YTJBServer implements Server {
 		try {
 			int finishedCount = 0;
 			while (finishedCount < player.size()){
+					IO.printlnDebug(this, "Playercount: "+player.size()+", finishedCount: "+finishedCount);
 					playerFinished.acquire();
 					finishedCount++;
 			}
