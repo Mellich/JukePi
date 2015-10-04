@@ -5,6 +5,7 @@ import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.ClientLayout;
 import util.tasks.SetGaplistTask;
+import util.tasks.SetWishlistTask;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -40,7 +41,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.5
+ * @version 1.6
  */
 public class MainWindow extends Window implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
 	
@@ -954,7 +955,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 												showFail("Voted for the Song");
 											else
 												showFail("Couldn't vote for the Song");
-											createWishlistTable();
+										//	createWishlistTable();
 										}, wishlist[index]);
 	}
 	
@@ -1240,7 +1241,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void onGapListUpdatedNotify(Song[] songs) {
 	//	setGaplist(songs);
 		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
-		System.out.println(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getRowCount());
 	}
 
 	@Override
@@ -1250,7 +1250,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		setWishlist(songs);
+		new SetWishlistTask(wishlist, songs, lblNoWishlist, wrapper, frame, oldPane, this).execute();
+		System.out.println("ready");
+		//	setWishlist(songs);
 	}
 
 	@Override
@@ -1269,5 +1271,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
 		this.oldGaplistPane = oldGaplistPane;
+	}
+
+	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
+		this.wishlist = wishlist;
+		this.lblNoWishlist = lblNoWishlist;
+		this.frame = frame;
+		this.oldPane = oldPane;
 	}
 }

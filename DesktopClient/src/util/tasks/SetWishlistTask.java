@@ -17,58 +17,58 @@ import windows.MainWindow;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 
-public class SetGaplistTask extends SwingWorker<Void, Song[]>{
+public class SetWishlistTask extends SwingWorker<Void, Song[]>{
 
-	private Song[] gaplist;
-	private Song[] newGaplist;
-	private JLabel lblNoGaplist;
+	private Song[] newWishlist;
+	private Song[] wishlist;
+	private JLabel lblNoWishlist;
 	private ServerConnection wrapper;
 	private JFrame frame;
-	private JScrollPane oldGaplistPane;
+	private JScrollPane oldPane;
 	private MainWindow mw;
-	
-	public SetGaplistTask(Song[] gaplist, Song[] newGaplist, JLabel lblNoGaplist, 
+
+	public SetWishlistTask(Song[] wishlist, Song[] newWishlist, JLabel lblNoWishlist,
 			ServerConnection wrapper, JFrame frame, JScrollPane pane, MainWindow mw) {
-		this.newGaplist = newGaplist;
-		this.gaplist = gaplist;
-		this.lblNoGaplist = lblNoGaplist;
+		this.newWishlist = newWishlist;
+		this.wishlist = wishlist;
+		this.lblNoWishlist = lblNoWishlist;
 		this.wrapper = wrapper;
 		this.frame = frame;
-		this.oldGaplistPane = pane;
+		this.oldPane = pane;
 		this.mw = mw;
 	}
 	
 	@Override
 	protected Void doInBackground() throws Exception {
-		gaplist = new Song[newGaplist.length];
+		wishlist = new Song[newWishlist.length];
 		
-		for (int i = 0; i < newGaplist.length; i++) {
-			gaplist[i] = newGaplist[i];
-			publish(gaplist);
+		for (int i = 0; i < newWishlist.length; i++) {
+			wishlist[i] = newWishlist[i];
+			publish(wishlist);
 		}
 		return null;
 	}
-
+	
 	@Override
-	protected void process(List<Song[]> songs) {
-		Song[] lastList = songs.get(songs.size()-1);
-		lblNoGaplist.setText(""+lastList.length);
+	protected void process(List<Song[]> list) {
+		Song[] lastList = list.get(list.size()-1);
+		lblNoWishlist.setText(""+lastList.length);
 		
 		Point p = new Point(-1,-1);
 		boolean notFirst = false;
-		
-		if (oldGaplistPane != null) {
+		if(oldPane != null) {
 			notFirst = true;
-			p = oldGaplistPane.getViewport().getViewPosition();
-			frame.getContentPane().remove(oldGaplistPane);
+			p = oldPane.getViewport().getViewPosition();
+			frame.getContentPane().remove(oldPane);
 		}
 		
-		String[] columns = {"Gaplist:"};
+		String[] columns = {"Song:", "Votes:"};
 		
-		String[][] data = new String[lastList.length][1];
+		String[][] data = new String[lastList.length][2];
 		
 		for (int i = 0; i < lastList.length; i++) {
 			data[i][0] = lastList[i].getName();
+			data[i][1] = ""+lastList[i].getVotes();
 		}
 		
 		JTable table = new JTable(data, columns) {
@@ -78,35 +78,28 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 			private static final long serialVersionUID = 1L;
 			
 			/**
-			 * The ToolTip for the column.
+			 * The ToolTips for the TableHeaders.
 			 */
-			private String [] columnToolTips = {"The Name of the Song in the Gaplist"};
+			private String [] columnToolTips = {"The Name of the Song", "The Votes for this Song"};
 
 			/**
-			 * Returns the ToolTip for the Cell at the Cursor's Position.
+			 * Returns the ToolTip for the Cell at the given Position of the Cursor.
 			 * @param e	The MouseEvent.
-			 * @return The ToolTip for the Cell at the Position of the Cursor.
+			 * @return	The ToolTip for the Cell at the Cursor's Position.
 			 */
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				
-				if (colIndex == 0) {
-					switch (gaplist[rowIndex].getParseStatus()){
-						case PARSED: tip = "Parsed - "; break;
-						case NOT_PARSED: tip = "Not Parsed - "; break;
-						case PARSING: tip = "Currently Parsing - "; break;
-						default: tip = "Error while parsing: Check the URL! - "; break;
-					}
-					tip = tip.concat(""+ getValueAt(rowIndex, colIndex));
-				}
+        
+				if (colIndex == 0)
+					tip = ""+ getValueAt(rowIndex, colIndex);
 				return tip;
 			}
 			
 			/**
-			 * Returns, if the Cell at the given index is editable.
+			 * Returns, if the Cell at the given Position is editable.
 			 * @param row	The row-index of the Cell.
 			 * @param column	The column-index of the Cell.
 			 * @return false by default, as these Cells shouldn't be editable.
@@ -117,7 +110,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 	
 			/**
 			 * Creates a new TableHeader.
-			 * @return	The new TableHeader.
+			 * @return the new TableHeader.
 			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
@@ -127,9 +120,9 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 					private static final long serialVersionUID = 1L;
 
 					/**
-					 * Returns the ToolTip for the column at the Cursor's Position.
+					 * Returns the ToolTip for the column at the given Cursor's Position.
 					 * @param e	The MouseEvent.
-					 * @return	The ToolTip for the given column.
+					 * @return the ToolTip for the column at the Position of the Cursor.
 					 */
 					public String getToolTipText(MouseEvent e) {
 						java.awt.Point p = e.getPoint();
@@ -141,21 +134,19 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
             }
         };
         
-        table.addMouseListener(new TablePopClickListener(table, gaplist, wrapper, mw));
+        table.addMouseListener(new TablePopClickListener(table, wishlist, wrapper, mw));
         
-  //TODO      table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
-        
-		JScrollPane gaplistPane = new JScrollPane(table);
-		
-		if (notFirst) 
-			gaplistPane.getViewport().setViewPosition(p);
-		oldGaplistPane = gaplistPane;
-		frame.getContentPane().add(oldGaplistPane, ClientLayout.GAPLIST_SCROLL);
-		System.gc();
+        table.getColumnModel().getColumn(0).setMinWidth(210);
+        table.getColumnModel().getColumn(1).setMaxWidth(40);
+		JScrollPane wishlistPane = new JScrollPane(table);
+		frame.getContentPane().add(wishlistPane, ClientLayout.WISHLIST_SCROLL);
+		if (notFirst)
+			wishlistPane.getViewport().setViewPosition(p);
+		oldPane = wishlistPane;
 	}
 	
 	@Override
 	protected void done() {
-		mw.doneGaplistUpdate(gaplist, lblNoGaplist, frame, oldGaplistPane);
+		mw.doneWishlistUpdate(wishlist, lblNoWishlist, frame, oldPane);
 	}
 }
