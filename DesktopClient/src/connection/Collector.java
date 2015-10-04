@@ -4,6 +4,7 @@ package connection;
 import java.net.BindException;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import server.Server;
 import server.ServerFactory;
@@ -118,7 +119,11 @@ public class Collector {
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
 			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
-			mainScreen.show();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					mainScreen.show();
+				}
+			});
 			debugScreen = new DebugWindow(wrapper);
 			wrapper.addDebugNotificationListener(debugScreen);
 			return true;

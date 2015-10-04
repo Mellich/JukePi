@@ -4,6 +4,7 @@ import util.TablePopClickListener;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.ClientLayout;
+import util.tasks.SetGaplistTask;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -1202,7 +1203,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @author Haeldeus
 	 * @version 1.0
 	 */
-	private class TableRenderer extends DefaultTableCellRenderer {
+	public class TableRenderer extends DefaultTableCellRenderer {
 
 	    /**
 		 * The serial Version UID.
@@ -1237,7 +1238,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
-		setGaplist(songs);
+	//	setGaplist(songs);
+		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
+		System.out.println(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getRowCount());
 	}
 
 	@Override
@@ -1259,5 +1262,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void onDisconnect() {
 		collector.disconnect();
+	}
+
+	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
+		this.gaplist = gaplist;
+		this.lblNoGaplist = lblNoGaplist;
+		this.frame = frame;
+		this.oldGaplistPane = oldGaplistPane;
 	}
 }
