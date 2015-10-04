@@ -15,13 +15,11 @@ import utilities.IO;
  */
 public class ConnectionWaiter extends Thread {
 	
-	private ServerSocket serverSocket;
 	private YTJBServer server;
 	private boolean running;
 	private ArrayList<Connection> connections = new ArrayList<Connection>();
 	
 	public ConnectionWaiter(YTJBServer server) {
-		this.serverSocket = server.getServerSocket();
 		this.server = server;
 		running = true;
 	}
@@ -32,7 +30,7 @@ public class ConnectionWaiter extends Thread {
 		IO.printlnDebug(this, "Waiter waits for new music wishes...");
 		try {
 			while (running){
-				Socket s = serverSocket.accept();
+				Socket s = server.getServerSocket().accept();
 				Connection handler = new Connection(s,server,this);
 				connections.add(handler);
 				IO.printlnDebug(this, "New Connection established");

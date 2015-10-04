@@ -36,7 +36,7 @@ public class VLCPlayer implements Runnable, Player {
 								isPlaying = true;
 							}else if (input[input.length - 1].equals("End")){
 								isPlaying = false;
-								playerProcess.destroy();
+								trackFinished.release();
 							}else if (input.length == 1){
 								try{
 									currentTime = Integer.parseInt(input[0]);
@@ -70,24 +70,16 @@ public class VLCPlayer implements Runnable, Player {
 	private volatile boolean isPlaying = false;
 	private volatile int currentTime = 0;;
 	private Semaphore currentTimeMutex = new Semaphore(0);
+	private Semaphore trackFinished = new Semaphore(0);
 	
 	public VLCPlayer(PlayerStarter parent) {
 		this.parent = parent;
-	}
-
-	@Override
-	public void play(String track) {
-		playerProcess = null;
 		try {
-			playerProcess =  new ProcessBuilder(programURI,"--intf=\"rc\"","--rc-host=\"localhost:8080\"","-f",track).start();
-			Thread.sleep(200);
+			playerProcess =  new ProcessBuilder(programURI,"--extraintf=\"rc\"","--control=\"qt\"","--rc-host=\"localhost:8080\"").start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		}
 		if (playerProcess != null){
 			try {
 				InetAddress localhost = InetAddress.getByName("localhost");
@@ -99,6 +91,18 @@ public class VLCPlayer implements Runnable, Player {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@Override
+	public void play(String track) {
+		try {
+			out.write("add "+track+"\n");
+			out.flush();
+			Thread.sleep(100);
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		playThread = new Thread(this);
 		lastSkipAction = System.currentTimeMillis();
@@ -138,10 +142,8 @@ public class VLCPlayer implements Runnable, Player {
 			if (currentTime - lastSkipAction < SKIPWAITDURATION)
 				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
 			lastSkipAction = System.currentTimeMillis();
-			out.write("quit\n");
+			out.write("stop\n");
 			out.flush();
-			reader.interrupt();
-			playerProcess.destroy();
 			playThread.join();
 			IO.printlnDebug(this, "Skipped track successfully");
 			return true;
@@ -211,11 +213,8 @@ public class VLCPlayer implements Runnable, Player {
 			try {
 				out.write("info\n");
 				out.flush();
-				playerProcess.waitFor();
+				trackFinished.acquire();
 				parent.trackIsFinished(this.isSkipped());
-				reader.interrupt();
-				if (socket != null)
-					socket.close();
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			} catch (IOException e) {

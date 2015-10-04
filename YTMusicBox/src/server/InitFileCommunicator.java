@@ -25,7 +25,8 @@ public class InitFileCommunicator {
 		STARTUPGAPLIST(0), 
 		AUTOPLAY(5) ,
 		MAXADMINCOUNT(6),
-		MAXPLAYERCOUNT(7);
+		MAXPLAYERCOUNT(7),
+		PORT(8);
 		
 		private int id;
 		
@@ -42,7 +43,7 @@ public class InitFileCommunicator {
 	
 	private static String INITFILENAME = "jukepi.ini";
 	
-	private String[] defaultValues = {"gaplist.jb","player","playback","debug","gaplist",""+true,""+Long.MAX_VALUE,""+1};
+	private String[] defaultValues = {"gaplist.jb","player","playback","debug","gaplist",""+true,""+Long.MAX_VALUE,""+1,"22222"};
 	
 	private String dir;
 	

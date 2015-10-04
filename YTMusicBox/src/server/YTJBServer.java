@@ -44,8 +44,7 @@ public class YTJBServer implements Server {
 	 * the server socket to handle connections to the server
 	 */
 	private ServerSocket server;
-	
-	private int port;
+
 	
 	/**
 	 * the connection waiter of the server
@@ -129,8 +128,10 @@ public class YTJBServer implements Server {
 	/**
 	 * starts the server and makes him ready for work
 	 */
-	public void startUp(){
+	public boolean startUp(){
+		try {
 			ProcessCommunicator.updateYoutubeDL(workingDirectory);
+			server = new ServerSocket(Integer.parseInt(initFile.getValue(ColumnType.PORT)));
 			currentGapList = initFile.getValue(ColumnType.STARTUPGAPLIST);
 			searchGapLists();	
 			urlParser = new URLParser[Runtime.getRuntime().availableProcessors()];
@@ -142,10 +143,17 @@ public class YTJBServer implements Server {
 			gapListLoader.start();
 			waiter.start();
 			scheduler.start();
+			int port = Integer.parseInt(initFile.getValue(ColumnType.PORT));
 			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
 			IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public String getWorkingDir(){
@@ -559,39 +567,37 @@ public class YTJBServer implements Server {
 	 * @throws BindException is thrown if the port is already in use
 	 */
 	public YTJBServer(int port) throws BindException {
-			try {
-				this.port = port;
-				IO.setServer(this);
-				this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-				this.workingDirectory = this.workingDirectory.replace("%20", " ");
-				int lastdir = this.workingDirectory.lastIndexOf("/");
-				if (lastdir == this.workingDirectory.length() - 1){
-					this.workingDirectory = this.workingDirectory.substring(0, lastdir);
-					lastdir = this.workingDirectory.lastIndexOf("/");
-					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);
-				}
-				else{
-					this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);					
-				}
-				wishList = new LinkedList<MusicTrack>();
-				notifiables = new ArrayList<Connection>();
-				votingController = new VotingController(wishList);
-				player = new ArrayList<Connection>();
-				gapList = new LinkedList<MusicTrack>();
-				initFile = new InitFileCommunicator(workingDirectory);
-				server = new ServerSocket(port);
-				scheduler = new TrackScheduler(this);
-				waiter = new ConnectionWaiter(this);
-				version = CURRENT_VERSION;
-			} catch(BindException e){
-				throw new BindException();
-			} catch (IOException e) {
-				IO.printlnDebug(this, "Error while initiating  the server!");
-				e.printStackTrace();
+			IO.setServer(this);
+			this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			this.workingDirectory = this.workingDirectory.replace("%20", " ");
+			int lastdir = this.workingDirectory.lastIndexOf("/");
+			if (lastdir == this.workingDirectory.length() - 1){
+				this.workingDirectory = this.workingDirectory.substring(0, lastdir);
+				lastdir = this.workingDirectory.lastIndexOf("/");
+				this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);
 			}
+			else{
+				this.workingDirectory = this.workingDirectory.substring(0, lastdir + 1);					
+			}
+			wishList = new LinkedList<MusicTrack>();
+			notifiables = new ArrayList<Connection>();
+			votingController = new VotingController(wishList);
+			player = new ArrayList<Connection>();
+			gapList = new LinkedList<MusicTrack>();
+			initFile = new InitFileCommunicator(workingDirectory);
+			if (port > 0){
+				initFile.setValue(ColumnType.PORT, ""+port);
+			}
+			scheduler = new TrackScheduler(this);
+			waiter = new ConnectionWaiter(this);
+			version = CURRENT_VERSION;
 	}
 	
 	
+	public YTJBServer() throws BindException {
+		this(-1);
+	}
+
 	public void searchGapLists(){
 		gapLists = IO.getGapLists(workingDirectory);
 	}
@@ -648,6 +654,8 @@ public class YTJBServer implements Server {
 				initFile.setValue(ColumnType.GAPLISTPW, input);
 			}else if (call.equals("-playbackPW")){
 				initFile.setValue(ColumnType.PLAYBACKPW, input);
+			}else if (call.equals("-port")){
+				initFile.setValue(ColumnType.PORT, input);
 			}else if (call.equals("-help")){
 				printHelp();
 				return false;
@@ -668,7 +676,7 @@ public class YTJBServer implements Server {
 	public static void main(String[] args) {
 		YTJBServer server;
 		try {
-			server = new YTJBServer(22222);
+			server = new YTJBServer();
 			if (server.parseArguments(args)){
 				server.startUp();
 			}
