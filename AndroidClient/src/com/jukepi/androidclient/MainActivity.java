@@ -95,13 +95,17 @@ public class MainActivity extends Activity implements DefaultNotificationListene
                     }
                 });
         String title;
-        if (GlobalAccess.con.getCurrentSong() != null)
+        if (GlobalAccess.con.getCurrentSong() != null) {
         	title = GlobalAccess.con.getCurrentSong().getName();
-        else 
+        	url = GlobalAccess.con.getCurrentSong().getURL();
+        }
+        else {
         	title = this.getString(R.string.nothing);
+        	url = this.getString(R.string.nothing);
+        }
         
         firstPressedSave = true;
-        onNextTrackNotify(title, "", false);
+        onNextTrackNotify(title, url, false);
         onWishListUpdatedNotify(GlobalAccess.con.getWishList());
 		
 	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
