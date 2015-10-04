@@ -53,6 +53,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			playerMutex.acquire();
 			if (player != null && isPlaying != player.isPlaying()){
 				player.pauseResume();
+				Thread.sleep(100);
 				if (pauseResumeWaitingCount == 1){
 					if (videoMode)
 						viewer.showIdleScreen(!player.isPlaying());

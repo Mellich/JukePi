@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
 
 import utilities.IO;
 import client.PlayerStarter;
@@ -33,6 +34,16 @@ public class VLCPlayer implements Runnable, Player {
 								isPlaying = false;
 							}else if (input[input.length - 1].equals("Play")){
 								isPlaying = true;
+							}else if (input[input.length - 1].equals("End")){
+								isPlaying = false;
+								playerProcess.destroy();
+							}else if (input.length == 1){
+								try{
+									currentTime = Integer.parseInt(input[0]);
+									currentTimeMutex.release();
+								} catch (NumberFormatException e){
+									IO.printlnDebug(this, "Could not parse Integer: "+input[0]);;
+								}
 							}
 						}
 				}
@@ -57,6 +68,8 @@ public class VLCPlayer implements Runnable, Player {
 	private boolean wasSkipped = false;
 	private Socket socket;
 	private volatile boolean isPlaying = false;
+	private volatile int currentTime = 0;;
+	private Semaphore currentTimeMutex = new Semaphore(0);
 	
 	public VLCPlayer(PlayerStarter parent) {
 		this.parent = parent;
@@ -66,17 +79,22 @@ public class VLCPlayer implements Runnable, Player {
 	public void play(String track) {
 		playerProcess = null;
 		try {
-			playerProcess =  new ProcessBuilder(programURI,"--intf=\"rc\"","--rc-host=\"localhost:8080\"").start();
+			playerProcess =  new ProcessBuilder(programURI,"--intf=\"rc\"","--rc-host=\"localhost:8080\"","-f",track).start();
+			Thread.sleep(200);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		if (playerProcess != null){
 			try {
 				InetAddress localhost = InetAddress.getByName("localhost");
 				socket = new Socket(localhost, 8080);
 			    out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -95,6 +113,22 @@ public class VLCPlayer implements Runnable, Player {
 	private synchronized boolean isSkipped(){
 		return wasSkipped;
 	}
+	
+	private boolean updateCurrentTime(){
+		try {
+			out.write("get_time\n");
+			out.flush();
+			currentTimeMutex.acquire();
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public boolean skip() {
@@ -104,7 +138,7 @@ public class VLCPlayer implements Runnable, Player {
 			if (currentTime - lastSkipAction < SKIPWAITDURATION)
 				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
 			lastSkipAction = System.currentTimeMillis();
-			out.write("quit\r\n");
+			out.write("quit\n");
 			out.flush();
 			reader.interrupt();
 			playerProcess.destroy();
@@ -124,7 +158,7 @@ public class VLCPlayer implements Runnable, Player {
 	@Override
 	public boolean pauseResume() {
 		try {
-			out.write("pause\r\n");
+			out.write("pause\n");
 			out.flush();
 			return true;
 		} catch (IOException | NullPointerException e) {
@@ -141,13 +175,31 @@ public class VLCPlayer implements Runnable, Player {
 
 	@Override
 	public boolean seekForward() {
-		// TODO Auto-generated method stub
+		updateCurrentTime();
+		currentTime += 30;
+		try {
+			out.write("seek "+currentTime+"\n");
+			out.flush();
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean seekBackward() {
-		// TODO Auto-generated method stub
+		updateCurrentTime();
+		currentTime -= 30;
+		try {
+			out.write("seek "+currentTime+"\n");
+			out.flush();
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -157,6 +209,8 @@ public class VLCPlayer implements Runnable, Player {
 		reader.start();
 		if (playerProcess != null){
 			try {
+				out.write("info\n");
+				out.flush();
 				playerProcess.waitFor();
 				parent.trackIsFinished(this.isSkipped());
 				reader.interrupt();
