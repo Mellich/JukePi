@@ -22,7 +22,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	/**
 	 * set the used player here
 	 */
-	private PlayerFactory playerFactory = new VLCPlayerFactory();
+	private PlayerFactory playerFactory = new OMXPlayerFactory();
 	private volatile Player player = null;
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;

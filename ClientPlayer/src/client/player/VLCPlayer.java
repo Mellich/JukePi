@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
@@ -13,6 +14,20 @@ import utilities.IO;
 import client.PlayerStarter;
 
 public class VLCPlayer implements Runnable, Player {
+	
+	public class VLCNotFoundException extends RuntimeException{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3163448637440793502L;
+		
+		@Override
+		public String getMessage() {
+			return "VLC could not be found on the system!";
+		}
+		
+	}
 	
 	private class ReaderThread implements Runnable{
 
@@ -76,27 +91,36 @@ public class VLCPlayer implements Runnable, Player {
 		this.parent = parent;
 		try {
 			playerProcess =  new ProcessBuilder(programURI,"--extraintf=\"rc\"","--control=\"qt\"","--rc-host=\"localhost:8080\"").start();
-		} catch (IOException e) {
+			if (playerProcess != null){
+				InetAddress localhost = InetAddress.getByName("localhost");
+				boolean success = false;
+				while (!success){
+					try{
+						socket = new Socket(localhost, 8080);
+					    out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+					    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
+					    success  = true;
+					}catch (ConnectException e){
+						IO.printlnDebug(this, "Connection to VLC could not be established! Trying again...");
+						Thread.sleep(200);
+					}
+				}
+
+			}	
+			else{
+				IO.printlnDebug(this, "VLC could not be started!");
+				throw new VLCNotFoundException();
+			}
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		if (playerProcess != null){
-			try {
-				InetAddress localhost = InetAddress.getByName("localhost");
-				socket = new Socket(localhost, 8080);
-			    out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
 	@Override
 	public void play(String track) {
 		try {
+			wasSkipped= false;
 			out.write("add "+track+"\n");
 			out.flush();
 			Thread.sleep(100);

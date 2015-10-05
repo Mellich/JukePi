@@ -28,3 +28,4 @@ init
 hs_err_pid*
 *.apk
 AndroidClient/bin/AndroidClient.apk
+*.ini

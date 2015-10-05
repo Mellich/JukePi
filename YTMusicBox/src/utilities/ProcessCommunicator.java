@@ -35,7 +35,7 @@ public class ProcessCommunicator {
 			result[0] = parseInput.readLine();
 			result[1] = parseInput.readLine();
 			parseInput.close();
-		} else 	IO.printlnDebug(null, "youtube-dl not found! paring aborted!");
+		} else 	IO.printlnDebug(null, "youtube-dl not found! parsing aborted!");
 		return result;
 	}
 	
@@ -49,7 +49,7 @@ public class ProcessCommunicator {
 		String result = null;
 		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
 			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
-			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-g", url).start();
+			Process parseProcess = new ProcessBuilder(path+"youtube-dl","-g", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 			result = parseInput.readLine();
 			parseInput.close();
