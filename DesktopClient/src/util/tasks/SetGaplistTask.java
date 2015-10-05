@@ -12,6 +12,7 @@ import javax.swing.SwingWorker;
 import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
+import util.TableRenderer;
 import util.layouts.ClientLayout;
 import windows.MainWindow;
 import client.serverconnection.ServerConnection;
@@ -143,7 +144,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
         
         table.addMouseListener(new TablePopClickListener(table, gaplist, wrapper, mw));
         
-  //TODO      table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
+        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer(gaplist));
         
 		JScrollPane gaplistPane = new JScrollPane(table);
 		

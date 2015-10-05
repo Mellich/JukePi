@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import client.serverconnection.Song;
+
 /**
  * The Renderer for the Table Cells in the Gaplist-Pane.
  * @author Haeldeus
@@ -13,6 +15,16 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class TableRenderer extends DefaultTableCellRenderer {
 
+	private Song[] gaplist;
+	
+	public TableRenderer(Song[] gaplist) {
+		this.gaplist = gaplist;
+	}
+	
+/*	public void setGaplist(Song[] gaplist) {
+		this.gaplist = gaplist;
+	}*/
+	
     /**
 	 * The serial Version UID.
 	 */
@@ -21,12 +33,12 @@ public class TableRenderer extends DefaultTableCellRenderer {
 	@Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-   /* 	switch (gaplist[row].getParseStatus()){
+    	switch (gaplist[row].getParseStatus()){
     		case PARSED: c.setBackground(Color.WHITE); break;
     		case PARSING: c.setBackground(Color.YELLOW);break;
     		case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY); break;
     		default: c.setBackground(Color.RED); break;
-    	}*/
+    	}
     	if (isSelected && c.getBackground() != Color.RED) {
     		c.setBackground(table.getSelectionBackground());
     	}
