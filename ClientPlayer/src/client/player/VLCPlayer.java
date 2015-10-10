@@ -40,6 +40,8 @@ public class VLCPlayer implements Runnable, Player {
 		@Override
 		public void run() {
 			try {
+				out.write("info\n");
+				out.flush();
 				while(true){
 						String s = in.readLine();
 						if (s != null){
@@ -101,6 +103,8 @@ public class VLCPlayer implements Runnable, Player {
 					    out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 					    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 					    success  = true;
+					    reader = new Thread(new ReaderThread(in));
+					    reader.start();
 					}catch (ConnectException e){
 						IO.printlnDebug(this, "Connection to VLC could not be established! Trying again...");
 						Thread.sleep(200);
@@ -134,6 +138,7 @@ public class VLCPlayer implements Runnable, Player {
 		playThread = new Thread(this);
 		lastSkipAction = System.currentTimeMillis();
 		playThread.start();
+		this.resume();
 
 	}
 	
@@ -225,20 +230,14 @@ public class VLCPlayer implements Runnable, Player {
 
 	@Override
 	public void run() {
-		reader = new Thread(new ReaderThread(in));
-		reader.start();
 		if (playerProcess != null){
 			try {
-				out.write("info\n");
-				out.flush();
 				trackFinished.acquire();				
 				parent.trackIsFinished(this.wasSkipped);
+				IO.printlnDebug(this, "finished playback!");
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 		}
 		else{
 			IO.printlnDebug(this, "Error during music playback");

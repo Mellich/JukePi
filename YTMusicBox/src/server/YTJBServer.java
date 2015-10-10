@@ -315,8 +315,6 @@ public class YTJBServer implements Server {
 				notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 			}
 		}
-		if (temp != null && !temp.isReady())
-			return null;
 		return temp;
 	}
 	

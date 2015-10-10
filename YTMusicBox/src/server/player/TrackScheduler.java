@@ -94,20 +94,26 @@ public class TrackScheduler extends Thread {
 					lock.getPlayerAvailable().await();
 				}
 				lock.unlock();
-				while (!current.isReady()){
-					Thread.sleep(100);
+				while (!current.isReady() && !current.isError()){
+					IO.printlnDebug(this, "Warte, dass track fertig geparst wird...");
+					Thread.sleep(200);
 				}
-				args.set(0,""+true);
-				server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
-				ArrayList<String> argsNext = new ArrayList<String>();
-				argsNext.add(current.getTitle());
-				argsNext.add(current.getVideoURL());
-				argsNext.add(""+current.getIsVideo());
-				server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
-				IO.printlnDebug(this,"Playing next track: "+current.getTitle());
-				player = new ClientPlayer(server,this);
-				player.play(current);
-				player = null;
+				if (!current.isError()){
+					args.set(0,""+true);
+					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
+					ArrayList<String> argsNext = new ArrayList<String>();
+					argsNext.add(current.getTitle());
+					argsNext.add(current.getVideoURL());
+					argsNext.add(""+current.getIsVideo());
+					server.notifyClients(MessageType.NEXTTRACKNOTIFY,argsNext);
+					IO.printlnDebug(this,"Playing next track: "+current.getTitle());
+					player = new ClientPlayer(server,this);
+					player.play(current);
+					player = null;
+				}
+				else{
+					IO.printlnDebug(this, "Track wird übersprungen: Konnte nicht geprst werden!");
+				}
 			}
 		} catch (InterruptedException e) {
 			IO.printlnDebug(this, "Player was closed");

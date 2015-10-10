@@ -3,6 +3,7 @@ package client.visuals;
 
 //import java.sql.Timestamp;
 
+import utilities.IO;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 import javafx.application.Platform;
@@ -178,6 +179,7 @@ public class IdleViewer implements Visualizer {
 		Platform.runLater(() -> {debugInfo.appendText(t.toString()+": "+info+"\n");
 								 debugInfo.setScrollTop(Double.MAX_VALUE);
 							});*/
+		IO.printlnDebug(this, info);
 	}
 
 }

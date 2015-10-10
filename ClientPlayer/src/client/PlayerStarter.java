@@ -105,7 +105,6 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 		viewer.showIdleScreen(true);
 		if (player != null)
 			player.skip();
-		player = null;
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
 	}
