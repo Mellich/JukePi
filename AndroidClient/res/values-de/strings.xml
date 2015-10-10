@@ -19,4 +19,6 @@
     <string name ="removeVote">Stimme löschen</string> 
     <string name ="currentURL">Kopiere momentane Song-URL</string>
     <string name ="savedSongList">Deine gespeicherten Songs</string>
+    <string name="title_activity_share">Füge einen Link hinzu</string>
+    <string name="share_text">Wiedergabe</string>
 </resources>

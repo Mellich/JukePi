@@ -31,5 +31,17 @@
         <activity 
             android:name=".AddActivity"
             android:label="@string/app_name" />
-                </application>
+        
+                <activity android:name="com.jukepi.androidclient.ShareActivity"
+            android:label="@string/title_activity_share"
+            ><intent-filter
+    android:label="@string/share_text">
+    <action android:name="android.intent.action.SEND" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <data android:mimeType="text/plain" />
+</intent-filter>
+        </activity>
+        
+    </application>
 </manifest>
+

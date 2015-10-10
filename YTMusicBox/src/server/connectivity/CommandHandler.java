@@ -58,8 +58,6 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.DELETEGAPLIST: new DeleteGapListCommand(out, prompt,server, args[1]).handle();
 			break;
-		case MessageType.SWITCHGAPLISTNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
-		break;
 		case MessageType.ADDTOOTHERLIST: new AddSongToOtherListCommand(out,prompt,server,Long.parseLong(args[1])).handle();
 		break;
 		default: return false;
@@ -125,6 +123,8 @@ public class CommandHandler extends Thread {
 		}
 		switch (prompt){
 		case MessageType.SWITCHPAUSERESUMENOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
+		break;
+		case MessageType.SWITCHGAPLISTNOTIFY: new SwitchNotifyStatusCommand(out,prompt,parent).handle();
 		break;
 		case MessageType.SETPERMISSION: new SetPermissionCommand(out,prompt,server,args[1],args[2],this.parent).handle();
 		break;

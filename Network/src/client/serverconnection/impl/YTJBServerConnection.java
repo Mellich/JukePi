@@ -491,9 +491,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public Song getCurrentSong() {
 		Song result = null;
-		String input = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK)[0];
-		String[] values = input.split(MessageType.SEPERATOR);
-		if (!input.equals("NOTHING")){
+		String[] values = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK);
+		if (!values[0].equals("NOTHING")){
 			if (this.usedVersion < 901L){
 				result = new Song(0,values[0],0,false,ParseStatus.PARSED,"");
 			}

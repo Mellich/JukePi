@@ -8,16 +8,20 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="now_Playing">Now Playing:</string>
-    <string name ="Next_Track">Next Track:</string>
-    <string name ="Name">Name:</string>
-    <string name ="Count_Votes">#Votes:</string>
-    <string name ="Vote">Vote</string>
-    <string name ="nothing">Nothing</string>
-    <string name ="add">Add</string>
-    <string name ="backButton">Back</string>
-    <string name ="add_settings">Add a Track</string>
-    <string name ="removeVote">Remove Your Vote</string>
-    <string name ="currentURL">Copy current Song-URL</string>
-    <string name ="savedSongList">View your Saved Songs</string>
+    <string name="Next_Track">Next Track:</string>
+    <string name="Name">Name:</string>
+    <string name="Count_Votes">#Votes:</string>
+    <string name="Vote">Vote</string>
+    <string name="nothing">Nothing</string>
+    <string name="add">Add</string>
+    <string name="backButton">Back</string>
+    <string name="add_settings">Add a Track</string>
+    <string name="removeVote">Remove Your Vote</string>
+    <string name="currentURL">Copy current Song-URL</string>
+    <string name="savedSongList">View your Saved Songs</string>
+    <string name="title_activity_share">Add a Link</string>
+    <string name="share_text">Play back with JukePi</string>
+    <string name="share_info_text">Add the following URL to JukePi:</string>
+    <string name="share_button">Add</string>
 
 </resources>
