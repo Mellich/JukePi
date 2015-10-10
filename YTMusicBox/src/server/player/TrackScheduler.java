@@ -1,11 +1,11 @@
 package server.player;
 
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
 import server.MusicTrack;
 import server.YTJBServer;
+import utilities.ConditionVariable;
 import utilities.IO;
 
 
@@ -15,27 +15,13 @@ public class TrackScheduler extends Thread {
 	private boolean running;
 	private MusicPlayer player;
 	private MusicTrack current;
-	private Semaphore playableTrack = new Semaphore(0);
-	private Semaphore playerAvailable = new Semaphore(0);
-	
-	private volatile boolean playableTrackAquired = false;
+	private ConditionVariable lock;
 	
 	public TrackScheduler(YTJBServer server) {
 		this.server = server;
+		lock = server.getLock();
 		running = true;
 	}
-	
-	public synchronized void notifyPlayableTrack(){
-		if (playableTrackAquired){
-			playableTrack.release();
-			playableTrackAquired = false;
-		}
-	}
-	
-	public void notifyPlayerAvailable(){
-		playerAvailable.release();
-	}
-
 	
 	public synchronized void setRunning(boolean r){
 		running = r;
@@ -85,29 +71,29 @@ public class TrackScheduler extends Thread {
 	
 	@Override
 	public void run() {
-		super.run();
 		IO.printlnDebug(this, "Player is ready to play your music...");
 		try {
 			player = null;
 			while (running){
+				lock.lock();
 				IO.printlnDebug(this, "getting next track in the list");
 				current = server.chooseNextTrack();
 				ArrayList<String> args = new ArrayList<String>();
-				args.add(""+false); //TODO hier weiter
+				args.add(""+false);
 				while (current == null){
 					IO.printlnDebug(this, "waiting for a parsed track...");
 					args.set(0, ""+false);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
-					playableTrackAquired = true;
-					playableTrack.acquire();
+					lock.getPlayableTrackAvailable().await();
 					current = server.chooseNextTrack();
 				}
 				if (server.getPlayerCount() == 0){
 					args.set(0, ""+false);
 					server.notifyClients(MessageType.PAUSERESUMENOTIFY,args);
 					IO.printlnDebug(this, "Waiting for available player...");
-					playerAvailable.acquire();
+					lock.getPlayerAvailable().await();
 				}
+				lock.unlock();
 				while (!current.isReady()){
 					Thread.sleep(100);
 				}

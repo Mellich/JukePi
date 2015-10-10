@@ -22,7 +22,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	/**
 	 * set the used player here
 	 */
-	private PlayerFactory playerFactory = new OMXPlayerFactory();
+	private PlayerFactory playerFactory = new VLCPlayerFactory();
 	private volatile Player player = null;
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;
@@ -51,8 +51,10 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 		viewer.showDebugInfo("New Pause/Resume request! In Line:"+pauseResumeWaitingCount+" New Playstatus: "+isPlaying);
 		try {
 			playerMutex.acquire();
-			if (player != null && isPlaying != player.isPlaying()){
-				player.pauseResume();
+			if (player != null){
+				if(isPlaying)
+					player.resume();
+				else player.pause();
 				Thread.sleep(100);
 				if (pauseResumeWaitingCount == 1){
 					if (videoMode)

@@ -13,7 +13,7 @@ public class OMXPlayer implements Runnable, Player{
 	private final static long SKIPWAITDURATION = 1000;
 	
 	private volatile Process playerProcess;
-	private volatile boolean playing = false;
+	private volatile boolean isPlaying = false;
 	private volatile boolean wasSkipped = false;
 	private BufferedWriter out;
 	private PlayerStarter parent;
@@ -26,6 +26,7 @@ public class OMXPlayer implements Runnable, Player{
 	@Override
 	public void play(String track) {
 		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
+		isPlaying = true;
 		if (playerProcess != null)
 			out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
 		playThread = new Thread(this);
@@ -73,12 +74,11 @@ public class OMXPlayer implements Runnable, Player{
 	/* (non-Javadoc)
 	 * @see client.Player#pauseResume()
 	 */
-	@Override
-	public synchronized boolean pauseResume() {
+	private boolean pauseResume() {
 		try {
 			out.write(' ');
 			out.flush();
-			playing = !playing;
+			isPlaying = !isPlaying;
 			return true;
 		} catch (IOException | NullPointerException e) {
 			IO.printlnDebug(this, "could not pause/resume player successfully");
@@ -91,7 +91,7 @@ public class OMXPlayer implements Runnable, Player{
 	 */
 	@Override
 	public boolean isPlaying() {
-		return playing;
+		return isPlaying;
 	}
 	
 	/* (non-Javadoc)
@@ -128,17 +128,33 @@ public class OMXPlayer implements Runnable, Player{
 	public void run() {
 		if (playerProcess != null){
 			try {
-				playing = true;
+				isPlaying = true;
 				playerProcess.waitFor();
 				parent.trackIsFinished(this.isSkipped());
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			}
-			playing = false;
+			isPlaying = false;
 		}
 		else{
 			IO.printlnDebug(this, "Error during music playback");
 		}
+	}
+
+	@Override
+	public boolean pause() {
+		if(isPlaying){
+			return pauseResume();
+		}
+		return true;
+	}
+
+	@Override
+	public boolean resume() {
+		if (!isPlaying){
+			return pauseResume();
+		}
+		return true;
 	}
 
 }

@@ -18,6 +18,7 @@ import server.InitFileCommunicator.ColumnType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
+import utilities.ConditionVariable;
 import utilities.IO;
 import utilities.ProcessCommunicator;
 
@@ -89,13 +90,13 @@ public class YTJBServer implements Server {
 	
 	private VotingController votingController;
 
-	private URLParser[] urlParser;
+	private URLParser urlParser;
+	
+	private ConditionVariable con = new ConditionVariable();
 	
 	
-	private void notifyParser(){
-		for (URLParser p : urlParser){
-			p.notifyNewURL();
-		}
+	public ConditionVariable getLock(){
+		return con;
 	}
 	
 	public String getPW(Permission p){
@@ -134,15 +135,12 @@ public class YTJBServer implements Server {
 			server = new ServerSocket(Integer.parseInt(initFile.getValue(ColumnType.PORT)));
 			currentGapList = initFile.getValue(ColumnType.STARTUPGAPLIST);
 			searchGapLists();	
-			urlParser = new URLParser[Runtime.getRuntime().availableProcessors()];
-			for (int i = 0; i < urlParser.length; i++){
-				this.urlParser[i] = new URLParser(this,scheduler,i);
-				urlParser[i].start();
-			}
+			urlParser = new URLParser(this);
 			gapListLoader = new GapListLoader(this);
 			gapListLoader.start();
 			waiter.start();
 			scheduler.start();
+			urlParser.startUp();
 			int port = Integer.parseInt(initFile.getValue(ColumnType.PORT));
 			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
@@ -207,6 +205,7 @@ public class YTJBServer implements Server {
 	 * @param atFirst if true, track will be added at the beginning of the list and at the and, if the value is false
 	 */
 	public synchronized void addToList(MusicTrack track,boolean toWishList, boolean atFirst){
+		con.lock();
 		boolean existsParsed = this.existsParsedURL();
 		if (toWishList){
 			if (atFirst){
@@ -231,9 +230,10 @@ public class YTJBServer implements Server {
 				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 		}
 		if (!existsParsed && this.existsParsedURL()){
-			scheduler.notifyPlayableTrack();
+			con.getPlayableTrackAvailable().signal();
 			IO.printlnDebug(this, "Neuer track verfügbar");
 		}
+		con.unlock();
 	}
 	
 	public int getPlayerCount(){
@@ -352,6 +352,7 @@ public class YTJBServer implements Server {
 	 * loads current gap list from a file
 	 */
 	public void loadGapListFromFile(){
+		con.lock();
 		gapList.clear();
 		ArrayList<String> args = new ArrayList<String>();
 		args.add(currentGapList);
@@ -362,8 +363,9 @@ public class YTJBServer implements Server {
 			this.notifyClients(MessageType.GAPLISTCOUNTCHANGEDNOTIFY, gapLists);
 		}
 		else{
-			this.notifyParser();
+			con.getNotParsedTrackAvailable().signalAll();;
 		}
+		con.unlock();
 	}
 	
 	/**saves the gap list to a file
@@ -495,14 +497,16 @@ public class YTJBServer implements Server {
 	}
 	
 	public synchronized void registerPlayer(Connection c){
+		con.lock();
 		player.add(c);
 		c.setIsPlayer(true);
 		if (player.size() == 1)
-			scheduler.notifyPlayerAvailable();
+			con.getPlayerAvailable().signal();;
 		ArrayList<String> s = new ArrayList<String>();
 		s.add(""+player.size());
 		this.notifyClients(MessageType.PLAYERCOUNTCHANGEDNOTIFY,s);
 		IO.printlnDebug(this, "Count of connected Players: "+player.size());
+		con.unlock();
 	}
 	
 	public synchronized void removePlayer(Connection c){
@@ -548,7 +552,9 @@ public class YTJBServer implements Server {
 		}
 		if (messageType == MessageType.GAPLISTUPDATEDNOTIFY ||
 			messageType == MessageType.WISHLISTUPDATEDNOTIFY){		
-			this.notifyParser();		
+			con.lock();
+			con.getNotParsedTrackAvailable().signal();
+			con.unlock();
 		}
 	}	
 	
@@ -630,9 +636,7 @@ public class YTJBServer implements Server {
 			scheduler.join();
 			waiter.join();
 			connectionBroadcast.interrupt();
-			for (URLParser p : urlParser){
-				p.interrupt();
-			}
+			urlParser.shutDown();
 			IO.printlnDebug(this, "Server was shut down");
 		} catch (IOException | InterruptedException e) {
 			IO.printlnDebug(this, "Error while closing server");

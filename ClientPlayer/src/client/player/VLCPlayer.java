@@ -90,6 +90,7 @@ public class VLCPlayer implements Runnable, Player {
 	public VLCPlayer(PlayerStarter parent) {
 		this.parent = parent;
 		try {
+			playThread = new Thread(this);
 			playerProcess =  new ProcessBuilder(programURI,"--extraintf=\"rc\"","--control=\"qt\"","--rc-host=\"localhost:8080\"").start();
 			if (playerProcess != null){
 				InetAddress localhost = InetAddress.getByName("localhost");
@@ -120,9 +121,11 @@ public class VLCPlayer implements Runnable, Player {
 	@Override
 	public void play(String track) {
 		try {
+			playThread.join();
 			wasSkipped= false;
 			out.write("add "+track+"\n");
 			out.flush();
+			isPlaying = true;
 			Thread.sleep(100);
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -132,14 +135,6 @@ public class VLCPlayer implements Runnable, Player {
 		lastSkipAction = System.currentTimeMillis();
 		playThread.start();
 
-	}
-	
-	private synchronized void setSkipped(){
-		wasSkipped  = true;
-	}
-	
-	private synchronized boolean isSkipped(){
-		return wasSkipped;
 	}
 	
 	private boolean updateCurrentTime(){
@@ -161,7 +156,7 @@ public class VLCPlayer implements Runnable, Player {
 	@Override
 	public boolean skip() {
 		try {
-			setSkipped();
+			wasSkipped = true;
 			long currentTime = System.currentTimeMillis();
 			if (currentTime - lastSkipAction < SKIPWAITDURATION)
 				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
@@ -181,8 +176,7 @@ public class VLCPlayer implements Runnable, Player {
 		return false;
 	}
 
-	@Override
-	public boolean pauseResume() {
+	private boolean pauseResume() {
 		try {
 			out.write("pause\n");
 			out.flush();
@@ -237,8 +231,8 @@ public class VLCPlayer implements Runnable, Player {
 			try {
 				out.write("info\n");
 				out.flush();
-				trackFinished.acquire();
-				parent.trackIsFinished(this.isSkipped());
+				trackFinished.acquire();				
+				parent.trackIsFinished(this.wasSkipped);
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			} catch (IOException e) {
@@ -250,6 +244,22 @@ public class VLCPlayer implements Runnable, Player {
 			IO.printlnDebug(this, "Error during music playback");
 		}
 		
+	}
+
+	@Override
+	public boolean pause() {
+		if(isPlaying){
+			return pauseResume();
+		}
+		return true;
+	}
+
+	@Override
+	public boolean resume() {
+		if (!isPlaying){
+			return pauseResume();
+		}
+		return true;
 	}
 
 }

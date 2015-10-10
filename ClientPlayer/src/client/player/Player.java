@@ -2,16 +2,18 @@ package client.player;
 
 public interface Player {
 
-	public abstract void play(String track);
+	public void play(String track);
 
-	public abstract boolean skip();
+	public boolean skip();
 
-	public abstract boolean pauseResume();
+	public boolean pause();
+	
+	public boolean resume();
+	
+	public boolean isPlaying();
 
-	public abstract boolean isPlaying();
+	public boolean seekForward();
 
-	public abstract boolean seekForward();
-
-	public abstract boolean seekBackward();
+	public boolean seekBackward();
 
 }

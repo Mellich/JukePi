@@ -40,6 +40,11 @@ public class InputListener implements Runnable {
 	 * The Checker, that will check, if the Connection is still alive.
 	 */
 	private AliveChecker checker;
+
+	/**
+	 * the ExectionThread of the network interface
+	 */
+	private ExecutionThread executor;
 	
 	/**
 	 * Creates a new Listener for the Input.
@@ -47,13 +52,15 @@ public class InputListener implements Runnable {
 	 * @param notifyWrapper	The Wrapper, that will be added to the {@link NotificationHandler}.
 	 * @param responses	The Controller, that will be added to the {@link ResponseHandler}.
 	 * @param checker	The Checker, that will check, if the Connection is still established.
+	 * @param exe The ExecutionThread of the network interface
 	 * @since 1.0
 	 */
-	public InputListener(BufferedReader input, ServerConnectionNotifier notifyWrapper,ResponseController responses, AliveChecker checker) {
+	public InputListener(BufferedReader input, ServerConnectionNotifier notifyWrapper,ResponseController responses, AliveChecker checker, ExecutionThread exe) {
 		this.input = input;
 		this.notifyWrapper = notifyWrapper;
 		this.responses = responses;
 		this.checker = checker;
+		this.executor = exe;
 	}
 	
 	@Override
@@ -68,11 +75,9 @@ public class InputListener implements Runnable {
 					String[] params = line.split(MessageType.SEPERATOR);
 					int messageType = Integer.parseInt(params[0]);
 					if (messageType == MessageType.RESPONSENOTIFY){
-						Thread t = new Thread(new ResponseHandler(responses,params));
-						t.start();
+						executor.add(new ResponseHandler(responses,params));
 					}else{
-						Thread t = new Thread(new NotificationHandler(notifyWrapper,messageType,params));
-						t.start();					
+						executor.add(new NotificationHandler(notifyWrapper,messageType,params));				
 					}
 				}
 			}

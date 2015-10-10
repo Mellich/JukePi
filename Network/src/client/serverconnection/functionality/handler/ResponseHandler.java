@@ -8,7 +8,7 @@ import client.serverconnection.functionality.ResponseController;
  * @author Mellich
  * @version 1.0
  */
-public class ResponseHandler implements Runnable {
+public class ResponseHandler implements InputHandler {
 	
 	/**
 	 * The Controller for Responses.
@@ -30,9 +30,9 @@ public class ResponseHandler implements Runnable {
 		this.responses = responses;
 		this.message = message;
 	}
-	
+
 	@Override
-	public void run() {
+	public void execute() {
 		int messageType = Integer.parseInt(message[1]);
 		String[] arguments = new String[message.length - 2];
 		for (int i = 2; i < message.length; i++){
@@ -44,6 +44,17 @@ public class ResponseHandler implements Runnable {
 		}
 		
 		currentResponseListener.onResponse(arguments);
+		
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Command: "+message[1]+", Arguments: "+message[2]);
+		for (int i = 3; i < message.length; i++){
+			sb.append(", "+ message[i]);
+		}
+		return "[Type: Response, "+sb+"]";
 	}
 
 }

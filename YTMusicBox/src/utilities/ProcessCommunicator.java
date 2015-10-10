@@ -39,6 +39,24 @@ public class ProcessCommunicator {
 		return result;
 	}
 	
+	static public String parseShortURLToTitle(String url,String path) throws IOException{
+		String result = null;
+		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
+			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result = parseInput.readLine();
+			parseInput.close();
+		}else if (System.getProperty("os.name").equals("Linux")){
+			IO.printlnDebug(null, "Using Youtube-dl: "+"youtube-dl");
+			Process parseProcess = new ProcessBuilder("youtube-dl","-e", url).start();
+			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
+			result = parseInput.readLine();
+			parseInput.close();
+		} else 	IO.printlnDebug(null, "youtube-dl not found! parsing aborted!");
+		return result;
+	}
+	
 	/**parses the direct video url of the link with youtube-dl
 	 * 
 	 * @param url the link to parse

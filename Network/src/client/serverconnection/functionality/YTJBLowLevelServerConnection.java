@@ -78,6 +78,8 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	 * Determines, if the Client is an Android Application.
 	 */
 	private boolean isAndroid;
+
+	private ExecutionThread executor;
 	
 	/**
 	 * Gets the MAC-Address of the Client.
@@ -130,6 +132,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		this.notifyWrapper = notifyWrapper;
 		responses = new ResponseControllerImpl();
 		checker = new AliveChecker(checkInterval);
+		this.executor = new ExecutionThread();
 		this.version = version;
 	}
 
@@ -138,9 +141,10 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		try {
 			socket = new Socket(ipAddress,port);
 			output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
-			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker));
+			this.inputListener = new Thread(new InputListener(new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8")),notifyWrapper,responses,checker,executor));
 			inputListener.start();
 			checker.start();
+			executor.start();
 			String[] response = this.sendBlockingMessage(MessageType.REGISTERCLIENT,""+getMACAddress()+MessageType.SEPERATOR+version);
 			serverVersion = Long.parseLong(response[0]);
 			return true;
@@ -156,9 +160,11 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 		try {
 			inputListener.interrupt();
 			checker.interrupt();
+			executor.interrupt();
 			socket.close();
 			inputListener.join();
 			checker.join();
+			executor.join();
 			return true;
 		} catch (IOException | InterruptedException e) {
 			return false;
