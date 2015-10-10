@@ -1266,6 +1266,16 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		collector.disconnect();
 	}
 
+	/**
+	 * The Method, that is called, whenever the {@link SetGaplistTask} is finished. Is called 
+	 * to update the references in this class.
+	 * @param gaplist	The new Gaplist as an Array of {@link Song}s.
+	 * @param lblNoGaplist	The {@link JLabel}, that displays the amount of Tracks in the 
+	 * Gaplist.
+	 * @param frame	The {@link JFrame}, that displays this MainWindow.
+	 * @param oldGaplistPane	The {@link JScrollPane}, that displays the Gaplist as a table.
+	 * @since 1.6
+	 */
 	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
 		this.gaplist = gaplist;
 		this.lblNoGaplist = lblNoGaplist;
@@ -1273,6 +1283,16 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.oldGaplistPane = oldGaplistPane;
 	}
 
+	/**
+	 * The Method, that is called whenever the {@link SetWishlistTask} is finished. Is called 
+	 * to update the references in this class.
+	 * @param wishlist	The new Wishlist as an Array of {@link Song}s.
+	 * @param lblNoWishlist	The {@link JLabel}, that displays the amount of Tracks in the 
+	 * Wishlist.
+	 * @param frame	The {@link JFrame}, that displays this MainWindow.
+	 * @param oldPane	The {@link JScrollPane}, that displays the Wishlist as a table.
+	 * @since 1.6
+	 */
 	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
 		this.wishlist = wishlist;
 		this.lblNoWishlist = lblNoWishlist;

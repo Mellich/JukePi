@@ -15,8 +15,16 @@ import client.serverconnection.Song;
  */
 public class TableRenderer extends DefaultTableCellRenderer {
 
+	/**
+	 * The Gaplist as an Array of {@link Song}s.
+	 */
 	private Song[] gaplist;
 	
+	/**
+	 * The Constructor for this Renderer.
+	 * @param gaplist	The Gaplist as an Array of {@link Song}s.
+	 * @since 1.0
+	 */
 	public TableRenderer(Song[] gaplist) {
 		this.gaplist = gaplist;
 	}

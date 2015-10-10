@@ -18,16 +18,62 @@ import windows.MainWindow;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 
+/**
+ * The {@link SwingWorker}, that fills the GaplistPane with the Tracks in the Gaplist and their
+ * Parser-Status.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 
+	/**
+	 * The old Gaplist as an Array of {@link Song}s.
+	 */
 	private Song[] gaplist;
+	
+	/**
+	 * The new Gaplist as an Array of {@link Song}s.
+	 */
 	private Song[] newGaplist;
+	
+	/**
+	 * The {@link JLabel} that displays the Number of Tracks in the Gaplist.
+	 */
 	private JLabel lblNoGaplist;
+	
+	/**
+	 * The {@link ServerConnection} to the Server. This Connection is used to send and receive 
+	 * Messages from/to the Server.
+	 */
 	private ServerConnection wrapper;
+	
+	/**
+	 * The {@link JFrame}, that displays the {@link MainWindow}.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The {@link JScrollPane}, that contains the Gaplist Pane
+	 */
 	private JScrollPane oldGaplistPane;
+	
+	/**
+	 * The {@link MainWindow} this Task is called from.
+	 */
 	private MainWindow mw;
 	
+	/**
+	 * The Constructor for this Task.
+	 * @param gaplist	The old Gaplist as an Array of {@link Song}s.
+	 * @param newGaplist	The new Gaplist as an Array of {@link Song}s.
+	 * @param lblNoGaplist	The {@link JLabel}, that displays the amount of Tracks in the 
+	 * Gaplist.
+	 * @param wrapper	The {@link ServerConnection} to the Server the Client is connected to.
+	 * @param frame	The {@link JFrame}, the Task is operating on.
+	 * @param pane	The {@link JScrollPane}, that contains the Gaplist as displayed Table.
+	 * @param mw	The {@link MainWindow}, this Task is called from.
+	 * @since 1.0
+	 */
 	public SetGaplistTask(Song[] gaplist, Song[] newGaplist, JLabel lblNoGaplist, 
 			ServerConnection wrapper, JFrame frame, JScrollPane pane, MainWindow mw) {
 		this.newGaplist = newGaplist;
@@ -144,14 +190,14 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
         
         table.addMouseListener(new TablePopClickListener(table, gaplist, wrapper, mw));
         
-        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer(gaplist));
+        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer(lastList));
         
 		JScrollPane gaplistPane = new JScrollPane(table);
 		
 		if (notFirst) 
 			gaplistPane.getViewport().setViewPosition(p);
 		oldGaplistPane = gaplistPane;
-		frame.getContentPane().add(oldGaplistPane, ClientLayout.GAPLIST_SCROLL);
+		frame.getContentPane().add(gaplistPane, ClientLayout.GAPLIST_SCROLL);
 		System.gc();
 	}
 	
