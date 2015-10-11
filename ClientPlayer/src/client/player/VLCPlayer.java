@@ -9,6 +9,9 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import utilities.IO;
 import client.PlayerStarter;
@@ -45,6 +48,7 @@ public class VLCPlayer implements Runnable, Player {
 				while(true){
 						String s = in.readLine();
 						if (s != null){
+							playerLock.lock();
 							IO.printlnDebug(this, s);
 							String[] input = s.split(" ");
 							if (input[input.length - 1].equals("Pause")){
@@ -53,15 +57,16 @@ public class VLCPlayer implements Runnable, Player {
 								isPlaying = true;
 							}else if (input[input.length - 1].equals("End")){
 								isPlaying = false;
-								trackFinished.release();
+								playerFinished.signalAll();
 							}else if (input.length == 1){
 								try{
 									currentTime = Integer.parseInt(input[0]);
-									currentTimeMutex.release();
+									timeReceived.signalAll();
 								} catch (NumberFormatException e){
 									IO.printlnDebug(this, "Could not parse Integer: "+input[0]);;
 								}
 							}
+							playerLock.unlock();
 						}
 				}
 			} catch (IOException e) {
@@ -86,8 +91,9 @@ public class VLCPlayer implements Runnable, Player {
 	private Socket socket;
 	private volatile boolean isPlaying = false;
 	private volatile int currentTime = 0;;
-	private Semaphore currentTimeMutex = new Semaphore(0);
-	private Semaphore trackFinished = new Semaphore(0);
+	private Lock playerLock = new ReentrantLock();
+	private Condition playerFinished = playerLock.newCondition();
+	private Condition timeReceived = playerLock.newCondition();
 	
 	public VLCPlayer(PlayerStarter parent) {
 		this.parent = parent;
@@ -125,11 +131,9 @@ public class VLCPlayer implements Runnable, Player {
 	@Override
 	public void play(String track) {
 		try {
-			playThread.join();
 			wasSkipped= false;
 			out.write("add "+track+"\n");
 			out.flush();
-			isPlaying = true;
 			Thread.sleep(100);
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -138,15 +142,15 @@ public class VLCPlayer implements Runnable, Player {
 		playThread = new Thread(this);
 		lastSkipAction = System.currentTimeMillis();
 		playThread.start();
-		this.resume();
 
 	}
 	
 	private boolean updateCurrentTime(){
 		try {
+			playerLock.lock();
 			out.write("get_time\n");
 			out.flush();
-			currentTimeMutex.acquire();
+			timeReceived.await();
 			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -154,6 +158,9 @@ public class VLCPlayer implements Runnable, Player {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally{
+			playerLock.unlock();
 		}
 		return false;
 	}
@@ -232,12 +239,16 @@ public class VLCPlayer implements Runnable, Player {
 	public void run() {
 		if (playerProcess != null){
 			try {
-				trackFinished.acquire();				
+				playerLock.lock();
+				playerFinished.await();				
 				parent.trackIsFinished(this.wasSkipped);
 				IO.printlnDebug(this, "finished playback!");
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			} 
+			finally{
+				playerLock.unlock();
+			}
 		}
 		else{
 			IO.printlnDebug(this, "Error during music playback");

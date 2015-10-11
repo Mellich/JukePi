@@ -7,20 +7,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ShareActivity extends Activity {
+	
+	EditText pastedURL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 		String url = this.getIntent().getStringExtra(Intent.EXTRA_TEXT);
-		EditText pastedURL = (EditText) this.findViewById(R.id.efPastedURL);
+		pastedURL = (EditText) this.findViewById(R.id.efPastedURL);
 		pastedURL.setText(url);
 	}
 	
 	public void onAddButtonClicked(View v){
-		//TODO: implementiere add
+		if (GlobalAccess.con.isConnected()){
+			if (GlobalAccess.con.addToList(pastedURL.getText().toString(), true, true))
+				Toast.makeText(this, "Added the Song to the Wishlist.", Toast.LENGTH_LONG).show();
+			else
+				Toast.makeText(this, "Failed to add the Song", Toast.LENGTH_LONG).show();			
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}else{
+			Intent intent = new Intent(this, LoginActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override

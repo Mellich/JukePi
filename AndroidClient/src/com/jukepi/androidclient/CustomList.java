@@ -1,14 +1,18 @@
 package com.jukepi.androidclient;
 
 import java.util.ArrayList;
+
 import client.serverconnection.Song;
+import android.R.color;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
  
 /**
@@ -66,13 +70,18 @@ public class CustomList extends ArrayAdapter<Song>{
 		TextView txtName = (TextView) rowView.findViewById(R.id.cell_name);
  
 		TextView txtVotes = (TextView) rowView.findViewById(R.id.cell_votes);
+		LinearLayout cell = (LinearLayout) rowView.findViewById(R.id.list_cell);
+		cell.setOnClickListener(new ClickListener(position, songs));
 		
-		Button button = (Button) rowView.findViewById(R.id.cell_button);
-		button.setOnClickListener(new ClickListener(position, songs));
+	//	Button button = (Button) rowView.findViewById(R.id.list_cell);
+	//	button.setOnClickListener(new ClickListener(position, songs));
 	//	button.setVisibility(android.view.View.INVISIBLE);
 		
 		txtName.setText(songs.get(position).getName());
 		txtVotes.setText("" + songs.get(position).getVotes());
+		if (songs.get(position).isOwnVote()){
+			cell.setBackgroundColor(Color.GREEN);
+		}
 		
 		if (isEmpty) {
 			txtName.setText("NO TRACKS YET");

@@ -90,7 +90,8 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 				viewer.updateInfos();
 			}
 		} catch (Exception e) {
-			viewer.showDebugInfo("Error while skipping track: "+e.getLocalizedMessage());
+			viewer.showDebugInfo("Error while skipping track: "+e);
+			e.printStackTrace();
 		}
 		finally{
 			skipWaitingCount--;

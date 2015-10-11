@@ -5,30 +5,47 @@
 	android:paddingBottom="@dimen/tableRowMargin" >
 
 		<LinearLayout
+		    android:id="@+id/list_cell"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:background="#DDDDDD"
-		    android:gravity="center">
+		    android:background="#EEEFFF"
+		    android:gravity="center" >
 
 		    <TextView
-            android:id="@+id/cell_name"
-            android:layout_width="0dp"
-            android:layout_weight="0.7"
-            android:layout_height="fill_parent"
-            android:gravity="start" 
-            android:text="Das ist ein Song"></TextView>
+		        android:id="@+id/cell_name"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="0.8"
+		        android:gravity="start"
+		        android:padding="5dp"
+		        android:text="Das ist ein Song, der einen etwas längeren namen hat"
+		        android:textSize="15sp" >
+
+			</TextView>
+			
+		    <TextView
+		            android:id="@+id/cell_votes"
+		            android:layout_width="0dp"
+		            android:layout_gravity="end"
+		            android:layout_height="wrap_content"
+		            android:gravity="end"
+		            android:layout_weight="0.2"
+		            android:text="0"
+		            android:textSize="25sp" />
         
-	       <LinearLayout 
+	   <!--     <LinearLayout 
 	           android:layout_width="0dp"
 	           android:layout_height="wrap_content"
 	           android:layout_weight="0.3"
 	           android:gravity="end">
+
 		        <TextView
 		            android:id="@+id/cell_votes"
 		            android:layout_width="30dp"
 		            android:layout_height="wrap_content"
 		            android:gravity="center"
-		            android:text="0" />
+		            android:text="0"
+		            android:textSize="25sp" />
 		        
 		        <Button
 		            android:id="@+id/cell_button"
@@ -37,6 +54,6 @@
 		            android:gravity="center"
 		            android:text="@string/Vote" />
 	
-	        </LinearLayout>
+	        </LinearLayout>--> 
         </LinearLayout>
 </TableLayout>

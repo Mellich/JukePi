@@ -29,23 +29,34 @@
             android:textSize="@dimen/main_text_size"
 		    android:textStyle="bold" />
         
-        <TextView
+
+    </GridLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+            <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:layout_weight="0.5"
             android:text="@string/Name"
-            android:textSize="@dimen/main_text_size"
+            android:textSize="30dp"
             android:textStyle="bold" />
                     	
          <TextView
-           	android:id="@+id/vote"
-           	android:layout_width="wrap_content"
-           	android:layout_height="wrap_content"
-           	android:text="@string/Vote" 
-		    android:textSize="@dimen/main_text_size"
-		    android:textStyle="bold" />
-    </GridLayout>
+             android:id="@+id/vote"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_gravity="end"
+             android:layout_weight="0.5"
+             android:gravity="end"
+             android:text="@string/Vote"
+             android:textSize="30dp"
+             android:textStyle="bold" />
+
+    </LinearLayout>
     
  <!--         <LinearLayout
             android:layout_width="wrap_content"

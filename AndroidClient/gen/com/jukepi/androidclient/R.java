@@ -36,14 +36,14 @@ public final class R {
         public static final int button1=0x7f08000d;
         public static final int button_connect=0x7f080006;
         public static final int button_udpconnect=0x7f080005;
-        public static final int cell_button=0x7f080010;
-        public static final int cell_name=0x7f08000e;
-        public static final int cell_votes=0x7f08000f;
+        public static final int cell_name=0x7f08000f;
+        public static final int cell_votes=0x7f080010;
         public static final int currentURL_settings=0x7f080016;
         public static final int edit_ip=0x7f080004;
         public static final int edit_port=0x7f080003;
         public static final int efPastedURL=0x7f08000c;
         public static final int link=0x7f080012;
+        public static final int list_cell=0x7f08000e;
         public static final int name=0x7f080009;
         public static final int nowPlaying=0x7f080007;
         public static final int playingTrack=0x7f080008;

@@ -3,8 +3,10 @@ package com.jukepi.androidclient;
 import java.util.ArrayList;
 
 import client.serverconnection.Song;
+import android.R.color;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
