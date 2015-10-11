@@ -18,8 +18,8 @@
 #windows files
 Thumbs.db
 
-#init file
-init
+#bin directories 
+**/bin/**
 
 #android
 *.apk
