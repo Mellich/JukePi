@@ -93,6 +93,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 			gaplist[i] = newGaplist[i];
 			publish(gaplist);
 		}
+		publish(gaplist);
 		return null;
 	}
 
