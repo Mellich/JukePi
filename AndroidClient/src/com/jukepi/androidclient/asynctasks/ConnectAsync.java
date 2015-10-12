@@ -1,9 +1,9 @@
 package com.jukepi.androidclient.asynctasks;
 
-import com.jukepi.androidclient.GlobalAccess;
 import com.jukepi.androidclient.MainActivity;
 import com.jukepi.androidclient.ServerConnectionContainer;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,8 +41,7 @@ public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... arg0) {
-		GlobalAccess.con = ServerConnectionContainer.getServerConnection();
-		if (GlobalAccess.con.connect(arg0[0], Integer.parseInt(arg0[1])))
+		if (ServerConnectionContainer.getServerConnection().connect(arg0[0], Integer.parseInt(arg0[1])))
 			return true;
 		return false;
 	}
@@ -58,8 +57,9 @@ public class ConnectAsync extends AsyncTask<String, Integer, Boolean> {
 		super.onPostExecute(result);
 		progress.dismiss();
 		if (result){
-			Intent intent = new Intent(context, MainActivity.class);
-			context.startActivity(intent);
+			//Intent intent = new Intent(context, MainActivity.class);
+			//context.startActivity(intent);
+			((Activity) context).finish();
 		}
 	}
 	

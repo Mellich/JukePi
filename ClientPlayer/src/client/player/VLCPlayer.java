@@ -168,6 +168,7 @@ public class VLCPlayer implements Runnable, Player {
 	@Override
 	public boolean skip() {
 		try {
+			playerLock.lock();
 			wasSkipped = true;
 			long currentTime = System.currentTimeMillis();
 			if (currentTime - lastSkipAction < SKIPWAITDURATION)
@@ -175,6 +176,8 @@ public class VLCPlayer implements Runnable, Player {
 			lastSkipAction = System.currentTimeMillis();
 			out.write("stop\n");
 			out.flush();
+			playerFinished.signalAll();
+			playerLock.unlock();
 			playThread.join();
 			IO.printlnDebug(this, "Skipped track successfully");
 			return true;

@@ -23,8 +23,8 @@ public class ShareActivity extends Activity {
 	}
 	
 	public void onAddButtonClicked(View v){
-		if (GlobalAccess.con.isConnected()){
-			if (GlobalAccess.con.addToList(pastedURL.getText().toString(), true, true))
+		if (ServerConnectionContainer.getServerConnection().isConnected()){
+			if (ServerConnectionContainer.getServerConnection().addToList(pastedURL.getText().toString(), true, true))
 				Toast.makeText(this, "Added the Song to the Wishlist.", Toast.LENGTH_LONG).show();
 			else
 				Toast.makeText(this, "Failed to add the Song", Toast.LENGTH_LONG).show();			
