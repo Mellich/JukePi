@@ -1,6 +1,6 @@
 package messages;
 
-public 	enum Permission{
+public enum Permission{
 	/**
 	 * adds permissions for debugging purposes
 	 */
@@ -17,9 +17,9 @@ public 	enum Permission{
 	PLAYER, 
 	
 	/**
-	 * adds permissions for gap list editing (admin permissions)
+	 * adds admin permissions
 	 */
-	GAPLIST, 
+	ADMIN,
 	
 	/**
 	 * control the play back of the server

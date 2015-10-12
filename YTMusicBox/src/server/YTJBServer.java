@@ -100,7 +100,7 @@ public class YTJBServer implements Server {
 	}
 	
 	public String getPW(Permission p){
-		if (p.equals(Permission.GAPLIST)){
+		if (p.equals(Permission.ADMIN)){
 			int adminCount = 0;
 			for (Connection c : notifiables){
 				if (c.checkPermission(p)){
@@ -120,7 +120,7 @@ public class YTJBServer implements Server {
 		case PLAYER: return initFile.getValue(ColumnType.PLAYERPW);
 		case PLAYBACK: return initFile.getValue(ColumnType.PLAYBACKPW);
 		case DEBUGGING: return initFile.getValue(ColumnType.DEBUGPW);
-		case GAPLIST: return initFile.getValue(ColumnType.GAPLISTPW);
+		case ADMIN: return initFile.getValue(ColumnType.GAPLISTPW);
 		default: return null;
 		}
 	}

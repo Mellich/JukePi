@@ -30,7 +30,7 @@ public class CommandHandler extends Thread {
 	}
 
 	private boolean gaplistCommand(int prompt, String[] args){	
-		if (!parent.checkPermission(Permission.GAPLIST)){
+		if (!parent.checkPermission(Permission.ADMIN)){
 			return false;
 		}
 		switch (prompt){
@@ -66,7 +66,7 @@ public class CommandHandler extends Thread {
 	}
 	
 	private boolean debuggingCommand(int prompt, String[] args){	
-		if (!parent.checkPermission(Permission.DEBUGGING)){
+		if (!parent.checkPermission(Permission.DEBUGGING) && !parent.checkPermission(Permission.ADMIN)){
 			return false;
 		}
 		switch (prompt){
@@ -82,7 +82,7 @@ public class CommandHandler extends Thread {
 	}
 	
 	private boolean playbackCommand(int prompt, String[] args){	
-		if (!parent.checkPermission(Permission.PLAYBACK)){
+		if (!parent.checkPermission(Permission.PLAYBACK) && !parent.checkPermission(Permission.ADMIN)){
 			return false;
 		}
 		switch (prompt){
