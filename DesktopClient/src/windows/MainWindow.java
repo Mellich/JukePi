@@ -187,9 +187,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		
-		wrapper.addPermission(Permission.GAPLIST, "gaplist");
-		wrapper.addPermission(Permission.PLAYBACK, "playback");
-		wrapper.addPermission(Permission.DEBUGGING, "debug");
+		wrapper.addPermission(Permission.ADMIN, "gaplist");
+//		wrapper.addPermission(Permission.PLAYBACK, "playback");
+//		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
 		wrapper.addPauseResumeNotificationListener(this);
