@@ -1241,8 +1241,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
-	//	setGaplist(songs);
 		showFail("Gaplist updated");
+	//	setGaplist(songs);
 		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 	}
 
@@ -1257,14 +1257,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		showFail("Wishlist updated");
 		new SetWishlistTask(wishlist, songs, lblNoWishlist, wrapper, frame, oldPane, this).execute();
+		showFail("Wishlist updated");
 		//	setWishlist(songs);
 	}
 
 	@Override
 	public void onNextTrackNotify(String title, String url, boolean isVideo) {
-		showFail("Playing Next Track");
+		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
 	}

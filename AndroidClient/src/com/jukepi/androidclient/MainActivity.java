@@ -293,7 +293,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	}
 	
 	/**
-	 * The Method, that will change the current visible Activity to the SavedSong-Activity.
+	 * The Method, that will change the cureent visible Activity to the SavedSong-Activity.
 	 * @since 1.0
 	 */
 	public void changeToSavedSongs() {

@@ -46,6 +46,7 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
 			wishlist[i] = newWishlist[i];
 			publish(wishlist);
 		}
+		publish(wishlist);
 		return null;
 	}
 	
