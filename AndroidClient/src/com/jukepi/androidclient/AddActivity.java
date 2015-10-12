@@ -38,7 +38,7 @@ public class AddActivity extends Activity{
 	 * @since 1.0
 	 */
 	public void addClick(View v) {
-		if (GlobalAccess.con.addToList(link.getText().toString(), true, true))
+		if (ServerConnectionContainer.getServerConnection().addToList(link.getText().toString(), true, true))
 			Toast.makeText(this, "Added the Song to the Wishlist.", Toast.LENGTH_LONG).show();
 		else
 			Toast.makeText(this, "Failed to add the Song", Toast.LENGTH_LONG).show();

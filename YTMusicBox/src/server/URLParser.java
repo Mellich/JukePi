@@ -41,10 +41,18 @@ public class URLParser implements Runnable{
 					try {
 						m.setVideoURL("PARSING");
 						lock.unlock();
-						String out = ProcessCommunicator.parseShortURLToVideoURL(m.getShortURL(), server.getWorkingDir());
-						if (out != null){
+						String[] out = new String[2];
+						if (m.getShortURL().equals(m.getTitle())){
+							out = ProcessCommunicator.parseShortURLToVideoURLAndTitle(m.getShortURL(), server.getWorkingDir());
+						}
+						else {
+							out[1] = ProcessCommunicator.parseShortURLToVideoURL(m.getShortURL(), server.getWorkingDir());
+							out[0] = m.getTitle();
+						}
+						if (out[1] != null){
+							m.setTitle(out[0]);
 							IO.printlnDebug(this, "Parse thread: Track parsed: "+m.getTitle());
-							m.setVideoURL(out);
+							m.setVideoURL(out[1]);
 						}else{
 							IO.printlnDebug(this, "Parse thread: Track couldn't be parsed: "+m.getTitle());
 							m.setVideoURL("ERROR");								

@@ -70,19 +70,11 @@ public class MainActivity extends Activity implements DefaultNotificationListene
     private String url;
     
     private boolean firstPressedSave;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		this.setTitle("JukePi");
-		backPressed = false;
-		GlobalAccess.con.addDefaultNotificationListener(this);
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
 		list = new ArrayList<Song>();
-		
-		for (Song s : GlobalAccess.con.getWishList())
-			list.add(s);
-		
 		adapter = new CustomList(MainActivity.this, list);
         view=(ListView)findViewById(android.R.id.list);
         view.setAdapter(adapter);
@@ -94,10 +86,25 @@ public class MainActivity extends Activity implements DefaultNotificationListene
  
                     }
                 });
+		String url = this.getIntent().getStringExtra(Intent.EXTRA_TEXT);
+		//TODO: hier neuen share intent einfügen
+    	if(ServerConnectionContainer.getServerConnection().isConnected()){
+    		refreshInput();
+    	}else{
+			Intent intent = new Intent(this, LoginActivity.class);
+			startActivity(intent);
+			Toast.makeText(this, "Connection lost", Toast.LENGTH_SHORT).show();
+		}
+    }
+    
+    private void refreshInput(){
+		
+		for (Song s : ServerConnectionContainer.getServerConnection().getWishList())
+			list.add(s);
         String title;
-        if (GlobalAccess.con.getCurrentSong() != null) {
-        	title = GlobalAccess.con.getCurrentSong().getName();
-        	url = GlobalAccess.con.getCurrentSong().getURL();
+        if (ServerConnectionContainer.getServerConnection().getCurrentSong() != null) {
+        	title = ServerConnectionContainer.getServerConnection().getCurrentSong().getName();
+        	url = ServerConnectionContainer.getServerConnection().getCurrentSong().getURL();
         }
         else {
         	title = this.getString(R.string.nothing);
@@ -106,7 +113,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
         
         firstPressedSave = true;
         onNextTrackNotify(title, url, false);
-        onWishListUpdatedNotify(GlobalAccess.con.getWishList());
+        onWishListUpdatedNotify(ServerConnectionContainer.getServerConnection().getWishList());
 		
 	/*	listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
 		onWishListUpdatedNotify(GlobalAccess.con.getWishList());
@@ -123,6 +130,14 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			  }
 			}); 
 		*/
+    }
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		backPressed = false;
+		ServerConnectionContainer.getServerConnection().addDefaultNotificationListener(this);
 	}
 
 	@Override
@@ -145,7 +160,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			changeToAdd();
 		}
 		else if (id == R.id.removeVote_settings) {
-			if (GlobalAccess.con.removeVote())
+			if (ServerConnectionContainer.getServerConnection().removeVote())
 				Toast.makeText(MainActivity.this, "Removed Vote", Toast.LENGTH_SHORT).show();
 			else
 				Toast.makeText(MainActivity.this, "Failed to remove Vote", Toast.LENGTH_SHORT).show();
@@ -157,9 +172,9 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 			
 			String FILENAME = "saved_songs";
 			String text = "";
-			if (GlobalAccess.con.getCurrentSong() != null) {
-				text = GlobalAccess.con.getCurrentSong().getName();
-				text = text.concat(System.getProperty("line.separator") + GlobalAccess.con.getCurrentSong().getURL());
+			if (ServerConnectionContainer.getServerConnection().getCurrentSong() != null) {
+				text = ServerConnectionContainer.getServerConnection().getCurrentSong().getName();
+				text = text.concat(System.getProperty("line.separator") + ServerConnectionContainer.getServerConnection().getCurrentSong().getURL());
 			}
 
 			FileOutputStream fos;
@@ -289,7 +304,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	@Override
 	public void onBackPressed() {
 		backPressed = true;
-		GlobalAccess.con.close();
+		ServerConnectionContainer.getServerConnection().close();
 		Intent intent = new Intent(this, LoginActivity.class);
 		this.startActivity(intent);
 	}

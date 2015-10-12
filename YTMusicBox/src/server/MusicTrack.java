@@ -68,6 +68,10 @@ public class MusicTrack {
 		voteCount = count;
 	}
 	
+	public void setTitle(String t){
+		title = t;
+	}
+	
 	public void setVideoURL(String videoURL){
 		this.videoURL = videoURL;
 	}

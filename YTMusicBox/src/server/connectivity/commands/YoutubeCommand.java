@@ -31,19 +31,19 @@ public class YoutubeCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		String[] parsedURL;
-		try {
-			parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url,server.getWorkingDir());
-			if (parsedURL[0] != null){
+		//String[] parsedURL;
+//		try {
+			//parsedURL = ProcessCommunicator.parseShortURLToVideoURLAndTitle(url,server.getWorkingDir());
+			//if (parsedURL[0] != null){
 				response(""+true);
-				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,parsedURL[0],parsedURL[1],url);
+				MusicTrack yURL = new MusicTrack(TrackType.YOUTUBE,url,"",url);
 				addToList(yURL);
 				return true;
-			}else response(""+false);
-		} catch (IOException e) {
-			IO.printlnDebug(this, "could not handle command");
-		}
-		return false;
+			//}else response(""+false);
+//		} catch (IOException e) {
+//			IO.printlnDebug(this, "could not handle command");
+//		}
+//		return false;
 	}
 	
 	private void addToList(MusicTrack track){
