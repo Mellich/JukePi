@@ -9,9 +9,9 @@ public class InputExecutionFailedException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -8368062430035312604L;
 	private InputHandler handler;
-	private Exception ex;
+	private Throwable ex;
 	
-	public InputExecutionFailedException(InputHandler input, Exception e) {
+	public InputExecutionFailedException(InputHandler input, Throwable e) {
 		handler = input;
 		ex = e;
 	}

@@ -80,9 +80,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			videoMode = isVideo;
 			if (player != null){
 					player.skip();
-			}
-			if (player == null)
-				player = playerFactory.newInstance(this);
+			}else player = playerFactory.newInstance(this);
 			player.play(videoURL);
 			if (skipWaitingCount == 1){
 				if (videoMode)

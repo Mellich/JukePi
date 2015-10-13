@@ -38,7 +38,7 @@ public class ExecutionThread extends Thread {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (Exception e){
+			} catch (Throwable e){
 				throw new InputExecutionFailedException(nextInput,e);
 			}
 		}

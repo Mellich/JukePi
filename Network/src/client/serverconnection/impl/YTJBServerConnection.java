@@ -351,6 +351,8 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean isConnected() {
+		if (this.isAndroid)
+			return this.serverConnection.sendMessage(MessageType.ISREADY);
 		return connected;
 	}
 

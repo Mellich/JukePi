@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,8 +42,6 @@ public class VLCPlayer implements Runnable, Player {
 		@Override
 		public void run() {
 			try {
-				out.write("info\n");
-				out.flush();
 				while(true){
 						String s = in.readLine();
 						if (s != null){
@@ -57,6 +54,7 @@ public class VLCPlayer implements Runnable, Player {
 								isPlaying = true;
 							}else if (input[input.length - 1].equals("End")){
 								isPlaying = false;
+								IO.printlnDebug(this, "Notify player finished!");
 								playerFinished.signalAll();
 							}else if (input.length == 1){
 								try{
@@ -135,6 +133,8 @@ public class VLCPlayer implements Runnable, Player {
 			out.write("add "+track+"\n");
 			out.flush();
 			Thread.sleep(100);
+			out.write("info\n");
+			out.flush();
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -167,28 +167,31 @@ public class VLCPlayer implements Runnable, Player {
 
 	@Override
 	public boolean skip() {
-		try {
-			playerLock.lock();
-			wasSkipped = true;
-			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSkipAction < SKIPWAITDURATION)
-				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
-			lastSkipAction = System.currentTimeMillis();
-			out.write("stop\n");
-			out.flush();
-			playerFinished.signalAll();
-			playerLock.unlock();
-			playThread.join();
-			IO.printlnDebug(this, "Skipped track successfully");
-			return true;
-		} catch (IOException | NullPointerException e) {
-			IO.printlnDebug(this, "could not skip track successfully");
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!wasSkipped){
+			try {
+				playerLock.lock();
+				wasSkipped = true;
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - lastSkipAction < SKIPWAITDURATION)
+					Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
+				lastSkipAction = System.currentTimeMillis();
+				out.write("stop\n");
+				out.flush();
+				playerFinished.signalAll();
+				playerLock.unlock();
+				playThread.join();
+				IO.printlnDebug(this, "Skipped track successfully");
+				return true;
+			} catch (IOException | NullPointerException e) {
+				IO.printlnDebug(this, "could not skip track successfully");
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean pauseResume() {
@@ -261,7 +264,7 @@ public class VLCPlayer implements Runnable, Player {
 
 	@Override
 	public boolean pause() {
-		if(isPlaying){
+		if(isPlaying()){
 			return pauseResume();
 		}
 		return true;
@@ -269,7 +272,7 @@ public class VLCPlayer implements Runnable, Player {
 
 	@Override
 	public boolean resume() {
-		if (!isPlaying){
+		if (!isPlaying()){
 			return pauseResume();
 		}
 		return true;
