@@ -197,6 +197,7 @@ public class Collector {
 		try {
 			iport = Integer.parseInt(port);
 			localServer = ServerFactory.createServer(iport);
+			//TODO: make selectable, if youtube-dl should be updated or not  
 			localServer.startUp();
 			this.connect("localhost", ""+port);
 		} catch (NumberFormatException nfe) {

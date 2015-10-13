@@ -81,7 +81,7 @@ public class ProcessCommunicator {
 		return result;
 	}
 	
-	public static void updateYoutubeDL(String path){
+	public static boolean updateYoutubeDL(String path){
 		IO.printlnDebug(null, "Updating youtube-dl... please wait...");
 		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
 			try {
@@ -96,10 +96,13 @@ public class ProcessCommunicator {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return false;
 			}
 		}else{
 			IO.printlnDebug(null, "youtube-dl could not be found in the working directory!");
+			return false;
 		}
+		return true;
 	}
 
 	

@@ -29,7 +29,7 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 		RawNotificationOutput l = new RawNotificationOutput();
 		ServerConnection server;
 		server = new YTJBServerConnection(15000);
-		server.addPermission(Permission.GAPLIST, "gaplist");
+		server.addPermission(Permission.ADMIN, "gaplist");
 		server.addDefaultNotificationListener(l);
 		server.addGapListNotificationListener(l);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

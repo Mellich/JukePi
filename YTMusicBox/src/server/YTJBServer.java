@@ -134,7 +134,6 @@ public class YTJBServer implements Server {
 	 */
 	public boolean startUp(){
 		try {
-			ProcessCommunicator.updateYoutubeDL(workingDirectory);
 			server = new ServerSocket(Integer.parseInt(initFile.getValue(ColumnType.PORT)));
 			currentGapList = initFile.getValue(ColumnType.STARTUPGAPLIST);
 			searchGapLists();	
@@ -683,6 +682,7 @@ public class YTJBServer implements Server {
 		try {
 			server = new YTJBServer();
 			if (server.parseArguments(args)){
+				server.updateYoutubeDL();
 				server.startUp();
 			}
 		} catch (BindException e) {
@@ -694,6 +694,17 @@ public class YTJBServer implements Server {
 
 	public long getVersion() {
 		return version;
+	}
+
+	@Override
+	public boolean updateYoutubeDL() {
+		return 	ProcessCommunicator.updateYoutubeDL(workingDirectory);
+	}
+
+	@Override
+	public void searchGapListFiles() {
+		searchGapLists();
+		
 	}
 	
 	
