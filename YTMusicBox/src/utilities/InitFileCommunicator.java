@@ -1,60 +1,33 @@
-package server;
+package utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
-import utilities.IO;
-
 public class InitFileCommunicator {
 	
-	/**
-	 * The column types of the init file. 
-	 * To add a new column, add a new value to this class and add a constructor with a id to the new value.
-	 * The id represents the index of the default value in the defalutValues array. Add a default value there in the right position.
-	 * 
-	 * @author mellich
-	 *
-	 */
-	public enum ColumnType{
-		PLAYERPW(1),
-		PLAYBACKPW(2), 
-		DEBUGPW(3), 
-		GAPLISTPW(4), 
-		STARTUPGAPLIST(0), 
-		AUTOPLAY(5) ,
-		MAXADMINCOUNT(6),
-		MAXPLAYERCOUNT(7),
-		PORT(8);
-		
-		private int id;
-		
-		private ColumnType(int id){
-			this.id = id;
-		}
-		
-		public int getID(){
-			return id;
-		}
-	}
+
 	
 	private HashMap<ColumnType,String> fileValues = new HashMap<ColumnType,String>();
 	
-	private static String INITFILENAME = "jukepi.ini";
+	//private static String INITFILENAME = "jukepi.ini";
 	
-	private String[] defaultValues = {"gaplist.jb","player","playback","debug","gaplist",""+true,""+Long.MAX_VALUE,""+1,"22222"};
+	//private String[] defaultValues = {"gaplist.jb","player","playback","debug","gaplist",""+true,""+Long.MAX_VALUE,""+1,"22222"};
 	
 	private String dir;
+
+	private String filename;
 	
 	private void fillDefaultValues(){
 		for (ColumnType t : ColumnType.values()){
-			fileValues.put(t, defaultValues[t.getID()]);
+			fileValues.put(t, t.getDefaultValue());
 		}
 	}
 	
-	public InitFileCommunicator(String directory) {
+	public InitFileCommunicator(String directory,String filename) {
 		this.dir = directory;
+		this.filename = filename;
 		fillDefaultValues();
 		loadInitFile();
 	}
@@ -69,7 +42,7 @@ public class InitFileCommunicator {
 	}
 	
 	private void saveInitFile(){
-		BufferedWriter file = IO.getFileInput(dir+INITFILENAME);
+		BufferedWriter file = IO.getFileInput(dir+filename);
 		try {
 			for (ColumnType k : fileValues.keySet()){
 				file.append(k.toString()+" = "+fileValues.get(k));
@@ -83,7 +56,7 @@ public class InitFileCommunicator {
 	}
 	
 	private void loadInitFile(){
-		BufferedReader file = IO.getFileOutput(dir+INITFILENAME);
+		BufferedReader file = IO.getFileOutput(dir+filename);
 		String line;
 		try {
 			line = file.readLine();

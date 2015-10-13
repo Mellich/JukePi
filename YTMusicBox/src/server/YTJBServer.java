@@ -14,13 +14,14 @@ import java.util.concurrent.Semaphore;
 
 import messages.MessageType;
 import messages.Permission;
-import server.InitFileCommunicator.ColumnType;
 import server.connectivity.Connection;
 import server.connectivity.ConnectionWaiter;
 import server.player.TrackScheduler;
 import utilities.ConditionVariable;
 import utilities.IO;
+import utilities.InitFileCommunicator;
 import utilities.ProcessCommunicator;
+import utilities.ColumnType;
 
 /**A server, that includes classes to stream videos from youtube or audio files given
  * by a client 
@@ -36,6 +37,8 @@ public class YTJBServer implements Server {
 	public static final int PORT = 12345;
 	
 	public static final long CURRENT_VERSION = 901L;
+
+	private static final String INITFILENAME = "jukepi.ini";
 	
 	private long version = -1L;
 	
@@ -588,7 +591,7 @@ public class YTJBServer implements Server {
 			votingController = new VotingController(wishList);
 			player = new ArrayList<Connection>();
 			gapList = new LinkedList<MusicTrack>();
-			initFile = new InitFileCommunicator(workingDirectory);
+			initFile = new InitFileCommunicator(workingDirectory,INITFILENAME);
 			if (port > 0){
 				initFile.setValue(ColumnType.PORT, ""+port);
 			}
