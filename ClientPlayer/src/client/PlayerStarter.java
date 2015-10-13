@@ -1,7 +1,5 @@
 package client;
 
-import java.util.concurrent.Semaphore;
-
 import utilities.IO;
 import client.listener.*;
 import client.player.OMXPlayerFactory;
@@ -22,18 +20,17 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	/**
 	 * set the used player here
 	 */
-	private PlayerFactory playerFactory = new VLCPlayerFactory();
+	private PlayerFactory playerFactory;
 	private volatile Player player = null;
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;
 	private Thread listenBroadcast;
-	private Semaphore playerMutex = new Semaphore(1);
-	private volatile int pauseResumeWaitingCount = 0;
-	private volatile int skipWaitingCount = 0;
-	private volatile int seekWaitingCount = 0;
 	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
+		if (System.getProperty("os.name").equals("Linux"))
+			playerFactory = new OMXPlayerFactory();
+		else playerFactory = new VLCPlayerFactory();
 		server = ServerConnectionFactory.createServerConnection(15000,900);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
@@ -47,53 +44,41 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 
 	@Override
 	public void onPauseResumeNotify(boolean isPlaying) {
-		pauseResumeWaitingCount++;
-		viewer.showDebugInfo("New Pause/Resume request! In Line:"+pauseResumeWaitingCount+" New Playstatus: "+isPlaying);
+		viewer.showDebugInfo("New Pause/Resume request! New Playstatus: "+isPlaying);
 		try {
-			playerMutex.acquire();
 			if (player != null){
 				if(isPlaying)
 					player.resume();
 				else player.pause();
 				Thread.sleep(100);
-				if (pauseResumeWaitingCount == 1){
-					if (videoMode)
-						viewer.showIdleScreen(!player.isPlaying());
-					viewer.updateInfos();
-				}
+				if (videoMode)
+					viewer.showIdleScreen(!player.isPlaying());
+				viewer.updateInfos();
 			}			
 		} catch (Exception e) {
 			viewer.showDebugInfo("Error while pause/resume track: "+e.getLocalizedMessage());
-		}
-		finally{
-			pauseResumeWaitingCount--;
-			playerMutex.release();
 		}
 	}
 
 	@Override
 	public void onNextTrackNotify(String title, String videoURL,boolean isVideo) {
-		skipWaitingCount++;
 		try {
-			viewer.showDebugInfo("New Skip request! In Line:"+skipWaitingCount+" Title: "+title);
-			playerMutex.acquire();
+			viewer.showDebugInfo("New Skip request! Title: "+title);
 			videoMode = isVideo;
 			if (player != null){
 					player.skip();
 			}else player = playerFactory.newInstance(this);
 			player.play(videoURL);
-			if (skipWaitingCount == 1){
-				if (videoMode)
-					viewer.showIdleScreen(false);
-				viewer.updateInfos();
-			}
+			if (videoMode)
+				viewer.showIdleScreen(false);
+			viewer.updateInfos();
+			
 		} catch (Exception e) {
 			viewer.showDebugInfo("Error while skipping track: "+e);
+			if (player != null)
+				player.destroy();
+			player = null;
 			e.printStackTrace();
-		}
-		finally{
-			skipWaitingCount--;
-			playerMutex.release();
 		}
 	}
 
@@ -151,10 +136,8 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 
 	@Override
 	public void onSeekNotify(boolean forward) {
-		seekWaitingCount++;
-		viewer.showDebugInfo("New seek request! In Line:"+seekWaitingCount);
+		viewer.showDebugInfo("New seek request!");
 		try {
-			playerMutex.acquire();
 			if (player != null){
 				if (forward)
 					player.seekForward();
@@ -162,11 +145,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			}
 		} catch (Exception e) {
 			viewer.showDebugInfo("Error while seek in track: "+e.getLocalizedMessage());
-		}
-		finally{
-			seekWaitingCount--;
-			playerMutex.release();
-		}		
+		}	
 	}
 
 	@Override

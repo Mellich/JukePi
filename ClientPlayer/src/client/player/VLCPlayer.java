@@ -278,4 +278,15 @@ public class VLCPlayer implements Runnable, Player {
 		return true;
 	}
 
+	@Override
+	public void destroy() {
+		try {
+			out.write("close\n");
+			out.flush();
+			playerProcess.waitFor();
+		} catch (IOException | InterruptedException e) {
+			IO.printlnDebug(this, "Couldnot destroy player process: not reachable!");
+		}
+	}
+
 }

@@ -15,5 +15,7 @@ public interface Player {
 	public boolean seekForward();
 
 	public boolean seekBackward();
+	
+	public void destroy();
 
 }

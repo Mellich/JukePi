@@ -157,4 +157,15 @@ public class OMXPlayer implements Runnable, Player{
 		return true;
 	}
 
+	@Override
+	public void destroy() {
+		try {
+			out.write('q');
+			out.flush();
+			playThread.join();
+		} catch (IOException | InterruptedException e) {
+			IO.printlnDebug(this, "Couldnot destroy player process: not reachable!");
+		}
+	}
+
 }
