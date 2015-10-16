@@ -12,6 +12,7 @@ import javax.swing.SwingWorker;
 import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
+import util.TableRenderer;
 import util.layouts.ClientLayout;
 import windows.MainWindow;
 import client.serverconnection.ServerConnection;
@@ -136,6 +137,8 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
         };
         
         table.addMouseListener(new TablePopClickListener(table, wishlist, wrapper, mw));
+        
+        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer(lastList));
         
         table.getColumnModel().getColumn(0).setMinWidth(210);
         table.getColumnModel().getColumn(1).setMaxWidth(40);
