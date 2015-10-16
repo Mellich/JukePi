@@ -28,9 +28,13 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
-		if (System.getProperty("os.name").equals("Linux"))
+		if (System.getProperty("os.name").equals("Linux")){
 			playerFactory = new OMXPlayerFactory();
-		else playerFactory = new VLCPlayerFactory();
+			IO.printlnDebug(this, "Choosing OMXPlayer for media playback.");
+		}else{
+			playerFactory = new VLCPlayerFactory();
+			IO.printlnDebug(this, "Choosing VLCPlayer for media playback.");
+		}
 		server = ServerConnectionFactory.createServerConnection(15000,900);
 		viewer = new IdleViewer(primaryStage,server);
 		viewer.showIdleScreen(true);
@@ -111,7 +115,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	
 	public void trackIsFinished(boolean wasSkipped){
 		viewer.showIdleScreen(true);
-		IO.printlnDebug(this, "Track finished!");
+		IO.printlnDebug(this, "Track finished! was skipped="+wasSkipped);
 		if (!wasSkipped)
 			server.notifyPlayerFinished((String[] s) -> {viewer.updateInfos();});
 	}

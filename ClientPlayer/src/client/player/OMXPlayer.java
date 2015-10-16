@@ -25,6 +25,7 @@ public class OMXPlayer implements Runnable, Player{
 	 */
 	@Override
 	public void play(String track) {
+		wasSkipped = false;
 		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
 		isPlaying = true;
 		if (playerProcess != null)
@@ -37,38 +38,33 @@ public class OMXPlayer implements Runnable, Player{
 	public OMXPlayer(PlayerStarter parent) {
 		this.parent = parent;
 	}
-	
-	private synchronized void setSkipped(){
-		wasSkipped = true;
-	}
-	
-	private synchronized boolean isSkipped(){
-		return wasSkipped;
-	}
 
 	/* (non-Javadoc)
 	 * @see client.Player#skip()
 	 */
 	@Override
 	public boolean skip() {
-		try {
-			setSkipped();
-			long currentTime = System.currentTimeMillis();
-			if (currentTime - lastSkipAction < SKIPWAITDURATION)
-				Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
-			lastSkipAction = System.currentTimeMillis();
-			out.write("q");
-			out.flush();
-			playThread.join();
-			IO.printlnDebug(this, "Skipped track successfully");
-			return true;
-		} catch (IOException | NullPointerException e) {
-			IO.printlnDebug(this, "could not skip track successfully");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!wasSkipped){
+			try {
+				wasSkipped = true;
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - lastSkipAction < SKIPWAITDURATION)
+					Thread.sleep(SKIPWAITDURATION - (currentTime - lastSkipAction));
+				lastSkipAction = System.currentTimeMillis();
+				out.write("q");
+				out.flush();
+				playThread.join();
+				IO.printlnDebug(this, "Skipped track successfully");
+				return true;
+			} catch (IOException | NullPointerException e) {
+				IO.printlnDebug(this, "could not skip track successfully");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -130,7 +126,7 @@ public class OMXPlayer implements Runnable, Player{
 			try {
 				isPlaying = true;
 				playerProcess.waitFor();
-				parent.trackIsFinished(this.isSkipped());
+				parent.trackIsFinished(this.wasSkipped);
 			} catch (InterruptedException e) {
 				IO.printlnDebug(this, "playback was cancelled forcefully");
 			}

@@ -54,8 +54,10 @@ public class VLCPlayer implements Runnable, Player {
 								isPlaying = true;
 							}else if (input[input.length - 1].equals("End")){
 								isPlaying = false;
-								IO.printlnDebug(this, "Notify player finished!");
-								playerFinished.signalAll();
+								if (!isFinished){
+									IO.printlnDebug(this, "Notify player finished!");
+									playerFinished.signalAll();
+								}
 							}else if (input.length == 1){
 								try{
 									currentTime = Integer.parseInt(input[0]);
@@ -88,6 +90,7 @@ public class VLCPlayer implements Runnable, Player {
 	private boolean wasSkipped = false;
 	private Socket socket;
 	private volatile boolean isPlaying = false;
+	private volatile boolean isFinished = false;
 	private volatile int currentTime = 0;;
 	private Lock playerLock = new ReentrantLock();
 	private Condition playerFinished = playerLock.newCondition();
@@ -132,9 +135,10 @@ public class VLCPlayer implements Runnable, Player {
 			wasSkipped= false;
 			out.write("add "+track+"\n");
 			out.flush();
-			Thread.sleep(100);
+			Thread.sleep(200);
 			out.write("info\n");
 			out.flush();
+			Thread.sleep(200);
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,6 +183,7 @@ public class VLCPlayer implements Runnable, Player {
 				out.flush();
 				playerFinished.signalAll();
 				playerLock.unlock();
+				Thread.sleep(200);
 				playThread.join();
 				IO.printlnDebug(this, "Skipped track successfully");
 				return true;
@@ -198,8 +203,9 @@ public class VLCPlayer implements Runnable, Player {
 		try {
 			out.write("pause\n");
 			out.flush();
+			Thread.sleep(200);
 			return true;
-		} catch (IOException | NullPointerException e) {
+		} catch (IOException | NullPointerException | InterruptedException e) {
 			IO.printlnDebug(this, "could not pause/resume player successfully");
 			e.printStackTrace();
 		}
@@ -246,7 +252,9 @@ public class VLCPlayer implements Runnable, Player {
 		if (playerProcess != null){
 			try {
 				playerLock.lock();
-				playerFinished.await();				
+				isFinished = false;
+				playerFinished.await();	
+				//isFinished = true;
 				parent.trackIsFinished(this.wasSkipped);
 				IO.printlnDebug(this, "finished playback!");
 			} catch (InterruptedException e) {
