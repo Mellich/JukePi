@@ -4,7 +4,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
-import client.serverconnection.InputExecutionFailedException;
+import client.serverconnection.exceptions.InputExecutionFailedException;
 import client.serverconnection.functionality.handler.InputHandler;
 
 public class ExecutionThread extends Thread {

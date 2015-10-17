@@ -8,6 +8,8 @@ import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
 import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
+import client.serverconnection.exceptions.PermissionDeniedException;
+import client.serverconnection.exceptions.UDPTimeoutException;
 import client.serverconnection.impl.LoadGapListStatus;
 
 /**
@@ -625,5 +627,11 @@ public interface ServerConnection {
 	 * @return the granted permissions
 	 */
 	public Permission[] getPermissions();
+	
+	/**
+	 * Deletes all votes of the connected clients
+	 * @return true, if no error occured
+	 */
+	public boolean deleteAllVotes();
 	
 }

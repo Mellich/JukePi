@@ -2,7 +2,7 @@ package client;
 
 import messages.Permission;
 import client.serverconnection.ServerConnection;
-import client.serverconnection.UDPTimeoutException;
+import client.serverconnection.exceptions.UDPTimeoutException;
 import client.visuals.Visualizer;
 import utilities.IO;
 

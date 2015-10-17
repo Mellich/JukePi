@@ -123,7 +123,7 @@ public class YTJBServer implements Server {
 		case PLAYER: return initFile.getValue(ColumnType.PLAYERPW);
 		case PLAYBACK: return initFile.getValue(ColumnType.PLAYBACKPW);
 		case DEBUGGING: return initFile.getValue(ColumnType.DEBUGPW);
-		case ADMIN: return initFile.getValue(ColumnType.GAPLISTPW);
+		case ADMIN: return initFile.getValue(ColumnType.ADMINPW);
 		default: return null;
 		}
 	}
@@ -655,7 +655,7 @@ public class YTJBServer implements Server {
 			}else if (call.equals("-debugPW")){
 				initFile.setValue(ColumnType.DEBUGPW, input);
 			}else if (call.equals("-gaplistPW")){
-				initFile.setValue(ColumnType.GAPLISTPW, input);
+				initFile.setValue(ColumnType.ADMINPW, input);
 			}else if (call.equals("-playbackPW")){
 				initFile.setValue(ColumnType.PLAYBACKPW, input);
 			}else if (call.equals("-port")){

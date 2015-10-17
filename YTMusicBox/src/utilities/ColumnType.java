@@ -12,7 +12,7 @@ public enum ColumnType{
 	PLAYERPW("player"),
 	PLAYBACKPW("playback"), 
 	DEBUGPW("debug"), 
-	GAPLISTPW("gaplist"), 
+	ADMINPW("gaplist"),
 	STARTUPGAPLIST("gaplist.jb"), 
 	AUTOPLAY(""+true) ,
 	MAXADMINCOUNT(""+Long.MAX_VALUE),

@@ -60,6 +60,8 @@ public class CommandHandler extends Thread {
 			break;
 		case MessageType.ADDTOOTHERLIST: new AddSongToOtherListCommand(out,prompt,server,Long.parseLong(args[1])).handle();
 		break;
+		case MessageType.DELETEALLVOTES: new DeleteAllVotesCommand(out,prompt,server).handle();
+		break;
 		default: return false;
 		}	
 		return true;

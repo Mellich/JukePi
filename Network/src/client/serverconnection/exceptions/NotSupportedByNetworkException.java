@@ -1,4 +1,4 @@
-package client.serverconnection;
+package client.serverconnection.exceptions;
 
 public class NotSupportedByNetworkException extends RuntimeException {
 

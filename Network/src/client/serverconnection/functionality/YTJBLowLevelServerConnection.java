@@ -16,6 +16,7 @@ import java.util.concurrent.Semaphore;
 import messages.MessageType;
 import client.listener.ResponseListener;
 import client.serverconnection.ServerConnectionNotifier;
+import client.serverconnection.exceptions.NotConnectedException;
 
 /**
  * Implements the {@link LowLevelServerConnection} for the YouTubeJukeBox.
@@ -191,32 +192,35 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 
 	@Override
 	public boolean sendMessage(final int messageType, final String messageArgument) {
-		if (isAndroid){
-			new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					try {
-						output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
-						output.newLine();
-						output.flush();
-					} catch (IOException | NullPointerException e) {
-						e.printStackTrace();
+		if (socket.isConnected()){
+			if (isAndroid){
+				new Thread(new Runnable(){
+	
+					@Override
+					public void run() {
+						try {
+							output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
+							output.newLine();
+							output.flush();
+						} catch (IOException | NullPointerException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-				
-			}).start();
-			return true;
-		}else{
-			try {
-				output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
-				output.newLine();
-				output.flush();
+					
+				}).start();
 				return true;
-			} catch (IOException | NullPointerException e) {
-				return false;
-			}	
+			}else{
+				try {
+					output.write(""+messageType+MessageType.SEPERATOR+messageArgument);
+					output.newLine();
+					output.flush();
+					return true;
+				} catch (IOException | NullPointerException e) {
+					return false;
+				}	
+			}
 		}
+		else throw new NotConnectedException();
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ import com.jukepi.androidclient.MainActivity;
 import com.jukepi.androidclient.ServerConnectionContainer;
 
 import client.serverconnection.ServerConnection;
-import client.serverconnection.UDPTimeoutException;
+import client.serverconnection.exceptions.UDPTimeoutException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;

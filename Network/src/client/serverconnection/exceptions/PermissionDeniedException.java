@@ -1,4 +1,4 @@
-package client.serverconnection;
+package client.serverconnection.exceptions;
 
 import client.serverconnection.impl.YTJBServerConnection.PermissionTuple;
 

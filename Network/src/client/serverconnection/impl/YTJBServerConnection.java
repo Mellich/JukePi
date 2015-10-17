@@ -17,12 +17,12 @@ import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
 import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
-import client.serverconnection.NotSupportedByNetworkException;
-import client.serverconnection.PermissionDeniedException;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
-import client.serverconnection.UDPTimeoutException;
+import client.serverconnection.exceptions.NotSupportedByNetworkException;
+import client.serverconnection.exceptions.PermissionDeniedException;
+import client.serverconnection.exceptions.UDPTimeoutException;
 import client.serverconnection.functionality.LowLevelServerConnection;
 import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 
@@ -35,8 +35,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	
 	/**
 	 * The Current Version.
+	 * 
+	 * 900 = added permissions
+	 * 901 = added new currentsong command (sends the whole song instead of only the title)
+	 * 902 = added deleteAllVotes command
 	 */
-	private static final long CURRENT_VERSION = 901L;
+	private static final long CURRENT_VERSION = 902L;
 	
 	/**
 	 * The Listeners for seekNotifications.
@@ -800,5 +804,12 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			i++;
 		}
 		return result;
+	}
+
+	@Override
+	public boolean deleteAllVotes() {
+		if (this.version < 902L)
+			throw new NotSupportedByNetworkException(this.version, 902L);
+		return Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.DELETEALLVOTES)[0]);
 	}
 }

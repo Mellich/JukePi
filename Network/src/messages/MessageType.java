@@ -295,6 +295,12 @@ public class MessageType {
 	
 	
 	/**
+	 * deletes all votes from all clients
+	 */
+	public static final int DELETEALLVOTES = 57;
+	
+	
+	/**
 	 * The Seperator for the arguments of a command.
 	 */
 	public static final String SEPERATOR = ";\t;";
