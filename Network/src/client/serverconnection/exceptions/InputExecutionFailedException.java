@@ -11,14 +11,14 @@ public class InputExecutionFailedException extends RuntimeException {
 	private InputHandler handler;
 	private Throwable ex;
 	
-	public InputExecutionFailedException(InputHandler input, Throwable e) {
+	public InputExecutionFailedException(InputHandler input, Exception e) {
 		handler = input;
 		ex = e;
 	}
 	
 	@Override
 	public String getMessage() {
-		return "An uncatched error occured while executing a server input: "+handler.toString()+", Exception: "+ex.getMessage();
+		return "An uncatched error occured while executing a server input: "+handler.toString()+", Exception: "+ex.getLocalizedMessage();
 	}
 
 }

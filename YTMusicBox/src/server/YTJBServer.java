@@ -36,7 +36,7 @@ public class YTJBServer implements Server {
 	 */
 	public static final int PORT = 12345;
 	
-	public static final long CURRENT_VERSION = 901L;
+	public static final long CURRENT_VERSION = 902L;
 
 	private static final String INITFILENAME = "jukepi.ini";
 	
@@ -100,6 +100,10 @@ public class YTJBServer implements Server {
 	
 	public ConditionVariable getLock(){
 		return con;
+	}
+	
+	public boolean removeAllVotes(){
+		return votingController.removeAllVotes();
 	}
 	
 	public String getPW(Permission p){

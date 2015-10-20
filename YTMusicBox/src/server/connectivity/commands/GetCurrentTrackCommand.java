@@ -27,7 +27,7 @@ public class GetCurrentTrackCommand extends Command {
 			else response(current.getTitle());
 		}
 		else{
-			response("NOTHING");
+			response(-1+MessageType.SEPERATOR+"NOTHING"+MessageType.SEPERATOR+"NOTHING");
 		}
 		return true;
 	}

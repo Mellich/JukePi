@@ -1,6 +1,7 @@
 package client.serverconnection;
 
 import messages.Permission;
+import client.LoadGapListStatus;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
@@ -10,7 +11,6 @@ import client.listener.ResponseListener;
 import client.listener.SeekNotificationListener;
 import client.serverconnection.exceptions.PermissionDeniedException;
 import client.serverconnection.exceptions.UDPTimeoutException;
-import client.serverconnection.impl.LoadGapListStatus;
 
 /**
  * Interface for client side communication with the YTJBServer.

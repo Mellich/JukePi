@@ -1,4 +1,4 @@
-package client.serverconnection.impl;
+package client;
 
 /**
  * A Class, that will save the LoadStatus of the Gaplist.
@@ -23,7 +23,7 @@ public class LoadGapListStatus{
 	 * @param max	The amount of Track, that have to be loaded.
 	 * @since 1.0
 	 */
-	protected LoadGapListStatus(int loaded, int max){
+	public LoadGapListStatus(int loaded, int max){
 		this.loaded = loaded;
 		this.max = max;
 	}
@@ -44,5 +44,9 @@ public class LoadGapListStatus{
 	 */
 	public int getMaxTrackCount(){
 		return max;
+	}
+	
+	public boolean isFullyLoaded(){
+		return loaded == max;
 	}
 }

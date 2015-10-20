@@ -10,6 +10,7 @@ import java.util.List;
 import messages.MessageType;
 import messages.ParseStatus;
 import messages.Permission;
+import client.LoadGapListStatus;
 import client.ServerAddress;
 import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
@@ -498,7 +499,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	public Song getCurrentSong() {
 		Song result = null;
 		String[] values = this.serverConnection.sendBlockingMessage(MessageType.GETCURRENTTRACK);
-		if (!values[0].equals("NOTHING")){
+		if (!values[0].equals("-1")){
 			if (this.usedVersion < 901L){
 				result = new Song(0,values[0],0,false,ParseStatus.PARSED,"");
 			}

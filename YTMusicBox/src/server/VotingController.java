@@ -13,7 +13,7 @@ public class VotingController {
 		this.wishList = wishList2;
 	}
 	
-	public boolean addVote(long trackID,long macAddress){
+	public  synchronized boolean addVote(long trackID,long macAddress){
 		if (!macs.containsKey(macAddress)){
 			MusicTrack temp = null;
 			for (MusicTrack m : wishList){
@@ -46,7 +46,7 @@ public class VotingController {
 		}else return false;
 	}
 	
-	public boolean removeVote(long macAddress){
+	public  synchronized boolean removeVote(long macAddress){
 		if (macs.containsKey(macAddress)){
 			long trackID = macs.get(macAddress);
 			macs.remove(macAddress);
@@ -73,25 +73,34 @@ public class VotingController {
 		else return false;
 	}
 	
-	public long getVotedTrackID(long macAddress){
+	public  synchronized long getVotedTrackID(long macAddress){
 		if (macs.containsKey(macAddress))
 			return macs.get(macAddress);
 		else return -1L;
 	}
 	
-	public int getVoteCount(long trackID){
+	public  synchronized int getVoteCount(long trackID){
 		if (votes.containsKey(trackID))
 			return votes.get(trackID).size();
 		else return 0;
 	}
 	
-	public ArrayList<Long> removeTrack(long trackID){
+	public  synchronized ArrayList<Long> removeTrack(long trackID){
 		ArrayList<Long> list = votes.remove(trackID);
 		if (list != null)
 			for (Long l : list){
 				macs.remove(l);
 			}
 		return list;
+	}
+
+	public synchronized boolean removeAllVotes() {
+			for (MusicTrack m : wishList){
+				m.setVoteCount(0);
+			}
+			votes.clear();
+			macs.clear();
+			return true;
 	}
 
 }
