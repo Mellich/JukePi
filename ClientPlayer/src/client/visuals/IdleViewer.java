@@ -4,8 +4,8 @@ package client.visuals;
 //import java.sql.Timestamp;
 
 import utilities.IO;
-import client.serverconnection.ServerConnection;
-import client.serverconnection.Song;
+import client.LoadGapListStatus;
+import client.Status;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 public class IdleViewer implements Visualizer {
 	
 	private Stage stage;
-	private ServerConnection serverConnection;
 	private ImageView imgView;
 	private ImageView playView;
 	private Image pauseImage;
@@ -37,9 +36,8 @@ public class IdleViewer implements Visualizer {
 	
 	private static final String FONTFAMILY = "Tahoma";
 	
-	public IdleViewer(Stage stage, ServerConnection serverConnection) {
+	public IdleViewer(Stage stage) {
 		this.stage = stage;
-		this.serverConnection = serverConnection;
 		root = new Group();
 		//buildNextTrack();
 		stage.centerOnScreen();
@@ -114,9 +112,9 @@ public class IdleViewer implements Visualizer {
 	    root.getChildren().add(soon);
 	}*/
 	
-	private void gaplistReadOutStatus(int currentCount,int maxCount){
-		if (currentCount < maxCount){
-			info.setText("Gaplist wird geladen: ("+currentCount+"/"+maxCount+")");
+	private void gaplistReadOutStatus(LoadGapListStatus status){
+		if (!status.isFullyLoaded()){
+			info.setText("Gaplist wird geladen: ("+status.getLoadedTrackCount()+"/"+status.getMaxTrackCount()+")");
 		}
 		else{
 			info.setText("Gaplist vollständig geladen!");
@@ -147,17 +145,20 @@ public class IdleViewer implements Visualizer {
 	}
 
 	@Override
-	public void updateInfos() {
-		serverConnection.getCurrentGapListName((String[] s) -> {Platform.runLater(() -> this.currentGapList.setText("Geöffnete Gaplist: "+s[0]));});
-		serverConnection.getLoadGapListStatus((String[] s) -> {Platform.runLater(() -> gaplistReadOutStatus(Integer.parseInt(s[0]),Integer.parseInt(s[1])));});
-		Platform.runLater(() -> editConnectionDetails(serverConnection.getIPAddress(),serverConnection.getPort()));
-		serverConnection.getCurrentPlaybackStatus((String[] s) -> {if (Boolean.parseBoolean(s[0])){ Platform.runLater(() -> this.playView.setImage(playImage));}
-																	else Platform.runLater(() -> this.playView.setImage(pauseImage)); });
-		Platform.runLater(() ->{Song s = serverConnection.getCurrentSong(); 
-								if (s != null && s.getName().length() > 45)
-									this.currentTrack.setText("Jetzt spielt: "+s.getName().substring(0, 42)+"...");
-								else if (s != null ) this.currentTrack.setText("Jetzt spielt: "+s.getName());
-								else this.currentTrack.setText("Jetzt spielt: -");});
+	public void updateInfos(Status newStatus) {
+		Platform.runLater(() -> {
+									this.currentGapList.setText("Geöffnete Gaplist: "+newStatus.getGaplistTitle());
+									gaplistReadOutStatus(newStatus.getLoadStatus());
+									editConnectionDetails(newStatus.getServerIP(),newStatus.getServerPort());
+									if (newStatus.isPlaying()) this.playView.setImage(playImage);
+									else this.playView.setImage(pauseImage);
+									String title = newStatus.getCurrentTrackTitle();
+									if (title != null && title.length() > 45)
+										this.currentTrack.setText("Jetzt spielt: "+title.substring(0, 42)+"...");
+									else if (title != null ) this.currentTrack.setText("Jetzt spielt: "+title);
+									else this.currentTrack.setText("Jetzt spielt: -");
+		}						
+		);
 	}
 
 	@Override

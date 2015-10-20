@@ -1,9 +1,11 @@
 package client.visuals;
 
+import client.Status;
+
 public interface Visualizer {
 	public void showIdleScreen(boolean show);
 	public void showTrackInfo();
-	public void updateInfos();
+	public void updateInfos(Status newStatus);
 	public void resetView();
 	public void showDebugInfo(String info);
 }

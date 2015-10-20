@@ -30,11 +30,16 @@ public class BroadcastListener implements Runnable {
 					server.addDefaultNotificationListener(starter);
 					server.addPermission(Permission.PLAYER, "player");
 					//server.addDebugNotificationListener(starter);
-					//server.addGapListNotificationListener(starter);
+					server.addGapListNotificationListener(starter);
 					server.addPauseResumeNotificationListener(starter);
 					server.addSeekNotificationListener(starter);
 					server.setMeAsPlayer();
-					viewer.updateInfos();
+					Status s = starter.getCurrentStatus();
+					s.setServerIP(server.getIPAddress());
+					s.setServerPort(server.getPort());
+					s.setGaplistTitle(server.getCurrentGapListName());
+					s.setCurrentTrackTitle(server.getCurrentSong().getName());
+					viewer.updateInfos(s);
 					serverNotFound = false;
 				}
 			} catch (UDPTimeoutException e) {

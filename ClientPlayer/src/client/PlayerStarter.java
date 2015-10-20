@@ -1,5 +1,6 @@
 package client;
 
+import messages.ParseStatus;
 import utilities.IO;
 import client.listener.*;
 import client.player.OMXPlayerFactory;
@@ -25,6 +26,11 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	private Visualizer viewer;
 	private volatile boolean videoMode = false;
 	private Thread listenBroadcast;
+	private Status currentStatus = new Status("-",false,"-",0,"-",new LoadGapListStatus(0,0));
+	
+	public Status getCurrentStatus(){
+		return currentStatus;
+	}
 	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
@@ -36,7 +42,7 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 			IO.printlnDebug(this, "Choosing VLCPlayer for media playback.");
 		}
 		server = ServerConnectionFactory.createServerConnection(15000,900);
-		viewer = new IdleViewer(primaryStage,server);
+		viewer = new IdleViewer(primaryStage);
 		viewer.showIdleScreen(true);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
@@ -57,7 +63,8 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 				Thread.sleep(100);
 				if (videoMode)
 					viewer.showIdleScreen(!player.isPlaying());
-				viewer.updateInfos();
+				currentStatus.setPlaying(isPlaying);
+				viewer.updateInfos(currentStatus);
 			}			
 		} catch (Exception e) {
 			viewer.showDebugInfo("Error while pause/resume track: "+e.getLocalizedMessage());
@@ -73,9 +80,10 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 					player.skip();
 			}else player = playerFactory.newInstance(this);
 			player.play(videoURL);
+			currentStatus.setCurrentTrackTitle(title);
 			if (videoMode)
 				viewer.showIdleScreen(false);
-			viewer.updateInfos();
+			viewer.updateInfos(currentStatus);
 			
 		} catch (Exception e) {
 			viewer.showDebugInfo("Error while skipping track: "+e);
@@ -99,25 +107,33 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 
 	@Override
 	public void onGapListChangedNotify(String name) {
-		viewer.updateInfos();
+		currentStatus.setGaplistTitle(name);
+		viewer.updateInfos(currentStatus);
 	}
 
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
-		viewer.updateInfos();
+		int parsedSongs = 0;
+		for (Song s : songs){
+			if (s.getParseStatus() == ParseStatus.PARSED || s.getParseStatus() == ParseStatus.ERROR){
+				parsedSongs++;
+			}
+		}
+		currentStatus.setLoadStatus(new LoadGapListStatus(parsedSongs,songs.length));
+		viewer.updateInfos(currentStatus);
 		
 	}
 
 	@Override
 	public void onWishListUpdatedNotify(Song[] songs) {
-		viewer.updateInfos();
+		viewer.updateInfos(currentStatus);
 	}
 	
 	public void trackIsFinished(boolean wasSkipped){
 		viewer.showIdleScreen(true);
 		IO.printlnDebug(this, "Track finished! was skipped="+wasSkipped);
 		if (!wasSkipped)
-			server.notifyPlayerFinished((String[] s) -> {viewer.updateInfos();});
+			server.notifyPlayerFinished((String[] s) -> {viewer.updateInfos(currentStatus);});
 	}
 
 	@Override

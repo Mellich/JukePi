@@ -6,15 +6,18 @@ import server.YTJBServer;
 
 public class DeleteAllVotesCommand extends Command {
 
+	private YTJBServer server;
+
 	public DeleteAllVotesCommand(BufferedWriter out, int messageType, YTJBServer server) {
 		super(out, messageType);
-		// TODO Auto-generated constructor stub
+		this.server = server;
+
 	}
 
 	@Override
 	public boolean handle() {
-		// TODO Auto-generated method stub
-		return false;
+		response(""+server.removeAllVotes());
+		return true;
 	}
 
 }
