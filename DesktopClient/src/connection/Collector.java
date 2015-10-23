@@ -12,6 +12,7 @@ import windows.DebugWindow;
 import windows.LogIn;
 import windows.LowClientWindow;
 import windows.MainWindow;
+import windows.PasswordWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
 import client.serverconnection.ServerConnection;
@@ -20,7 +21,7 @@ import client.serverconnection.Song;
 /**
  * The Collector, that will start the Client. Also provides all necessary information for each Frame, to work properly.
  * @author Haeldeus
- * @version 1.2
+ * @version 1.3
  */
 public class Collector {
 
@@ -118,14 +119,8 @@ public class Collector {
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
-			mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, iport);
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					mainScreen.show();
-				}
-			});
-			debugScreen = new DebugWindow(wrapper);
-			wrapper.addDebugNotificationListener(debugScreen);
+			mainScreen = new PasswordWindow(ip, iport, wrapper, this);
+			mainScreen.show();
 			return true;
 		}
 		else {
@@ -160,6 +155,24 @@ public class Collector {
 			showFail(loginScreen, "Incorrect Server Information. Please try another IP-Address");
 			return false;
 		}
+	}
+	
+	/**
+	 * Connects as Admin to the Server with the given IP and Port.
+	 * @param ip	The IP of the Server.
+	 * @param port	The Port of the Server.
+	 * @param password	The Password for the Admin-Permissions.
+	 * @since 1.3
+	 */
+	public void adminConnect(String ip, int port, String password) {
+		mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mainScreen.show();
+			}
+		});
+		debugScreen = new DebugWindow(wrapper);
+		wrapper.addDebugNotificationListener(debugScreen);
 	}
 	
 	/**
@@ -199,7 +212,8 @@ public class Collector {
 			localServer = ServerFactory.createServer(iport);
 			//TODO: make selectable, if youtube-dl should be updated or not  
 			localServer.startUp();
-			this.connect("localhost", ""+port);
+			wrapper.connect("localhost", iport);
+			this.adminConnect("localhost", iport, "gaplist");
 		} catch (NumberFormatException nfe) {
 			showFail(loginScreen, "Please insert a real number at the Port-Field.");
 		} catch (BindException e) {

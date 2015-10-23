@@ -179,7 +179,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @param wishlist	The Wishlist as an Array of {@link Song}s.
 	 * @since 1.0
 	 */
-	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport) {
+	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport, String password) {
 		this.collector = collector;
 		this.frame = frame;
 		this.wrapper = wrapper;
@@ -187,7 +187,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		
-		wrapper.addPermission(Permission.ADMIN, "gaplist");
+		wrapper.addPermission(Permission.ADMIN, password);
 //		wrapper.addPermission(Permission.PLAYBACK, "playback");
 //		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		wrapper.addDefaultNotificationListener(this);
