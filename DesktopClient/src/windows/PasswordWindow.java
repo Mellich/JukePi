@@ -136,7 +136,8 @@ public class PasswordWindow extends Window{
 		});
 		
 		btBack.addActionListener((ActionEvent ae) -> {
-			collector.disconnect();
+			this.close();
+			collector.startUp();
 		});
 		
 		south.add(btBack);

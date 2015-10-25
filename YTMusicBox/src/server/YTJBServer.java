@@ -136,8 +136,7 @@ public class YTJBServer implements Server {
 	/**
 	 * starts the server and makes him ready for work
 	 */
-	public boolean startUp(){
-		try {
+	public boolean startUp() throws IOException{
 			server = new ServerSocket(Integer.parseInt(initFile.getValue(ColumnType.PORT)));
 			currentGapList = initFile.getValue(ColumnType.STARTUPGAPLIST);
 			searchGapLists();	
@@ -153,11 +152,6 @@ public class YTJBServer implements Server {
 			this.connectionBroadcast.start();
 			IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
 			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
 	}
 	
 	public String getWorkingDir(){
@@ -689,7 +683,7 @@ public class YTJBServer implements Server {
 				server.updateYoutubeDL();
 				server.startUp();
 			}
-		} catch (BindException e) {
+		} catch (IOException e) {
 			IO.printlnDebug(null, "given port is in use!");
 			e.printStackTrace();
 		}

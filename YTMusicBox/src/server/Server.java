@@ -1,5 +1,7 @@
 package server;
 
+import java.io.IOException;
+
 /**
  * a juke box server
  * @author mellich
@@ -11,8 +13,9 @@ public interface Server {
 	 * via the shutDown method!
 	 * 
 	 * @return true, if the server started without complications.
+	 * @throws IOException 
 	 */
-	public boolean startUp();
+	public boolean startUp() throws IOException;
 	
 	/**
 	 * Lets the server try to update the Youtube-DL instance in the execution directory.

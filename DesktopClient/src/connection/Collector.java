@@ -1,6 +1,7 @@
 package connection;
 
 
+import java.io.IOException;
 import java.net.BindException;
 
 import javax.swing.JFrame;
@@ -216,7 +217,7 @@ public class Collector {
 			this.adminConnect("localhost", iport, "gaplist");
 		} catch (NumberFormatException nfe) {
 			showFail(loginScreen, "Please insert a real number at the Port-Field.");
-		} catch (BindException e) {
+		} catch (IOException e) {
 			showFail(loginScreen, "Port is already in use, please enter another Port.");
 		}
 		
