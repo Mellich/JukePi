@@ -2,7 +2,6 @@ package connection;
 
 
 import java.io.IOException;
-import java.net.BindException;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -215,6 +214,8 @@ public class Collector {
 			localServer = ServerFactory.createServer(iport);
 			//TODO: make selectable, if youtube-dl should be updated or not  
 			localServer.startUp();
+			if (loginScreen != null)
+				loginScreen.close();
 			wrapper.connect("localhost", iport);
 			this.adminConnect("localhost", iport, "gaplist");
 		} catch (NumberFormatException nfe) {
