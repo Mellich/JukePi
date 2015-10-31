@@ -968,7 +968,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 													showFail("Removed your vote.");
 												else
 													showFail("Couldn't remove your vote.");
-												createWishlistTable();
+											//	createWishlistTable();
 											});
 	}
 	
@@ -987,7 +987,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame = new JFrame();
 		frame.setTitle(title);
 		frame.setSize(new Dimension(620,700));
-		frame.getContentPane().setLayout(new ClientLayout());
+		ClientLayout layout = new ClientLayout();
+		frame.getContentPane().setLayout(layout);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(617,695));
 		/*Delete till here*/		
@@ -1189,7 +1190,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnUp.addActionListener((ActionEvent ae) -> {moveTrackUp(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnDown.addActionListener((ActionEvent ae) -> {moveTrackDown(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnLoad.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
-		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
+		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");layout.layoutContainer(frame);});
 		btnRemove.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textName.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});

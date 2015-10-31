@@ -133,6 +133,7 @@ public class PasswordWindow extends Window{
 		
 		btSkip.addActionListener((ActionEvent ae) -> {
 			collector.lowConnect(wrapper.getIPAddress(), "" +wrapper.getPort());
+			this.close();
 		});
 		
 		btBack.addActionListener((ActionEvent ae) -> {

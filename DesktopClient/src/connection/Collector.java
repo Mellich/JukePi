@@ -167,6 +167,8 @@ public class Collector {
 	 */
 	public void adminConnect(String ip, int port, String password) {
 		mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
+		if (loginScreen != null)
+			loginScreen.close();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mainScreen.show();
