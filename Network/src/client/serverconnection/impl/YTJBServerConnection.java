@@ -35,11 +35,11 @@ import client.serverconnection.functionality.YTJBLowLevelServerConnection;
 public class YTJBServerConnection implements ServerConnection, ServerConnectionNotifier {
 	
 	/**
-	 * The Current Version.
+	 * The Current Version.<br>
 	 * 
-	 * 900 = added permissions
-	 * 901 = added new currentsong command (sends the whole song instead of only the title)
-	 * 902 = added deleteAllVotes command
+	 * 900 = added permissions<br>
+	 * 901 = added new currentsong command (sends the whole song instead of only the title)<br>
+	 * 902 = added deleteAllVotes command<br>
 	 */
 	private static final long CURRENT_VERSION = 902L;
 	
