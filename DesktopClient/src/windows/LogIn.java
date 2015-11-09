@@ -124,10 +124,6 @@ public class LogIn extends Window {
 		btnConnect.setToolTipText("Tries to connect to a Server with the given IP and Port.");
 		frame.getContentPane().add(btnConnect, LoginLayout.CONNECT_BUTTON);
 		
-		final JButton btnLowConnect = new JButton("Low Client Connect");
-		btnLowConnect.setToolTipText("Connects as a low Client without Admin-Permissions to the Server.");
-		frame.getContentPane().add(btnLowConnect, LoginLayout.LOW_CLIENT_BUTTON);
-		
 		lblFail = new JLabel("");
 		frame.getContentPane().add(lblFail, LoginLayout.FAIL_LABEL);
 		
@@ -144,8 +140,7 @@ public class LogIn extends Window {
 		btnConnect.addActionListener((ActionEvent ae) -> {new Thread(() -> {collector.connect(txtIp.getText(), txtPort.getText());}).start();});
 		btnUDPConnect.addActionListener(new UDPListener(collector));
 		btnInternServer.addActionListener((ActionEvent ae)->{collector.createLocalServer(txtPort.getText());});
-		btnLowConnect.addActionListener((ActionEvent ae) -> {new Thread(() -> {collector.lowConnect(txtIp.getText(), txtPort.getText());}).start();});
-		
+	
 		txtIp.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
@@ -177,5 +172,6 @@ public class LogIn extends Window {
 			public void keyTyped(KeyEvent arg0) {
 			}
 		});
+		util.IO.println(this, "Constructed Frame");
 	}
 }

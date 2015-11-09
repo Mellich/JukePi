@@ -1,7 +1,7 @@
 package windows;
 
 /**
- * An abstract Class, that is the parent-Class of {@link MainWindow} and {@link LogIn} and 
+ * An abstract Class, that is the parent-Class of all Windows for the Client UI and 
  * provides basic Methods.
  * @author Haeldeus
  * @version 1.0

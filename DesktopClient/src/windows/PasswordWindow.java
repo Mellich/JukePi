@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 
 
 
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -18,6 +19,7 @@ import javax.swing.JPasswordField;
 import connection.Collector;
 import messages.Permission;
 import client.serverconnection.ServerConnection;
+import client.serverconnection.exceptions.PermissionDeniedException;
 
 /**
  * The Window, where the User can enter the Password, to get Admin Permissions on the Server.
@@ -117,11 +119,13 @@ public class PasswordWindow extends Window{
 			String password = "";
 			for (char c : pwField.getPassword())
 				password = password+c;
-			if (wrapper.addPermission(Permission.ADMIN, password)) {
-				collector.adminConnect(wrapper.getIPAddress(), wrapper.getPort(), password);
-				this.close();
+			try {
+				if (wrapper.addPermission(Permission.ADMIN, password)) {
+					collector.adminConnect(wrapper.getIPAddress(), wrapper.getPort(), password);
+					this.close();
+				}
 			}
-			else {
+			catch (PermissionDeniedException e) {
 				counter++;
 				if (counter <= 2) {
 					showFail("Wrong Password! You have " + (3-counter) +" tries left!");

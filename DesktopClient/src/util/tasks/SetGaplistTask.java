@@ -87,6 +87,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 	
 	@Override
 	protected Void doInBackground() throws Exception {
+		util.IO.println(this, "Starting to update GaplistPane");
 		gaplist = new Song[newGaplist.length];
 		
 		for (int i = 0; i < newGaplist.length; i++) {
@@ -204,6 +205,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 	
 	@Override
 	protected void done() {
+		util.IO.println(this, "Updated GaplistPane");
 		mw.doneGaplistUpdate(gaplist, lblNoGaplist, frame, oldGaplistPane);
 	}
 }

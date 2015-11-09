@@ -4,7 +4,9 @@ import util.TablePopClickListener;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.ClientLayout;
+import util.tasks.SetContentTask;
 import util.tasks.SetGaplistTask;
+import util.tasks.SetSavedGaplistsTask;
 import util.tasks.SetWishlistTask;
 
 import java.awt.Color;
@@ -41,7 +43,7 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.6
+ * @version 1.7
  */
 public class MainWindow extends Window implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
 	
@@ -315,41 +317,42 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		}
 	}
 	
-	/**
-	 * Sets the Gaplist to the given List and updates the Gaplist-Model
-	 * @param gaplist	The new Gaplist.
-	 * @since 1.0
-	 */
-	public void setGaplist(Song[] gaplist) {
-		this.gaplist = gaplist;
-		lblNoGaplist.setText(""+gaplist.length);
-		createGaplistTable();
-		setNextTrack();
-	}
+//	/**
+//	 * Sets the Gaplist to the given List and updates the Gaplist-Model
+//	 * @param gaplist	The new Gaplist.
+//	 * @since 1.0
+//	 */
+//	public void setGaplist(Song[] gaplist) {
+//		this.gaplist = gaplist;
+//		lblNoGaplist.setText(""+gaplist.length);
+//		new SetGaplistTask(this.gaplist, gaplist, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
+//	//	createGaplistTable();
+//		setNextTrack();
+//	}
 	
 	
 	
-	/**
-	 * Sets the Wishlist to the given List and updates the Wishlist-Table.
-	 * @param wishlist	The new Wishlist.
-	 * @since 1.0
-	 */
-	public void setWishlist(Song[] wishlist) {
-		this.wishlist = wishlist;
-		lblNoWishlist.setText(""+wishlist.length);
-		createWishlistTable();
-		setNextTrack();
-	}
+//	/**
+//	 * Sets the Wishlist to the given List and updates the Wishlist-Table.
+//	 * @param wishlist	The new Wishlist.
+//	 * @since 1.0
+//	 */
+//	public void setWishlist(Song[] wishlist) {
+//		this.wishlist = wishlist;
+//		lblNoWishlist.setText(""+wishlist.length);
+//		createWishlistTable();
+//		setNextTrack();
+//	}
 	
-	/**
-	 * Sets the Gaplists to the given List and updates the Saved-Gaplists-Table.
-	 * @param gaplists	The Gaplists on the Server.
-	 * @since 1.2
-	 */
-	public void setGaplists(String[] gaplists) {
-		this.gaplists = gaplists;
-		createSavedGaplistsTable();
-	}
+//	/**
+//	 * Sets the Gaplists to the given List and updates the Saved-Gaplists-Table.
+//	 * @param gaplists	The Gaplists on the Server.
+//	 * @since 1.2
+//	 */
+//	public void setGaplists(String[] gaplists) {
+//		this.gaplists = gaplists;
+//		createSavedGaplistsTable();
+//	}
 	
 	/**
 	 * Moves the Song at the given index upwards in the Gaplist.
@@ -449,7 +452,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 														for (int i = 0; i < s.length; i = i+2) {
 															songs[i/2] = new Song(-1, s[i], 0, false, null, s[i+1]);
 														}
-														createContentTable(songs);
+														new SetContentTask(songs, oldContentPane, frame, this).execute();
 													}, name);
 	//	createContentTable(wrapper.getTitleFromGapList(name));
 	}
@@ -473,14 +476,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		}
 	}
 	
-	/**
-	 * Will be executed, when an other Gaplist was loaded on the Server.
-	 * @param gapListName	The Name of the new Gaplist.
-	 * @since 1.0
-	 */
-	public void gaplistChanged(String gapListName) {
-		lblGaplistName.setText("Gaplist - " + gapListName);
-	}
+//	/**
+//	 * Will be executed, when an other Gaplist was loaded on the Server.
+//	 * @param gapListName	The Name of the new Gaplist.
+//	 * @since 1.0
+//	 */
+//	public void gaplistChanged(String gapListName) {
+//		lblGaplistName.setText("Gaplist - " + gapListName);
+//	}
 	
 	/**
 	 * Sets the Text of the PlayingTrackLabel to the given title.
@@ -493,7 +496,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	
 	/**
 	 * Sets the Text of the NextTrackLabel to the given title.
-	 * @param title	The title of the next Song.
 	 * @since 1.0
 	 */
 	public void setNextTrack() {
@@ -510,6 +512,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * Creates the Table, that displays the Wishlist and the Votes for each Song in it.
 	 * @since 1.0
 	 */
+	@Deprecated
 	private synchronized void createWishlistTable() {
 		Point p = new Point(-1,-1);
 		boolean notFirst = false;
@@ -606,6 +609,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * Creates the Table, that contains the Gaplist.
 	 * @since 1.1
 	 */
+	@Deprecated
 	private synchronized void createGaplistTable() {
 		Point p = new Point(-1,-1);
 		boolean notFirst = false;
@@ -711,6 +715,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * Creates a Table with all saved Gaplists in it.
 	 * @since 1.2
 	 */
+	@Deprecated
 	private synchronized void createSavedGaplistsTable() {
 		if (oldSavedGaplistPane != null)
 			frame.getContentPane().remove(oldSavedGaplistPane);
@@ -794,7 +799,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * an empty table will be build with nothing but the header in it.
 	 * @param content	The Content of the Gaplist, that should be shown.
 	 * @since 1.2
-	 */
+	 */	
+	@Deprecated
 	private synchronized void createContentTable(Song[] content) {
 		if (oldContentPane != null)
 			frame.getContentPane().remove(oldContentPane);
@@ -973,6 +979,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	}
 	
 	/**
+	 * Removes all Votes from the Server.
+	 * @since 1.7
+	 */
+	private void removeAllVotes() {
+		wrapper.deleteAllVotes();
+	}
+	
+	/**
 	 * Creates a new Frame.
 	 * @return The created Frame.
 	 * @since 1.0
@@ -1086,8 +1100,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(chckbxInfront, ClientLayout.FRONT_CHECK);
 		
 		
-		createWishlistTable();
-		createGaplistTable();
+	//	createWishlistTable();
+		new SetWishlistTask(wishlist, wishlist, lblNoWishlist, wrapper, frame, oldPane, this).execute();
+	//	createGaplistTable();
+		new SetGaplistTask(gaplist, gaplist, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 		
 		lblGaplistName = new JLabel("");
 		lblGaplistName.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -1118,8 +1134,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnDown.setToolTipText("Click here to move the selected track downwards.");
 		frame.getContentPane().add(btnDown, ClientLayout.TRACK_DOWN_BUTTON);
 		
-		createSavedGaplistsTable();
-		createContentTable(null);
+	//	createSavedGaplistsTable();
+		new SetSavedGaplistsTask(frame, gaplists, oldSavedGaplistPane, this).execute();
+		new SetContentTask(new Song[] {}, oldContentPane, frame, this).execute();
 		
 		final ButtonGroup bg = new ButtonGroup();
 		bg.add(rdbtnGaplist);
@@ -1160,6 +1177,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
 		frame.getContentPane().add(btnRemoveVote, ClientLayout.REMOVE_VOTE_BUTTON);
 		
+		final JButton btnRemoveAllVotes = new JButton("Remove all Votes");
+		btnRemoveAllVotes.setToolTipText("Click here to remove all Votes.");
+		frame.getContentPane().add(btnRemoveAllVotes, ClientLayout.REMOVE_ALL_VOTES_BUTTON);
+		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
 		
@@ -1190,14 +1211,16 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnUp.addActionListener((ActionEvent ae) -> {moveTrackUp(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnDown.addActionListener((ActionEvent ae) -> {moveTrackDown(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnLoad.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
-		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");layout.layoutContainer(frame);});
+		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
 		btnRemove.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
 		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textName.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
+		btnRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
 		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
 		long end = System.currentTimeMillis();
 		System.out.println(end-start);
+		util.IO.println(this, "Constructed Frame");
 	}
 	
 	/**
@@ -1231,13 +1254,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void onGapListCountChangedNotify(String[] gapLists) {
 		showFail("Count of Gaplists changed");
-		setGaplists(gapLists);
+		this.gaplists = gapLists;
+		new SetSavedGaplistsTask(frame, gapLists, oldSavedGaplistPane, this).execute();
 	}
 
 	@Override
 	public void onGapListChangedNotify(String gapListName) {
 		showFail("Gaplist changed");
-		gaplistChanged(gapListName);
+		lblGaplistName.setText("Gaplist - " + gapListName);
 	}
 
 	@Override
@@ -1307,5 +1331,30 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
 		this.oldPane = oldPane;
+	}
+	
+	/**
+	 * The Method, that is called whenever the {@link SetContentTask} is finished. Is called
+	 * to update the references in this class.
+	 * @param frame	The {@link JFrame}, that displays this MainWindow.
+	 * @param contentPane	The {@link JScrollPane}, that displays the Content as a table.
+	 * @since 1.7
+	 */
+	public void doneContentUpdate(JFrame frame, JScrollPane contentPane) {
+		this.frame = frame;
+		this.oldContentPane = contentPane;
+		frame.repaint();
+	}
+	
+	/**
+	 * The Method, that is called whenever the {@link SetSavedGaplistsTask} is finished. Is
+	 * called to update the references in this clas.
+	 * @param frame	The {@link JFrame}, that displays this MainWindow.
+	 * @param savedListsPane	The {@link JScrollPane}, that displays the saved Lists as a 
+	 * table.
+	 */
+	public void doneSavedListsUpdate(JFrame frame, JScrollPane savedListsPane) {
+		this.frame = frame;
+		this.oldSavedGaplistPane = savedListsPane;
 	}
 }

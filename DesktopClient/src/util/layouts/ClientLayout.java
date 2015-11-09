@@ -156,6 +156,11 @@ public class ClientLayout implements LayoutManager{
 	public static final String REMOVE_VOTE_BUTTON = "Remove_Vote_Button";
 	
 	/**
+	 * The String, that declares the Remove_All_Votes_Button.
+	 */
+	public static final String REMOVE_ALL_VOTES_BUTTON = "Remove_All_Votes_Button";
+	
+	/**
 	 * The String, that declares the Load_Button.
 	 */
 	public static final String LOAD_BUTTON = "Load_Button";
@@ -256,6 +261,9 @@ public class ClientLayout implements LayoutManager{
 		final int lblHeight = (int)(height*0.02);
 		final int spacer = (int)(width*0.016);
 		
+	//	final int voteSpacer = (int)(width*1/75);
+	//	final int voteButtonWidth = (int)(width*0.13);
+		
 		final int manButtonHeight = (int)(height*0.064);
 		final int manButtonWidth = (int)(width*0.2);
 		final int buttonHeight = (int)(height*0.032);
@@ -352,6 +360,9 @@ public class ClientLayout implements LayoutManager{
 		if (components.get(REMOVE_VOTE_BUTTON) != null)
 			components.get(REMOVE_VOTE_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
 		
+		if (components.get(REMOVE_ALL_VOTES_BUTTON) != null)
+			components.get(REMOVE_ALL_VOTES_BUTTON).setBounds((int)(width*0.533), secondButtonY+buttonHeight+spacer, 2*manButtonWidth+spacer, buttonHeight);
+		
 		/************************************Panes**********************************/
 		if (components.get(GAPLIST_SCROLL) != null)
 			components.get(GAPLIST_SCROLL).setBounds(10, (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
@@ -421,13 +432,14 @@ public class ClientLayout implements LayoutManager{
 				regex.equals(SKIP_BUTTON) || regex.equals(TRACK_UP_BUTTON) || 
 				regex.equals(TRACK_DOWN_BUTTON) || regex.equals(DELETE_BUTTON) || 
 				regex.equals(SAVE_BUTTON) || regex.equals(VOTE_BUTTON) || 
-				regex.equals(REMOVE_VOTE_BUTTON) || regex.equals(LOAD_BUTTON) || 
-				regex.equals(SHOW_BUTTON) || regex.equals(REMOVE_BUTTON) || 
-				regex.equals(CREATE_BUTTON) || regex.equals(LINK_TEXT) || 
-				regex.equals(GAPLIST_TEXT) || regex.equals(GAPLIST_RADIO) || 
-				regex.equals(WISHLIST_RADIO) || regex.equals(FRONT_CHECK) || 
-				regex.equals(GAPLIST_SCROLL) || regex.equals(WISHLIST_SCROLL) || 
-				regex.equals(SAVED_GAPLIST_SCROLL) || regex.equals(CONTENT_SCROLL))	
+				regex.equals(REMOVE_VOTE_BUTTON) || regex.equals(REMOVE_ALL_VOTES_BUTTON) || 
+				regex.equals(LOAD_BUTTON) || regex.equals(SHOW_BUTTON) || 
+				regex.equals(REMOVE_BUTTON) || regex.equals(CREATE_BUTTON) || 
+				regex.equals(LINK_TEXT) || regex.equals(GAPLIST_TEXT) || 
+				regex.equals(GAPLIST_RADIO) || regex.equals(WISHLIST_RADIO) || 
+				regex.equals(FRONT_CHECK) || regex.equals(GAPLIST_SCROLL) || 
+				regex.equals(WISHLIST_SCROLL) || regex.equals(SAVED_GAPLIST_SCROLL) || 
+				regex.equals(CONTENT_SCROLL))	
 			return true;
 		else
 			return false;
@@ -587,6 +599,12 @@ public class ClientLayout implements LayoutManager{
 		if (components.get(REMOVE_VOTE_BUTTON) != null)
 			if (components.get(REMOVE_VOTE_BUTTON).equals(comp)) {
 				components.put(REMOVE_VOTE_BUTTON, null);
+				return;
+			}
+		
+		if (components.get(REMOVE_ALL_VOTES_BUTTON) != null)
+			if (components.get(REMOVE_ALL_VOTES_BUTTON).equals(comp)) {
+				components.put(REMOVE_ALL_VOTES_BUTTON, null);
 				return;
 			}
 		

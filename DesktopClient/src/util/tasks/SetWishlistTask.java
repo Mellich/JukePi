@@ -18,16 +18,60 @@ import windows.MainWindow;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
 
+/**
+ * The {@link SwingWorker}, that will fill the Wishlist table.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class SetWishlistTask extends SwingWorker<Void, Song[]>{
 
+	/**
+	 * The new Wishlist to be loaded as an Array of {@link Song}s.
+	 */
 	private Song[] newWishlist;
+	
+	/**
+	 * The Wishlist, that is actually displayed on the Frame.
+	 */
 	private Song[] wishlist;
+	
+	/**
+	 * The {@link JLabel}, that displays the Number of Tracks in the Wishlist.
+	 */
 	private JLabel lblNoWishlist;
+	
+	/**
+	 * The {@link ServerConnection}, that will send Messages to the Server.
+	 */
 	private ServerConnection wrapper;
+	
+	/**
+	 * The {@link JFrame}, that displays the {@link MainWindow}.
+	 */
 	private JFrame frame;
+	
+	/**
+	 * The {@link JScrollPane}, that displays the Wishlist as a table.
+	 */
 	private JScrollPane oldPane;
+	
+	/**
+	 * The {@link MainWindow}, that called this Worker.
+	 */
 	private MainWindow mw;
 
+	/**
+	 * The Constructor for this Worker.
+	 * @param wishlist	The Wishlist, that is shown at the Frame, as an Array of {@link Song}s.
+	 * @param newWishlist	The new Wishlist to be shown as an Array of {@link Song}s.
+	 * @param lblNoWishlist	The {@link JLabel}, that displays the number of Tracks in the 
+	 * Wishlist.
+	 * @param wrapper The {@link ServerConnection}, that will send the Messages to the Server.
+	 * @param frame	The {@link JFrame}, that displays the {@link MainWindow}.
+	 * @param pane	The {@link JScrollPane}, that displays the Wishlist as a table.
+	 * @param mw	The {@link MainWindow}, that called this Worker.
+	 * @since 1.0
+	 */
 	public SetWishlistTask(Song[] wishlist, Song[] newWishlist, JLabel lblNoWishlist,
 			ServerConnection wrapper, JFrame frame, JScrollPane pane, MainWindow mw) {
 		this.newWishlist = newWishlist;
@@ -41,6 +85,7 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
 	
 	@Override
 	protected Void doInBackground() throws Exception {
+		util.IO.println(this, "Starting to update the WishlistPane");
 		wishlist = new Song[newWishlist.length];
 		
 		for (int i = 0; i < newWishlist.length; i++) {
@@ -151,6 +196,7 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
 	
 	@Override
 	protected void done() {
+		util.IO.println(this, "Updated WishlistPane");
 		mw.doneWishlistUpdate(wishlist, lblNoWishlist, frame, oldPane);
 	}
 }

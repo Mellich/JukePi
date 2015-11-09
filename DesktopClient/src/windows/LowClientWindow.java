@@ -163,6 +163,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		btnDisc.addActionListener((ActionEvent ae) -> {collector.disconnect();});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
+		util.IO.println(this, "Constructed Frame");
 	}
 	
 	/**
@@ -209,6 +210,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	 * Creates the Table, that displays the WishList and the Votes for each Song in it.
 	 * @since 1.0
 	 */
+	@Deprecated
 	private synchronized JScrollPane createWishlistTable() {
 		Point p = new Point(-1,-1);
 		boolean notFirst = false;

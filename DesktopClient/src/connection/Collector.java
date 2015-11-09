@@ -34,7 +34,7 @@ public class Collector {
 	/**
 	 * The Current Interface-Version, that is implemented.
 	 */
-	private static final long CURRENT_VERSION = 901L;
+	private static final long CURRENT_VERSION = 902L;
 	
 	/**
 	 * The wrapper, that will send the Messages.
@@ -260,5 +260,5 @@ public class Collector {
 	 */
 	public void showDebugWindow() {
 		debugScreen.show();
-	}
+	}	
 }
