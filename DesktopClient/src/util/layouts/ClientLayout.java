@@ -15,6 +15,11 @@ import java.util.HashMap;
 public class ClientLayout implements LayoutManager{
 	
 	/**
+	 * The String, that declares the Menu_Bar, which is the Menu for the Client.
+	 */
+	public static final String MENU_BAR = "Menu_Bar";
+	
+	/**
 	 * The String, that declares the Gaplist_Label, which displays {@code "Tracks in the 
 	 * Gaplist:"}.
 	 */
@@ -273,127 +278,136 @@ public class ClientLayout implements LayoutManager{
 		
 		/***********************************Labels***************************************/
 		if (components.get(GAPLIST_LABEL) != null)
-			components.get(GAPLIST_LABEL).setBounds(10, 10, Math.min((int)(width*0.205),123), lblHeight);
+			components.get(GAPLIST_LABEL).setBounds(10, 20 + 10, Math.min((int)(width*0.205),123), lblHeight);
 		
 		if(components.get(WISHLIST_LABEL) != null)
-			components.get(WISHLIST_LABEL).setBounds(10, 10+ (int)(height*0.037), Math.min((int)(width*0.205), 123), lblHeight);
+			components.get(WISHLIST_LABEL).setBounds(10, 20 + 10 + (int)(height*0.037), Math.min((int)(width*0.205), 123), lblHeight);
 		
 		if (components.get(COUNT_GAPLIST_LABEL) != null)
-			components.get(COUNT_GAPLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 10, (int)(width*0.1133), lblHeight);
+			components.get(COUNT_GAPLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 20 + 10, (int)(width*0.1133), lblHeight);
 		
 		if (components.get(COUNT_WISHLIST_LABEL) != null)
-			components.get(COUNT_WISHLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer,10+(int)(height*0.037),(int)(width*0.1133),lblHeight);
+			components.get(COUNT_WISHLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 20 + 10 + (int)(height*0.037),(int)(width*0.1133),lblHeight);
 		
 		if (components.get(NOW_PLAYING_LABEL) != null)
-			components.get(NOW_PLAYING_LABEL).setBounds(10, (int)(height*0.205), Math.min(68,(int)(width*0.1133)),lblHeight);
+			components.get(NOW_PLAYING_LABEL).setBounds(10, 20 + (int)(height*0.205), Math.min(68,(int)(width*0.1133)),lblHeight);
 		
 		if (components.get(NEXT_TRACK_LABEL) != null)
-			components.get(NEXT_TRACK_LABEL).setBounds(10, (int)(height*0.241), Math.min(68,(int)(width*0.1133)),lblHeight);
+			components.get(NEXT_TRACK_LABEL).setBounds(10, 20 + (int)(height*0.241), Math.min(68,(int)(width*0.1133)),lblHeight);
 		
 		if (components.get(NAME_NOW_PLAYING_LABEL) != null)
-			components.get(NAME_NOW_PLAYING_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.205), (int)(width*0.6406), lblHeight);
+			components.get(NAME_NOW_PLAYING_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, 20 + (int)(height*0.205), (int)(width*0.6406), lblHeight);
 		
 		if (components.get(NAME_NEXT_TRACK_LABEL) != null)
-			components.get(NAME_NEXT_TRACK_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, (int)(height*0.241), (int)(width*0.6406), lblHeight);
+			components.get(NAME_NEXT_TRACK_LABEL).setBounds(Math.min(68,(int)(width*0.1133)) + 10 + spacer, 20 + (int)(height*0.241), (int)(width*0.6406), lblHeight);
 		
 		if (components.get(GAPLIST_NAME_LABEL) != null)
-			components.get(GAPLIST_NAME_LABEL).setBounds(10, (int)(height*0.428), (int)(width*0.416), lblHeight);
+			components.get(GAPLIST_NAME_LABEL).setBounds(10, 20 + (int)(height*0.428), (int)(width*0.416), lblHeight);
 		
 		if (components.get(WISHLIST_SHOW_LABEL) != null)
-			components.get(WISHLIST_SHOW_LABEL).setBounds((int)(width*0.533), (int)(height*0.428), (int)(width*0.416), lblHeight);
+			components.get(WISHLIST_SHOW_LABEL).setBounds((int)(width*0.533), 20 + (int)(height*0.428), (int)(width*0.416), lblHeight);
 		
 		if (components.get(SAVED_GAPLIST_LABEL) != null)
-			components.get(SAVED_GAPLIST_LABEL).setBounds(10, (int)(height*0.714), (int)(width*0.416), lblHeight);
+			components.get(SAVED_GAPLIST_LABEL).setBounds(10, 20 + (int)(height*0.714), (int)(width*0.416), lblHeight);
 		
 		if (components.get(FAIL_LABEL) != null)
-			components.get(FAIL_LABEL).setBounds((int)(width*0.29), (int)(height*0.4), (int)(width*19.0/60.0), lblHeight);
+			components.get(FAIL_LABEL).setBounds((int)(width*0.29), 20 + (int)(height*0.4), (int)(width*19.0/60.0), lblHeight);
 		
 		/**************************Buttons**************************/
 		if (components.get(ADD_BUTTON) != null)
-			components.get(ADD_BUTTON).setBounds(10, (int)(height*0.13), (int)(width*0.1), (int)(height*0.04));
+			components.get(ADD_BUTTON).setBounds(10, 20 + (int)(height*0.13), (int)(width*0.1), (int)(height*0.04));
 		
 		if (components.get(SEEK_BACK_BUTTON) != null)
-			components.get(SEEK_BACK_BUTTON).setBounds(10, (int)(height*0.277), manButtonWidth, manButtonHeight);
+			components.get(SEEK_BACK_BUTTON).setBounds(10, 20 + (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
 		if (components.get(PLAY_PAUSE_BUTTON) != null)
-			components.get(PLAY_PAUSE_BUTTON).setBounds(manButtonWidth+10+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
+			components.get(PLAY_PAUSE_BUTTON).setBounds(manButtonWidth+10+spacer, 20 + (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
 		if (components.get(SEEK_FORWARD_BUTTON) != null)
-			components.get(SEEK_FORWARD_BUTTON).setBounds((int)(width*0.533), (int)(height*0.277), manButtonWidth, manButtonHeight);
+			components.get(SEEK_FORWARD_BUTTON).setBounds((int)(width*0.533), 20 + (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
 		if (components.get(SKIP_BUTTON) != null)
-			components.get(SKIP_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, (int)(height*0.277), manButtonWidth, manButtonHeight);
+			components.get(SKIP_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 20 + (int)(height*0.277), manButtonWidth, manButtonHeight);
 		
 		if (components.get(DISCONNECT_BUTTON) != null)
-			components.get(DISCONNECT_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10, manButtonWidth, buttonHeight);
+			components.get(DISCONNECT_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 20 + 10, manButtonWidth, buttonHeight);
 		
 		if (components.get(DEBUG_BUTTON) != null)
-			components.get(DEBUG_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 10+(int)(height*0.032+height*0.01), manButtonWidth, buttonHeight);
+			components.get(DEBUG_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 20 + 10 + (int)(height*0.032+height*0.01), manButtonWidth, buttonHeight);
 
 		if (components.get(DELETE_BUTTON) != null)
-			components.get(DELETE_BUTTON).setBounds(10, secondButtonY, manButtonWidth, buttonHeight);
+			components.get(DELETE_BUTTON).setBounds(10, 20 + secondButtonY, manButtonWidth, buttonHeight);
 		
 		if (components.get(SAVE_BUTTON) != null)
-			components.get(SAVE_BUTTON).setBounds(10+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
+			components.get(SAVE_BUTTON).setBounds(10+manButtonWidth+spacer, 20 + secondButtonY, manButtonWidth, buttonHeight);
 		
 		if (components.get(TRACK_UP_BUTTON) != null)
-			components.get(TRACK_UP_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.487), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
+			components.get(TRACK_UP_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, 20 + (int)(height*0.487), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
 		
 		if (components.get(TRACK_DOWN_BUTTON) != null)
-			components.get(TRACK_DOWN_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, (int)(height*0.56), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
+			components.get(TRACK_DOWN_BUTTON).setBounds(10+2*manButtonWidth+spacer+2, 20 + (int)(height*0.56), Math.min(40, (int)(width*0.067)), Math.min(25,(int)(height*0.036)));
 		
 		if (components.get(LOAD_BUTTON) != null)
-			components.get(LOAD_BUTTON).setBounds(10, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
+			components.get(LOAD_BUTTON).setBounds(10, 20 + thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
 		
 		if (components.get(SHOW_BUTTON) != null)
-			components.get(SHOW_BUTTON).setBounds(10+(int)((2*manButtonWidth+spacer)*0.3)+spacer, thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
+			components.get(SHOW_BUTTON).setBounds(10+(int)((2*manButtonWidth+spacer)*0.3)+spacer, 20 + thirdButtonY, (int)((2*manButtonWidth+spacer)*0.3), buttonHeight);
 		
 		if (components.get(REMOVE_BUTTON) != null)
-			components.get(REMOVE_BUTTON).setBounds(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer, thirdButtonY, (int)((2*manButtonWidth+spacer+10)-(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer)), buttonHeight);
+			components.get(REMOVE_BUTTON).setBounds(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer, 20 + thirdButtonY, (int)((2*manButtonWidth+spacer+10)-(2*(int)((2*manButtonWidth+spacer)*0.3)+10+2*spacer)), buttonHeight);
 		
 		if (components.get(CREATE_BUTTON) != null) 
-			components.get(CREATE_BUTTON).setBounds((int)(width*0.533), thirdButtonY, (int)(width*2/15), buttonHeight);
+			components.get(CREATE_BUTTON).setBounds((int)(width*0.533), 20 + thirdButtonY, (int)(width*2/15), buttonHeight);
 		
 		if (components.get(VOTE_BUTTON) != null)
-			components.get(VOTE_BUTTON).setBounds((int)(width*0.533), secondButtonY, manButtonWidth, buttonHeight);
+			components.get(VOTE_BUTTON).setBounds((int)(width*0.533), 20 + secondButtonY, manButtonWidth, buttonHeight);
 		
 		if (components.get(REMOVE_VOTE_BUTTON) != null)
-			components.get(REMOVE_VOTE_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, secondButtonY, manButtonWidth, buttonHeight);
+			components.get(REMOVE_VOTE_BUTTON).setBounds((int)(width*0.533)+manButtonWidth+spacer, 20 + secondButtonY, manButtonWidth, buttonHeight);
 		
 		if (components.get(REMOVE_ALL_VOTES_BUTTON) != null)
-			components.get(REMOVE_ALL_VOTES_BUTTON).setBounds((int)(width*0.533), secondButtonY+buttonHeight+spacer, 2*manButtonWidth+spacer, buttonHeight);
+			components.get(REMOVE_ALL_VOTES_BUTTON).setBounds((int)(width*0.533), 20 + secondButtonY+buttonHeight+spacer, 2*manButtonWidth+spacer, buttonHeight);
 		
 		/************************************Panes**********************************/
 		if (components.get(GAPLIST_SCROLL) != null)
-			components.get(GAPLIST_SCROLL).setBounds(10, (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
+			components.get(GAPLIST_SCROLL).setBounds(10, 20 + (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
 		
 		if (components.get(WISHLIST_SCROLL) != null)
-			components.get(WISHLIST_SCROLL).setBounds((int)(width*0.533), (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
+			components.get(WISHLIST_SCROLL).setBounds((int)(width*0.533), 20 + (int)(height*0.468), 2*manButtonWidth+spacer, height/7);
 		
 		if (components.get(SAVED_GAPLIST_SCROLL) != null)
-			components.get(SAVED_GAPLIST_SCROLL).setBounds(10, (int)(height*0.754), 2*manButtonWidth+spacer, height/7);
+			components.get(SAVED_GAPLIST_SCROLL).setBounds(10, 20 + (int)(height*0.754), 2*manButtonWidth+spacer, height/7);
 		
 		if (components.get(CONTENT_SCROLL) != null)
-			components.get(CONTENT_SCROLL).setBounds((int)(width*0.533), (int)(height*0.753), 2*manButtonWidth+spacer, height/7);
+			components.get(CONTENT_SCROLL).setBounds((int)(width*0.533), 20 + (int)(height*0.753), 2*manButtonWidth+spacer, height/7);
 		
 		/******************************TextFields********************************/
 		if (components.get(LINK_TEXT) != null)
-			components.get(LINK_TEXT).setBounds(10, (int)(height*3/35), (int)(width*0.533)-10, (int)(height/35));
+			components.get(LINK_TEXT).setBounds(10, 20 + (int)(height*3/35), (int)(width*0.533)-10, (int)(height/35));
 		
 		if (components.get(GAPLIST_TEXT) != null)
-			components.get(GAPLIST_TEXT).setBounds((int)(width*0.533)+(int)(width*2/15)+spacer, thirdButtonY, (2*manButtonWidth)-((int)(width*2/15)), buttonHeight);
+			components.get(GAPLIST_TEXT).setBounds((int)(width*0.533)+(int)(width*2/15)+spacer, 20 + thirdButtonY, (2*manButtonWidth)-((int)(width*2/15)), buttonHeight);
 		
 		/*****************************RadioButtons********************************/
 		if (components.get(WISHLIST_RADIO) != null)
-			components.get(WISHLIST_RADIO).setBounds((int)(width*13/100), (int)(height*9/70), (int)(width*0.125), buttonHeight);
+			components.get(WISHLIST_RADIO).setBounds((int)(width*13/100), 20 + (int)(height*9/70), (int)(width*0.125), buttonHeight);
 		
 		if (components.get(GAPLIST_RADIO) != null)
-			components.get(GAPLIST_RADIO).setBounds((int)(width*13/100)+(int)(width*0.125)+2, (int)(height*9/70), (int)(width*0.125), buttonHeight);
+			components.get(GAPLIST_RADIO).setBounds((int)(width*13/100)+(int)(width*0.125)+2, 20 + (int)(height*9/70), (int)(width*0.125), buttonHeight);
 		
 		/***************************CheckBox***********************************/
 		if (components.get(FRONT_CHECK) != null)
-			components.get(FRONT_CHECK).setBounds((int)(width*13/100)+(int)(width*0.25)+4, (int)(height*9/70), (int)(width*97/600), buttonHeight);
+			components.get(FRONT_CHECK).setBounds((int)(width*13/100)+(int)(width*0.25)+4, 20 + (int)(height*9/70), (int)(width*97/600), buttonHeight);
 
+		/***************************MenuBar**************************************/
+		if (components.get(MENU_BAR) != null)
+			components.get(MENU_BAR).setBounds(0, 0, width, 20);
+		
+		
+		if (components.get(CONTENT_SCROLL)!= null) {
+			util.IO.println(this, "Content Scroll Bounds: " + components.get(CONTENT_SCROLL).getBounds().toString());
+			util.IO.println(this, "Content Scroll: " + components.get(CONTENT_SCROLL).hashCode());
+		}
 	}
 
 	@Override
@@ -439,7 +453,7 @@ public class ClientLayout implements LayoutManager{
 				regex.equals(GAPLIST_RADIO) || regex.equals(WISHLIST_RADIO) || 
 				regex.equals(FRONT_CHECK) || regex.equals(GAPLIST_SCROLL) || 
 				regex.equals(WISHLIST_SCROLL) || regex.equals(SAVED_GAPLIST_SCROLL) || 
-				regex.equals(CONTENT_SCROLL))	
+				regex.equals(CONTENT_SCROLL) || regex.equals(MENU_BAR))	
 			return true;
 		else
 			return false;
@@ -452,6 +466,12 @@ public class ClientLayout implements LayoutManager{
 	 * @see Component
 	 */
 	private void remove(Component comp) {
+		if (components.get(MENU_BAR) != null)
+			if (components.get(MENU_BAR).equals(comp)) {
+				components.put(MENU_BAR, null);
+				return;
+			}
+		
 		if (components.get(GAPLIST_LABEL) != null)
 			if (components.get(GAPLIST_LABEL).equals(comp)) {
 				components.put(GAPLIST_LABEL, null);
@@ -682,6 +702,7 @@ public class ClientLayout implements LayoutManager{
 		
 		if (components.get(CONTENT_SCROLL) != null)
 			if (components.get(CONTENT_SCROLL).equals(comp)) {
+				util.IO.println(this, "Removed Content Scroll");
 				components.put(CONTENT_SCROLL, null);
 				return;
 			}

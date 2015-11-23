@@ -1,5 +1,6 @@
 package windows;
 
+import util.GenericMouseListener;
 import util.TablePopClickListener;
 import util.TextFieldListener;
 import util.PopClickListener;
@@ -23,6 +24,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -700,7 +704,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
         
         table.addMouseListener(new TablePopClickListener(table, gaplist, wrapper, this));
         
-        table.getColumnModel().getColumn(0).setCellRenderer(new TableRenderer());
+        table.getColumnModel().getColumn(0).setCellRenderer(new util.TableRenderer(gaplist));
         
 		JScrollPane gaplistPane = new JScrollPane(table);
 		frame.getContentPane().add(gaplistPane, ClientLayout.GAPLIST_SCROLL);
@@ -1101,8 +1105,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		
 	//	createWishlistTable();
+		oldPane = new JScrollPane();
 		new SetWishlistTask(wishlist, wishlist, lblNoWishlist, wrapper, frame, oldPane, this).execute();
-	//	createGaplistTable();
+		//	createGaplistTable();
+		oldGaplistPane = new JScrollPane();
 		new SetGaplistTask(gaplist, gaplist, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 		
 		lblGaplistName = new JLabel("");
@@ -1135,7 +1141,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(btnDown, ClientLayout.TRACK_DOWN_BUTTON);
 		
 	//	createSavedGaplistsTable();
+		oldSavedGaplistPane = new JScrollPane();
+		frame.getContentPane().add(oldSavedGaplistPane, ClientLayout.SAVED_GAPLIST_SCROLL);
 		new SetSavedGaplistsTask(frame, gaplists, oldSavedGaplistPane, this).execute();
+		oldContentPane = new JScrollPane();
+		oldContentPane.addMouseListener(new GenericMouseListener());
+		frame.getContentPane().add(oldContentPane, ClientLayout.CONTENT_SCROLL);
 		new SetContentTask(new Song[] {}, oldContentPane, frame, this).execute();
 		
 		final ButtonGroup bg = new ButtonGroup();
@@ -1181,6 +1192,49 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnRemoveAllVotes.setToolTipText("Click here to remove all Votes.");
 		frame.getContentPane().add(btnRemoveAllVotes, ClientLayout.REMOVE_ALL_VOTES_BUTTON);
 		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menuServer = new JMenu("Server Messages");
+		JMenu menuOptions = new JMenu("Options");
+		
+		JMenu trackEditMenu = new JMenu("Track Edit");
+		JMenuItem menuSkip = new JMenuItem("Skip");
+		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
+		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");
+		JMenuItem menuPlayPause = new JMenuItem("Pause");
+		
+		menuSkip.addActionListener((ActionEvent ae) -> {skip();});
+		menuSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
+		menuSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
+		menuPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
+		
+		trackEditMenu.add(menuSkip);
+		trackEditMenu.add(menuSeekBackwards);
+		trackEditMenu.add(menuSeekForward);
+		trackEditMenu.add(menuPlayPause);
+		
+		menuServer.add(trackEditMenu);
+		
+		JMenuItem menuSaveGaplist = new JMenuItem("Save Gaplist");
+		JMenuItem menuDisconnect = new JMenuItem("Disconnect");
+		JMenuItem menuRemoveVote = new JMenuItem("Remove Vote");
+		JMenuItem menuRemoveAllVotes = new JMenuItem("Remove all Votes");
+		
+		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
+		menuDisconnect.addActionListener((ActionEvent ae) -> {collector.disconnect();});
+		menuRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
+		menuRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
+		
+		menuServer.add(menuSaveGaplist);
+		menuServer.add(menuDisconnect);
+		menuServer.add(menuRemoveVote);
+		menuServer.add(menuRemoveAllVotes);
+		
+		menuBar.add(menuServer);
+		menuBar.add(menuOptions);
+		menuBar.setBackground(Color.white);
+		
+		frame.getContentPane().add(menuBar, ClientLayout.MENU_BAR);
+		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
 		
@@ -1219,8 +1273,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
 		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
 		long end = System.currentTimeMillis();
-		System.out.println(end-start);
-		util.IO.println(this, "Constructed Frame");
+		util.IO.println(this, "Frame Constructed in " + (end-start) + " ms");
 	}
 	
 	/**
@@ -1228,28 +1281,28 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @author Haeldeus
 	 * @version 1.0
 	 */
-	public class TableRenderer extends DefaultTableCellRenderer {
-
-	    /**
-		 * The serial Version UID.
-		 */
-		private static final long serialVersionUID = 1386922222679555490L;
-
-		@Override
-	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	    	switch (gaplist[row].getParseStatus()){
-	    		case PARSED: c.setBackground(Color.WHITE); break;
-	    		case PARSING: c.setBackground(Color.YELLOW);break;
-	    		case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY); break;
-	    		default: c.setBackground(Color.RED); break;
-	    	}
-	    	if (isSelected && c.getBackground() != Color.RED) {
-	    		c.setBackground(table.getSelectionBackground());
-	    	}
-	        return c;
-	    }
-	}
+//	public class TableRenderer extends DefaultTableCellRenderer {
+//
+//	    /**
+//		 * The serial Version UID.
+//		 */
+//		private static final long serialVersionUID = 1386922222679555490L;
+//
+//		@Override
+//	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//	    	final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//	    	switch (gaplist[row].getParseStatus()){
+//	    		case PARSED: c.setBackground(Color.WHITE); break;
+//	    		case PARSING: c.setBackground(Color.YELLOW);break;
+//	    		case NOT_PARSED: c.setBackground(Color.LIGHT_GRAY); break;
+//	    		default: c.setBackground(Color.RED); break;
+//	    	}
+//	    	if (isSelected && c.getBackground() != Color.RED) {
+//	    		c.setBackground(table.getSelectionBackground());
+//	    	}
+//	        return c;
+//	    }
+//	}
 
 	@Override
 	public void onGapListCountChangedNotify(String[] gapLists) {
@@ -1342,19 +1395,25 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void doneContentUpdate(JFrame frame, JScrollPane contentPane) {
 		this.frame = frame;
+		this.frame.setContentPane(frame.getContentPane());
 		this.oldContentPane = contentPane;
-		frame.repaint();
+		util.IO.println(this, "Content Pane's Bounds: " + oldContentPane.getBounds().toString());
+		this.frame.repaint();
+		this.frame.revalidate();
 	}
 	
 	/**
 	 * The Method, that is called whenever the {@link SetSavedGaplistsTask} is finished. Is
-	 * called to update the references in this clas.
+	 * called to update the references in this class.
 	 * @param frame	The {@link JFrame}, that displays this MainWindow.
 	 * @param savedListsPane	The {@link JScrollPane}, that displays the saved Lists as a 
 	 * table.
+	 * @since 1.7
 	 */
 	public void doneSavedListsUpdate(JFrame frame, JScrollPane savedListsPane) {
 		this.frame = frame;
 		this.oldSavedGaplistPane = savedListsPane;
+		this.frame.repaint();
+		util.IO.println(this, "Saved Gaplist Pane's Bounds: " + oldSavedGaplistPane.getBounds().toString());
 	}
 }
