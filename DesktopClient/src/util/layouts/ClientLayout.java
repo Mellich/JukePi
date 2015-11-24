@@ -402,12 +402,6 @@ public class ClientLayout implements LayoutManager{
 		/***************************MenuBar**************************************/
 		if (components.get(MENU_BAR) != null)
 			components.get(MENU_BAR).setBounds(0, 0, width, 20);
-		
-		
-		if (components.get(CONTENT_SCROLL)!= null) {
-			util.IO.println(this, "Content Scroll Bounds: " + components.get(CONTENT_SCROLL).getBounds().toString());
-			util.IO.println(this, "Content Scroll: " + components.get(CONTENT_SCROLL).hashCode());
-		}
 	}
 
 	@Override
@@ -702,7 +696,6 @@ public class ClientLayout implements LayoutManager{
 		
 		if (components.get(CONTENT_SCROLL) != null)
 			if (components.get(CONTENT_SCROLL).equals(comp)) {
-				util.IO.println(this, "Removed Content Scroll");
 				components.put(CONTENT_SCROLL, null);
 				return;
 			}

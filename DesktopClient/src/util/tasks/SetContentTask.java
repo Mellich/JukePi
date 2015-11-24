@@ -156,15 +156,13 @@ public class SetContentTask extends SwingWorker<Void, Song[]>{
         };
         table.addMouseListener(new TablePopClickListener(table, lastList));
 		JScrollPane contentPane = new JScrollPane(table);
-		util.IO.println(this, "Content Scroll: " + contentPane.hashCode());
 		oldContentPane = contentPane;
 		frame.getContentPane().add(contentPane, ClientLayout.CONTENT_SCROLL);
-		util.IO.println(this, "Content Pane: " + contentPane.getBounds().toString());
 	}
 	
 	@Override
 	protected void done() {
-		util.IO.println(this, "Updated ContentPane " + oldContentPane.getBounds().toString());
+		util.IO.println(this, "Updated ContentPane.");
 		mw.doneContentUpdate(frame, oldContentPane);
 	}
 	

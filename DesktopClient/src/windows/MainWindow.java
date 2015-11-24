@@ -1367,6 +1367,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
 		this.oldGaplistPane = oldGaplistPane;
+		this.frame.revalidate();
 	}
 
 	/**
@@ -1384,6 +1385,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
 		this.oldPane = oldPane;
+		this.frame.revalidate();
 	}
 	
 	/**
@@ -1397,8 +1399,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.frame = frame;
 		this.frame.setContentPane(frame.getContentPane());
 		this.oldContentPane = contentPane;
-		util.IO.println(this, "Content Pane's Bounds: " + oldContentPane.getBounds().toString());
-		this.frame.repaint();
+	//	this.frame.repaint();
 		this.frame.revalidate();
 	}
 	
@@ -1413,7 +1414,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneSavedListsUpdate(JFrame frame, JScrollPane savedListsPane) {
 		this.frame = frame;
 		this.oldSavedGaplistPane = savedListsPane;
-		this.frame.repaint();
-		util.IO.println(this, "Saved Gaplist Pane's Bounds: " + oldSavedGaplistPane.getBounds().toString());
+	//	this.frame.repaint();
+		this.frame.revalidate();
 	}
 }
