@@ -154,10 +154,10 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		JButton btnRemoveVote = new JButton("Remove Vote");
 		contentPane.add(btnRemoveVote, LowClientLayout.REMOVE_BUTTON);
 		
+		frame.setContentPane(contentPane);
+		
 		JScrollPane wishlistPane = createWishlistTable();
 		contentPane.add(wishlistPane, LowClientLayout.WISHLIST_PANE);
-		
-		frame.setContentPane(contentPane);
 		
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText());});
 		btnDisc.addActionListener((ActionEvent ae) -> {collector.disconnect();});

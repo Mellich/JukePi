@@ -73,7 +73,7 @@ public class Collector {
 	 * The Screen, that is currently visible.
 	 * @see JFrame
 	 */
-	private JFrame visibleScreen;
+//	private JFrame visibleScreen;
 	
 	/**
 	 * The Gaplist, which is played on the Server.
@@ -94,8 +94,9 @@ public class Collector {
 	 */
 	public Collector() {
 		wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL,CURRENT_VERSION);
-		visibleScreen = new JFrame();
-		loginScreen = new LogIn(this, visibleScreen);
+	//	visibleScreen = new JFrame();
+	//	loginScreen = new LogIn(this, visibleScreen);
+		loginScreen = new LogIn(this, new JFrame());
 	}
 
 	/**
@@ -119,7 +120,8 @@ public class Collector {
 		
 		if (wrapper.connect(ip, iport)) {
 			loginScreen.close();
-			mainScreen = new PasswordWindow(ip, iport, wrapper, this);
+		//	mainScreen = new PasswordWindow(ip, iport, visibleScreen, wrapper, this);
+			mainScreen = new PasswordWindow(ip, iport, new JFrame(), wrapper, this);
 			mainScreen.show();
 			return true;
 		}
@@ -132,28 +134,15 @@ public class Collector {
 	/**
 	 * Connects with the LowClient.
 	 * @param ip	The IP of the Server as a String Value.
-	 * @param port	The Port of the Server as a String Value.
-	 * @return	{@code true}, if the Connection was established, {@code false} else.
+	 * @param port	The Port of the Server as an Integer Value.
 	 * @since 1.2
 	 */
-	public boolean lowConnect(String ip, String port) {
-		showFail(loginScreen, "Pending IP, please wait!");
-		int iport = -1;
-		try {
-			iport = Integer.parseInt(port);
-		} catch (NumberFormatException nfe) {
-			return false;
-		}
-		
-		if (wrapper.connect(ip, iport)) {
+	public void lowConnect(String ip, int port) {
+		if (loginScreen != null) {
 			loginScreen.close();
-			mainScreen = new LowClientWindow(this, visibleScreen, wrapper, wishlist, ip, iport);
+		//	mainScreen = new LowClientWindow(this, visibleScreen, wrapper, wishlist, ip, iport);
+			mainScreen = new LowClientWindow(this, new JFrame(), wrapper, wishlist, ip, port);
 			mainScreen.show();
-			return true;
-		}
-		else {
-			showFail(loginScreen, "Incorrect Server Information. Please try another IP-Address");
-			return false;
 		}
 	}
 	
@@ -165,7 +154,8 @@ public class Collector {
 	 * @since 1.3
 	 */
 	public void adminConnect(String ip, int port, String password) {
-		mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
+	//	mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
+		mainScreen = new MainWindow(this, new JFrame(), wrapper, gaplist, wishlist, ip, port, password);
 		if (loginScreen != null)
 			loginScreen.close();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -182,14 +172,18 @@ public class Collector {
 	 * @since 1.0
 	 */
 	public void disconnect() {
+		System.out.println(mainScreen.getClass().toString());
 		if (debugScreen != null)
 			debugScreen.close();
 		mainScreen.close();
 		wrapper.close();
 		if (localServer != null)
 			localServer.shutDown();
-		visibleScreen.getContentPane().removeAll();
-		loginScreen.show();
+	//	visibleScreen.getContentPane().removeAll();
+		loginScreen = new LogIn(this, new JFrame());
+		mainScreen = loginScreen;
+		System.out.println(mainScreen.getClass().toString());
+		mainScreen.show();
 	}
 	
 	/**

@@ -11,7 +11,6 @@ import util.tasks.SetSavedGaplistsTask;
 import util.tasks.SetWishlistTask;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -32,7 +31,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import messages.Permission;
@@ -1220,9 +1218,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		JMenuItem menuRemoveAllVotes = new JMenuItem("Remove all Votes");
 		
 		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		menuDisconnect.addActionListener((ActionEvent ae) -> {collector.disconnect();});
+		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
 		menuRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		menuRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
+		menuOptions.addActionListener((ActionEvent ae) -> {new OptionsWindow(collector).show();});
 		
 		menuServer.add(menuSaveGaplist);
 		menuServer.add(menuDisconnect);
@@ -1254,7 +1253,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 															}
 														});
 	
-		btnDisconnect.addActionListener((ActionEvent ae)->{collector.disconnect();});
+		btnDisconnect.addActionListener((ActionEvent ae)->{onDisconnect();});
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});

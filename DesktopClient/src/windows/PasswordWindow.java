@@ -62,8 +62,8 @@ public class PasswordWindow extends Window{
 	 * @param collector	The Collector, that provides additional Methods for the Client.
 	 * @since 1.0
 	 */
-	public PasswordWindow(String ip, int port, ServerConnection wrapper, Collector collector) {
-		frame = new JFrame();
+	public PasswordWindow(String ip, int port, JFrame visibleFrame, ServerConnection wrapper, Collector collector) {
+		frame = visibleFrame;
 		frame.setTitle("JukePi - " +ip+":"+port);
 		this.wrapper = wrapper;
 		this.collector = collector;
@@ -131,12 +131,12 @@ public class PasswordWindow extends Window{
 					showFail("Wrong Password! You have " + (3-counter) +" tries left!");
 				}
 				else
-					collector.lowConnect(wrapper.getIPAddress(), "" + wrapper.getPort());
+					collector.lowConnect(wrapper.getIPAddress(), wrapper.getPort());
 			}
 			});
 		
 		btSkip.addActionListener((ActionEvent ae) -> {
-			collector.lowConnect(wrapper.getIPAddress(), "" +wrapper.getPort());
+			collector.lowConnect(wrapper.getIPAddress(), wrapper.getPort());
 			this.close();
 		});
 		
