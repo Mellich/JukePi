@@ -296,8 +296,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public boolean close() {
-		if(serverConnection.close()){
+	public synchronized boolean close() {
+		System.out.println("Closing connection");
+		if(connected && serverConnection.close()){
 			connected = false;
 			return true;
 		}else{

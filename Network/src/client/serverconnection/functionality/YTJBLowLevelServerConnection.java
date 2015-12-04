@@ -159,15 +159,21 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 	@Override
 	public boolean close() {
 		try {
+			System.out.println("Start closing...");
 			inputListener.interrupt();
 			checker.interrupt();
 			executor.interrupt();
 			socket.close();
-			inputListener.join();
-			checker.join();
-			executor.join();
+			System.out.println("Waiting for join...");
+			//inputListener.join();
+			System.out.println("Waiting for join...");
+			//checker.join();
+			System.out.println("Waiting for join...");
+			//executor.join();
+			System.out.println("Closing done");
 			return true;
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException /*| InterruptedException*/ e) {
+			System.out.println("Erröööar");
 			return false;
 		}
 	}
@@ -322,7 +328,8 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 					}
 				} catch (InterruptedException e) {
 				}
-				close();
+				if (!Thread.interrupted())
+					close();
 			}
 		}
 

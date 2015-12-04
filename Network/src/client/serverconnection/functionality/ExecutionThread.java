@@ -36,6 +36,7 @@ public class ExecutionThread extends Thread {
 				nextInput = inputs.poll();
 				nextInput.execute();
 			} catch (InterruptedException e) {
+				System.out.println("Interrupted");
 				//thread was interrupted because connection will be closed
 			} catch (Exception e){
 				throw new InputExecutionFailedException(nextInput,e);

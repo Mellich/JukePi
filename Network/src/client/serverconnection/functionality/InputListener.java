@@ -16,10 +16,6 @@ import client.serverconnection.functionality.handler.ResponseHandler;
  */
 public class InputListener implements Runnable {
 
-	/**
-	 * Determines, if the Listener is running. Will be {@code true} at any time.
-	 */
-	private boolean running = true;
 	
 	/**
 	 * The {@link BufferedReader}, that delivers the Input.
@@ -66,12 +62,10 @@ public class InputListener implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (running){
+			while (!Thread.interrupted()){
 				String line = input.readLine();
 				if (!line.equals("")){
 					checker.setLastResponse();
-					if (Thread.interrupted())
-						break;
 					String[] params = line.split(MessageType.SEPERATOR);
 					int messageType = Integer.parseInt(params[0]);
 					if (messageType == MessageType.RESPONSENOTIFY){
