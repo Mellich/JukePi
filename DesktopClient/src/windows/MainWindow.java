@@ -1376,8 +1376,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
 		this.gaplist = gaplist;
+		frame.remove(this.lblNoGaplist);
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
+		frame.remove(this.oldGaplistPane);
 		this.oldGaplistPane = oldGaplistPane;
 		this.frame.revalidate();
 	}
@@ -1394,8 +1396,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
 		this.wishlist = wishlist;
+		frame.remove(this.lblNoWishlist);
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
+		frame.remove(this.oldPane);
 		this.oldPane = oldPane;
 		this.frame.revalidate();
 	}
@@ -1409,7 +1413,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void doneContentUpdate(JFrame frame, JScrollPane contentPane) {
 		this.frame = frame;
-		this.frame.setContentPane(frame.getContentPane());
+	//	this.frame.setContentPane(frame.getContentPane());
+		frame.remove(this.oldContentPane);
 		this.oldContentPane = contentPane;
 	//	this.frame.repaint();
 		this.frame.revalidate();
@@ -1425,6 +1430,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void doneSavedListsUpdate(JFrame frame, JScrollPane savedListsPane) {
 		this.frame = frame;
+		frame.remove(this.oldSavedGaplistPane);
 		this.oldSavedGaplistPane = savedListsPane;
 	//	this.frame.repaint();
 		this.frame.revalidate();
