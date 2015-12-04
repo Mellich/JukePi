@@ -21,7 +21,7 @@ public class ProcessCommunicator {
 	 */
 	static public String[] parseShortURLToVideoURLAndTitle(String url,String path) throws IOException{
 		String[] result = new String[2];
-		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+		if ((new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()) && System.getProperty("os.name").equals("Linux")){
 			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
 			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e","-g", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
@@ -41,7 +41,7 @@ public class ProcessCommunicator {
 	
 	static public String parseShortURLToTitle(String url,String path) throws IOException{
 		String result = null;
-		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+		if ((new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()) && System.getProperty("os.name").equals("Linux")){
 			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
 			Process parseProcess = new ProcessBuilder(path+"youtube-dl.exe","-e", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
@@ -65,7 +65,7 @@ public class ProcessCommunicator {
 	 */
 	static public String parseShortURLToVideoURL(String url, String path) throws IOException{
 		String result = null;
-		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+		if ((new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()) && System.getProperty("os.name").equals("Linux")){
 			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
 			Process parseProcess = new ProcessBuilder(path+"youtube-dl","-g", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
@@ -83,7 +83,7 @@ public class ProcessCommunicator {
 	
 	public static boolean updateYoutubeDL(String path){
 		IO.printlnDebug(null, "Updating youtube-dl... please wait...");
-		if (new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()){
+		if ((new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists()) && System.getProperty("os.name").equals("Linux")){
 			try {
 				Process updateProcess = new ProcessBuilder(path+"youtube-dl","-U").start();
 				BufferedReader updateInput = new BufferedReader(new InputStreamReader(updateProcess.getInputStream()));

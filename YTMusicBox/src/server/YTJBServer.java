@@ -147,7 +147,8 @@ public class YTJBServer implements Server {
 			scheduler.start();
 			urlParser.startUp();
 			int port = Integer.parseInt(initFile.getValue(ColumnType.PORT));
-			ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
+			if (Boolean.parseBoolean(initFile.getValue(ColumnType.STARTPLAYER)))
+				ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
 			this.connectionBroadcast = new Thread(new ConnectionBroadcast(getIpAddress(),port,this));
 			this.connectionBroadcast.start();
 			IO.printlnDebug(this, "New server opened on address "+getIpAddress()+" port "+port);
@@ -570,7 +571,7 @@ public class YTJBServer implements Server {
 	 * @param port the port used for the server socket
 	 * @throws BindException is thrown if the port is already in use
 	 */
-	public YTJBServer(int port, String adminPW, String playerPW) throws BindException {
+	public YTJBServer() throws BindException {
 			IO.setServer(this);
 			this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 			this.workingDirectory = this.workingDirectory.replace("%20", " ");
@@ -589,19 +590,22 @@ public class YTJBServer implements Server {
 			player = new ArrayList<Connection>();
 			gapList = new LinkedList<MusicTrack>();
 			initFile = new InitFileCommunicator(workingDirectory,INITFILENAME);
-			if (port > 0){
-				initFile.setValue(ColumnType.PORT, ""+port);
-			}
-			initFile.setValue(ColumnType.ADMINPW, adminPW);
-			initFile.setValue(ColumnType.PLAYERPW, playerPW);
 			scheduler = new TrackScheduler(this);
 			waiter = new ConnectionWaiter(this);
 			version = CURRENT_VERSION;
 	}
 	
+	public YTJBServer(int port, String adminPW, String playerPW) throws BindException {
+		this(port);
+		initFile.setValue(ColumnType.ADMINPW, adminPW);
+		initFile.setValue(ColumnType.PLAYERPW, playerPW);
+}
 	
-	public YTJBServer() throws BindException {
-		this(-1, "gaplist", "player");
+	public YTJBServer(int port) throws BindException {
+		this();
+		if (port > 0){
+			initFile.setValue(ColumnType.PORT, ""+port);
+		}
 	}
 
 	public void searchGapLists(){
