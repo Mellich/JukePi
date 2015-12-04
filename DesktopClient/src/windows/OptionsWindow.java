@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,9 +23,15 @@ public class OptionsWindow extends Window{
 	
 	private Collector collector;
 	
-	public OptionsWindow(Collector collector) {
+	private String adminPW;
+	
+	private String playerPW;
+	
+	public OptionsWindow(Collector collector, String adminPW, String playerPW) {
 		frame = new JFrame();
 		this.collector = collector;
+		this.adminPW = adminPW;
+		this.playerPW = playerPW;
 	}
 	
 	@Override
@@ -61,15 +68,15 @@ public class OptionsWindow extends Window{
 		lblPWAdmin.setHorizontalAlignment(JLabel.CENTER);
 		JLabel lblPWPlayer = new JLabel("Player");
 		lblPWPlayer.setHorizontalAlignment(JLabel.CENTER);
-		JTextField txtAdminPW = new JTextField();
-		JTextField txtPlayerPW = new JTextField();
+		JLabel lblAdminPW = new JLabel(adminPW);
+		JLabel lblPlayerPW = new JLabel(playerPW);
 		
 		Container upLeftCenter = new Container();
 		upLeftCenter.setLayout(new GridLayout(2, 2, 1, 1));
 		upLeftCenter.add(lblPWAdmin);
-		upLeftCenter.add(txtAdminPW);
+		upLeftCenter.add(lblAdminPW);
 		upLeftCenter.add(lblPWPlayer);
-		upLeftCenter.add(txtPlayerPW);
+		upLeftCenter.add(lblPlayerPW);
 		
 		upLeft.add(lblPasswords, BorderLayout.NORTH);
 		upLeft.add(upLeftCenter, BorderLayout.CENTER);
@@ -130,6 +137,9 @@ public class OptionsWindow extends Window{
 		
 		JButton btnSave = new JButton("Save");
 		JButton btnCancel = new JButton("Cancel");
+		
+		btnSave.addActionListener((ActionEvent ae) -> {this.close();});
+		btnCancel.addActionListener((ActionEvent ae) -> {this.close();});
 		
 		south.add(btnSave);
 		south.add(btnCancel);

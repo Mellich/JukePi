@@ -570,7 +570,7 @@ public class YTJBServer implements Server {
 	 * @param port the port used for the server socket
 	 * @throws BindException is thrown if the port is already in use
 	 */
-	public YTJBServer(int port) throws BindException {
+	public YTJBServer(int port, String adminPW, String playerPW) throws BindException {
 			IO.setServer(this);
 			this.workingDirectory = YTJBServer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 			this.workingDirectory = this.workingDirectory.replace("%20", " ");
@@ -592,6 +592,8 @@ public class YTJBServer implements Server {
 			if (port > 0){
 				initFile.setValue(ColumnType.PORT, ""+port);
 			}
+			initFile.setValue(ColumnType.ADMINPW, adminPW);
+			initFile.setValue(ColumnType.PLAYERPW, playerPW);
 			scheduler = new TrackScheduler(this);
 			waiter = new ConnectionWaiter(this);
 			version = CURRENT_VERSION;
@@ -599,7 +601,7 @@ public class YTJBServer implements Server {
 	
 	
 	public YTJBServer() throws BindException {
-		this(-1);
+		this(-1, "gaplist", "player");
 	}
 
 	public void searchGapLists(){

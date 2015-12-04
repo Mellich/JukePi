@@ -172,6 +172,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private final ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
+	private final String adminPassword;
+	
+	private final String playerPassword;
+	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
@@ -183,7 +187,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @param wishlist	The Wishlist as an Array of {@link Song}s.
 	 * @since 1.0
 	 */
-	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport, String password) {
+	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport, String adminPassword, 
+			String playerPassword) {
 		this.collector = collector;
 		this.frame = frame;
 		this.wrapper = wrapper;
@@ -191,7 +196,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		
-		wrapper.addPermission(Permission.ADMIN, password);
+		this.adminPassword = adminPassword;
+		this.playerPassword = playerPassword;
+		
+		wrapper.addPermission(Permission.ADMIN, adminPassword);
 //		wrapper.addPermission(Permission.PLAYBACK, "playback");
 //		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		wrapper.addDefaultNotificationListener(this);
@@ -1192,7 +1200,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuServer = new JMenu("Server Messages");
-		JMenu menuOptions = new JMenu("Options");
+		JMenu menuEdit = new JMenu("Edit");
 		
 		JMenu trackEditMenu = new JMenu("Track Edit");
 		JMenuItem menuSkip = new JMenuItem("Skip");
@@ -1221,15 +1229,20 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
 		menuRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		menuRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
-		menuOptions.addActionListener((ActionEvent ae) -> {new OptionsWindow(collector).show();});
 		
 		menuServer.add(menuSaveGaplist);
 		menuServer.add(menuDisconnect);
 		menuServer.add(menuRemoveVote);
 		menuServer.add(menuRemoveAllVotes);
 		
+
+		JMenuItem menuOptions = new JMenuItem("Preferences");
+		menuOptions.addActionListener((ActionEvent ae) -> {new OptionsWindow(collector, adminPassword, playerPassword).show();});
+
+		menuEdit.add(menuOptions);
+		
 		menuBar.add(menuServer);
-		menuBar.add(menuOptions);
+		menuBar.add(menuEdit);
 		menuBar.setBackground(Color.white);
 		
 		frame.getContentPane().add(menuBar, ClientLayout.MENU_BAR);

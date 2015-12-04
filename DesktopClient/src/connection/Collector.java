@@ -13,6 +13,7 @@ import windows.LogIn;
 import windows.LowClientWindow;
 import windows.MainWindow;
 import windows.PasswordWindow;
+import windows.SetPasswordWindow;
 import windows.Window;
 import client.ServerConnectionFactory;
 import client.serverconnection.ServerConnection;
@@ -153,9 +154,9 @@ public class Collector {
 	 * @param password	The Password for the Admin-Permissions.
 	 * @since 1.3
 	 */
-	public void adminConnect(String ip, int port, String password) {
+	public void adminConnect(String ip, int port, String adminPassword, String playerPassword) {
 	//	mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
-		mainScreen = new MainWindow(this, new JFrame(), wrapper, gaplist, wishlist, ip, port, password);
+		mainScreen = new MainWindow(this, new JFrame(), wrapper, gaplist, wishlist, ip, port, adminPassword, playerPassword);
 		if (loginScreen != null)
 			loginScreen.close();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -202,22 +203,33 @@ public class Collector {
 	 * @since 1.0
 	 */
 	public void createLocalServer(String port){
-		int iport = -1;
 		try {
+			int iport = -1;
 			iport = Integer.parseInt(port);
-			localServer = ServerFactory.createServer(iport);
-			//TODO: make selectable, if youtube-dl should be updated or not  
-			localServer.startUp();
 			if (loginScreen != null)
 				loginScreen.close();
-			wrapper.connect("localhost", iport);
-			this.adminConnect("localhost", iport, "gaplist");
+		//	this.adminConnect("localhost", iport, "gaplist");
+			if (loginScreen != null)
+				loginScreen.close();
+			mainScreen = new SetPasswordWindow(this, iport);
+			mainScreen.show();
 		} catch (NumberFormatException nfe) {
-			showFail(loginScreen, "Please insert a real number at the Port-Field.");
+			showFail(loginScreen, "Please enter a real Number as Port");
+		}
+	}
+	
+	public void createLocalServerFinal(int port, String adminPassword, String playerPassword) {
+		try {
+			localServer = ServerFactory.createServer(port, adminPassword, playerPassword);
+			//TODO: make selectable, if youtube-dl should be updated or not
+			localServer.startUp();
+			wrapper.connect("localhost", port);
+			mainScreen.close();
+			adminConnect("localhost", port, adminPassword, playerPassword);
 		} catch (IOException e) {
+			loginScreen.show();
 			showFail(loginScreen, "Port is already in use, please enter another Port.");
 		}
-		
 	}
 	
 	/**
