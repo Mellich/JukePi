@@ -11,9 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.TableModel;
 
 import connection.Collector;
 
@@ -21,7 +19,7 @@ public class OptionsWindow extends Window{
 
 	private JFrame frame;
 	
-	private Collector collector;
+//	private Collector collector;
 	
 	private String adminPW;
 	
@@ -29,7 +27,7 @@ public class OptionsWindow extends Window{
 	
 	public OptionsWindow(Collector collector, String adminPW, String playerPW) {
 		frame = new JFrame();
-		this.collector = collector;
+	//	this.collector = collector;
 		this.adminPW = adminPW;
 		this.playerPW = playerPW;
 	}
