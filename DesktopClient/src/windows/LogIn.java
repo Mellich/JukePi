@@ -12,7 +12,9 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import listener.UDPListener;
 import connection.Collector;
@@ -113,10 +115,10 @@ public class LogIn extends Window {
 		frame.getContentPane().add(txtPort, LoginLayout.PORT_TEXT);
 		txtPort.setColumns(10);
 		
-		JLabel lblWelcomescreen = new JLabel("<html><body>Welcome to the RaspberryPi Jukebox.<br>" +
-											"Please enter IP-Address and Port below and click on \"Connect\".<br>" + 
-											"You could also scan your network for possible Servers by clicking \"UDP Connect\", <br>" +
-											"or you create your own Server by clicking on \"Create own Server\".</body></html>");
+		JMultilineLabel lblWelcomescreen = new JMultilineLabel("Welcome to the RaspberryPi Jukebox.\n" +
+											"Please enter IP-Address and Port below and click on \"Connect\".\n" + 
+											"You could also scan your network for possible Servers by clicking \"UDP Connect\",\n" +
+											"or you create your own Server by clicking on \"Create own Server\".");
 		frame.getContentPane().add(lblWelcomescreen, LoginLayout.WELCOME_LABEL);
 		
 		JLabel lblIPAddress = new JLabel("IP-Address:");
@@ -180,3 +182,23 @@ public class LogIn extends Window {
 		util.IO.println(this, "Constructed Frame in " + (System.currentTimeMillis()-start) + "ms.");
 	}
 }
+
+/**
+ * A Class, that symbols a Multiline-Label, but can be set to Multiline without using HTML.
+ * 
+ * @author Haledues
+ * @version 1.0
+ */
+class JMultilineLabel extends JTextArea{
+    private static final long serialVersionUID = 1L;
+    public JMultilineLabel(String text){
+        super(text);
+        setEditable(false);  
+        setCursor(null);  
+        setOpaque(false);  
+        setFocusable(false);  
+        setFont(UIManager.getFont("Label.font"));      
+        setWrapStyleWord(true);  
+        setLineWrap(true);
+    }
+} 
