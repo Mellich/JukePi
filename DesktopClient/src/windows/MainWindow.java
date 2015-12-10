@@ -1,6 +1,5 @@
 package windows;
 
-import util.GenericMouseListener;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.ClientLayout;
@@ -168,9 +167,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private final ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
-	private final String adminPassword;
+//	private final String adminPassword;
+//	
+//	private final String playerPassword;
 	
-	private final String playerPassword;
+	/**
+	 * The OptionsWindow, that will be opened, when the User clicked on Edit > Preferences.
+	 */
+	private OptionsWindow options;
 	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
@@ -192,8 +196,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		
-		this.adminPassword = adminPassword;
-		this.playerPassword = playerPassword;
+	//	this.adminPassword = adminPassword;
+	//	this.playerPassword = playerPassword;
+		
+		options = new OptionsWindow(collector, adminPassword, playerPassword);
 		
 		wrapper.addPermission(Permission.ADMIN, adminPassword);
 //		wrapper.addPermission(Permission.PLAYBACK, "playback");
@@ -772,7 +778,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(oldSavedGaplistPane, ClientLayout.SAVED_GAPLIST_SCROLL);
 		new SetSavedGaplistsTask(frame, gaplists, oldSavedGaplistPane, this).execute();
 		oldContentPane = new JScrollPane();
-		oldContentPane.addMouseListener(new GenericMouseListener());
 		frame.getContentPane().add(oldContentPane, ClientLayout.CONTENT_SCROLL);
 		new SetContentTask(new Song[] {}, oldContentPane, frame, this).execute();
 		
@@ -855,10 +860,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuServer.add(menuDisconnect);
 		menuServer.add(menuRemoveVote);
 		menuServer.add(menuRemoveAllVotes);
-		
 
 		JMenuItem menuOptions = new JMenuItem("Preferences");
-		menuOptions.addActionListener((ActionEvent ae) -> {new OptionsWindow(collector, adminPassword, playerPassword).show();});
+		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
 
 		menuEdit.add(menuOptions);
 		

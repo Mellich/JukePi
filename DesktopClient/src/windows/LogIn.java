@@ -186,7 +186,7 @@ public class LogIn extends Window {
 /**
  * A Class, that symbols a Multiline-Label, but can be set to Multiline without using HTML.
  * 
- * @author Haledues
+ * @author Haeldeus
  * @version 1.0
  */
 class JMultilineLabel extends JTextArea{
