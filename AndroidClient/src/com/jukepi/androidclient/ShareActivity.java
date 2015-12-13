@@ -28,8 +28,7 @@ public class ShareActivity extends Activity {
 				Toast.makeText(this, "Added the Song to the Wishlist.", Toast.LENGTH_LONG).show();
 			else
 				Toast.makeText(this, "Failed to add the Song", Toast.LENGTH_LONG).show();			
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
+			finish();
 		}else{
 			Intent intent = new Intent(this, LoginActivity.class);
 			startActivity(intent);
