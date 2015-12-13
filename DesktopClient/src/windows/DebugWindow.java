@@ -145,6 +145,7 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 		Container pane = new Container();
 		pane.setLayout(new BorderLayout());
 		
+		txtDebugs.setEditable(false);
 		scrollPane = new JScrollPane(txtDebugs);
 		JScrollBar sb = scrollPane.getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());

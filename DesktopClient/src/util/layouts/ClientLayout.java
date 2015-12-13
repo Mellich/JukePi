@@ -269,7 +269,8 @@ public class ClientLayout implements LayoutManager{
 	//	final int voteSpacer = (int)(width*1/75);
 	//	final int voteButtonWidth = (int)(width*0.13);
 		
-		final int manButtonHeight = (int)(height*0.064);
+	//	final int manButtonHeight = (int)(height*0.064);
+		final int manButtonHeight = 42;
 		final int manButtonWidth = (int)(width*0.2);
 		final int buttonHeight = (int)(height*0.032);
 		

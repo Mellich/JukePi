@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import javax.swing.KeyStroke;
 
 import messages.Permission;
 import client.listener.DefaultNotificationListener;
@@ -825,49 +826,84 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(btnRemoveAllVotes, ClientLayout.REMOVE_ALL_VOTES_BUTTON);
 		
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menuServer = new JMenu("Server Messages");
+		JMenu menuServer = new JMenu("Server");
 		JMenu menuEdit = new JMenu("Edit");
+		JMenu menuGaplist = new JMenu("Gaplist");
+		JMenu menuWishlist = new JMenu("Wishlist");
+		JMenu menuTrack = new JMenu("Track");
 		
-		JMenu trackEditMenu = new JMenu("Track Edit");
+		
+		/***************Server Menu*********************/
+		JMenuItem menuDisconnect = new JMenuItem("Disconnect");
+		JMenuItem menuDebug = new JMenuItem("Debug-Mode");
+		menuDisconnect.setAccelerator(KeyStroke.getKeyStroke('d'));
+		menuDebug.setAccelerator(KeyStroke.getKeyStroke('b'));
+		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
+		menuDebug.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
+		
+		menuServer.add(menuDisconnect);
+		menuServer.add(menuDebug);
+		
+		/*****************Edit Menu***********************/
+		JMenuItem menuOptions = new JMenuItem("Preferences");
+		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
+
+		menuEdit.add(menuOptions);
+		
+		/****************Track Menu*************************/
+//		JMenu trackEditMenu = new JMenu("Track Edit");
 		JMenuItem menuSkip = new JMenuItem("Skip");
 		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
 		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");
 		JMenuItem menuPlayPause = new JMenuItem("Pause");
+		
+		menuSkip.setAccelerator(KeyStroke.getKeyStroke('s'));
+		menuSeekBackwards.setAccelerator(KeyStroke.getKeyStroke('b'));
+		menuSeekForward.setAccelerator(KeyStroke.getKeyStroke('f'));
+		menuPlayPause.setAccelerator(KeyStroke.getKeyStroke('p'));
 		
 		menuSkip.addActionListener((ActionEvent ae) -> {skip();});
 		menuSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		menuSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
 		menuPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		
-		trackEditMenu.add(menuSkip);
-		trackEditMenu.add(menuSeekBackwards);
-		trackEditMenu.add(menuSeekForward);
-		trackEditMenu.add(menuPlayPause);
+		menuTrack.add(menuSkip);
+		menuTrack.add(menuSeekBackwards);
+		menuTrack.add(menuSeekForward);
+		menuTrack.add(menuPlayPause);
 		
-		menuServer.add(trackEditMenu);
-		
+		/********************Gaplist Menu*******************/
 		JMenuItem menuSaveGaplist = new JMenuItem("Save Gaplist");
-		JMenuItem menuDisconnect = new JMenuItem("Disconnect");
+		JMenuItem menuCreateGaplist = new JMenuItem("Create new Gaplist");
+		JMenuItem menuDisplayGaplists = new JMenuItem("Display all Gaplists");
+		menuSaveGaplist.setAccelerator(KeyStroke.getKeyStroke('s'));
+		menuCreateGaplist.setAccelerator(KeyStroke.getKeyStroke('c'));
+		menuDisplayGaplists.setAccelerator(KeyStroke.getKeyStroke('d'));
+		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
+		menuCreateGaplist.addActionListener(null); //TODO
+		menuDisplayGaplists.addActionListener(null); //TODO
+		
+		menuGaplist.add(menuSaveGaplist);
+		menuGaplist.add(menuCreateGaplist);
+		menuGaplist.add(menuDisplayGaplists);
+		
+		/**********************Wishlist Menu*******************/
 		JMenuItem menuRemoveVote = new JMenuItem("Remove Vote");
 		JMenuItem menuRemoveAllVotes = new JMenuItem("Remove all Votes");
-		
-		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
+		menuRemoveVote.setAccelerator(KeyStroke.getKeyStroke('r'));
+		menuRemoveAllVotes.setAccelerator(KeyStroke.getKeyStroke('v'));
 		menuRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		menuRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
 		
-		menuServer.add(menuSaveGaplist);
-		menuServer.add(menuDisconnect);
-		menuServer.add(menuRemoveVote);
-		menuServer.add(menuRemoveAllVotes);
-
-		JMenuItem menuOptions = new JMenuItem("Preferences");
-		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
-
-		menuEdit.add(menuOptions);
+		menuWishlist.add(menuRemoveVote);
+		menuWishlist.add(menuRemoveAllVotes);
 		
+		/*****************Finishing Menu Creation*************/
 		menuBar.add(menuServer);
 		menuBar.add(menuEdit);
+		menuBar.add(menuTrack);
+		menuBar.add(menuGaplist);
+		menuBar.add(menuWishlist);
 		menuBar.setBackground(Color.white);
 		
 		frame.getContentPane().add(menuBar, ClientLayout.MENU_BAR);
@@ -898,7 +934,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		btnSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText(), rdbtnWishlist.isSelected(), chckbxInfront.isSelected(), txtLink);});
 		btnSave.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
+	//	btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnUp.addActionListener((ActionEvent ae) -> {moveTrackUp(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnDown.addActionListener((ActionEvent ae) -> {moveTrackDown(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnLoad.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
@@ -1002,6 +1038,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
 		this.gaplist = gaplist;
 		frame.remove(this.lblNoGaplist);
+		frame.add(lblNoGaplist, ClientLayout.COUNT_GAPLIST_LABEL);
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
 		frame.remove(this.oldGaplistPane);
@@ -1022,6 +1059,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
 		this.wishlist = wishlist;
 		frame.remove(this.lblNoWishlist);
+		frame.add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
 		frame.remove(this.oldPane);

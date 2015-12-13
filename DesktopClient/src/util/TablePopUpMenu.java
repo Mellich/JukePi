@@ -14,7 +14,7 @@ import client.serverconnection.Song;
 /**
  * The Class for the PopUpMenu for all Tables.
  * @author Haeldeus
- * @version 1.0
+ * @version 1.1
  */
 public class TablePopUpMenu extends JPopupMenu{
 
@@ -32,6 +32,11 @@ public class TablePopUpMenu extends JPopupMenu{
 	 * The MenuItem for the moveToOtherList-Command.
 	 */
 	private JMenuItem moveToOtherList;
+	
+	/**
+	 * The MenuItem for the Delete-Command
+	 */
+	private JMenuItem delete;
 	
 	/**
 	 * The TextTransfer, that will be used to copy the Link of the Song to the Clipboard.
@@ -70,6 +75,14 @@ public class TablePopUpMenu extends JPopupMenu{
         																											else
         																												mw.showFail("Coudln't add the Song to the other List");}, list[row]);
         													});
+        delete = new JMenuItem("Delete Track from List");
+        delete.setAccelerator(KeyStroke.getKeyStroke('d'));
+        delete.addActionListener((ActionEvent ae) -> {	int row = table.getSelectedRow();
+        												this.wrapper.deleteFromList((String[] s) -> {	if (s[0].equals("true"))
+        																									mw.showFail("Deleted the Track");
+        																								else
+        																									mw.showFail("Couldn't delete the Track");}, list[row]);
+        												});
         add(getLink);
         add(moveToOtherList);
 	}

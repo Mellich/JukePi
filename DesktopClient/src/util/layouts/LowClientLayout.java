@@ -97,7 +97,7 @@ public class LowClientLayout implements LayoutManager{
 	 * @since 1.0
 	 */
 	public LowClientLayout() {
-		components = new HashMap<String, Component>(12, (float) 1.0);
+		components = new HashMap<String, Component>();
 	}
 	
 	@Override
@@ -119,8 +119,8 @@ public class LowClientLayout implements LayoutManager{
 				regex.equals(CURRENT_TRACK_LABEL) || regex.equals(NAME_CURRENT_TRACK_LABEL) || 
 				regex.equals(LINK_TEXT) || regex.equals(ADD_BUTTON) || 
 				regex.equals(DISCONNECT_BUTTON) || regex.equals(VOTE_BUTTON) || 
-				regex.equals(REMOVE_BUTTON) || regex.equals(WISHLIST_PANE))
-			return true;
+				regex.equals(REMOVE_BUTTON) || regex.equals(WISHLIST_PANE)) {
+			return true; }
 		else
 			return false;
 	}
@@ -284,7 +284,7 @@ public class LowClientLayout implements LayoutManager{
 		
 		if (components.get(WISHLIST_PANE) != null)
 			if (components.get(WISHLIST_PANE).equals(comp)) {
-				components.put(REMOVE_BUTTON, null);
+				components.put(WISHLIST_PANE, null);
 				return;
 			}
 	}
