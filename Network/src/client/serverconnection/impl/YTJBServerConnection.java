@@ -778,6 +778,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 
 	@Override
 	public boolean addPermission(Permission p, String passphrase) throws PermissionDeniedException{
+		//TODO: add exception for empty passphrase here
 		if (this.version < 900L)
 			throw new NotSupportedByNetworkException(this.version, 900L);
 		PermissionTuple pt = new PermissionTuple(p, passphrase);

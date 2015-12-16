@@ -189,6 +189,7 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
         table.getColumnModel().getColumn(1).setMaxWidth(40);
 		JScrollPane wishlistPane = new JScrollPane(table);
 		frame.getContentPane().add(wishlistPane, ClientLayout.WISHLIST_SCROLL);
+		frame.getContentPane().add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
 		if (notFirst)
 			wishlistPane.getViewport().setViewPosition(p);
 		oldPane = wishlistPane;

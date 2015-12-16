@@ -37,8 +37,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	private final JFrame frame;
 	
 	/**
-	 * The Wishlist as an Array of Songs (no real Songs, just an Instance of 
-	 * {@link client.serverconnection.Song} with random Values).
+	 * The Wishlist as an Array of {@link Song}s.
 	 */
 	private Song[] wishlist;
 	
@@ -142,6 +141,9 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		txtLink.addMouseListener(new PopClickListener(txtLink));
 		contentPane.add(txtLink, LowClientLayout.LINK_TEXT);
 		
+		JButton btnRemoveVote = new JButton("Remove Vote");
+		contentPane.add(btnRemoveVote, LowClientLayout.REMOVE_BUTTON);
+		
 		JButton btnAdd = new JButton("Add");
 		contentPane.add(btnAdd, LowClientLayout.ADD_BUTTON);
 		
@@ -150,9 +152,6 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		
 		JButton btnVote = new JButton("Vote");
 		contentPane.add(btnVote, LowClientLayout.VOTE_BUTTON);
-		
-		JButton btnRemoveVote = new JButton("Remove Vote");
-		contentPane.add(btnRemoveVote, LowClientLayout.REMOVE_BUTTON);
 		
 		frame.setContentPane(contentPane);
 		

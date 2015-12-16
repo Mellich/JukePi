@@ -22,7 +22,7 @@ import client.serverconnection.Song;
 /**
  * The Collector, that will start the Client. Also provides all necessary information for each Frame, to work properly.
  * @author Haeldeus
- * @version 1.3
+ * @version 1.4
  */
 public class Collector {
 
@@ -218,6 +218,14 @@ public class Collector {
 		}
 	}
 	
+	/**
+	 * The final Method to create a local Server. This is called by the SetPasswordWindow, when
+	 * the User entered the Passwords needed for the Server.
+	 * @param port	The Port of the new Server.
+	 * @param adminPassword	The Password, that has to be entered to connect as an Admin.
+	 * @param playerPassword	The Password, that has to be entered to connect as a Player.
+	 * @since 1.4
+	 */
 	public void createLocalServerFinal(int port, String adminPassword, String playerPassword) {
 		try {
 			localServer = ServerFactory.createServer(port, adminPassword, playerPassword);

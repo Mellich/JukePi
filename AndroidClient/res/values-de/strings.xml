@@ -21,4 +21,6 @@
     <string name ="savedSongList">Deine gespeicherten Songs</string>
     <string name="title_activity_share">Füge einen Link hinzu</string>
     <string name="share_text">Wiedergabe</string>
+    <string name="share_info_text">Füge die folgende URL hinzu:</string>
+    <string name="share_button">Hinzufügen</string>
 </resources>
