@@ -160,7 +160,7 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 		contentPane.add(wishlistPane, LowClientLayout.WISHLIST_PANE);
 		
 		btnAdd.addActionListener((ActionEvent ae) -> {add(txtLink.getText());});
-		btnDisc.addActionListener((ActionEvent ae) -> {collector.disconnect();});
+		btnDisc.addActionListener((ActionEvent ae) -> {wrapper.close();});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
 		util.IO.println(this, "Constructed Frame");

@@ -60,6 +60,8 @@ public class ConnectionBroadcast implements Runnable {
 					        IO.printlnDebug(this, "UDP message received: "+message);
 				        	if (message.equals("REQUEST")){
 				        		sendSocket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+				        		sendSocket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
+				        		sendSocket.send(new DatagramPacket(byteMessage, byteMessage.length , group ,NETWORK_GROUP_PORT));
 				        		IO.printlnDebug(this, "server information sent!");
 				        	}
 				        }

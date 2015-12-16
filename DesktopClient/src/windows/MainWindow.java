@@ -887,7 +887,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 															}
 														});
 	
-		btnDisconnect.addActionListener((ActionEvent ae)->{onDisconnect();});
+		btnDisconnect.addActionListener((ActionEvent ae)->{wrapper.close();});
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
