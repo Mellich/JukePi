@@ -200,6 +200,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	
 	private DisplayGaplistsWindow gaplistsWindow;
 	
+	private String currentURL;
+	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
@@ -705,7 +707,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(lblPlayingTrack, NewClientLayout.NAME_NOW_PLAYING_LABEL);
-		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]);});		
+		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]); currentURL = s[2];});
 		
 		lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -873,17 +875,21 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
 		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");
 		JMenuItem menuPlayPause = new JMenuItem("Pause");
+		JMenuItem menuCopyLink = new JMenuItem("Copy Link");
 		
 		menuSkip.setAccelerator(KeyStroke.getKeyStroke('s'));
 		menuSeekBackwards.setAccelerator(KeyStroke.getKeyStroke('b'));
 		menuSeekForward.setAccelerator(KeyStroke.getKeyStroke('f'));
 		menuPlayPause.setAccelerator(KeyStroke.getKeyStroke('p'));
+		menuCopyLink.setAccelerator(KeyStroke.getKeyStroke('c'));
 		
 		menuSkip.addActionListener((ActionEvent ae) -> {skip();});
 		menuSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		menuSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
 		menuPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
+		menuCopyLink.addActionListener((ActionEvent ae) -> {new util.TextTransfer().setClipboardContents(currentURL);});
 		
+		menuTrack.add(menuCopyLink);
 		menuTrack.add(menuSkip);
 		menuTrack.add(menuSeekBackwards);
 		menuTrack.add(menuSeekForward);
@@ -1033,6 +1039,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
+		this.currentURL = url;
 	}
 
 	@Override
