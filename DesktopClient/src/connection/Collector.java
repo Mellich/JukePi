@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import messages.Permission;
 import server.Server;
 import server.ServerFactory;
 import windows.DebugWindow;
@@ -232,6 +233,7 @@ public class Collector {
 			//TODO: make selectable, if youtube-dl should be updated or not
 			localServer.startUp();
 			wrapper.connect("localhost", port);
+			wrapper.addPermission(Permission.ADMIN, adminPassword);
 			mainScreen.close();
 			adminConnect("localhost", port, adminPassword, playerPassword);
 		} catch (IOException e) {

@@ -13,7 +13,7 @@ import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
 import util.TableRenderer;
-import util.layouts.ClientLayout;
+import util.layouts.NewClientLayout;
 import windows.MainWindow;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
@@ -188,8 +188,8 @@ public class SetWishlistTask extends SwingWorker<Void, Song[]>{
         table.getColumnModel().getColumn(0).setMinWidth(210);
         table.getColumnModel().getColumn(1).setMaxWidth(40);
 		JScrollPane wishlistPane = new JScrollPane(table);
-		frame.getContentPane().add(wishlistPane, ClientLayout.WISHLIST_SCROLL);
-		frame.getContentPane().add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
+		frame.getContentPane().add(wishlistPane, NewClientLayout.WISHLIST_PANE);
+		frame.getContentPane().add(lblNoWishlist, NewClientLayout.COUNT_WISHLIST_LABEL);
 		if (notFirst)
 			wishlistPane.getViewport().setViewPosition(p);
 		oldPane = wishlistPane;

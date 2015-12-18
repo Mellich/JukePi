@@ -4,7 +4,7 @@ package windows;
  * An abstract Class, that is the parent-Class of all Windows for the Client UI and 
  * provides basic Methods.
  * @author Haeldeus
- * @version 1.0
+ * @version 1.1
  */
 public abstract class Window {
 
@@ -26,4 +26,12 @@ public abstract class Window {
 	 * @since 1.0
 	 */
 	public abstract void close();
+	
+	/**
+	 * Sets the State of the Window to the given State.
+	 * @param state	The new State of the Window, active, if {@code true}, inactive else.
+	 * @since 1.1
+	 */
+	public abstract void setActive(boolean state);
+	
 }

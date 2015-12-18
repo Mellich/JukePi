@@ -92,4 +92,9 @@ public class SetPasswordWindow extends Window{
 		
 		frame.setContentPane(content);
 	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
+	}
 }

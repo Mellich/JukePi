@@ -11,6 +11,7 @@ import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
 import util.layouts.ClientLayout;
+import windows.DisplayGaplistsWindow;
 import windows.MainWindow;
 import client.serverconnection.Song;
 
@@ -46,7 +47,7 @@ public class SetContentTask extends SwingWorker<Void, Song[]>{
 	/**
 	 * The {@link MainWindow}, that called this Worker.
 	 */
-	private MainWindow mw;
+	private DisplayGaplistsWindow dgw;
 
 	/**
 	 * The Constructor for the Worker.
@@ -56,11 +57,11 @@ public class SetContentTask extends SwingWorker<Void, Song[]>{
 	 * @param mw	The {@link MainWindow}, that called this Worker.
 	 * @since 1.0
 	 */
-	public SetContentTask(Song[] newContent, JScrollPane oldContentPane, JFrame frame, MainWindow mw) {
+	public SetContentTask(Song[] newContent, JScrollPane oldContentPane, JFrame frame, DisplayGaplistsWindow dgw) {
 		this.newContent = newContent;
 		this.oldContentPane = oldContentPane;
 		this.frame = frame;
-		this.mw = mw;
+		this.dgw = dgw;
 	}
 	
 	@Override
@@ -163,7 +164,7 @@ public class SetContentTask extends SwingWorker<Void, Song[]>{
 	@Override
 	protected void done() {
 		util.IO.println(this, "Updated ContentPane.");
-		mw.doneContentUpdate(frame, oldContentPane);
+		dgw.doneContentUpdate(frame, oldContentPane);
 	}
 	
 }

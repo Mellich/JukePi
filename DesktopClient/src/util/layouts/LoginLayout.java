@@ -78,9 +78,8 @@ public class LoginLayout implements LayoutManager{
 	
 	@Override
 	public void addLayoutComponent(String regex, Component comp) {
-		if (checkLayoutComponent(regex)) {
+		if (checkLayoutComponent(regex))
 			components.put(regex, comp);
-		}
 	}
 
 	@Override
@@ -136,9 +135,8 @@ public class LoginLayout implements LayoutManager{
 
 	@Override
 	public void removeLayoutComponent(Component comp) {
-		if (components.containsValue(comp)) {
+		if (components.containsValue(comp))
 			remove(comp);
-		}
 	}
 
 	/**

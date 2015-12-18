@@ -114,7 +114,6 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 	
 	/**
 	 * Adds a new Message to {@link #messages}, if {@link #recording} is {@code true}.
-	 * @param message	The Message, that might be added.
 	 * @since 1.0
 	 */
 	private synchronized void addNewMessage() {	
@@ -192,5 +191,10 @@ public class DebugWindow extends Window implements DebugNotificationListener{
 														});
 		
 		frame.setVisible(true);
+	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
 	}
 }
