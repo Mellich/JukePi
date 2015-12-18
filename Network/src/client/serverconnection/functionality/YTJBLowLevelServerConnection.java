@@ -198,7 +198,7 @@ public class YTJBLowLevelServerConnection implements LowLevelServerConnection {
 
 	@Override
 	public boolean sendMessage(final int messageType, final String messageArgument) {
-		if (socket.isConnected()){
+		if (socket != null && socket.isConnected()){
 			if (isAndroid){
 				new Thread(new Runnable(){
 	

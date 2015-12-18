@@ -21,6 +21,7 @@ import client.listener.SeekNotificationListener;
 import client.serverconnection.ServerConnectionNotifier;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
+import client.serverconnection.exceptions.NotConnectedException;
 import client.serverconnection.exceptions.NotSupportedByNetworkException;
 import client.serverconnection.exceptions.PermissionDeniedException;
 import client.serverconnection.exceptions.UDPTimeoutException;
@@ -40,8 +41,9 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * 900 = added permissions<br>
 	 * 901 = added new currentsong command (sends the whole song instead of only the title)<br>
 	 * 902 = added deleteAllVotes command<br>
+	 * 902 = added ownVote in getCurrentSong<br>
 	 */
-	private static final long CURRENT_VERSION = 902L;
+	private static final long CURRENT_VERSION = 903L;
 	
 	/**
 	 * The Listeners for seekNotifications.
@@ -342,7 +344,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 				this.serverConnection.sendMessage(MessageType.SWITCHDEBUGNOTIFY);
 			
 			if (!failedPermissions.isEmpty())
-				throw new PermissionDeniedException(failedPermissions.toArray(new PermissionTuple[failedPermissions.size()]));
+				throw new PermissionDeniedException(failedPermissions.toArray(new PermissionTuple[failedPermissions.size()]),"Denied by Server");
 			return true;
 		}else{
 			connected = false;
@@ -358,7 +360,13 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	@Override
 	public boolean isConnected() {
 		if (this.isAndroid)
-			return this.serverConnection.sendMessage(MessageType.ISREADY);
+			try{
+				if (serverConnection != null)
+					return this.serverConnection.sendMessage(MessageType.ISREADY);
+				else return false;
+			}catch (NotConnectedException e){
+				return false;
+			}
 		return connected;
 	}
 
@@ -504,7 +512,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 			if (this.usedVersion < 901L){
 				result = new Song(0,values[0],0,false,ParseStatus.PARSED,"");
 			}
-			else result = new Song(Integer.parseInt(values[0]),values[1],0,false,ParseStatus.PARSED,values[2]);
+			else result = new Song(Integer.parseInt(values[0]),values[1],0,values.length >= 4 ? Integer.parseInt(values[0]) == Integer.parseInt(values[3]) : false,ParseStatus.PARSED,values[2]);
 		}
 		return result;
 	}
@@ -782,13 +790,16 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 		if (this.version < 900L)
 			throw new NotSupportedByNetworkException(this.version, 900L);
 		PermissionTuple pt = new PermissionTuple(p, passphrase);
+		if (passphrase == null || passphrase.equals("")){
+			throw new PermissionDeniedException(pt,"Invalid password format!");
+		}
 		permissions.remove(pt); //remove eventually existing tuple with same permission
 		if (connected){
 			if (Boolean.parseBoolean(this.serverConnection.sendBlockingMessage(MessageType.SETPERMISSION,p.name()+ MessageType.SEPERATOR+passphrase)[0])){
 				permissions.add(pt);
 				return true;
 			}else{
-				throw new PermissionDeniedException(pt);
+				throw new PermissionDeniedException(pt,"Denied by Server");
 			}
 		}else{
 			permissions.add(pt);

@@ -42,8 +42,8 @@ public class ResponseHandler implements InputHandler {
 		synchronized(responses){
 			currentResponseListener = responses.getResponseListener(messageType);
 		}
-		
-		currentResponseListener.onResponse(arguments);
+		if (currentResponseListener != null)
+			currentResponseListener.onResponse(arguments);
 		
 	}
 	
