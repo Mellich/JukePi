@@ -63,6 +63,13 @@ $(NETWORK_DIR)$(OUTPUT_DIR)/messages/Permission.class \
 $(NETWORK_DIR)$(OUTPUT_DIR)/messages/MessageType.class
 
 $(NETWORK_DIR)$(OUTPUT_DIR)/%.class: $(NETWORK_DIR)$(INPUT_DIR)/%.java
-	@echo "Making JukePi Network..."
-	$(MD) $(NETWORK_DIR)$(OUTPUT_DIR)
-	$(JC) $(JFLAGS) -d $(NETWORK_DIR)$(OUTPUT_DIR) $(NETWORK_SRC_FILES)
+	@echo ""
+	@echo "NETWORK"
+	@echo "-------"
+	@echo "Creating output folder: $(NETWORK_DIR)$(OUTPUT_DIR)"
+	@$(MD) $(NETWORK_DIR)$(OUTPUT_DIR)
+	@echo "Compiling JukePi network"
+	@$(JC) $(JFLAGS) -d $(NETWORK_DIR)$(OUTPUT_DIR) $(NETWORK_SRC_FILES)
+	
+
+

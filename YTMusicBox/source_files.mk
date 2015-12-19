@@ -111,6 +111,12 @@ $(SERVER_DIR)$(OUTPUT_DIR)/server/player/OMXPlayer.class \
 $(SERVER_DIR)$(OUTPUT_DIR)/server/URLParser.class
 
 $(SERVER_DIR)$(OUTPUT_DIR)/%.class: $(SERVER_DIR)$(INPUT_DIR)/%.java
-	@echo "Making JukePi Server..."
-	$(MD) $(SERVER_DIR)$(OUTPUT_DIR)
-	$(JC) $(JFLAGS) -d $(SERVER_DIR)$(OUTPUT_DIR) -cp $(NETWORK_DIR)$(OUTPUT_DIR) $(SERVER_SRC_FILES)
+	@echo ""
+	@echo "SERVER"
+	@echo "------"
+	@echo "Creating output folder: $(SERVER_DIR)$(OUTPUT_DIR)"
+	@$(MD) $(SERVER_DIR)$(OUTPUT_DIR)
+	@echo "Compiling JukePi server"
+	@$(JC) $(JFLAGS) -d $(SERVER_DIR)$(OUTPUT_DIR) -cp $(NETWORK_DIR)$(OUTPUT_DIR) $(SERVER_SRC_FILES)
+
+

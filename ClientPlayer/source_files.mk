@@ -28,7 +28,24 @@ $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/player/Player.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/PlayerStarter.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/BroadcastListener.class
 
+PLAYER_ARTWORK = \
+$(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/logo.jpg \
+$(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/play.png \
+$(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/pause.png \
+
+$(PLAYER_DIR)$(OUTPUT_DIR)/%.jpg: $(PLAYER_DIR)$(INPUT_DIR)/%.jpg
+	@echo "Copying artwork: $<"
+	@$(CP) $(PLAYER_DIR)$(INPUT_DIR)/$*.jpg $(PLAYER_DIR)$(OUTPUT_DIR)/$*.jpg
+
+$(PLAYER_DIR)$(OUTPUT_DIR)/%.png: $(PLAYER_DIR)$(INPUT_DIR)/%.png
+	@echo "Copying artwork: $<"
+	@$(CP) $(PLAYER_DIR)$(INPUT_DIR)/$*.png $(PLAYER_DIR)$(OUTPUT_DIR)/$*.png
+
 $(PLAYER_DIR)$(OUTPUT_DIR)/%.class: $(PLAYER_DIR)$(INPUT_DIR)/%.java
-	@echo "Making JukePi Player..."
-	$(MD) $(PLAYER_DIR)$(OUTPUT_DIR)
-	$(JC) $(JFLAGS) -d $(PLAYER_DIR)$(OUTPUT_DIR) -cp $(NETWORK_DIR)$(OUTPUT_DIR) $(PLAYER_SRC_FILES)
+	@echo ""
+	@echo "PLAYER"
+	@echo "------"
+	@echo "Creating output folder: $(PLAYER_DIR)$(OUTPUT_DIR)"
+	@$(MD) $(PLAYER_DIR)$(OUTPUT_DIR)
+	@echo "Compiling JukePi player"
+	@$(JC) $(JFLAGS) -d $(PLAYER_DIR)$(OUTPUT_DIR) -cp $(NETWORK_DIR)$(OUTPUT_DIR) $(PLAYER_SRC_FILES)

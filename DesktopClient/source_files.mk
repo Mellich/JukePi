@@ -70,6 +70,13 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/start/ClientStarter.class
 
 
 $(CLIENT_DIR)$(OUTPUT_DIR)/%.class: $(CLIENT_DIR)$(INPUT_DIR)/%.java
-	@echo "Making JukePi Client..."
-	$(MD) $(CLIENT_DIR)$(OUTPUT_DIR)
-	$(JC) $(JFLAGS) -d $(CLIENT_DIR)$(OUTPUT_DIR) -classpath $(NETWORK_DIR)$(OUTPUT_DIR)$::$(SERVER_DIR)$(OUTPUT_DIR) $(CLIENT_SRC_FILES)
+	@echo ""
+	@echo "CLIENT"
+	@echo "------"
+	@echo "Creating output folder: $(CLIENT_DIR)$(OUTPUT_DIR)"
+	@$(MD) $(CLIENT_DIR)$(OUTPUT_DIR)
+	@echo "Compiling JukePi client"
+	@$(JC) $(JFLAGS) -d $(CLIENT_DIR)$(OUTPUT_DIR) -classpath $(NETWORK_DIR)$(OUTPUT_DIR)$::$(SERVER_DIR)$(OUTPUT_DIR) $(CLIENT_SRC_FILES)
+
+
+
