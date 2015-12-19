@@ -17,6 +17,8 @@ import server.connectivity.commands.UnknownCommand;
 import utilities.IO;
 
 public class Connection extends Thread {
+
+	private long CONNECTION_TIMEOUT = 30000L;
 	
 	private Socket socket;
 	private YTJBServer server;
@@ -32,6 +34,7 @@ public class Connection extends Thread {
 	private boolean isPlayer = false;
 	private long macAddress = -1L;
 	private long version = -1L;
+	private long lastRefresh = 0L;
 	private List<Permission> permissions;
 	
 	public Connection(Socket s,YTJBServer server,ConnectionWaiter waiter) {
@@ -44,6 +47,7 @@ public class Connection extends Thread {
 	@Override
 	public void run() {
 		super.run();
+		lastRefresh = System.currentTimeMillis();
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
@@ -55,6 +59,7 @@ public class Connection extends Thread {
 				try{
 					CommandHandler newCommand = new CommandHandler(out,server,this,message);
 					newCommand.start();
+					lastRefresh = System.currentTimeMillis();
 				}
 				catch (NumberFormatException | IndexOutOfBoundsException e){
 					IO.printlnDebug(this, "Wrong command format was sent by client:"+message);
@@ -143,7 +148,9 @@ public class Connection extends Thread {
 		isGapListListener = !isGapListListener;
 	}
 	
-	
+	public boolean checkTimeout(){
+		return System.currentTimeMillis() - lastRefresh > CONNECTION_TIMEOUT;
+	}
 	
 	
 	public void notify(int messageType,List<String> args){
@@ -164,6 +171,7 @@ public class Connection extends Thread {
 			if (messageType == MessageType.GAPLISTUPDATEDNOTIFY || messageType == MessageType.WISHLISTUPDATEDNOTIFY)
 				builder.insert(0, ""+server.getVote(macAddress)+MessageType.SEPERATOR);
 			new NotifyClientCommand(out,MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,messageType,builder.toString()).handle();
+			lastRefresh = System.currentTimeMillis();
 		}
 	}
 

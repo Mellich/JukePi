@@ -25,14 +25,17 @@ NETWORK_DIR = Network
 
 MANIFEST = Manifest.txt
 
+#
+# files in sub directories including needed source and class files
+#
 -include $(NETWORK_DIR)/$(SOURCE_FILES)
 -include $(SERVER_DIR)/$(SOURCE_FILES)
 -include $(CLIENT_DIR)/$(SOURCE_FILES)
 -include $(PLAYER_DIR)/$(SOURCE_FILES)
+
 #
 # the default make target entry
 #
-
 all: Server.jar Player.jar Client.jar
 	@echo "compilation done."
 

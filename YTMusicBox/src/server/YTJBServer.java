@@ -109,19 +109,38 @@ public class YTJBServer implements Server {
 	public String getPW(Permission p){
 		if (p.equals(Permission.ADMIN)){
 			int adminCount = 0;
+			ArrayList<Connection> timeoutConns = new ArrayList<Connection>(); //check for outdated connections
 			for (Connection c : notifiables){
 				if (c.checkPermission(p)){
 					adminCount++;
+					if (c.checkTimeout()){
+						timeoutConns.add(c);
+					}
 				}
 			}
-			if (adminCount >= Long.valueOf(initFile.getValue(ColumnType.MAXADMINCOUNT))){
+			if (adminCount >= Long.valueOf(initFile.getValue(ColumnType.MAXADMINCOUNT)) && timeoutConns.size() == 0){
 				IO.printlnDebug(this, "Maximal Admin count reached! Permission denied! Admin count: "+adminCount);
 				return null;
 			}
+			for (Connection c : timeoutConns){
+				c.closeConnection();
+				notifiables.remove(c);
+			}
 		}
 		if (p.equals(Permission.PLAYER) && player.size() >= Long.valueOf(initFile.getValue(ColumnType.MAXPLAYERCOUNT))){
-			IO.printlnDebug(this, "Maximal Player count reached! Permission denied! Player count: "+player.size());
-			return null;
+			ArrayList<Connection> timeoutConns = new ArrayList<Connection>(); //check for outdated connections
+			for (Connection c :player){
+				if (c.checkTimeout())
+					timeoutConns.add(c);
+			}
+			if (timeoutConns.size() == 0){
+				IO.printlnDebug(this, "Maximal Player count reached! Permission denied! Player count: "+player.size());
+				return null;
+			}
+			for (Connection c : timeoutConns){
+				c.closeConnection();
+				player.remove(c);
+			}
 		}
 		switch (p){
 		case PLAYER: return initFile.getValue(ColumnType.PLAYERPW);
