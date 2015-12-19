@@ -64,9 +64,10 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	}
 
 	private void createFrame() {
-		frame.setSize(new Dimension(500,300));
+		frame.setSize(new Dimension(550,300));
 		frame.setTitle("Saved Gaplists");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().removeAll();
 		
 		Container content = frame.getContentPane();
 		content.setLayout(new DisplayGaplistsLayout());
@@ -115,6 +116,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 				showFail("Select a Gaplist first.");});
 
 		new SetSavedGaplistsTask(frame, gaplists, gaplistsPane, this).execute();
+		new SetContentTask(new Song[] {}, contentPane, frame, this).execute();
 	}
 	
 	private void loadGaplist(String name) {
@@ -159,15 +161,15 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 
 	public void doneSavedListsUpdate(JFrame frame, JScrollPane gaplistsPane) {
 		this.frame = frame;
-		frame.remove(this.gaplistsPane);
+		this.frame.remove(this.gaplistsPane);
 		this.gaplistsPane = gaplistsPane;
-		this.frame.validate();
+		this.frame.revalidate();
 	}
 
 	public void doneContentUpdate(JFrame frame, JScrollPane contentPane) {
 		this.frame = frame;
-		frame.remove(this.contentPane);
+		this.frame.remove(this.contentPane);
 		this.contentPane = contentPane;
-		this.frame.validate();
+		this.frame.revalidate();
 	}
 }

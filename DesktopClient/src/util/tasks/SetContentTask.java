@@ -10,7 +10,7 @@ import javax.swing.SwingWorker;
 import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
-import util.layouts.ClientLayout;
+import util.layouts.DisplayGaplistsLayout;
 import windows.DisplayGaplistsWindow;
 import windows.MainWindow;
 import client.serverconnection.Song;
@@ -158,7 +158,7 @@ public class SetContentTask extends SwingWorker<Void, Song[]>{
         table.addMouseListener(new TablePopClickListener(table, lastList));
 		JScrollPane contentPane = new JScrollPane(table);
 		oldContentPane = contentPane;
-		frame.getContentPane().add(contentPane, ClientLayout.CONTENT_SCROLL);
+		frame.getContentPane().add(contentPane, DisplayGaplistsLayout.CONTENT_PANE);
 	}
 	
 	@Override

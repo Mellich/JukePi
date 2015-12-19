@@ -73,7 +73,7 @@ public class DisplayGaplistsLayout implements LayoutManager{
 			components.get(SHOW_BUTTON).setBounds(10 + buttonWidth + 10, buttonY, buttonWidth, buttonHeight);
 		
 		if (components.get(DELETE_BUTTON) != null) 
-			components.get(DELETE_BUTTON).setBounds(30 + 2*buttonWidth, buttonY, buttonWidth, buttonHeight);
+			components.get(DELETE_BUTTON).setBounds(30 + 2*buttonWidth, buttonY, ((width-20)/2+5) - (30 + 2*buttonWidth), buttonHeight);
 		
 		/*****************Panes*****************************/
 		if (components.get(GAPLISTS_PANE) != null)
