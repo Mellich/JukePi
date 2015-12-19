@@ -82,6 +82,7 @@ public class TablePopUpMenu extends JPopupMenu{
         																									mw.showFail("Deleted the Track");
         																								else
         																									mw.showFail("Couldn't delete the Track");}, list[row]);
+        												mw.setSelectedGaplistIndex(row);
         												});
         add(getLink);
         add(moveToOtherList);

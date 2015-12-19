@@ -130,8 +130,10 @@ public class PasswordWindow extends Window{
 				if (counter <= 2) {
 					showFail("Wrong Password! You have " + (3-counter) +" tries left!");
 				}
-				else
+				else {
 					collector.lowConnect(wrapper.getIPAddress(), wrapper.getPort());
+					this.close();
+				}
 			}
 			});
 		
@@ -158,8 +160,9 @@ public class PasswordWindow extends Window{
 		content.add(south);
 		frame.setContentPane(content);
 	}
-	
-//	public static void main(String[] args) {
-//		new PasswordWindow("", 0, null, null).show();
-//	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);	
+	}
 }

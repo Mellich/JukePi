@@ -13,16 +13,39 @@ import javax.swing.JTextField;
 
 import connection.Collector;
 
+/**
+ * The Window, where the User can enter the Passwords for Admin- and Player-Permissions.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class SetPasswordWindow extends Window{
 
+	/**
+	 * The {@link Collector}, that provides additional Methods.
+	 */
 	private Collector collector;
 	
+	/**
+	 * The {@link JFrame}, that contains this Window.
+	 */
 	private JFrame frame;
 	
+	/**
+	 * The {@link JLabel}, that displays responses from the Server.
+	 */
 	private JLabel lblFail;
 	
+	/**
+	 * The Port of the Server.
+	 */
 	private int port;
 	
+	/**
+	 * The Constructor for the Window.
+	 * @param collector	The {@link Collector}, that provides additional Methods.
+	 * @param port	The Port of the Server.
+	 * @since 1.0
+	 */
 	public SetPasswordWindow(Collector collector, int port) {
 		frame = new JFrame();
 		lblFail = new JLabel();
@@ -46,8 +69,13 @@ public class SetPasswordWindow extends Window{
 		frame.setVisible(false);
 	}
 
+	/**
+	 * Creates the Frame of this Window.
+	 * @since 1.0
+	 */
 	private void createFrame() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Set Passwords");
 		frame.setSize(new Dimension(300,200));
 		
 		Container content = frame.getContentPane();
@@ -91,5 +119,10 @@ public class SetPasswordWindow extends Window{
 		btnSkip.addActionListener((ActionEvent ae) -> {collector.createLocalServerFinal(port, "gaplist", "player");});
 		
 		frame.setContentPane(content);
+	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
 	}
 }

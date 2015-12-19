@@ -333,4 +333,9 @@ public class OptionsWindow extends Window{
         table.getColumnModel().getColumn(1).setMaxWidth(70);
 		return table;
 	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
+	}
 }

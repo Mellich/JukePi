@@ -9,7 +9,8 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.JTableHeader;
 
-import util.layouts.ClientLayout;
+import util.layouts.DisplayGaplistsLayout;
+import windows.DisplayGaplistsWindow;
 import windows.MainWindow;
 
 /**
@@ -35,9 +36,9 @@ public class SetSavedGaplistsTask extends SwingWorker<Void, String[]>{
 	private JScrollPane oldSavedGaplistPane;
 	
 	/**
-	 * The {@link MainWindow}, that called this Worker.
+	 * The {@link DisplayGaplistsWindow}, that called this Worker.
 	 */
-	private MainWindow mw;
+	private DisplayGaplistsWindow dgw;
 	
 	/**
 	 * The Constructor for this Worker.
@@ -45,14 +46,14 @@ public class SetSavedGaplistsTask extends SwingWorker<Void, String[]>{
 	 * @param gaplists	The Gaplists saved on the Server as an Array of Strings.
 	 * @param gaplistsPane	The {@link JScrollPane}, that displays the saved Gaplists as a 
 	 * table.
-	 * @param mw	The {@link MainWindow}, that called this Worker.
+	 * @param dgw	The {@link MainWindow}, that called this Worker.
 	 * @since 1.0
 	 */
-	public SetSavedGaplistsTask(JFrame frame, String[] gaplists, JScrollPane gaplistsPane, MainWindow mw) {
+	public SetSavedGaplistsTask(JFrame frame, String[] gaplists, JScrollPane gaplistsPane, DisplayGaplistsWindow dgw) {
 		this.frame = frame;
 		this.gaplists = gaplists;
 		this.oldSavedGaplistPane = gaplistsPane;
-		this.mw = mw;
+		this.dgw = dgw;
 	}
 	
 	@Override
@@ -144,13 +145,13 @@ public class SetSavedGaplistsTask extends SwingWorker<Void, String[]>{
             }
         };
 		JScrollPane gaplistsPane = new JScrollPane(table);
-		frame.getContentPane().add(gaplistsPane, ClientLayout.SAVED_GAPLIST_SCROLL);
+		frame.getContentPane().add(gaplistsPane, DisplayGaplistsLayout.GAPLISTS_PANE);
 		oldSavedGaplistPane = gaplistsPane;
 	}
 	
 	@Override
 	protected void done() {
 		util.IO.println(this, "Updated saved Gaplists");
-		mw.doneSavedListsUpdate(frame, oldSavedGaplistPane);
+		dgw.doneSavedListsUpdate(frame, oldSavedGaplistPane);
 	}
 }

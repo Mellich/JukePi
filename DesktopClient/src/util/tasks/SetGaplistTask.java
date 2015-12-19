@@ -13,7 +13,7 @@ import javax.swing.table.JTableHeader;
 
 import util.TablePopClickListener;
 import util.TableRenderer;
-import util.layouts.ClientLayout;
+import util.layouts.NewClientLayout;
 import windows.MainWindow;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
@@ -199,7 +199,7 @@ public class SetGaplistTask extends SwingWorker<Void, Song[]>{
 		if (notFirst) 
 			gaplistPane.getViewport().setViewPosition(p);
 		oldGaplistPane = gaplistPane;
-		frame.getContentPane().add(gaplistPane, ClientLayout.GAPLIST_SCROLL);
+		frame.getContentPane().add(gaplistPane, NewClientLayout.GAPLIST_PANE);
 		System.gc();
 	}
 	

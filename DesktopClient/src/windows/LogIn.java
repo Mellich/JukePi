@@ -181,6 +181,11 @@ public class LogIn extends Window {
 		});
 		util.IO.println(this, "Constructed Frame in " + (System.currentTimeMillis()-start) + "ms.");
 	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
+	}
 }
 
 /**

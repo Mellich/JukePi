@@ -339,4 +339,9 @@ public class LowClientWindow extends Window implements DefaultNotificationListen
 	public void onDisconnect() {
 		collector.disconnect();
 	}
+
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
+	}
 }

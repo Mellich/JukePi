@@ -2,7 +2,7 @@ package windows;
 
 import util.TextFieldListener;
 import util.PopClickListener;
-import util.layouts.ClientLayout;
+import util.layouts.NewClientLayout;
 import util.tasks.SetContentTask;
 import util.tasks.SetGaplistTask;
 import util.tasks.SetSavedGaplistsTask;
@@ -23,13 +23,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
+import javax.swing.text.BadLocationException;
 
 import messages.Permission;
+import client.listener.DebugNotificationListener;
 import client.listener.DefaultNotificationListener;
 import client.listener.GapListNotificationListener;
 import client.listener.PauseResumeNotificationListener;
@@ -41,9 +45,9 @@ import connection.Collector;
  * The Main {@link Window}, that contains information transmitted by the Server, this Client 
  * is connected to.
  * @author Haeldeus
- * @version 1.7
+ * @version 1.8
  */
-public class MainWindow extends Window implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener{
+public class MainWindow extends Window implements DefaultNotificationListener, PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationListener{
 	
 	/**
 	 * The {@link Collector}, that will perform Actions with extern needed information.
@@ -168,6 +172,23 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private final ImageIcon pauseIcon = new ImageIcon("pause.png");
 	
+	/**
+	 * The StringBuilder, that will buffer the Messages to maintain functionality and 
+	 * correctness of the Messages.
+	 */
+	private StringBuilder buffer;
+	
+	/**
+	 * The TextArea for the Messages from the Server.
+	 * @see JTextArea
+	 */
+	private JTextArea txtDebugs;
+	
+	/**
+	 * The {@link JScrollPane}, that contains the DebugArea.
+	 */
+	private JScrollPane scrollPane;
+	
 //	private final String adminPassword;
 //	
 //	private final String playerPassword;
@@ -176,6 +197,16 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * The OptionsWindow, that will be opened, when the User clicked on Edit > Preferences.
 	 */
 	private OptionsWindow options;
+	
+	/**
+	 * The {@link DisplayGaplistsWindow}, that will show the saved Gaplists when opened.
+	 */
+	private DisplayGaplistsWindow gaplistsWindow;
+	
+	/**
+	 * The URL of the Song, that is currently played on the Server.
+	 */
+	private String currentURL;
 	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
@@ -196,23 +227,25 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
+		buffer = new StringBuilder("");
 		
 	//	this.adminPassword = adminPassword;
 	//	this.playerPassword = playerPassword;
 		
 		options = new OptionsWindow(collector, adminPassword, playerPassword);
 		
-		wrapper.addPermission(Permission.ADMIN, adminPassword);
+//		wrapper.addPermission(Permission.ADMIN, adminPassword);
 //		wrapper.addPermission(Permission.PLAYBACK, "playback");
 //		wrapper.addPermission(Permission.DEBUGGING, "debug");
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
 		wrapper.addPauseResumeNotificationListener(this);
-		Permission[] p = wrapper.getPermissions();
-		for (Permission temp : p){
-			System.out.print(temp+", ");
-		}
-		System.out.println();
+		wrapper.addDebugNotificationListener(this);
+//		Permission[] p = wrapper.getPermissions();
+//		for (Permission temp : p){
+//			System.out.print(temp+", ");
+//		}
+//		System.out.println();
 		setIpAndPort(ip, iport);
 	}
 	
@@ -465,7 +498,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 														for (int i = 0; i < s.length; i = i+2) {
 															songs[i/2] = new Song(-1, s[i], 0, false, null, s[i+1]);
 														}
-														new SetContentTask(songs, oldContentPane, frame, this).execute();
+												//		new SetContentTask(songs, oldContentPane, frame, this).execute();
 													}, name);
 	//	createContentTable(wrapper.getTitleFromGapList(name));
 	}
@@ -526,7 +559,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @param index	The index of the new Selection.
 	 * @since 1.1
 	 */
-	private void setSelectedGaplistIndex(int index) {
+	public void setSelectedGaplistIndex(int index) {
 		if (index >= 0) {
 			try {
 				((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).setRowSelectionInterval(index, index);
@@ -551,40 +584,21 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	}
 	
 	/**
-	 * Creates a Gaplist with the given Name.
-	 * @param name	The Name of the new Gaplist.
-	 * @since 1.2
-	 */
-	private void createGaplist(String name) {
-		if (name != null) {
-			String newName = replaceSpecials(name);
-			wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
-															showFail("Created a new Gaplist.");
-														else
-															showFail("Failed to create a new Gaplist.");
-													}, newName);
-		}
-		else {
-			showFail("Please enter a name first");
-		}
-	}
-	
-	/**
 	 * Replaces all special Characters from the given String.
 	 * @param regex The String to have all specials replaced.
 	 * @return	The given String without special Characters.
 	 * @since 1.2
 	 */
-	private String replaceSpecials(String regex) {
-		regex = regex.replaceAll("ä", "ae");
-		regex = regex.replaceAll("Ä", "ae");
-		regex = regex.replaceAll("ü", "ue");
-		regex = regex.replaceAll("Ü", "ue");
-		regex = regex.replaceAll("ö", "oe");
-		regex = regex.replaceAll("Ö", "oe");
-		regex = regex.replaceAll("ß", "ss");
-		return regex;
-	}
+//	private String replaceSpecials(String regex) {
+//		regex = regex.replaceAll("ä", "ae");
+//		regex = regex.replaceAll("Ä", "ae");
+//		regex = regex.replaceAll("ü", "ue");
+//		regex = regex.replaceAll("Ü", "ue");
+//		regex = regex.replaceAll("ö", "oe");
+//		regex = regex.replaceAll("Ö", "oe");
+//		regex = regex.replaceAll("ß", "ss");
+//		return regex;
+//	}
 	
 	/**
 	 * Votes for the Song at the given index.
@@ -621,7 +635,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @since 1.7
 	 */
 	private void removeAllVotes() {
-		wrapper.deleteAllVotes();
+		if (wrapper.deleteAllVotes())
+			showFail("Deleted all Votes");
+		else
+			showFail("Couldn't delete all Votes");
 	}
 	
 	/**
@@ -632,6 +649,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private void constructFrame() {
 		long start = System.currentTimeMillis();
+		util.IO.println(this, "Starting to build frame");
 		gaplist = wrapper.getGapList();
 		wishlist = wrapper.getWishList();
 		gaplists = wrapper.getAvailableGapLists();
@@ -639,63 +657,74 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame = new JFrame();
 		frame.setTitle(title);
 		frame.setSize(new Dimension(620,700));
-		ClientLayout layout = new ClientLayout();
+		NewClientLayout layout = new NewClientLayout();
 		frame.getContentPane().setLayout(layout);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(617,695));
 		/*Delete till here*/		
 		
 		lblFail = new JLabel("");
-		frame.getContentPane().add(lblFail, ClientLayout.FAIL_LABEL);
+		frame.getContentPane().add(lblFail, NewClientLayout.FAIL_LABEL);
 		
 		
 		final JLabel lblGaplist = new JLabel("Tracks in the Gaplist:");
 		lblGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		frame.getContentPane().add(lblGaplist, ClientLayout.GAPLIST_LABEL);
+		frame.getContentPane().add(lblGaplist, NewClientLayout.GAPLIST_LABEL);
 		
 		final JLabel lblWishlist = new JLabel("Tracks in the Wishlist:");
 		lblWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		frame.getContentPane().add(lblWishlist, ClientLayout.WISHLIST_LABEL);
+		frame.getContentPane().add(lblWishlist, NewClientLayout.WISHLIST_LABEL);
 		
 		lblNoGaplist = new JLabel(""+ gaplist.length);
 		lblNoGaplist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		frame.getContentPane().add(lblNoGaplist, ClientLayout.COUNT_GAPLIST_LABEL);
+		frame.getContentPane().add(lblNoGaplist, NewClientLayout.COUNT_GAPLIST_LABEL);
 		
 		lblNoWishlist = new JLabel("" + wishlist.length);
 		lblNoWishlist.setFont(new Font("Tahoma", Font.BOLD, 11));
-		frame.getContentPane().add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
+		frame.getContentPane().add(lblNoWishlist, NewClientLayout.COUNT_WISHLIST_LABEL);
 		
 		txtLink = new JTextField("Insert a Link here.");
 		txtLink.addMouseListener(new PopClickListener(txtLink));
-		frame.getContentPane().add(txtLink, ClientLayout.LINK_TEXT);
+		frame.getContentPane().add(txtLink, NewClientLayout.LINK_TEXTFIELD);
 		
 		final JButton btnAdd = new JButton("Add");
 		btnAdd.setToolTipText("Adds the YouTube-Link in the upper Textfield either to the Gaplist or the Wishlist, whatever is selected on the right.");
-		frame.getContentPane().add(btnAdd, ClientLayout.ADD_BUTTON);
+		frame.getContentPane().add(btnAdd, NewClientLayout.ADD_BUTTON);
 		
 		final JRadioButton rdbtnWishlist = new JRadioButton("Wishlist");
-		frame.getContentPane().add(rdbtnWishlist, ClientLayout.WISHLIST_RADIO);
+		frame.getContentPane().add(rdbtnWishlist, NewClientLayout.WISHLIST_RADIO);
 		rdbtnWishlist.setSelected(true);
 		
 		final JRadioButton rdbtnGaplist = new JRadioButton("Gaplist");
-		frame.getContentPane().add(rdbtnGaplist, ClientLayout.GAPLIST_RADIO);
+		frame.getContentPane().add(rdbtnGaplist, NewClientLayout.GAPLIST_RADIO);
 		
 		final JLabel lblNowPlaying = new JLabel("Now Playing:");
 		lblNowPlaying.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		frame.getContentPane().add(lblNowPlaying, ClientLayout.NOW_PLAYING_LABEL);
+		frame.getContentPane().add(lblNowPlaying, NewClientLayout.NOW_PLAYING_LABEL);
 		
 		final JLabel lblNextTrack = new JLabel("Next Track:");
 		lblNextTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		frame.getContentPane().add(lblNextTrack, ClientLayout.NEXT_TRACK_LABEL);
+		frame.getContentPane().add(lblNextTrack, NewClientLayout.NEXT_TRACK_LABEL);
+		
+		final JLabel lblBuildVersion = new JLabel("0.9.1 - New Layout, Untested");
+		lblBuildVersion.setHorizontalAlignment(JLabel.RIGHT);
+		frame.getContentPane().add(lblBuildVersion, NewClientLayout.BUILD_VERSION_LABEL);
 		
 		lblPlayingTrack = new JLabel("");
 		lblPlayingTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		frame.getContentPane().add(lblPlayingTrack, ClientLayout.NAME_NOW_PLAYING_LABEL);
-		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]);});		
+		frame.getContentPane().add(lblPlayingTrack, NewClientLayout.NAME_NOW_PLAYING_LABEL);
+		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]); currentURL = s[2];});
 		
 		lblTrackNext = new JLabel("");
 		lblTrackNext.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		frame.getContentPane().add(lblTrackNext, ClientLayout.NAME_NEXT_TRACK_LABEL);
+		frame.getContentPane().add(lblTrackNext, NewClientLayout.NAME_NEXT_TRACK_LABEL);
+		
+		txtDebugs = new JTextArea();
+		txtDebugs.setEditable(false);
+		scrollPane = new JScrollPane(txtDebugs);
+		JScrollBar sb = scrollPane.getVerticalScrollBar();
+		sb.setValue(sb.getMaximum());
+		frame.getContentPane().add(scrollPane, NewClientLayout.DEBUG_PANE);
 		
 		Song[] wishlist = wrapper.getWishList();
 		Song[] gaplist = wrapper.getGapList();
@@ -715,27 +744,23 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		ImageIcon icon = new ImageIcon("play.png");
 		
 		btnPlayPause = new JButton(icon);
-		frame.getContentPane().add(btnPlayPause, ClientLayout.PLAY_PAUSE_BUTTON);
+		frame.getContentPane().add(btnPlayPause, NewClientLayout.PLAY_PAUSE_BUTTON);
 		
 		final JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
 		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
-		frame.getContentPane().add(btnSeekBackwards, ClientLayout.SEEK_BACK_BUTTON);
+		frame.getContentPane().add(btnSeekBackwards, NewClientLayout.SEEK_BACK_BUTTON);
 		
 		final JButton btnSkip = new JButton("Skip");
 		btnSkip.setToolTipText("Click here to skip the current track.");
-		frame.getContentPane().add(btnSkip, ClientLayout.SKIP_BUTTON);
+		frame.getContentPane().add(btnSkip, NewClientLayout.SKIP_BUTTON);
 		
 		final JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
 		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
-		frame.getContentPane().add(btnSeekForward, ClientLayout.SEEK_FORWARD_BUTTON);
+		frame.getContentPane().add(btnSeekForward, NewClientLayout.SEEK_FORWARD_BUTTON);
 		
-		final JButton btnDisconnect = new JButton("Disconnect");
-		btnDisconnect.setToolTipText("Click here to disconnect from the Server.");
-		frame.getContentPane().add(btnDisconnect, ClientLayout.DISCONNECT_BUTTON);
-		
-		final JCheckBox chckbxInfront = new JCheckBox("Add in Front");
+		final JCheckBox chckbxInfront = new JCheckBox("In Front");
 		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
-		frame.getContentPane().add(chckbxInfront, ClientLayout.FRONT_CHECK);
+		frame.getContentPane().add(chckbxInfront, NewClientLayout.IN_FRONT_CHECKBOX);
 		
 		
 	//	createWishlistTable();
@@ -749,81 +774,81 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		lblGaplistName.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblGaplistName.setVerticalAlignment(JLabel.CENTER);
 		lblGaplistName.setHorizontalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblGaplistName, ClientLayout.GAPLIST_NAME_LABEL);
+		frame.getContentPane().add(lblGaplistName, NewClientLayout.GAPLIST_NAME_LABEL);
 		
 		wrapper.getCurrentGapListName((String[] s) -> {lblGaplistName.setText("Gaplist - "+ s[0]);});
 		
 		final JLabel lblWishlist2 = new JLabel("Wishlist");
 		lblWishlist2.setHorizontalAlignment(JLabel.CENTER);
 		lblWishlist2.setVerticalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblWishlist2, ClientLayout.WISHLIST_SHOW_LABEL);
+		frame.getContentPane().add(lblWishlist2, NewClientLayout.WISHLIST_NAME_LABEL);
 		
-		final JButton btnDelete = new JButton("Delete");
-		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
-		frame.getContentPane().add(btnDelete, ClientLayout.DELETE_BUTTON);
+//TODO	final JButton btnDelete = new JButton("Delete");
+//		btnDelete.setToolTipText("Click here to delete the selected track from the Gaplist.");
+//		frame.getContentPane().add(btnDelete, NewClientLayout.DELETE_BUTTON);
 		
 		final JButton btnSave = new JButton("Save");
 		btnSave.setToolTipText("Click here to save the current Gaplist on the Server.");
-		frame.getContentPane().add(btnSave, ClientLayout.SAVE_BUTTON);
+		frame.getContentPane().add(btnSave, NewClientLayout.SAVE_BUTTON);
 		
 		final JButton btnUp = new JButton("/\\");
 		btnUp.setToolTipText("Click here to move the selected track upwards.");
-		frame.getContentPane().add(btnUp, ClientLayout.TRACK_UP_BUTTON);
+		frame.getContentPane().add(btnUp, NewClientLayout.TRACK_UP_BUTTON);
 		
 		final JButton btnDown = new JButton("\\/");
 		btnDown.setToolTipText("Click here to move the selected track downwards.");
-		frame.getContentPane().add(btnDown, ClientLayout.TRACK_DOWN_BUTTON);
+		frame.getContentPane().add(btnDown, NewClientLayout.TRACK_DOWN_BUTTON);
 		
 	//	createSavedGaplistsTable();
-		oldSavedGaplistPane = new JScrollPane();
-		frame.getContentPane().add(oldSavedGaplistPane, ClientLayout.SAVED_GAPLIST_SCROLL);
-		new SetSavedGaplistsTask(frame, gaplists, oldSavedGaplistPane, this).execute();
-		oldContentPane = new JScrollPane();
-		frame.getContentPane().add(oldContentPane, ClientLayout.CONTENT_SCROLL);
-		new SetContentTask(new Song[] {}, oldContentPane, frame, this).execute();
+//		oldSavedGaplistPane = new JScrollPane();
+//TODO	frame.getContentPane().add(oldSavedGaplistPane, NewClientLayout.SAVED_GAPLIST_SCROLL);
+//		new SetSavedGaplistsTask(frame, gaplists, oldSavedGaplistPane, this).execute();
+//		oldContentPane = new JScrollPane();
+//TODO	frame.getContentPane().add(oldContentPane, NewClientLayout.CONTENT_SCROLL);
+//		new SetContentTask(new Song[] {}, oldContentPane, frame, this).execute();
 		
 		final ButtonGroup bg = new ButtonGroup();
 		bg.add(rdbtnGaplist);
 		bg.add(rdbtnWishlist);
 		
-		final JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
-		lblSavedGaplists.setVerticalAlignment(JLabel.CENTER);
-		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblSavedGaplists, ClientLayout.SAVED_GAPLIST_LABEL);
+//TODO	final JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
+//		lblSavedGaplists.setVerticalAlignment(JLabel.CENTER);
+//		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
+//		frame.getContentPane().add(lblSavedGaplists, NewClientLayout.SAVED_GAPLIST_LABEL);
 		
 		
-		final JButton btnLoad = new JButton("Load");
-		btnLoad.setToolTipText("Loads the selected Gaplist.");
-		frame.getContentPane().add(btnLoad, ClientLayout.LOAD_BUTTON);
+//TODO	final JButton btnLoad = new JButton("Load");
+//		btnLoad.setToolTipText("Loads the selected Gaplist.");
+//		frame.getContentPane().add(btnLoad, NewClientLayout.LOAD_BUTTON);
 		
-		final JButton btnShow = new JButton("Show");
-		btnShow.setToolTipText("Shows the Content of the selected Gaplist.");
-		frame.getContentPane().add(btnShow, ClientLayout.SHOW_BUTTON);
+//TODO	final JButton btnShow = new JButton("Show");
+//		btnShow.setToolTipText("Shows the Content of the selected Gaplist.");
+//		frame.getContentPane().add(btnShow, NewClientLayout.SHOW_BUTTON);
 		
-		final JButton btnRemove = new JButton("Remove");
-		btnRemove.setToolTipText("Removes the selected Gaplist.");
-		frame.getContentPane().add(btnRemove, ClientLayout.REMOVE_BUTTON);	
+//TODO	final JButton btnRemove = new JButton("Remove");
+//		btnRemove.setToolTipText("Removes the selected Gaplist.");
+//		frame.getContentPane().add(btnRemove, NewClientLayout.REMOVE_BUTTON);	
 
-		final JButton btnCreate = new JButton("Create");
-		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
-		frame.getContentPane().add(btnCreate, ClientLayout.CREATE_BUTTON);
+//TODO	final JButton btnCreate = new JButton("Create");
+//		btnCreate.setToolTipText("Click here to create a Gaplist with the Name in the Textfield on the right.");
+//		frame.getContentPane().add(btnCreate, NewClientLayout.CREATE_BUTTON);
 		
-		JTextField textName = new JTextField();
-		textName.addMouseListener(new PopClickListener(textName));
-		frame.getContentPane().add(textName, ClientLayout.GAPLIST_TEXT);
-		textName.setColumns(10);
+//TODO	JTextField textName = new JTextField();
+//		textName.addMouseListener(new PopClickListener(textName));
+//		frame.getContentPane().add(textName, NewClientLayout.GAPLIST_TEXT);
+//		textName.setColumns(10);
 
 		final JButton btnVote = new JButton("Vote");
 		btnVote.setToolTipText("Click here to vote for the selected Song.");
-		frame.getContentPane().add(btnVote, ClientLayout.VOTE_BUTTON);
+		frame.getContentPane().add(btnVote, NewClientLayout.VOTE_BUTTON);
 		
-		final JButton btnRemoveVote = new JButton("Remove Vote");
-		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
-		frame.getContentPane().add(btnRemoveVote, ClientLayout.REMOVE_VOTE_BUTTON);
+//TODO	final JButton btnRemoveVote = new JButton("Remove Vote");
+//		btnRemoveVote.setToolTipText("Click here to remove your Vote.");
+//		frame.getContentPane().add(btnRemoveVote, NewClientLayout.REMOVE_VOTE_BUTTON);
 		
-		final JButton btnRemoveAllVotes = new JButton("Remove all Votes");
-		btnRemoveAllVotes.setToolTipText("Click here to remove all Votes.");
-		frame.getContentPane().add(btnRemoveAllVotes, ClientLayout.REMOVE_ALL_VOTES_BUTTON);
+//TODO	final JButton btnRemoveAllVotes = new JButton("Remove all Votes");
+//		btnRemoveAllVotes.setToolTipText("Click here to remove all Votes.");
+//		frame.getContentPane().add(btnRemoveAllVotes, NewClientLayout.REMOVE_ALL_VOTES_BUTTON);
 		
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuServer = new JMenu("Server");
@@ -851,22 +876,25 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuEdit.add(menuOptions);
 		
 		/****************Track Menu*************************/
-//		JMenu trackEditMenu = new JMenu("Track Edit");
 		JMenuItem menuSkip = new JMenuItem("Skip");
 		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
 		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");
 		JMenuItem menuPlayPause = new JMenuItem("Pause");
+		JMenuItem menuCopyLink = new JMenuItem("Copy Link");
 		
 		menuSkip.setAccelerator(KeyStroke.getKeyStroke('s'));
 		menuSeekBackwards.setAccelerator(KeyStroke.getKeyStroke('b'));
 		menuSeekForward.setAccelerator(KeyStroke.getKeyStroke('f'));
 		menuPlayPause.setAccelerator(KeyStroke.getKeyStroke('p'));
+		menuCopyLink.setAccelerator(KeyStroke.getKeyStroke('c'));
 		
 		menuSkip.addActionListener((ActionEvent ae) -> {skip();});
 		menuSeekBackwards.addActionListener((ActionEvent ae) -> {seek(false);});
 		menuSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
 		menuPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
+		menuCopyLink.addActionListener((ActionEvent ae) -> {new util.TextTransfer().setClipboardContents(currentURL);});
 		
+		menuTrack.add(menuCopyLink);
 		menuTrack.add(menuSkip);
 		menuTrack.add(menuSeekBackwards);
 		menuTrack.add(menuSeekForward);
@@ -880,8 +908,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuCreateGaplist.setAccelerator(KeyStroke.getKeyStroke('c'));
 		menuDisplayGaplists.setAccelerator(KeyStroke.getKeyStroke('d'));
 		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		menuCreateGaplist.addActionListener(null); //TODO
-		menuDisplayGaplists.addActionListener(null); //TODO
+		menuCreateGaplist.addActionListener((ActionEvent ae) -> {new NewListWindow(wrapper, this).show();});
+		menuDisplayGaplists.addActionListener((ActionEvent ae) -> {gaplistsWindow.show();});
 		
 		menuGaplist.add(menuSaveGaplist);
 		menuGaplist.add(menuCreateGaplist);
@@ -906,14 +934,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuBar.add(menuWishlist);
 		menuBar.setBackground(Color.white);
 		
-		frame.getContentPane().add(menuBar, ClientLayout.MENU_BAR);
+		frame.getContentPane().add(menuBar, NewClientLayout.MENU_BAR);
+		
+		gaplistsWindow = new DisplayGaplistsWindow(wrapper, this, gaplists);
 		
 		txtLink.addMouseListener(new TextFieldListener(new String[] {"Insert a Link here", "Couldn't add", "Track added", "No valid"}, txtLink));
 		txtLink.setColumns(10);
-		
-		final JButton btnDebugMode = new JButton("Debug Mode");
-		btnDebugMode.setToolTipText("Click here to open the Debug Window.");
-		frame.getContentPane().add(btnDebugMode, ClientLayout.DEBUG_BUTTON);
 		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
@@ -927,7 +953,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 															}
 														});
 	
-		btnDisconnect.addActionListener((ActionEvent ae)->{wrapper.close();});
+//		btnDisconnect.addActionListener((ActionEvent ae)->{onDisconnect();});
 		btnSkip.addActionListener((ActionEvent ae) -> {skip();});
 		btnPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		btnSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
@@ -937,14 +963,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	//	btnDelete.addActionListener((ActionEvent ae) -> {deleteTrack(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnUp.addActionListener((ActionEvent ae) -> {moveTrackUp(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
 		btnDown.addActionListener((ActionEvent ae) -> {moveTrackDown(((JTable) ((JViewport) oldGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow());});
-		btnLoad.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
-		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
-		btnRemove.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
-		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textName.getText());});
+//		btnLoad.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)loadGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
+//		btnShow.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) showGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
+//		btnRemove.addActionListener((ActionEvent ae) -> {if (((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) removeGaplist((String)(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) oldSavedGaplistPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); else showFail("Select a Gaplist first.");});
+//		btnCreate.addActionListener((ActionEvent ae) -> {createGaplist(textName.getText());});
 		btnVote.addActionListener((ActionEvent ae) -> {vote(((JTable) ((JViewport) oldPane.getComponent(0)).getComponent(0)).getSelectedRow());});
-		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
-		btnRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
-		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
+//		btnRemoveVote.addActionListener((ActionEvent ae) -> {removeVote();});
+//		btnRemoveAllVotes.addActionListener((ActionEvent ae) -> {removeAllVotes();});
+//		btnDebugMode.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
 		long end = System.currentTimeMillis();
 		util.IO.println(this, "Frame Constructed in " + (end-start) + " ms");
 	}
@@ -981,7 +1007,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void onGapListCountChangedNotify(String[] gapLists) {
 		showFail("Count of Gaplists changed");
 		this.gaplists = gapLists;
-		new SetSavedGaplistsTask(frame, gapLists, oldSavedGaplistPane, this).execute();
+	//	new SetSavedGaplistsTask(frame, gapLists, oldSavedGaplistPane, this).execute();
 	}
 
 	@Override
@@ -1018,6 +1044,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
+		this.currentURL = url;
 	}
 
 	@Override
@@ -1038,7 +1065,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
 		this.gaplist = gaplist;
 		frame.remove(this.lblNoGaplist);
-		frame.add(lblNoGaplist, ClientLayout.COUNT_GAPLIST_LABEL);
+		frame.add(lblNoGaplist, NewClientLayout.COUNT_GAPLIST_LABEL);
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
 		frame.remove(this.oldGaplistPane);
@@ -1059,7 +1086,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
 		this.wishlist = wishlist;
 		frame.remove(this.lblNoWishlist);
-		frame.add(lblNoWishlist, ClientLayout.COUNT_WISHLIST_LABEL);
+		frame.add(lblNoWishlist, NewClientLayout.COUNT_WISHLIST_LABEL);
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
 		frame.remove(this.oldPane);
@@ -1097,5 +1124,46 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.oldSavedGaplistPane = savedListsPane;
 	//	this.frame.repaint();
 		this.frame.revalidate();
+	}
+
+	@Override
+	public void onClientCountChangedNotify(int newClientCount) {
+		// Nothing to do here
+	}
+
+	@Override
+	public void onPlayerCountChangedNotify(int newPlayerCount) {
+		//Nothing to do here
+	}
+
+	@Override
+	public void onNewOutput(String output) {
+		buffer.append(output+"\n");
+		addNewMessage();
+	}
+	
+	/**
+	 * Adds a new Message to the Debug-TextArea.
+	 * @since 1.8
+	 */
+	private void addNewMessage() {
+		if (buffer.length() > 0){
+			txtDebugs.append(buffer.toString());
+			buffer.setLength(0);
+			if (txtDebugs.getLineCount() > 200){
+				int diff = txtDebugs.getLineCount() - 200;
+				try {
+					txtDebugs.replaceRange("", 0, txtDebugs.getLineEndOffset(diff - 1));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+			scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+		}
+	}
+	
+	@Override
+	public void setActive(boolean state) {
+		frame.setEnabled(state);
 	}
 }

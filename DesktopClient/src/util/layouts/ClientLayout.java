@@ -10,7 +10,7 @@ import java.util.HashMap;
  * The {@link LayoutManager} for the Client.
  * @author Haeldeus
  * @version 1.0
- *
+ * @deprecated
  */
 public class ClientLayout implements LayoutManager{
 	
