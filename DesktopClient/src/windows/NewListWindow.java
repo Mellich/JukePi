@@ -16,16 +16,39 @@ import javax.swing.JTextField;
 
 import client.serverconnection.ServerConnection;
 
+/**
+ * The Window, that will be opened, when a new Gaplist should be added to the Server.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class NewListWindow extends Window{
 
+	/**
+	 * The {@link JFrame}, that displays this Window.
+	 */
 	private JFrame frame;
 	
+	/**
+	 * The {@link ServerConnection}, that will send Messages to the Server.
+	 */
 	private ServerConnection wrapper;
 	
+	/**
+	 * The {@link JLabel}, that will display responses from the Server.
+	 */
 	private JLabel lblFail;
 	
+	/**
+	 * The {@link MainWindow}, that called this Window.
+	 */
 	private MainWindow mw;
 	
+	/**
+	 * The Constructor for this Window.
+	 * @param wrapper	The {@link ServerConnection}, that will send Messages to the Server.
+	 * @param mw	The {@link MainWindow}, that called this Window.
+	 * @since 1.0
+	 */
 	public NewListWindow(ServerConnection wrapper, MainWindow mw) {
 		frame = new JFrame();
 		this.wrapper = wrapper;
@@ -59,6 +82,10 @@ public class NewListWindow extends Window{
 		mw.setActive(true);
 	}
 
+	/**
+	 * Creates the Frame, that contains this Window.
+	 * @since 1.0
+	 */
 	private void createFrame() {
 		frame.setSize(new Dimension(300,100));
 		frame.setTitle("Creating a new Gaplist...");

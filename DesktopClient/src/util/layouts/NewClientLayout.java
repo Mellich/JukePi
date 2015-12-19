@@ -6,68 +6,168 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.util.HashMap;
 
+/**
+ * The Layout for the AdminClient.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class NewClientLayout implements LayoutManager{
 
+	/**
+	 * The String, that declares the Gaplist_Label.
+	 */
 	public static final String GAPLIST_LABEL = "Gaplist_Label";
 
+	/**
+	 * The String, that declares the Wishlist_Label.
+	 */
 	public static final String WISHLIST_LABEL = "Wishlist_Label";
 
+	/**
+	 * The String, that declares the Count_Gaplist_Label.
+	 */
 	public static final String COUNT_GAPLIST_LABEL = "Count_Gaplist_Label";
 
+	/**
+	 * The String, that declares the Count_Wishlist_Label.
+	 */
 	public static final String COUNT_WISHLIST_LABEL = "Count_Wishlist_Label";
 
+	/**
+	 * The String, that declares the Now_Playing_Label.
+	 */
 	public static final String NOW_PLAYING_LABEL = "Now_Playing_Label";
 
+	/**
+	 * The String, that declares the Next_Track_Label.
+	 */
 	public static final String NEXT_TRACK_LABEL = "Next_Track_Label";
 
+	/**
+	 * The String that declares, the Name_Now_Playing_Label.
+	 */
 	public static final String NAME_NOW_PLAYING_LABEL = "Name_Now_Playing_Label";
 
+	/**
+	 * The String, that declares the Name_Next_Track_Label.
+	 */
 	public static final String NAME_NEXT_TRACK_LABEL = "Name_Next_Track_Label";
 	
+	/**
+	 * The String, that declares the Gaplist_Name_Label.
+	 */
 	public static final String GAPLIST_NAME_LABEL = "Gaplist_Name_Label";
 	
+	/**
+	 * The String, that declares the Wishlist_Name_Label.
+	 */
 	public static final String WISHLIST_NAME_LABEL = "Wishlist_Name_Label";
 	
+	/**
+	 * The String, that declares the Build_Version_Label.
+	 */
 	public static final String BUILD_VERSION_LABEL = "Build_Version_Label";
 
+	/**
+	 * The String, that declares the Fail_Label.
+	 */
 	public static final String FAIL_LABEL = "Fail_Label";
 
+	/**
+	 * The String, that declares the Add_Button.
+	 */
 	public static final String ADD_BUTTON = "Add_Button";
 
+	/**
+	 * The String, that declares the Seek_Back_Button.
+	 */
 	public static final String SEEK_BACK_BUTTON = "Seek_Back_Button";
 
+	/**
+	 * The String, that declares the Play_Pause_Button.
+	 */
 	public static final String PLAY_PAUSE_BUTTON = "Play_Pause_Button";
 
+	/**
+	 * The String, that declares the Seek_Forward_Button.
+	 */
 	public static final String SEEK_FORWARD_BUTTON = "Seek_Forward_Button";
 
+	/**
+	 * The String, that declares the Skip_Button.
+	 */
 	public static final String SKIP_BUTTON = "Skip_Button";
 	
+	/**
+	 * The String, that declares the Save_Button.
+	 */
 	public static final String SAVE_BUTTON = "Save_Button";
 	
+	/**
+	 * The String, that declares the Vote_Button.
+	 */
 	public static final String VOTE_BUTTON = "Vote_Button";
 	
+	/**
+	 * The String, that declares the Track_Up_Button.
+	 */
 	public static final String TRACK_UP_BUTTON = "Track_Up_Button";
 	
+	/**
+	 * The String, that declares the Track_Down_Button.
+	 */
 	public static final String TRACK_DOWN_BUTTON = "Track_Down_Button";
 	
+	/**
+	 * The String, that declares the Gaplist_Pane.
+	 */
 	public static final String GAPLIST_PANE = "Gaplist_Pane";
 	
+	/**
+	 * The String, that declares the Wishlist_Pane.
+	 */
 	public static final String WISHLIST_PANE = "Wishlist_Pane";
 	
+	/**
+	 * The String, that declares the Debug_Pane.
+	 */
 	public static final String DEBUG_PANE = "Debug_Pane";
 	
+	/**
+	 * The String, that declares the Link_Textfield.
+	 */
 	public static final String LINK_TEXTFIELD = "Link_Textfield";
 	
+	/**
+	 * The String, that declares the Gaplist_Radiobutton.
+	 */
 	public static final String GAPLIST_RADIO = "Gaplist_Radio";
 	
+	/**
+	 * The String, that declares the Wishlist_Radiobutton.
+	 */
 	public static final String WISHLIST_RADIO = "Wishlist_Radio";
 	
+	/**
+	 * The String, that declares the In_Front_Checkbox.
+	 */
 	public static final String IN_FRONT_CHECKBOX = "In_Front_Checkbox";
 	
+	/**
+	 * The String, that declares the Menu_Bar.
+	 */
 	public static final String MENU_BAR = "Menu_Bar";
 	
+	/**
+	 * All components, that are used by this Layout as a {@link HashMap} of {@link String} and
+	 * {@link Component}.
+	 */
 	private HashMap<String, Component> components;
 	
+	/**
+	 * The Constructor for this Layout.
+	 * @since 1.0
+	 */
 	public NewClientLayout() {
 		components = new HashMap<String, Component>();
 	}
@@ -209,11 +309,38 @@ public class NewClientLayout implements LayoutManager{
 			remove(comp);
 	}
 
+	/**
+	 * Returns the boolean value, if the given String defines a Component.
+	 * @param regex	The String, that will be checked, if it defines a Component.
+	 * @return	{@code true}, if {@code regex} defines a Component, {@code false} else.
+	 * @since 1.0
+	 */
 	private boolean isLayoutComponent(String regex) {
-		//TODO
-		return true;
+		if (regex.equals(GAPLIST_LABEL) || regex.equals(WISHLIST_LABEL) || 
+				regex.equals(COUNT_GAPLIST_LABEL) || regex.equals(COUNT_WISHLIST_LABEL) || 
+				regex.equals(NOW_PLAYING_LABEL) || regex.equals(NEXT_TRACK_LABEL) || 
+				regex.equals(NAME_NOW_PLAYING_LABEL) || regex.equals(NAME_NEXT_TRACK_LABEL) || 
+				regex.equals(GAPLIST_NAME_LABEL) || regex.equals(WISHLIST_NAME_LABEL) || 
+				regex.equals(BUILD_VERSION_LABEL) || regex.equals(FAIL_LABEL) || 
+				regex.equals(ADD_BUTTON) || regex.equals(SEEK_BACK_BUTTON) || 
+				regex.equals(PLAY_PAUSE_BUTTON) || regex.equals(SEEK_FORWARD_BUTTON) || 
+				regex.equals(SKIP_BUTTON) || regex.equals(SAVE_BUTTON) || 
+				regex.equals(VOTE_BUTTON) || regex.equals(TRACK_UP_BUTTON) || 
+				regex.equals(TRACK_DOWN_BUTTON) || regex.equals(GAPLIST_PANE) || 
+				regex.equals(WISHLIST_PANE) || regex.equals(DEBUG_PANE) || 
+				regex.equals(LINK_TEXTFIELD) || regex.equals(GAPLIST_RADIO) || 
+				regex.equals(WISHLIST_RADIO) || regex.equals(IN_FRONT_CHECKBOX) || 
+				regex.equals(MENU_BAR))
+			return true;
+		else
+			return false;
 	}
 	
+	/**
+	 * Removes the given Component from the Layout.
+	 * @param comp	The Component to be removed.
+	 * @since 1.0
+	 */
 	private void remove(Component comp) {
 		if (components.get(GAPLIST_LABEL) != null) 
 			if (components.get(GAPLIST_LABEL).equals(comp)) {

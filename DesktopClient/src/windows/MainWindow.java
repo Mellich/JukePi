@@ -198,8 +198,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private OptionsWindow options;
 	
+	/**
+	 * The {@link DisplayGaplistsWindow}, that will show the saved Gaplists when opened.
+	 */
 	private DisplayGaplistsWindow gaplistsWindow;
 	
+	/**
+	 * The URL of the Song, that is currently played on the Server.
+	 */
 	private String currentURL;
 	
 	/**
@@ -870,7 +876,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuEdit.add(menuOptions);
 		
 		/****************Track Menu*************************/
-//		JMenu trackEditMenu = new JMenu("Track Edit");
 		JMenuItem menuSkip = new JMenuItem("Skip");
 		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
 		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");

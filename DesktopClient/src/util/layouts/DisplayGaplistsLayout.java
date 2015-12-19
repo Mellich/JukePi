@@ -6,26 +6,64 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.util.HashMap;
 
+/**
+ * The {@link LayoutManager}, that will manage the Layout for the 
+ * {@link windows#DisplayGaplistsWindow}.
+ * @author Haeldeus
+ * @version 1.0
+ */
 public class DisplayGaplistsLayout implements LayoutManager{
 
+	/**
+	 * The String, that declares the Fail_Label.
+	 */
 	public static final String FAIL_LABEL = "Fail_Label";
 	
+	/**
+	 * The String, that declares the Saved_Gaplists_Label.
+	 */
 	public static final String SAVED_GAPLISTS_LABEL = "Saved_Gaplists_Label";
 	
+	/**
+	 * The String, that declares the Content_Label.
+	 */
 	public static final String CONTENT_LABEL = "Content_Label";
 
+	/**
+	 * The String, that declares the Load_Button.
+	 */
 	public static final String LOAD_BUTTON = "Load_Button";
 	
+	/**
+	 * The String, that declares the Show_Button.
+	 */
 	public static final String SHOW_BUTTON = "Show_Button";
 	
+	/**
+	 * The String, that declares the Delete_Button.
+	 */
 	public static final String DELETE_BUTTON = "Delete_Button";
 	
+	/**
+	 * The String, that declares the Gaplists_Pane.
+	 */
 	public static final String GAPLISTS_PANE = "Gaplists_Pane";
 	
+	/**
+	 * The String, that declares the Content_Pane.
+	 */
 	public static final String CONTENT_PANE = "Content_Pane";
 	
+	/**
+	 * All components, that are used by this Layout as a {@link HashMap} of {@link String} and
+	 * {@link Component}.
+	 */
 	private HashMap<String, Component> components;
 	
+	/**
+	 * The Constructor for the Layout. Initializes the components-HashMap.
+	 * @since 1.0
+	 */
 	public DisplayGaplistsLayout() {
 		components = new HashMap<String, Component>();
 	}
@@ -99,6 +137,11 @@ public class DisplayGaplistsLayout implements LayoutManager{
 			remove(comp);
 	}
 	
+	/**
+	 * Removes the given Component from the Layout.
+	 * @param comp	The Component to be removed.
+	 * @since 1.0
+	 */
 	private void remove(Component comp) {
 		if (components.get(FAIL_LABEL) != null)
 			if (components.get(FAIL_LABEL).equals(comp)) {
