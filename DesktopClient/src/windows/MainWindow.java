@@ -729,6 +729,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(lblNextTrack, NewClientLayout.NEXT_TRACK_LABEL);
 		
 		final JLabel lblBuildVersion = new JLabel("0.9.2 - New Layout, Image Buttons, Untested");
+		lblBuildVersion.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		lblBuildVersion.setHorizontalAlignment(JLabel.RIGHT);
 		frame.getContentPane().add(lblBuildVersion, NewClientLayout.BUILD_VERSION_LABEL);
 		
