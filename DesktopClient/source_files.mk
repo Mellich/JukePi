@@ -68,6 +68,19 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/windows/PasswordWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/connection/Collector.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/start/ClientStarter.class 
 
+CLIENT_ARTWORK = \
+$(CLIENT_DIR)$(OUTPUT_DIR)/resources/skip.png \
+$(CLIENT_DIR)$(OUTPUT_DIR)/resources/seekbackward.png \
+$(CLIENT_DIR)$(OUTPUT_DIR)/resources/seekforward.png \
+$(CLIENT_DIR)$(OUTPUT_DIR)/resources/play.png \
+$(CLIENT_DIR)$(OUTPUT_DIR)/resources/pause.png
+
+$(CLIENT_DIR)$(OUTPUT_DIR)/%.png: $(CLIENT_DIR)$(INPUT_DIR)/%.png
+	@echo "Copying artwork: $<"
+	@$(MD) $(CLIENT_DIR)$(OUTPUT_DIR)/resources
+	@$(CP) $(CLIENT_DIR)$(INPUT_DIR)/$*.png $(CLIENT_DIR)$(OUTPUT_DIR)/$*.png
+
+
 
 $(CLIENT_DIR)$(OUTPUT_DIR)/%.class: $(CLIENT_DIR)$(INPUT_DIR)/%.java
 	@echo ""

@@ -48,7 +48,7 @@ Server: Network $(SERVER_CLASS_FILES)
 Player: Network $(PLAYER_CLASS_FILES) $(PLAYER_ARTWORK)
 	@echo "player compilation done."
 
-Client: Server $(CLIENT_CLASS_FILES)
+Client: Server $(CLIENT_CLASS_FILES) $(CLIENT_ARTWORK)
 	@echo "client compilation done."
 
 Server.jar: Server
