@@ -11,8 +11,13 @@ import util.tasks.SetWishlistTask;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -165,12 +170,18 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	/**
 	 * The Icon, that will be displayed instead of "Pause" as a String.
 	 */
-	private final ImageIcon playIcon = new ImageIcon("pause.png");
+	private ImageIcon playIcon;
 	
 	/**
 	 * The Icon, that will be displayed instead of "Play" as a String.
 	 */
-	private final ImageIcon pauseIcon = new ImageIcon("pause.png");
+	private ImageIcon pauseIcon;
+	
+	private ImageIcon seekBackwardIcon;
+	
+	private ImageIcon seekForwardIcon;
+	
+	private ImageIcon skipIcon;
 	
 	/**
 	 * The StringBuilder, that will buffer the Messages to maintain functionality and 
@@ -228,6 +239,17 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
 		buffer = new StringBuilder("");
+		
+		pauseIcon = new ImageIcon(MainWindow.class.getResource("/resources/pause.png"));
+		pauseIcon.setImage(pauseIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		playIcon = new ImageIcon(MainWindow.class.getResource("/resources/play.png"));
+		playIcon.setImage(playIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		seekBackwardIcon = new ImageIcon(MainWindow.class.getResource("/resources/seekbackward.png"));
+		seekBackwardIcon.setImage(seekBackwardIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		seekForwardIcon = new ImageIcon(MainWindow.class.getResource("/resources/seekforward.png"));
+		seekForwardIcon.setImage(seekForwardIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		skipIcon = new ImageIcon(MainWindow.class.getResource("/resources/skip.png"));
+		skipIcon.setImage(skipIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		
 	//	this.adminPassword = adminPassword;
 	//	this.playerPassword = playerPassword;
@@ -512,12 +534,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void pauseResume(boolean isPlaying) {
 		if (isPlaying) {
 			btnPlayPause.setIcon(pauseIcon);
-			btnPlayPause.setText("Pause");
+		//	btnPlayPause.setText("Pause");
 			btnPlayPause.setToolTipText("Click here to pause the Track.");
 		}
 		else {
 			btnPlayPause.setIcon(playIcon);
-			btnPlayPause.setText("Play");
+		//	btnPlayPause.setText("Play");
 			btnPlayPause.setToolTipText("Click here to resume the Track.");
 		}
 	}
@@ -706,7 +728,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		lblNextTrack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		frame.getContentPane().add(lblNextTrack, NewClientLayout.NEXT_TRACK_LABEL);
 		
-		final JLabel lblBuildVersion = new JLabel("0.9.1 - New Layout, Untested");
+		final JLabel lblBuildVersion = new JLabel("0.9.2 - New Layout, Image Buttons, Untested");
 		lblBuildVersion.setHorizontalAlignment(JLabel.RIGHT);
 		frame.getContentPane().add(lblBuildVersion, NewClientLayout.BUILD_VERSION_LABEL);
 		
@@ -739,22 +761,21 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		else
 			lblTrackNext.setText(wishlist[0].getName());
 		
-		
-		//TODO:
-		ImageIcon icon = new ImageIcon("play.png");
-		
-		btnPlayPause = new JButton(icon);
+		btnPlayPause = new JButton(playIcon);
+		btnPlayPause.setMargin(new Insets(0, 0, 0, 0));
 		frame.getContentPane().add(btnPlayPause, NewClientLayout.PLAY_PAUSE_BUTTON);
 		
-		final JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
+//		final JButton btnSeekBackwards = new JButton("<html><body>Seek<br>Backward</body></html>");
+		final JButton btnSeekBackwards = new JButton(seekBackwardIcon);
 		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
 		frame.getContentPane().add(btnSeekBackwards, NewClientLayout.SEEK_BACK_BUTTON);
 		
-		final JButton btnSkip = new JButton("Skip");
+		final JButton btnSkip = new JButton(skipIcon);
 		btnSkip.setToolTipText("Click here to skip the current track.");
 		frame.getContentPane().add(btnSkip, NewClientLayout.SKIP_BUTTON);
 		
-		final JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
+	//	final JButton btnSeekForward = new JButton("<html><body>Seek<br>Forward</body></html>");
+		final JButton btnSeekForward = new JButton(seekForwardIcon);
 		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
 		frame.getContentPane().add(btnSeekForward, NewClientLayout.SEEK_FORWARD_BUTTON);
 		
@@ -943,13 +964,13 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
-															//	btnPlayPause.setIcon(pauseIcon);
-																btnPlayPause.setText("Pause");
+																btnPlayPause.setIcon(pauseIcon);
+															//	btnPlayPause.setText("Pause");
 															}
 															else {
 																btnPlayPause.setToolTipText("Click here to resume the Track");
-															//	btnPlayPause.setIcon(playIcon);
-																btnPlayPause.setText("Play");
+																btnPlayPause.setIcon(playIcon);
+															//	btnPlayPause.setText("Play");
 															}
 														});
 	
@@ -1065,7 +1086,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneGaplistUpdate(Song[] gaplist, JLabel lblNoGaplist, JFrame frame, JScrollPane oldGaplistPane) {
 		this.gaplist = gaplist;
 		frame.remove(this.lblNoGaplist);
-		frame.add(lblNoGaplist, NewClientLayout.COUNT_GAPLIST_LABEL);
+		frame.getContentPane().add(lblNoGaplist, NewClientLayout.COUNT_GAPLIST_LABEL);
 		this.lblNoGaplist = lblNoGaplist;
 		this.frame = frame;
 		frame.remove(this.oldGaplistPane);
@@ -1086,7 +1107,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	public void doneWishlistUpdate(Song[] wishlist, JLabel lblNoWishlist, JFrame frame, JScrollPane oldPane) {
 		this.wishlist = wishlist;
 		frame.remove(this.lblNoWishlist);
-		frame.add(lblNoWishlist, NewClientLayout.COUNT_WISHLIST_LABEL);
+		frame.getContentPane().add(lblNoWishlist, NewClientLayout.COUNT_WISHLIST_LABEL);
 		this.lblNoWishlist = lblNoWishlist;
 		this.frame = frame;
 		frame.remove(this.oldPane);
