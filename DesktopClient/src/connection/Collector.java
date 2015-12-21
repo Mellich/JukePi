@@ -239,6 +239,7 @@ public class Collector {
 		} catch (IOException e) {
 			loginScreen.show();
 			showFail(loginScreen, "Port is already in use, please enter another Port.");
+			mainScreen.close();
 		}
 	}
 	

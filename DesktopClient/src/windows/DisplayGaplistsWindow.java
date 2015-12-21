@@ -147,8 +147,10 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 			});
 		
 		btnLoad.addActionListener((ActionEvent ae) -> {
-			if (((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0)
+			if (((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) {
 				loadGaplist((String)(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); 
+				this.close();
+			}
 			else 
 				showFail("Select a Gaplist first.");});
 
