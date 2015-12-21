@@ -147,6 +147,7 @@ public class IdleViewer implements Visualizer {
 	@Override
 	public void updateInfos(Status newStatus) {
 		Platform.runLater(() -> {
+									this.showDebugInfo("Starting view update...");
 									this.currentGapList.setText("Geöffnete Gaplist: "+newStatus.getGaplistTitle());
 									gaplistReadOutStatus(newStatus.getLoadStatus());
 									editConnectionDetails(newStatus.getServerIP(),newStatus.getServerPort());
@@ -157,6 +158,7 @@ public class IdleViewer implements Visualizer {
 										this.currentTrack.setText("Jetzt spielt: "+title.substring(0, 42)+"...");
 									else if (title != null ) this.currentTrack.setText("Jetzt spielt: "+title);
 									else this.currentTrack.setText("Jetzt spielt: -");
+									this.showDebugInfo("Vie update finished!");
 		}						
 		);
 	}

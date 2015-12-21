@@ -468,12 +468,14 @@ public class YTJBServer implements Server {
 		for (MusicTrack m : gapList){
 			if (m.getTrackID() == trackID){
 				wishList.add(new MusicTrack(m));
+				this.notifyClients(MessageType.WISHLISTUPDATEDNOTIFY,this.listToArray(wishList));
 				return true;
 			}
 		}
 		for (MusicTrack m : wishList){
 			if (m.getTrackID() == trackID){
 				gapList.add(new MusicTrack(m));
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
 				return true;
 			}
 		}
@@ -489,19 +491,36 @@ public class YTJBServer implements Server {
 					break;
 				}
 			}
-			int oldTrackIndex = gapList.indexOf(track) ;
-			int newTrackIndex;
-			if (withUpper)
-				newTrackIndex = oldTrackIndex - 1;
-			else newTrackIndex = oldTrackIndex + 1;
-			if (newTrackIndex < 0)
-				newTrackIndex = gapList.size() - 1;
-			if (newTrackIndex >= gapList.size())
-				newTrackIndex = 0;
-			gapList.set(oldTrackIndex, gapList.get(newTrackIndex));
-			gapList.set(newTrackIndex, track);
-			this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
-			return true;
+			if (track != null){
+				int oldTrackIndex = gapList.indexOf(track);
+				gapList.remove(track);
+				if ((gapList.size() == oldTrackIndex && !withUpper)){ //if track is last element in list set it to first
+					gapList.add(0,track);
+				}
+				else if ((0 == oldTrackIndex && withUpper)){ // if track is first element in list set it to last
+					gapList.add(track);			
+				}
+				else{
+					int newTrackIndex;
+					if (withUpper)
+						newTrackIndex = oldTrackIndex - 1;
+					else newTrackIndex = oldTrackIndex + 1;
+					gapList.add(newTrackIndex, track);
+					/*int newTrackIndex;
+					if (withUpper)
+						newTrackIndex = oldTrackIndex - 1;
+					else newTrackIndex = oldTrackIndex + 1;
+					if (newTrackIndex < 0)
+						newTrackIndex = gapList.size() - 1;
+					if (newTrackIndex >= gapList.size())
+						newTrackIndex = 0;
+					gapList.set(oldTrackIndex, gapList.get(newTrackIndex));
+					gapList.set(newTrackIndex, track);*/
+				}
+				this.notifyClients(MessageType.GAPLISTUPDATEDNOTIFY,this.listToArray(gapList));
+				return true;
+			}
+			else return false;
 		}
 		else return false;
 	}

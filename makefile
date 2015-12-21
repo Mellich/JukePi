@@ -83,6 +83,10 @@ Player.jar: Player
 	@$(EXE) $(PLAYER_DIR)$(JAR_DIR)/Player.jar	
 	@echo "Player created."
 	@echo ""
+	
+updatePlayer: Player.jar
+	@echo "uploading player to raspberry pi"
+	scp $(PLAYER_DIR)$(JAR_DIR)/Player.jar pi@raspberrypi:.jbserver/clientplayer.jar
 #
 # RM is a predefined macro in make (RM = rm -f)
 #
