@@ -5,11 +5,15 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+
 
 
 
@@ -110,6 +114,25 @@ public class NewListWindow extends Window{
 		
 		JButton btnCreate = new JButton("Create");
 		JButton btnCancel = new JButton("Cancel");
+		
+		txtName.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getExtendedKeyCode() == 10)
+					btnCreate.doClick();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}});
 		
 		btnCreate.addActionListener((ActionEvent ae) -> {
 			if (!txtName.getText().equals("")) {

@@ -86,6 +86,7 @@ public class TablePopUpMenu extends JPopupMenu{
         												});
         add(getLink);
         add(moveToOtherList);
+        add(delete);
 	}
 	
 	/**

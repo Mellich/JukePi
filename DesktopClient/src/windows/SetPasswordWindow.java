@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -117,6 +119,28 @@ public class SetPasswordWindow extends Window{
 				collector.createLocalServerFinal(port, "gaplist", "player");
 													});
 		btnSkip.addActionListener((ActionEvent ae) -> {collector.createLocalServerFinal(port, "gaplist", "player");});
+		
+		txtAdminPassword.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getExtendedKeyCode() == 10)
+					btnSet.doClick();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {}
+			@Override
+			public void keyTyped(KeyEvent arg0) {} });
+		
+		txtPlayerPassword.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getExtendedKeyCode() == 10)
+					btnSet.doClick();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {}
+			@Override
+			public void keyTyped(KeyEvent arg0) {} });
 		
 		frame.setContentPane(content);
 	}

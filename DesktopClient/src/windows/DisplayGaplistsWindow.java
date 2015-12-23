@@ -3,6 +3,8 @@ package windows;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,7 +40,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	/**
 	 * The {@link MainWindow}, this Object was called from.
 	 */
-	private MainWindow mw;
+//	private MainWindow mw;
 	
 	/**
 	 * The {@link JScrollPane}, that will display all Gaplists saved on the Server.
@@ -71,7 +73,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		frame = new JFrame();
 		lblFail = new JLabel();
 		this.wrapper = wrapper;
-		this.mw = mw;
+	//	this.mw = mw;
 		this.gaplists = gaplists;
 	}
 	
@@ -225,6 +227,30 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		this.frame.remove(this.gaplistsPane);
 		this.gaplistsPane = gaplistsPane;
 		this.frame.revalidate();
+		JTable table = (JTable) ((JViewport) this.gaplistsPane.getComponent(0)).getComponent(0);
+		table.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				if (event.getClickCount() == 1)
+					showGaplist((String)(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0)));
+				else if (event.getClickCount() == 2) {
+					loadGaplist((String)(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); 
+					close();
+				  }
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {} });
 	}
 
 	/**
