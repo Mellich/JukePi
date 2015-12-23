@@ -135,7 +135,7 @@ public class PasswordWindow extends Window{
 				password = password+c;
 			try {
 				if (wrapper.addPermission(Permission.ADMIN, password)) {
-					collector.adminConnect(wrapper.getIPAddress(), wrapper.getPort(), password, "UNKNOWN");
+					collector.adminConnect(wrapper.getIPAddress(), wrapper.getPort(), password, "UNKNOWN", false);
 					this.close();
 				}
 			}

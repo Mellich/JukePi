@@ -212,6 +212,11 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	private String currentURL;
 	
 	/**
+	 * Determines, if a local Server is running with this Client as Admin and Host.
+	 */
+	private boolean localServer;
+	
+	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
@@ -222,11 +227,13 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @param wishlist	The Wishlist as an Array of {@link Song}s.
 	 * @since 1.0
 	 */
-	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, Song[] wishlist, String ip, int iport, String adminPassword, 
-			String playerPassword) {
+	public MainWindow(Collector collector, JFrame frame, ServerConnection wrapper, Song[] gaplist, 
+			Song[] wishlist, String ip, int iport, String adminPassword, String playerPassword, 
+			boolean localServer) {
 		this.collector = collector;
 		this.frame = frame;
 		this.wrapper = wrapper;
+		this.localServer = localServer;
 		
 		this.gaplist = gaplist;
 		this.wishlist = wishlist;
@@ -715,8 +722,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		/***************Server Menu*********************/
 		JMenuItem menuDisconnect = new JMenuItem("Disconnect");
-		JMenuItem menuDebug = new JMenuItem("Debug-Mode");
 		menuDisconnect.setAccelerator(KeyStroke.getKeyStroke('d'));
+		if (localServer) {
+			menuDisconnect.setText("Shut Down Server");
+			menuDisconnect.setAccelerator(KeyStroke.getKeyStroke('s'));
+		}
+		JMenuItem menuDebug = new JMenuItem("Debug-Mode");
 		menuDebug.setAccelerator(KeyStroke.getKeyStroke('b'));
 		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
 		menuDebug.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});

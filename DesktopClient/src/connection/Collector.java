@@ -152,12 +152,14 @@ public class Collector {
 	 * Connects as Admin to the Server with the given IP and Port.
 	 * @param ip	The IP of the Server.
 	 * @param port	The Port of the Server.
-	 * @param password	The Password for the Admin-Permissions.
+	 * @param adminPassword	The Password for the Admin-Permissions.
+	 * @param playPassword	The Password for the Player.
+	 * @param localServer	Boolean value, if a Server is running with this Client as Host.
 	 * @since 1.3
 	 */
-	public void adminConnect(String ip, int port, String adminPassword, String playerPassword) {
+	public void adminConnect(String ip, int port, String adminPassword, String playerPassword, boolean localServer) {
 	//	mainScreen = new MainWindow(this, visibleScreen, wrapper, gaplist, wishlist, ip, port, password);
-		mainScreen = new MainWindow(this, new JFrame(), wrapper, gaplist, wishlist, ip, port, adminPassword, playerPassword);
+		mainScreen = new MainWindow(this, new JFrame(), wrapper, gaplist, wishlist, ip, port, adminPassword, playerPassword, localServer);
 		if (loginScreen != null)
 			loginScreen.close();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -235,7 +237,7 @@ public class Collector {
 			wrapper.connect("localhost", port);
 			wrapper.addPermission(Permission.ADMIN, adminPassword);
 			mainScreen.close();
-			adminConnect("localhost", port, adminPassword, playerPassword);
+			adminConnect("localhost", port, adminPassword, playerPassword, true);
 		} catch (IOException e) {
 			loginScreen.show();
 			showFail(loginScreen, "Port is already in use, please enter another Port.");
