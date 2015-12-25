@@ -114,13 +114,12 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		content.add(lblFail, DisplayGaplistsLayout.FAIL_LABEL);
 		
 		JLabel lblSavedGaplists = new JLabel("Saved Gaplists");
+		lblSavedGaplists.setHorizontalAlignment(JLabel.CENTER);
 		content.add(lblSavedGaplists, DisplayGaplistsLayout.SAVED_GAPLISTS_LABEL);
 		
 		JLabel lblContent = new JLabel("Content:");
+		lblContent.setHorizontalAlignment(JLabel.CENTER);
 		content.add(lblContent, DisplayGaplistsLayout.CONTENT_LABEL);
-		
-		JButton btnShow = new JButton("Show");
-		content.add(btnShow, DisplayGaplistsLayout.SHOW_BUTTON);
 		
 		JButton btnLoad = new JButton("Load");
 		content.add(btnLoad, DisplayGaplistsLayout.LOAD_BUTTON);
@@ -133,13 +132,6 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		
 		gaplistsPane = new JScrollPane();
 		content.add(gaplistsPane, DisplayGaplistsLayout.GAPLISTS_PANE);
-		
-		btnShow.addActionListener((ActionEvent ae) -> {
-			if (((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) 
-				showGaplist((String)(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); 
-			else 
-				showFail("Select a Gaplist first.");
-			});
 
 		btnDelete.addActionListener((ActionEvent ae) -> {
 			if (((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) 

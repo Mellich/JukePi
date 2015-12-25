@@ -590,7 +590,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(lblNextTrack, NewClientLayout.NEXT_TRACK_LABEL);
 		components.put(NewClientLayout.NEXT_TRACK_LABEL, lblNextTrack);
 		
-		final JLabel lblBuildVersion = new JLabel("0.9.2 - New Layout, Image Buttons, Untested");	//TODO: Localization
+		final JLabel lblBuildVersion = new JLabel("0.9.3 - KeyListener added, GaplistsWindow reduced");	//TODO: Localization
 		lblBuildVersion.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		lblBuildVersion.setHorizontalAlignment(JLabel.RIGHT);
 		frame.getContentPane().add(lblBuildVersion, NewClientLayout.BUILD_VERSION_LABEL);

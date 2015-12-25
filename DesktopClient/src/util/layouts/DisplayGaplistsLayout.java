@@ -35,11 +35,6 @@ public class DisplayGaplistsLayout implements LayoutManager{
 	public static final String LOAD_BUTTON = "Load_Button";
 	
 	/**
-	 * The String, that declares the Show_Button.
-	 */
-	public static final String SHOW_BUTTON = "Show_Button";
-	
-	/**
 	 * The String, that declares the Delete_Button.
 	 */
 	public static final String DELETE_BUTTON = "Delete_Button";
@@ -77,8 +72,8 @@ public class DisplayGaplistsLayout implements LayoutManager{
 	private boolean checkLayoutComponent(String regex) {
 		if (regex.equals(SAVED_GAPLISTS_LABEL) || regex.equals(CONTENT_LABEL) || 
 				regex.equals(FAIL_LABEL) || regex.equals(LOAD_BUTTON) || 
-				regex.equals(SHOW_BUTTON) || regex.equals(DELETE_BUTTON) || 
-				regex.equals(GAPLISTS_PANE) || regex.equals(CONTENT_PANE))
+				regex.equals(DELETE_BUTTON) || regex.equals(GAPLISTS_PANE) || 
+				regex.equals(CONTENT_PANE))
 			return true;
 		else
 			return false;
@@ -91,7 +86,7 @@ public class DisplayGaplistsLayout implements LayoutManager{
 		int lblHeight = 14;
 		int buttonHeight = 22;
 		int buttonY = height-(buttonHeight+10);
-		int buttonWidth = (((width-20)/2)-20)/3;
+		int buttonWidth = ((width-20)/2-5)/2-5;
 		
 		/*********************Labels*************************/
 		if (components.get(FAIL_LABEL) != null)
@@ -107,11 +102,8 @@ public class DisplayGaplistsLayout implements LayoutManager{
 		if (components.get(LOAD_BUTTON) != null)
 			components.get(LOAD_BUTTON).setBounds(10, buttonY, buttonWidth, buttonHeight);
 		
-		if (components.get(SHOW_BUTTON) != null)
-			components.get(SHOW_BUTTON).setBounds(10 + buttonWidth + 10, buttonY, buttonWidth, buttonHeight);
-		
 		if (components.get(DELETE_BUTTON) != null) 
-			components.get(DELETE_BUTTON).setBounds(30 + 2*buttonWidth, buttonY, ((width-20)/2+5) - (30 + 2*buttonWidth), buttonHeight);
+			components.get(DELETE_BUTTON).setBounds(20 + buttonWidth, buttonY, (10+(width-20)/2-5)-(20 + buttonWidth), buttonHeight);
 		
 		/*****************Panes*****************************/
 		if (components.get(GAPLISTS_PANE) != null)
@@ -164,12 +156,6 @@ public class DisplayGaplistsLayout implements LayoutManager{
 		if (components.get(LOAD_BUTTON) != null)
 			if (components.get(LOAD_BUTTON).equals(comp)) {
 				components.put(LOAD_BUTTON, null);
-				return;
-			}
-		
-		if (components.get(SHOW_BUTTON) != null)
-			if (components.get(SHOW_BUTTON).equals(comp)) {
-				components.put(SHOW_BUTTON, null);
 				return;
 			}
 		
