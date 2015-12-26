@@ -59,6 +59,8 @@ public class OptionsWindow extends Window{
 	 */
 	private ArrayList<String> supportedSites;
 	
+	private JScrollPane pane;
+	
 	/**
 	 * The Constructor for the Window.
 	 * @param collector	The Collector, that provides Methods to communicate with the Server.
@@ -213,7 +215,7 @@ public class OptionsWindow extends Window{
 		
 		JLabel lblRestrictions = new JLabel("Restrictions");
 		lblRestrictions.setHorizontalAlignment(JLabel.CENTER);
-		JScrollPane pane = new JScrollPane(createTable());
+		pane = new JScrollPane(createTable());
 		JButton btnRemove = new JButton("Remove Restrictions");
 		
 		centerLeft.add(lblRestrictions, BorderLayout.NORTH);
@@ -240,6 +242,16 @@ public class OptionsWindow extends Window{
 		
 		btnSave.addActionListener((ActionEvent ae) -> {this.close();});
 		btnCancel.addActionListener((ActionEvent ae) -> {this.close();});
+		btnRemove.addActionListener((ActionEvent ae) -> {
+			centerLeft.remove(pane);
+			pane = new JScrollPane(createTable());
+			centerLeft.add(pane, BorderLayout.CENTER);
+			center.removeAll();
+			center.add(centerLeft);
+			center.add(centerRight);
+			frame.getContentPane().add(center, BorderLayout.CENTER);
+			frame.revalidate();
+		});
 		
 		south.add(btnSave);
 		south.add(btnCancel);
@@ -257,11 +269,11 @@ public class OptionsWindow extends Window{
 	private JTable createTable() {
 		String[] columns = {"Homepage", "Restricted:"};
 		
-		String[][] data = new String[supportedSites.size()][2];
+		Object[][] data = new Object[supportedSites.size()][2];
 		
 		for (int i = 0; i < supportedSites.size(); i++) {
 			data[i][0] = supportedSites.get(i);
-			data[i][1] = "false";
+			data[i][1] = false;
 		}
 		
 		JTable table = new JTable(data, columns) {
@@ -297,10 +309,21 @@ public class OptionsWindow extends Window{
 			 * @param column	The column-index of the Cell.
 			 * @return false by default, as these Cells shouldn't be editable.
 			 */
-			public boolean isCellEditable(int row, int column){  
-				return false;  
+			public boolean isCellEditable(int row, int column){
+				if (column == 0)
+					return false;
+				else
+					return true;
 			}
 	
+			@Override
+            public Class getColumnClass(int column) {
+				switch (column) {
+					case 0: return String.class;
+					default: return Boolean.class;
+				}
+            }
+			
 			/**
 			 * Creates a new TableHeader.
 			 * @return the new TableHeader.
