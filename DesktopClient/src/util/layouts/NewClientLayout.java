@@ -192,16 +192,16 @@ public class NewClientLayout implements LayoutManager{
 		
 		/***********************************Labels***************************************/
 		if (components.get(GAPLIST_LABEL) != null)
-			components.get(GAPLIST_LABEL).setBounds(10, 20 + 10, Math.min((int)(width*0.205),123), lblHeight);
+			components.get(GAPLIST_LABEL).setBounds(10, 20 + 10, 123, lblHeight);
 		
 		if (components.get(WISHLIST_LABEL) != null)
-			components.get(WISHLIST_LABEL).setBounds(10, 20 + 10 + (int)(height*0.037), Math.min((int)(width*0.205), 123), lblHeight);
+			components.get(WISHLIST_LABEL).setBounds(10, 20+10+10+lblHeight, 123, lblHeight);
 		
 		if (components.get(COUNT_GAPLIST_LABEL) != null)
-			components.get(COUNT_GAPLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 20 + 10, (int)(width*0.1133), lblHeight);
+			components.get(COUNT_GAPLIST_LABEL).setBounds(components.get(GAPLIST_LABEL).getX() + components.get(GAPLIST_LABEL).getWidth() + spacer, 20 + 10, (int)(width*0.1133), lblHeight);
 		
 		if (components.get(COUNT_WISHLIST_LABEL) != null)
-			components.get(COUNT_WISHLIST_LABEL).setBounds(10+Math.min((int)(width*0.205),123)+spacer, 20 + 10 + (int)(height*0.037),(int)(width*0.1133),lblHeight);
+			components.get(COUNT_WISHLIST_LABEL).setBounds(components.get(WISHLIST_LABEL).getX() + components.get(WISHLIST_LABEL).getWidth() + spacer, components.get(WISHLIST_LABEL).getY(),(int)(width*0.1133),lblHeight);
 		
 		if (components.get(NOW_PLAYING_LABEL) != null)
 			components.get(NOW_PLAYING_LABEL).setBounds(10, 20 + (int)(height*0.205), Math.min(68,(int)(width*0.1133)),lblHeight);

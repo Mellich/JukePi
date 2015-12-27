@@ -1,5 +1,6 @@
 package windows;
 
+import server.YTJBServer;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.NewClientLayout;
@@ -13,7 +14,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -217,6 +225,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	private boolean localServer;
 	
 	/**
+	 * The {@link JMenuItem}, that is can be used to pause/resume the current Track from the 
+	 * Menu.
+	 */
+	private JMenuItem menuPlayPause;
+	
+	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
@@ -258,8 +272,14 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		wrapper.addDebugNotificationListener(this);
 
 		components = new HashMap<String, Component>();
-		
-		setIpAndPort(ip, iport);
+		if (!localServer)
+			setIpAndPort(ip, iport);
+		else
+			try {
+				setIpAndPort(InetAddress.getLocalHost().getHostAddress(), iport);
+			} catch (UnknownHostException e) {
+				setIpAndPort(ip, iport);
+			}
 	}
 	
 	@Override
@@ -444,11 +464,13 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 			btnPlayPause.setIcon(pauseIcon);
 		//	btnPlayPause.setText("Pause");
 			btnPlayPause.setToolTipText("Click here to pause the Track.");
+			menuPlayPause.setText("Pause");
 		}
 		else {
 			btnPlayPause.setIcon(playIcon);
 		//	btnPlayPause.setText("Play");
 			btnPlayPause.setToolTipText("Click here to resume the Track.");
+			menuPlayPause.setText("Play");
 		}
 	}
 	
@@ -709,8 +731,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		new SetGaplistTask(gaplist, gaplist, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 		
 		
-		//TODO: ADD MENUBAR TO COMPONENTS
-		
 		/********************Menu Bar********************/
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuServer = new JMenu("Server");
@@ -737,15 +757,21 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		/*****************Edit Menu***********************/
 		JMenuItem menuOptions = new JMenuItem("Preferences");
+		//TODO delete this after testing
+		JMenuItem menuTexts = new JMenuItem("Edit Texts");
+		menuTexts.addActionListener((ActionEvent ae) -> {setTexts();});
+		/*Till here*/
 		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
 
 		menuEdit.add(menuOptions);
+		//Delete this as well
+		menuEdit.add(menuTexts);
 		
 		/****************Track Menu*************************/
 		JMenuItem menuSkip = new JMenuItem("Skip");
 		JMenuItem menuSeekBackwards = new JMenuItem("Seek Backwards");
 		JMenuItem menuSeekForward = new JMenuItem("Seek Forward");
-		JMenuItem menuPlayPause = new JMenuItem("Pause");
+		menuPlayPause = new JMenuItem("Pause");
 		JMenuItem menuCopyLink = new JMenuItem("Copy Link");
 		
 		menuSkip.setAccelerator(KeyStroke.getKeyStroke('s'));
@@ -800,6 +826,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuBar.add(menuWishlist);
 		menuBar.setBackground(Color.white);
 		
+		components.put(NewClientLayout.MENU_BAR, menuBar);
 		frame.getContentPane().add(menuBar, NewClientLayout.MENU_BAR);
 		
 		/********************Creating OptionsWindow********************/
@@ -816,17 +843,19 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		else
 			lblTrackNext.setText(wishlist[0].getName());
 		
-		this.setTexts();
+	//	this.setTexts();
 		wrapper.getCurrentGapListName((String[] s) -> {lblGaplistName.setText("Gaplist - "+ s[0]);});
 		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]); currentURL = s[2];});
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
 																btnPlayPause.setIcon(pauseIcon);
+																menuPlayPause.setText("Pause");
 															//	btnPlayPause.setText("Pause");
 															}
 															else {
 																btnPlayPause.setToolTipText("Click here to resume the Track");
 																btnPlayPause.setIcon(playIcon);
+																menuPlayPause.setText("Play");
 															//	btnPlayPause.setText("Play");
 															}
 														});
@@ -951,7 +980,32 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @since 1.9
 	 */
 	private void setTexts() {
-		//TODO
+		try {
+			int size = 0;
+			String workingDir = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			System.out.println(workingDir);
+			File file = new File(workingDir + "\\data\\lang\\Deutsch.lang");
+			Scanner fileScanner = new Scanner(file);
+			ArrayList<String> texts = new ArrayList<String>();
+			while (fileScanner.hasNextLine()) {
+				texts.add(fileScanner.nextLine());
+				size++;
+			}
+			
+			for (int i = 0; i < size; i++)
+				if (i != 0 && i != 19 && i != 20)
+					texts.set(i, texts.get(i).substring(texts.get(i).indexOf("= ")+2));
+			
+			((JLabel)components.get(NewClientLayout.GAPLIST_LABEL)).setText(texts.get(1));
+			((JLabel)components.get(NewClientLayout.GAPLIST_LABEL)).setToolTipText(texts.get(1));
+			((JLabel)components.get(NewClientLayout.WISHLIST_LABEL)).setText(texts.get(2));
+			((JLabel)components.get(NewClientLayout.WISHLIST_LABEL)).setToolTipText(texts.get(2));
+			((JLabel)components.get(NewClientLayout.NOW_PLAYING_LABEL)).setText(texts.get(3));
+			
+			fileScanner.close();
+		} catch (NullPointerException | FileNotFoundException fnfe) {
+			showFail("Nappel " + fnfe.getClass());
+		}
 	}
 	
 	@Override
