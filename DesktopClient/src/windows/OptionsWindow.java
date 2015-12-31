@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -240,7 +241,7 @@ public class OptionsWindow extends Window{
 		JButton btnSave = new JButton("Save");
 		JButton btnCancel = new JButton("Cancel");
 		
-		btnSave.addActionListener((ActionEvent ae) -> {this.close();});
+		btnSave.addActionListener((ActionEvent ae) -> {getLanguages();this.close();});
 		btnCancel.addActionListener((ActionEvent ae) -> {this.close();});
 		btnRemove.addActionListener((ActionEvent ae) -> {
 			centerLeft.remove(pane);
@@ -317,7 +318,7 @@ public class OptionsWindow extends Window{
 			}
 	
 			@Override
-            public Class getColumnClass(int column) {
+            public Class<?> getColumnClass(int column) {
 				switch (column) {
 					case 0: return String.class;
 					default: return Boolean.class;
@@ -349,14 +350,24 @@ public class OptionsWindow extends Window{
 				};
             }
         };
-        
-        //TODO Add a listener to be able to change the Entry of "Restricted:"
-        
-        
         table.getColumnModel().getColumn(1).setMaxWidth(70);
 		return table;
 	}
 
+	private String[] getLanguages() {
+		String workingDir = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		System.out.println(workingDir);
+		File file = new File(workingDir + "\\data\\lang\\");
+		File[] languages = file.listFiles();
+		
+		String[] s = new String[10];
+		
+		for (int i = 0; i < languages.length; i++)
+			s[i] = languages[i].getName();
+		System.out.println(s.toString());
+		return s;
+	}
+	
 	@Override
 	public void setActive(boolean state) {
 		frame.setEnabled(state);

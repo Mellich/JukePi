@@ -277,7 +277,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		else
 			try {
 				setIpAndPort(InetAddress.getLocalHost().getHostAddress(), iport);
-			} catch (UnknownHostException e) {
+			} catch (UnknownHostException | NullPointerException e) {
 				setIpAndPort(ip, iport);
 			}
 	}
