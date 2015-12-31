@@ -165,6 +165,9 @@ public class YTJBServer implements Server {
 			waiter.start();
 			scheduler.start();
 			urlParser.startUp();
+			if (Boolean.parseBoolean(initFile.getValue(ColumnType.AUTOUPDATE))){
+				updateYoutubeDL();
+			}
 			int port = Integer.parseInt(initFile.getValue(ColumnType.PORT));
 			if (Boolean.parseBoolean(initFile.getValue(ColumnType.STARTPLAYER)))
 				ProcessCommunicator.startPlayer(getIpAddress(),port,workingDirectory);
@@ -251,7 +254,7 @@ public class YTJBServer implements Server {
 		}
 		if (!existsParsed && this.existsParsedURL()){
 			con.getPlayableTrackAvailable().signal();
-			IO.printlnDebug(this, "Neuer track verfügbar");
+			IO.printlnDebug(this, "Neuer track verfï¿½gbar");
 		}
 		con.unlock();
 	}
@@ -637,6 +640,11 @@ public class YTJBServer implements Server {
 		this(port);
 		initFile.setValue(ColumnType.ADMINPW, adminPW);
 		initFile.setValue(ColumnType.PLAYERPW, playerPW);
+}
+	
+	public YTJBServer(int port, String adminPW, String playerPW, boolean updateYoutubeDL) throws BindException {
+		this(port,adminPW,playerPW);
+		initFile.setValue(ColumnType.AUTOUPDATE, ""+updateYoutubeDL);
 }
 	
 	public YTJBServer(int port) throws BindException {

@@ -26,7 +26,12 @@ public class OMXPlayer implements Runnable, Player{
 	@Override
 	public void play(String track) {
 		wasSkipped = false;
-		playerProcess = ProcessCommunicator.getExternPlayerProcess(track);
+		try {
+			playerProcess = new ProcessBuilder("omxplayer",track).start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		isPlaying = true;
 		if (playerProcess != null)
 			out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));

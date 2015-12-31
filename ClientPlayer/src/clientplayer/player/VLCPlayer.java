@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -77,8 +78,8 @@ public class VLCPlayer implements Runnable, Player {
 		
 	}
 	
-	private static final String programURI = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
 	private final static long SKIPWAITDURATION = 1000;
+
 	
 	private PlayerStarter parent;
 	private Process playerProcess = null;
@@ -96,25 +97,38 @@ public class VLCPlayer implements Runnable, Player {
 	private Condition playerFinished = playerLock.newCondition();
 	private Condition timeReceived = playerLock.newCondition();
 	
-	public VLCPlayer(PlayerStarter parent) {
+	public VLCPlayer(PlayerStarter parent, List<String> cmd, int port) {
 		this.parent = parent;
 		try {
 			playThread = new Thread(this);
-			playerProcess =  new ProcessBuilder(programURI,"--extraintf=\"rc\"","--control=\"qt\"","--rc-host=\"localhost:8080\"").start();
+			ProcessBuilder playerBuilder =  new ProcessBuilder(cmd);
+			List<String> commands = playerBuilder.command();
+			for (String s : commands){
+				IO.printlnDebug(this, s);
+			}
+			playerProcess = playerBuilder.start();
 			if (playerProcess != null){
 				InetAddress localhost = InetAddress.getByName("localhost");
 				boolean success = false;
 				while (!success){
 					try{
-						socket = new Socket(localhost, 8080);
-					    out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-					    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
+						if (port != 0){
+							socket = new Socket(localhost, port);
+					    	out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+					    	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
+						}
+						else{
+					    	out = new BufferedWriter(new OutputStreamWriter(playerProcess.getOutputStream()));
+					    	in = new BufferedReader(new InputStreamReader(playerProcess.getInputStream()));		
+
+						}
 					    success  = true;
 					    reader = new Thread(new ReaderThread(in));
 					    reader.start();
 					}catch (ConnectException e){
 						IO.printlnDebug(this, "Connection to VLC could not be established! Trying again...");
 						Thread.sleep(200);
+						//e.printStackTrace();
 					}
 				}
 

@@ -18,6 +18,7 @@ public enum ColumnType{
 	MAXADMINCOUNT(""+Long.MAX_VALUE),
 	MAXPLAYERCOUNT("1"),
 	STARTPLAYER(""+true),
+	AUTOUPDATE(""+true),
 	PORT("22222");
 	
 	private String defValue;

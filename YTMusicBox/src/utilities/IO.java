@@ -43,7 +43,7 @@ public class IO {
 			else name = "STATIC";
 			long n = Thread.currentThread().getId();
 			Timestamp t = new Timestamp(System.currentTimeMillis());
-			System.out.println(t.toString()+" Thread-"+n+"="+name+": "+input);
+			System.out.println("["+t.toString()+" Thread-"+n+"="+name+"]: "+input);
 			if (server != null){
 				ArrayList<String> s = new ArrayList<String>();
 				s.add(t.toString()+" Thread-"+n+"="+name+": "+input);

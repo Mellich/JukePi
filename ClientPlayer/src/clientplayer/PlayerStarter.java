@@ -10,6 +10,7 @@ import clientplayer.player.PlayerFactory;
 import clientplayer.player.VLCPlayerFactory;
 import client.serverconnection.ServerConnection;
 import client.serverconnection.Song;
+import clientplayer.visuals.DummyViewer;
 import clientplayer.visuals.IdleViewer;
 import clientplayer.visuals.Visualizer;
 import javafx.application.Application;
@@ -35,15 +36,16 @@ public class PlayerStarter extends Application implements DefaultNotificationLis
 	
 	@Override
 	public synchronized void start(Stage primaryStage) throws Exception {
-		if (System.getProperty("os.name").equals("Linux")){
+		if (!VLCPlayerFactory.checkUsability()){
 			playerFactory = new OMXPlayerFactory();
 			IO.printlnDebug(this, "Choosing OMXPlayer for media playback.");
+			viewer = new IdleViewer(primaryStage);
 		}else{
 			playerFactory = new VLCPlayerFactory();
 			IO.printlnDebug(this, "Choosing VLCPlayer for media playback.");
+			viewer = new DummyViewer();
 		}
 		server = ServerConnectionFactory.createServerConnection(15000,900);
-		viewer = new IdleViewer(primaryStage);
 		viewer.showIdleScreen(true);
 		listenBroadcast = new Thread(new BroadcastListener(server,viewer,this));
 		listenBroadcast.start();
