@@ -236,7 +236,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		    } 
 		});
 		
-		if (wrapper.getCurrentSong().isOwnVote() ) {
+		/*if (ServerConnectionContainer.getServerConnection().getCurrentSong().isOwnVote() ) {
 			Notification.Builder mBuilder =
 					new Notification.Builder(this)
 					.setSmallIcon(R.drawable.ic_launcher)
@@ -264,7 +264,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			// mId allows you to update the notification later on.
 			mNotificationManager.notify(1, mBuilder.build());
-		}
+		}*/
 	}
 
 	@Override

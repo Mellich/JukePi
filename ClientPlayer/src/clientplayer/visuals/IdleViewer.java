@@ -64,7 +64,7 @@ public class IdleViewer implements Visualizer {
 		info = new Text(500,750,"");
 		info.setFont(new Font(FONTFAMILY,30));
 		info.setFill(Color.WHITE);
-		Text version = new Text(5,25,"Build version 0.9.2 (Without debug - untested)");
+		Text version = new Text(5,25,"Build version 0.9.3 (Without debug - untested)");
 		version.setFont(new Font(FONTFAMILY,20));
 		version.setFill(Color.WHITE);
 		currentGapList = new Text(500,800,"");

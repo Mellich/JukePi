@@ -41,7 +41,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	 * 900 = added permissions<br>
 	 * 901 = added new currentsong command (sends the whole song instead of only the title)<br>
 	 * 902 = added deleteAllVotes command<br>
-	 * 902 = added ownVote in getCurrentSong<br>
+	 * 903 = added ownVote in getCurrentSong<br>
 	 */
 	private static final long CURRENT_VERSION = 903L;
 	

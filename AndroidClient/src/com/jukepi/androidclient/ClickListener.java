@@ -40,7 +40,6 @@ public class ClickListener implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		ServerConnectionContainer.getServerConnection().removeVote();
 		ServerConnectionContainer.getServerConnection().voteSong(songs.get(pos));
 		Toast.makeText(v.getContext(),
 			      "Voted for Track Number: " + pos, Toast.LENGTH_LONG)

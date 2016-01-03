@@ -25,7 +25,11 @@ public class VotingController {
 			}
 			if (temp != null){
 				int i = wishList.indexOf(temp);
-				while (i >= 1 && wishList.get(i).getVoteCount() > wishList.get(i - 1).getVoteCount()){
+				while (i >= 1 &&
+						//change positions until tracks with equal vote count are reached
+						(wishList.get(i).getVoteCount() > wishList.get(i - 1).getVoteCount() || 
+						//changes positions until only older tracks are above the current
+						(wishList.get(i).getVoteCount() == wishList.get(i - 1).getVoteCount() && wishList.get(i).getTrackID() < wishList.get(i - 1).getTrackID()))){
 					MusicTrack m2 = wishList.get(i);
 					wishList.set(i, wishList.get(i-1));
 					wishList.set(i-1, m2);
@@ -60,7 +64,9 @@ public class VotingController {
 			}
 			if (temp != null){
 				int i = wishList.indexOf(temp);
-				while (i < wishList.size() - 1 && wishList.get(i).getVoteCount() < wishList.get(i + 1).getVoteCount()){
+				while (i < wishList.size() - 1 &&
+						(wishList.get(i).getVoteCount() < wishList.get(i + 1).getVoteCount() || 
+						(wishList.get(i).getVoteCount() == wishList.get(i + 1).getVoteCount() && wishList.get(i).getTrackID() > wishList.get(i + 1).getTrackID()))){
 					MusicTrack m2 = wishList.get(i);
 					wishList.set(i, wishList.get(i+1));
 					wishList.set(i+1, m2);
