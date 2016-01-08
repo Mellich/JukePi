@@ -1,6 +1,5 @@
 package windows;
 
-import server.YTJBServer;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.NewClientLayout;
@@ -14,7 +13,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
@@ -231,6 +229,33 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	private JMenuItem menuPlayPause;
 	
 	/**
+	 * The current Play-String for the {@link #menuPlayPause}-Item in the current Language.
+	 */
+	private String playLang;
+	
+	/**
+	 * The current Pause-String for the {@link #menuPlayPause}-Item in the current Language.
+	 */
+	private String pauseLang;
+	
+	/**
+	 * The boolean, that determines, if the Gaplist was changed. The Length of the Gaplist is
+	 * the important factor for this variable, since the Order of the Tracks is changed 
+	 * continually while using the Server.
+	 */
+	private boolean changed;
+	
+	/**
+	 * Determines, if the Server is currently playing a Track or not.
+	 */
+//TODO	private boolean playing;
+	
+	/**
+	 * The Language, this Client is currently in.
+	 */
+	private String language;
+	
+	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
@@ -264,7 +289,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		skipIcon = new ImageIcon(MainWindow.class.getResource("/resources/skip.png"));
 		skipIcon.setImage(skipIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		
-		options = new OptionsWindow(collector, adminPassword, playerPassword);
+		options = new OptionsWindow(collector, adminPassword, playerPassword, this);
 
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
@@ -280,6 +305,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 			} catch (UnknownHostException | NullPointerException e) {
 				setIpAndPort(ip, iport);
 			}
+		changed = false;
 	}
 	
 	@Override
@@ -446,8 +472,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @since 1.0
 	 */
 	private void saveGaplist() {
-		wrapper.saveGapList((String[] s) -> {	if (s[0].equals("true"))
+		wrapper.saveGapList((String[] s) -> {	if (s[0].equals("true")) {
 													showFail("Saved Gaplist.");
+													changed = false;
+												}
 												else
 													showFail("Couldn't save the Gaplist.");
 											});
@@ -612,7 +640,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(lblNextTrack, NewClientLayout.NEXT_TRACK_LABEL);
 		components.put(NewClientLayout.NEXT_TRACK_LABEL, lblNextTrack);
 		
-		final JLabel lblBuildVersion = new JLabel("0.9.3 - KeyListener added, GaplistsWindow reduced");	//TODO: Localization
+		final JLabel lblBuildVersion = new JLabel("0.9.4 - Languages implemented");	//TODO: Localization
 		lblBuildVersion.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		lblBuildVersion.setHorizontalAlignment(JLabel.RIGHT);
 		frame.getContentPane().add(lblBuildVersion, NewClientLayout.BUILD_VERSION_LABEL);
@@ -666,6 +694,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		final JCheckBox chckbxInfront = new JCheckBox("In Front");				//TODO: Localization
 		chckbxInfront.setToolTipText("When selected, the track will be added in Front of the list.");
 		frame.getContentPane().add(chckbxInfront, NewClientLayout.IN_FRONT_CHECKBOX);
+		components.put(NewClientLayout.IN_FRONT_CHECKBOX, chckbxInfront);
 		
 		/********************DebugArea********************/
 		txtDebugs = new JTextArea();
@@ -749,7 +778,12 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		}
 		JMenuItem menuDebug = new JMenuItem("Debug-Mode");
 		menuDebug.setAccelerator(KeyStroke.getKeyStroke('b'));
-		menuDisconnect.addActionListener((ActionEvent ae) -> {wrapper.close();});
+		menuDisconnect.addActionListener((ActionEvent ae) -> {	if (changed) {
+																	new AcknowledgeWindow(this, null, AcknowledgeWindow.DISCONNECT, wrapper).show();
+																}
+																else
+																	wrapper.close();
+															});
 		menuDebug.addActionListener((ActionEvent ae) -> {collector.showDebugWindow();});
 		
 		menuServer.add(menuDisconnect);
@@ -757,15 +791,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		/*****************Edit Menu***********************/
 		JMenuItem menuOptions = new JMenuItem("Preferences");
-		//TODO delete this after testing
-		JMenuItem menuTexts = new JMenuItem("Edit Texts");
-		menuTexts.addActionListener((ActionEvent ae) -> {setTexts();});
-		/*Till here*/
-		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
+	//	menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
 
 		menuEdit.add(menuOptions);
-		//Delete this as well
-		menuEdit.add(menuTexts);
 		
 		/****************Track Menu*************************/
 		JMenuItem menuSkip = new JMenuItem("Skip");
@@ -800,8 +828,18 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuCreateGaplist.setAccelerator(KeyStroke.getKeyStroke('c'));
 		menuDisplayGaplists.setAccelerator(KeyStroke.getKeyStroke('d'));
 		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		menuCreateGaplist.addActionListener((ActionEvent ae) -> {new NewListWindow(wrapper, this).show();});
-		menuDisplayGaplists.addActionListener((ActionEvent ae) -> {gaplistsWindow.show();});
+		menuCreateGaplist.addActionListener((ActionEvent ae) -> {
+			if (changed)
+				new AcknowledgeWindow(this, new NewListWindow(wrapper, this), AcknowledgeWindow.CREATE, wrapper).show();
+			else
+				new NewListWindow(wrapper, this).show();
+			});
+		menuDisplayGaplists.addActionListener((ActionEvent ae) -> {
+			if (changed)
+				new AcknowledgeWindow(this, gaplistsWindow, AcknowledgeWindow.LOAD, wrapper).show();
+			else
+				gaplistsWindow.show();
+			});
 		
 		menuGaplist.add(menuSaveGaplist);
 		menuGaplist.add(menuCreateGaplist);
@@ -892,6 +930,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
 		showFail("Gaplist updated");
+		if (this.gaplist.length != songs.length)
+			changed = true;
 		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 	}
 
@@ -915,7 +955,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
-		this.currentURL = url;
+		this.currentURL = wrapper.getCurrentSong().getURL();
 	}
 
 	@Override
@@ -942,6 +982,15 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.remove(this.oldGaplistPane);
 		this.oldGaplistPane = oldGaplistPane;
 		this.frame.revalidate();
+	}
+	
+	/**
+	 * Resets the changed-boolean, after the User has been acknowledged, that he has unsaved 
+	 * Changes for the Gaplist.
+	 * @since 1.9
+	 */
+	public void acknowledged() {
+		this.changed = false;
 	}
 
 	/**
@@ -971,7 +1020,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @since 1.9
 	 */
 	public void setLanguage(String lang) {
-		//TODO
+		this.language = lang;
+		System.out.println(language);
+		setTexts(language);
 	}
 	
 	/**
@@ -979,11 +1030,11 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * at the Start of the Client.
 	 * @since 1.9
 	 */
-	private void setTexts() {
+	private void setTexts(String lang) {
 		try {
 			int size = 0;
 			String workingDir = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-			System.out.println(workingDir);
+		//	System.out.println(workingDir);
 			File file = new File(workingDir + "\\data\\lang\\Deutsch.lang");
 			Scanner fileScanner = new Scanner(file);
 			ArrayList<String> texts = new ArrayList<String>();
@@ -991,19 +1042,123 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 				texts.add(fileScanner.nextLine());
 				size++;
 			}
+			fileScanner.close();
 			
 			for (int i = 0; i < size; i++)
-				if (i != 0 && i != 19 && i != 20)
+				if (i != 0 && i != 33 && i != 34) {
+				//	System.out.println(i);
 					texts.set(i, texts.get(i).substring(texts.get(i).indexOf("= ")+2));
+				}
+
+			boolean playing = wrapper.getCurrentPlaybackStatus();
 			
 			((JLabel)components.get(NewClientLayout.GAPLIST_LABEL)).setText(texts.get(1));
 			((JLabel)components.get(NewClientLayout.GAPLIST_LABEL)).setToolTipText(texts.get(1));
 			((JLabel)components.get(NewClientLayout.WISHLIST_LABEL)).setText(texts.get(2));
 			((JLabel)components.get(NewClientLayout.WISHLIST_LABEL)).setToolTipText(texts.get(2));
 			((JLabel)components.get(NewClientLayout.NOW_PLAYING_LABEL)).setText(texts.get(3));
+			((JLabel)components.get(NewClientLayout.NOW_PLAYING_LABEL)).setToolTipText(texts.get(3));
+			((JLabel)components.get(NewClientLayout.NEXT_TRACK_LABEL)).setText(texts.get(4));
+			((JLabel)components.get(NewClientLayout.NEXT_TRACK_LABEL)).setToolTipText(texts.get(4));
+			((JLabel)components.get(NewClientLayout.GAPLIST_NAME_LABEL)).setText(texts.get(5));
+			((JLabel)components.get(NewClientLayout.GAPLIST_NAME_LABEL)).setToolTipText(texts.get(5));
+			((JLabel)components.get(NewClientLayout.WISHLIST_NAME_LABEL)).setText(texts.get(6));
+			((JLabel)components.get(NewClientLayout.WISHLIST_NAME_LABEL)).setToolTipText(texts.get(6));
+			((JButton)components.get(NewClientLayout.ADD_BUTTON)).setText(texts.get(7));
+			((JButton)components.get(NewClientLayout.ADD_BUTTON)).setToolTipText(texts.get(35));
+			((JButton)components.get(NewClientLayout.SAVE_BUTTON)).setText(texts.get(8));
+			((JButton)components.get(NewClientLayout.SAVE_BUTTON)).setToolTipText(texts.get(36));
+			((JButton)components.get(NewClientLayout.VOTE_BUTTON)).setText(texts.get(9));
+			((JButton)components.get(NewClientLayout.VOTE_BUTTON)).setToolTipText(texts.get(37));
+			((JRadioButton)components.get(NewClientLayout.GAPLIST_RADIO)).setText(texts.get(10));
+			((JRadioButton)components.get(NewClientLayout.GAPLIST_RADIO)).setToolTipText(texts.get(10));
+			((JRadioButton)components.get(NewClientLayout.WISHLIST_RADIO)).setText(texts.get(11));
+			((JRadioButton)components.get(NewClientLayout.WISHLIST_RADIO)).setToolTipText(texts.get(11));
+			((JCheckBox)components.get(NewClientLayout.IN_FRONT_CHECKBOX)).setText(texts.get(12));
+			((JCheckBox)components.get(NewClientLayout.IN_FRONT_CHECKBOX)).setToolTipText(texts.get(12));
 			
-			fileScanner.close();
+			/**********ToolTip only*********************/
+			((JButton)components.get(NewClientLayout.SEEK_BACK_BUTTON)).setToolTipText(texts.get(38));
+			if (playing)
+				((JButton)components.get(NewClientLayout.PLAY_PAUSE_BUTTON)).setToolTipText(texts.get(39));
+			else
+				((JButton)components.get(NewClientLayout.PLAY_PAUSE_BUTTON)).setToolTipText(texts.get(40));
+			((JButton)components.get(NewClientLayout.SEEK_FORWARD_BUTTON)).setToolTipText(texts.get(41));
+			((JButton)components.get(NewClientLayout.SKIP_BUTTON)).setToolTipText(texts.get(42));
+			((JButton)components.get(NewClientLayout.TRACK_UP_BUTTON)).setToolTipText(texts.get(43));
+			((JButton)components.get(NewClientLayout.TRACK_DOWN_BUTTON)).setToolTipText(texts.get(44));
+			
+			/***********The Menu***********************/
+			JMenuBar menuBar = ((JMenuBar)components.get(NewClientLayout.MENU_BAR));
+			
+			/**********Getting Single Tabs************/
+			JMenu menuServer = menuBar.getMenu(0);
+			JMenu menuEdit = menuBar.getMenu(1);
+			JMenu menuTrack = menuBar.getMenu(2);
+			JMenu menuGaplist = menuBar.getMenu(3);
+			JMenu menuWishlist = menuBar.getMenu(4);
+			
+			/******Setting Text of each Tab**********/
+			menuServer.setText(texts.get(13));
+			menuEdit.setText(texts.get(14));
+			menuTrack.setText(texts.get(15));
+			menuGaplist.setText(texts.get(16));
+			menuWishlist.setText(texts.get(17));
+			
+			/**********Server MenuItems****************/
+			JMenuItem menuDisconnect = (JMenuItem)menuServer.getMenuComponent(0);
+			JMenuItem menuDebug = (JMenuItem)menuServer.getMenuComponent(1);
+			
+			/********Setting Text of ServerItems******/
+			if (!localServer)
+				menuDisconnect.setText(texts.get(18));
+			else
+				menuDisconnect.setText(texts.get(19));
+			menuDebug.setText(texts.get(20));
+			
+			/***********Edit MenuItems*************/
+			JMenuItem menuPreferences = (JMenuItem)menuEdit.getMenuComponent(0);
+			menuPreferences.setText(texts.get(21));
+			
+			/**********Track MenuItems************/
+			JMenuItem menuCopy = (JMenuItem)menuTrack.getMenuComponent(0);
+			JMenuItem menuSkip = (JMenuItem)menuTrack.getMenuComponent(1);
+			JMenuItem menuBackwards = (JMenuItem)menuTrack.getMenuComponent(2);
+			JMenuItem menuForward = (JMenuItem)menuTrack.getMenuComponent(3);
+			//Also in here: this.menuPlayPause
+			
+			/******Setting Text of TrackItems******/
+			menuCopy.setText(texts.get(22));
+			menuSkip.setText(texts.get(23));
+			menuBackwards.setText(texts.get(24));
+			menuForward.setText(texts.get(25));
+			playLang = texts.get(26);
+			pauseLang = texts.get(27);
+			if (playing)
+				menuPlayPause.setText(pauseLang);
+			else
+				menuPlayPause.setText(playLang);
+			
+			/******Gaplist MenuItems***********/
+			JMenuItem menuSave = (JMenuItem)menuGaplist.getMenuComponent(0);
+			JMenuItem menuNew = (JMenuItem)menuGaplist.getMenuComponent(1);
+			JMenuItem menuDisplay = (JMenuItem)menuGaplist.getMenuComponent(2);
+			
+			/***Setting Text of GaplistItems***/
+			menuSave.setText(texts.get(28));
+			menuNew.setText(texts.get(29));
+			menuDisplay.setText(texts.get(30));
+			
+			/*****Wishlist MenuItems**********/
+			JMenuItem menuRemove = (JMenuItem)menuWishlist.getMenuComponent(0);
+			JMenuItem menuRemoveAll = (JMenuItem)menuWishlist.getMenuComponent(1);
+			
+			/**Setting Text of WishlistItem***/
+			menuRemove.setText(texts.get(31));
+			menuRemoveAll.setText(texts.get(32));
+			
 		} catch (NullPointerException | FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
 			showFail("Nappel " + fnfe.getClass());
 		}
 	}
