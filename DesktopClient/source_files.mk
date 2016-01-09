@@ -19,6 +19,7 @@ $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetGaplistTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetWishlistTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetSavedGaplistsTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetContentTask.java \
+$(CLIENT_DIR)$(INPUT_DIR)/util/JMultilineLabel.java \
 $(CLIENT_DIR)$(INPUT_DIR)/listener/UDPListener.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/MainWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/NewListWindow.java \
@@ -31,6 +32,7 @@ $(CLIENT_DIR)$(INPUT_DIR)/windows/SetPasswordWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/OptionsWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/PasswordWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/connection/Collector.java \
+$(CLIENT_DIR)$(INPUT_DIR)/windows/AcknowledgeWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/start/ClientStarter.java 
 
 CLIENT_CLASS_FILES = \
@@ -52,6 +54,7 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/util/TablePopClickListener.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/PopClickListener.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetGaplistTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetWishlistTask.class \
+$(CLIENT_DIR)$(OUTPUT_DIR)/util/JMultilineLabel.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetSavedGaplistsTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetContentTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/listener/UDPListener.class \
@@ -66,6 +69,7 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/windows/SetPasswordWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/OptionsWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/PasswordWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/connection/Collector.class \
+$(CLIENT_DIR)$(OUTPUT_DIR)/windows/AcknowledgeWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/start/ClientStarter.class 
 
 CLIENT_ARTWORK = \
