@@ -205,7 +205,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	/**
 	 * The OptionsWindow, that will be opened, when the User clicked on Edit > Preferences.
 	 */
-//TODO	private OptionsWindow options;
+	private OptionsWindow options;
 	
 	/**
 	 * The {@link DisplayGaplistsWindow}, that will show the saved Gaplists when opened.
@@ -255,8 +255,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	private String language;
 	
-	private NewListWindow newListWindow;
-	
 	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
@@ -291,7 +289,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		skipIcon = new ImageIcon(MainWindow.class.getResource("/resources/skip.png"));
 		skipIcon.setImage(skipIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		
-//TODO	options = new OptionsWindow(collector, adminPassword, playerPassword, this);
+		options = new OptionsWindow(collector, adminPassword, playerPassword, this);
 
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
@@ -308,7 +306,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 				setIpAndPort(ip, iport);
 			}
 		changed = false;
-		newListWindow = new NewListWindow(wrapper, this, changed);
 	}
 	
 	@Override
@@ -478,7 +475,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		wrapper.saveGapList((String[] s) -> {	if (s[0].equals("true")) {
 													showFail("Saved Gaplist.");
 													changed = false;
-													newListWindow.setChanged(false);
 												}
 												else
 													showFail("Couldn't save the Gaplist.");
@@ -783,7 +779,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		JMenuItem menuDebug = new JMenuItem("Debug-Mode");
 		menuDebug.setAccelerator(KeyStroke.getKeyStroke('b'));
 		menuDisconnect.addActionListener((ActionEvent ae) -> {	if (changed) {
-																	new AcknowledgeWindow(this, null, AcknowledgeWindow.DISCONNECT, wrapper, "").show();
+																	new AcknowledgeWindow(this, null, AcknowledgeWindow.DISCONNECT, wrapper).show();
 																}
 																else
 																	wrapper.close();
@@ -832,8 +828,18 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		menuCreateGaplist.setAccelerator(KeyStroke.getKeyStroke('c'));
 		menuDisplayGaplists.setAccelerator(KeyStroke.getKeyStroke('d'));
 		menuSaveGaplist.addActionListener((ActionEvent ae) -> {saveGaplist();});
-		menuCreateGaplist.addActionListener((ActionEvent ae) -> {newListWindow.show();});
-		menuDisplayGaplists.addActionListener((ActionEvent ae) -> {gaplistsWindow.show();});
+		menuCreateGaplist.addActionListener((ActionEvent ae) -> {
+			if (changed)
+				new AcknowledgeWindow(this, new NewListWindow(wrapper, this), AcknowledgeWindow.CREATE, wrapper).show();
+			else
+				new NewListWindow(wrapper, this).show();
+			});
+		menuDisplayGaplists.addActionListener((ActionEvent ae) -> {
+			if (changed)
+				new AcknowledgeWindow(this, gaplistsWindow, AcknowledgeWindow.LOAD, wrapper).show();
+			else
+				gaplistsWindow.show();
+			});
 		
 		menuGaplist.add(menuSaveGaplist);
 		menuGaplist.add(menuCreateGaplist);
@@ -862,7 +868,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.getContentPane().add(menuBar, NewClientLayout.MENU_BAR);
 		
 		/********************Creating OptionsWindow********************/
-		gaplistsWindow = new DisplayGaplistsWindow(wrapper, this, gaplists, changed);
+		gaplistsWindow = new DisplayGaplistsWindow(wrapper, this, gaplists);
 		
 		
 		
@@ -924,11 +930,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
 		showFail("Gaplist updated");
-		if (this.gaplist.length != songs.length) {
+		if (this.gaplist.length != songs.length)
 			changed = true;
-			newListWindow.setChanged(true);
-			gaplistsWindow.setChanged(true);
-		}
 		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 	}
 
@@ -988,7 +991,6 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 */
 	public void acknowledged() {
 		this.changed = false;
-		newListWindow.setChanged(false);
 	}
 
 	/**

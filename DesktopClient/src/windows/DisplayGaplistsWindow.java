@@ -40,7 +40,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	/**
 	 * The {@link MainWindow}, this Object was called from.
 	 */
-	private MainWindow mw;
+//	private MainWindow mw;
 	
 	/**
 	 * The {@link JScrollPane}, that will display all Gaplists saved on the Server.
@@ -63,24 +63,18 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	private String[] gaplists;
 	
 	/**
-	 * Determines, if the Gaplist was changed.
-	 */
-	private boolean changed;
-	
-	/**
 	 * The Constructor for creating an Object of this Window.
 	 * @param wrapper	The {@link ServerConnection}, that will send Messages to the Server.
 	 * @param mw	The {@link MainWindow}, this Object was called from.
 	 * @param gaplists	The Gaplists, saved on the Server, as an Array of Strings.
 	 * @since 1.0
 	 */
-	public DisplayGaplistsWindow(ServerConnection wrapper, MainWindow mw, String[] gaplists, boolean changed) {
+	public DisplayGaplistsWindow(ServerConnection wrapper, MainWindow mw, String[] gaplists) {
 		frame = new JFrame();
 		lblFail = new JLabel();
 		this.wrapper = wrapper;
-		this.mw = mw;
+	//	this.mw = mw;
 		this.gaplists = gaplists;
-		this.changed = changed;
 	}
 	
 	@Override
@@ -149,6 +143,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		btnLoad.addActionListener((ActionEvent ae) -> {
 			if (((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow() >= 0) {
 				loadGaplist((String)(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getValueAt(((JTable) ((JViewport) gaplistsPane.getComponent(0)).getComponent(0)).getSelectedRow(), 0))); 
+				this.close();
 			}
 			else 
 				showFail("Select a Gaplist first.");});
@@ -163,14 +158,11 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	 * @since 1.0
 	 */
 	private void loadGaplist(String name) {
-		if (!changed)
-			wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
-															showFail("Loaded Gaplist.");
-														else
-															showFail("Couldn't load the Gaplist.");
-													}, name);
-		else
-			new AcknowledgeWindow(mw, this, AcknowledgeWindow.LOAD, wrapper, name).show();
+		wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
+														showFail("Loaded Gaplist.");
+													else
+														showFail("Couldn't load the Gaplist.");
+												}, name);
 	}
 	
 	/**
@@ -253,15 +245,6 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 			public void mouseReleased(MouseEvent arg0) {} });
 	}
 
-	/**
-	 * Sets the State of the changed-Value to the given state.
-	 * @param changed	The new Value for changed.
-	 * @since 1.0
-	 */
-	public void setChanged(boolean changed) {
-		this.changed = changed;
-	}
-	
 	/**
 	 * This Method is called by the {@link SetContentTask}, when the Content was loaded into 
 	 * the Pane.

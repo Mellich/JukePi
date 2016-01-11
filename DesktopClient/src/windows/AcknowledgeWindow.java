@@ -68,21 +68,15 @@ public class AcknowledgeWindow extends Window{
 	private ServerConnection wrapper;
 	
 	/**
-	 * The Input, that will be sent to the Server.
-	 */
-	private String input;
-	
-	/**
 	 * The Constructor for the Window.
 	 * @param mainWindow	The {@link MainWindow}, that called this instance.
 	 * @param newWindow	The new {@link Window}, that will be opened by this Window.
 	 * @param operation	The operation, this Window will perform.
 	 * @param wrapper	The {@link ServerConnection} to the Server, that will send the Messages.
-	 * @param input	The input, that will be sent to the Server.
 	 * @since 1.0
 	 */
 	public AcknowledgeWindow(MainWindow mainWindow, Window newWindow, String operation, 
-			ServerConnection wrapper, String input) {
+			ServerConnection wrapper) {
 		this.mainWindow = mainWindow;
 		this.frame = new JFrame();
 		this.newWindow = newWindow;
@@ -108,7 +102,7 @@ public class AcknowledgeWindow extends Window{
 
 	@Override
 	public void setActive(boolean state) {
-		frame.setEnabled(state);
+		
 	}
 
 	/**
@@ -125,19 +119,16 @@ public class AcknowledgeWindow extends Window{
 		content.add(lblText, BorderLayout.CENTER);
 		
 		Container south = new Container();
-		south.setLayout(new GridLayout(1, 3, 10, 0));
+		south.setLayout(new GridLayout(1, 2, 0, 10));
 		
 		JButton btnSave = new JButton("Save");
 		JButton btnDiscard = new JButton("Discard");
-		JButton btnCancel = new JButton("Cancel");
 		
-		btnSave.addActionListener(new CustomActionListener("Save", operation, mainWindow, newWindow, wrapper, this, input));
-		btnDiscard.addActionListener(new CustomActionListener("Discard", operation, mainWindow, newWindow, wrapper, this, input));
-		btnCancel.addActionListener((ActionEvent ae) -> {this.close();});
+		btnSave.addActionListener(new CustomActionListener("Save", operation, mainWindow, newWindow, wrapper, this));
+		btnDiscard.addActionListener(new CustomActionListener("Discard", operation, mainWindow, newWindow, wrapper, this));
 		
 		south.add(btnSave);
 		south.add(btnDiscard);
-		south.add(btnCancel);
 		
 		content.add(south, BorderLayout.SOUTH);
 		
@@ -183,11 +174,6 @@ class CustomActionListener implements ActionListener {
 	private AcknowledgeWindow ackWin;
 	
 	/**
-	 * The Input, that will be sent to the Server.
-	 */
-	private String input;
-	
-	/**
 	 * The Constructor for the Listener.
 	 * @param btnName	The Name of the {@link JButton}, this Listener is added to.
 	 * @param operation	The Operation, that will be executed, after clicking the Button.
@@ -199,7 +185,6 @@ class CustomActionListener implements ActionListener {
 	 * 					Messages.
 	 * @param acknowledgeWindow	The {@link AcknowledgeWindow}, that inherits the {@link 
 	 * 							JButton}, this Listener is added to.
-	 * @param input	The Input, that will be sent to the Server.
 	 * @see AcknowledgeWindow#CREATE
 	 * @see AcknowledgeWindow#DISCONNECT
 	 * @see AcknowledgeWindow#LOAD
@@ -208,7 +193,7 @@ class CustomActionListener implements ActionListener {
 	 * @since 1.0
 	 */
 	public CustomActionListener(String btnName, String operation, MainWindow mainWindow, 
-			Window newWindow, ServerConnection wrapper, AcknowledgeWindow acknowledgeWindow, String input) {
+			Window newWindow, ServerConnection wrapper, AcknowledgeWindow acknowledgeWindow) {
 		this.btnName = btnName;
 		this.operation = operation;
 		this.mainWindow = mainWindow;
@@ -222,14 +207,10 @@ class CustomActionListener implements ActionListener {
 		if (btnName.equals("Discard")) {
 			if (operation.equals(AcknowledgeWindow.DISCONNECT))
 				wrapper.close();
-			else if (operation.equals(AcknowledgeWindow.CREATE)) {
-				wrapper.switchToGapList(input);
-				newWindow.close();
-			}
-			else if (operation.equals(AcknowledgeWindow.LOAD)) {
-				wrapper.switchToGapList(input);
-				newWindow.close();
-			}
+			else if (operation.equals(AcknowledgeWindow.CREATE))
+				newWindow.show();
+			else if (operation.equals(AcknowledgeWindow.LOAD))
+				newWindow.show();
 		}
 		else {
 			if (operation.equals(AcknowledgeWindow.DISCONNECT)) {
@@ -238,13 +219,11 @@ class CustomActionListener implements ActionListener {
 			}
 			else if (operation.equals(AcknowledgeWindow.CREATE)) {
 				wrapper.saveGapList();
-				wrapper.switchToGapList(input);
-				newWindow.close();
+				newWindow.show();
 			}
 			else if (operation.equals(AcknowledgeWindow.LOAD)) {
 				wrapper.saveGapList();
-				wrapper.switchToGapList(input);
-				newWindow.close();
+				newWindow.show();
 			}
 		}
 		mainWindow.acknowledged();
