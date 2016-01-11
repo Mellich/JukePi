@@ -30,7 +30,7 @@ import connection.Collector;
 /**
  * The Class for the Options-Window.
  * @author Haeldeus
- * @version 1.1
+ * @version 1.0
  */
 public class OptionsWindow extends Window{
 
@@ -60,15 +60,7 @@ public class OptionsWindow extends Window{
 	 */
 	private ArrayList<String> supportedSites;
 	
-	/**
-	 * The {@link JScrollPane}, that inherits all Sites, that youtube-dl can use.
-	 */
 	private JScrollPane pane;
-	
-	/**
-	 * The MainWindow, that called this OptionsWindow.
-	 */
-	private final MainWindow mainWindow;
 	
 	/**
 	 * The Constructor for the Window.
@@ -77,12 +69,11 @@ public class OptionsWindow extends Window{
 	 * @param playerPW	The Password, that is needed to connect to the Server as a Player.
 	 * @since 1.0
 	 */
-	public OptionsWindow(Collector collector, String adminPW, String playerPW, MainWindow mainWindow) {
+	public OptionsWindow(Collector collector, String adminPW, String playerPW) {
 		frame = new JFrame();
 	//	this.collector = collector;
 		this.adminPW = adminPW;
 		this.playerPW = playerPW;
-		this.mainWindow = mainWindow;
 		supportedSites = new ArrayList<String>();
 		readInWebpage();
 	}
@@ -200,9 +191,9 @@ public class OptionsWindow extends Window{
 		JLabel lblLang = new JLabel("Language");
 		lblLang.setHorizontalAlignment(JLabel.CENTER);
 		JComboBox<String> cbxLang = new JComboBox<String>();
-		ArrayList<String> langs = getLanguages();
-		for (String s : langs)
-			cbxLang.addItem(s);
+		cbxLang.addItem("English");
+		cbxLang.addItem("Deutsch");
+		cbxLang.addItem("Klingonisch");
 		((JLabel)cbxLang.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		upRight.add(lblLang);
@@ -250,7 +241,7 @@ public class OptionsWindow extends Window{
 		JButton btnSave = new JButton("Save");
 		JButton btnCancel = new JButton("Cancel");
 		
-		btnSave.addActionListener((ActionEvent ae) -> {mainWindow.setLanguage((String)cbxLang.getSelectedItem());this.close();});
+		btnSave.addActionListener((ActionEvent ae) -> {getLanguages();this.close();});
 		btnCancel.addActionListener((ActionEvent ae) -> {this.close();});
 		btnRemove.addActionListener((ActionEvent ae) -> {
 			centerLeft.remove(pane);
@@ -363,23 +354,17 @@ public class OptionsWindow extends Window{
 		return table;
 	}
 
-	/**
-	 * Returns all Languages, saved on the Hard Drive of the Client.
-	 * @return	The Languages, saved on the Hard Drive.
-	 * @since 1.1
-	 */
-	private ArrayList<String> getLanguages() {
+	private String[] getLanguages() {
 		String workingDir = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-	//	System.out.println(workingDir);
+		System.out.println(workingDir);
 		File file = new File(workingDir + "\\data\\lang\\");
 		File[] languages = file.listFiles();
 		
-		ArrayList<String> s = new ArrayList<String>();
+		String[] s = new String[10];
 		
 		for (int i = 0; i < languages.length; i++)
-			if (!languages[i].getName().equals("SampleLang.lang"))
-				s.add(i, languages[i].getName().replaceAll(".lang", ""));
-		
+			s[i] = languages[i].getName();
+		System.out.println(s.toString());
 		return s;
 	}
 	
