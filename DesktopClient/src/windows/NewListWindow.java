@@ -48,16 +48,22 @@ public class NewListWindow extends Window{
 	private MainWindow mw;
 	
 	/**
+	 * Determines, if the Gaplist was changed.
+	 */
+	private boolean changed;
+	
+	/**
 	 * The Constructor for this Window.
 	 * @param wrapper	The {@link ServerConnection}, that will send Messages to the Server.
 	 * @param mw	The {@link MainWindow}, that called this Window.
 	 * @since 1.0
 	 */
-	public NewListWindow(ServerConnection wrapper, MainWindow mw) {
+	public NewListWindow(ServerConnection wrapper, MainWindow mw, boolean changed) {
 		frame = new JFrame();
 		this.wrapper = wrapper;
 		lblFail = new JLabel("Enter a Name for a new Gaplist");
 		this.mw = mw;
+		this.changed = changed;
 	}
 	
 	@Override
@@ -135,17 +141,24 @@ public class NewListWindow extends Window{
 			}});
 		
 		btnCreate.addActionListener((ActionEvent ae) -> {
-			if (!txtName.getText().equals("")) {
-				wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true")) {
-																showFail("Created a new Gaplist.");
-																this.close();
-															}
-															else
-																showFail("Failed to create a new Gaplist.");
-														}, txtName.getText());
+			if (!changed) {
+				if (!txtName.getText().equals("")) {
+					wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true")) {
+																	showFail("Created a new Gaplist.");
+																	this.close();
+																}
+																else
+																	showFail("Failed to create a new Gaplist.");
+															}, txtName.getText());
+				}
+				else {
+					showFail("Please enter a name first");
+				}
 			}
 			else {
-				showFail("Please enter a name first");
+				if (!txtName.getText().equals("")) {
+					new AcknowledgeWindow(mw, this, AcknowledgeWindow.CREATE, wrapper, txtName.getText()).show();
+				}
 			}
 		});
 		
@@ -162,6 +175,15 @@ public class NewListWindow extends Window{
 	@Override
 	public void setActive(boolean state) {
 		frame.setEnabled(state);
+	}
+	
+	/**
+	 * Sets the Changed-Status to the given boolean value.
+	 * @param changed	The new Status of changed.
+	 * @since 1.0
+	 */
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
 }
