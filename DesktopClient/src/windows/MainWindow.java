@@ -1,6 +1,5 @@
 package windows;
 
-import server.YTJBServer;
 import util.TextFieldListener;
 import util.PopClickListener;
 import util.layouts.NewClientLayout;
@@ -14,7 +13,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
@@ -231,6 +229,11 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	private JMenuItem menuPlayPause;
 	
 	/**
+	 * Determines, if the Gaplist was changed.
+	 */
+	private boolean changed;
+	
+	/**
 	 * The Constructor for the Main-Screen. Will set the parameters to their belonging 
 	 * variables.
 	 * @param collector	The {@link Collector}, that will perform Actions with extern needed 
@@ -280,6 +283,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 			} catch (UnknownHostException | NullPointerException e) {
 				setIpAndPort(ip, iport);
 			}
+		changed = false;
 	}
 	
 	@Override
@@ -892,6 +896,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void onGapListUpdatedNotify(Song[] songs) {
 		showFail("Gaplist updated");
+		if (songs.length != this.gaplist.length)
+			changed = true;
 		new SetGaplistTask(gaplist, songs, lblNoGaplist, wrapper, frame, oldGaplistPane, this).execute();
 	}
 
@@ -1047,5 +1053,23 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	@Override
 	public void setActive(boolean state) {
 		frame.setEnabled(state);
+	}
+	
+	/**
+	 * The User was acknowledged by the {@link AckWindow} and the value of {@link #changed} 
+	 * is set to {@code false}. 
+	 * @since 1.9
+	 */
+	public void acknowledged() {
+		this.changed = false;
+	}
+	
+	/**
+	 * Returns, if the Gaplist was changed since the last Save.
+	 * @return	{@code true}, if the Gaplist was changed, {@code false}, else.
+	 * @since 1.9
+	 */
+	protected boolean getChanged() {
+		return changed;
 	}
 }

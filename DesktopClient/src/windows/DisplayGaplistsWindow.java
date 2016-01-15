@@ -23,7 +23,7 @@ import client.serverconnection.Song;
 /**
  * The Class, whose Objects will display the Gaplists saved on the Server.
  * @author Haeldeus
- * @version 1.0
+ * @version 1.1
  */
 public class DisplayGaplistsWindow extends Window implements GapListNotificationListener{
 
@@ -40,7 +40,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	/**
 	 * The {@link MainWindow}, this Object was called from.
 	 */
-//	private MainWindow mw;
+	private MainWindow mw;
 	
 	/**
 	 * The {@link JScrollPane}, that will display all Gaplists saved on the Server.
@@ -73,7 +73,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		frame = new JFrame();
 		lblFail = new JLabel();
 		this.wrapper = wrapper;
-	//	this.mw = mw;
+		this.mw = mw;
 		this.gaplists = gaplists;
 	}
 	
@@ -158,11 +158,14 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 	 * @since 1.0
 	 */
 	private void loadGaplist(String name) {
-		wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
-														showFail("Loaded Gaplist.");
-													else
-														showFail("Couldn't load the Gaplist.");
-												}, name);
+		if (!mw.getChanged())
+			wrapper.switchToGapList((String[] s) -> {	if (s[0].equals("true"))
+															showFail("Loaded Gaplist.");
+														else
+															showFail("Couldn't load the Gaplist.");
+													}, name);
+		else
+			new AckWindow(wrapper, mw, name, this).show();
 	}
 	
 	/**

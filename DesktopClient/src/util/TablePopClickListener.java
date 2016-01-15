@@ -77,7 +77,6 @@ public class TablePopClickListener extends MouseAdapter {
 	
 	@Override
     public void mousePressed(MouseEvent e){
-		System.out.println("MouseEvent triggered");
 		if (SwingUtilities.isRightMouseButton(e)) {
         	Point p = e.getPoint();
         	int rowNumber = table.rowAtPoint(p);

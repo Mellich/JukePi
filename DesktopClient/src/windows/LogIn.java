@@ -1,5 +1,6 @@
 package windows;
 
+import util.JMultilineLabel;
 import util.PopClickListener;
 import util.TextFieldListener;
 import util.layouts.LoginLayout;
@@ -12,9 +13,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 
 import listener.UDPListener;
 import connection.Collector;
@@ -187,23 +186,3 @@ public class LogIn extends Window {
 		frame.setEnabled(state);
 	}
 }
-
-/**
- * A Class, that symbols a Multiline-Label, but can be set to Multiline without using HTML.
- * 
- * @author Haeldeus
- * @version 1.0
- */
-class JMultilineLabel extends JTextArea{
-    private static final long serialVersionUID = 1L;
-    public JMultilineLabel(String text){
-        super(text);
-        setEditable(false);  
-        setCursor(null);  
-        setOpaque(false);  
-        setFocusable(false);  
-        setFont(UIManager.getFont("Label.font"));      
-        setWrapStyleWord(true);  
-        setLineWrap(true);
-    }
-} 
