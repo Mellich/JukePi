@@ -48,6 +48,13 @@ public class AckWindow extends Window{
 	
 	/**
 	 * The Constructor for the Window.
+	 * @param wrapper	The {@link ServerConnection} to the Server.
+	 * @param mainWindow	The {@link MainWindow}, that is the parent or grand-parent (if 
+	 * 						this window was called before creating or loading a new List) of 
+	 * 						this Window.
+	 * @param input	The Name of the new Gaplist to be either loaded or created by the Server.
+	 * @param newWindow	The Window, this Window was called from, if it wasn't the 
+	 * 					{@link #mainWindow}.
 	 * @since 1.0
 	 */
 	public AckWindow(ServerConnection wrapper, MainWindow mainWindow, String input, Window newWindow) {
@@ -60,8 +67,7 @@ public class AckWindow extends Window{
 	
 	@Override
 	public void showFail(String text) {
-		// TODO Auto-generated method stub
-		
+		// Nothing to do here.
 	}
 
 	@Override
@@ -112,11 +118,11 @@ public class AckWindow extends Window{
 	}
 	
 	/**
-	 * Sends the Input to the Server.
+	 * Sends the Input to the Server and closes the Window afterwards.
 	 * @since 1.0
 	 */
 	private void sendMessage() {
-		if (!input.equals(""))
+		if (input.equals(""))
 			wrapper.close();
 		else {
 			wrapper.switchToGapList(input);
