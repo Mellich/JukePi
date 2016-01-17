@@ -124,6 +124,8 @@ public class AckWindow extends Window{
 	private void sendMessage() {
 		if (input.equals(""))
 			wrapper.close();
+		else if (input.equals("CLOSE"))
+			System.exit(0);
 		else {
 			wrapper.switchToGapList(input);
 			newWindow.close();

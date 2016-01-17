@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
@@ -579,8 +580,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		frame.setSize(new Dimension(620,700));
 		NewClientLayout layout = new NewClientLayout();
 		frame.getContentPane().setLayout(layout);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(617,695));
+		MyAdapter adapter = new MyAdapter(this, wrapper);
+		frame.addWindowListener(adapter);
 		
 		/********************Labels********************/
 		lblFail = new JLabel("");
@@ -1074,4 +1077,45 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	protected boolean getChanged() {
 		return changed;
 	}
+}
+
+/**
+ * The {@link WindowAdapter}, that will let the User save the Changes, before he closes the 
+ * Client.
+ * @author Haeldeus
+ * @version 1.0
+ */
+class MyAdapter extends WindowAdapter {
+	
+	/**
+	 * The {@literal ServerConnection} to the Server. This will send the Save-Message to the 
+	 * Server, if the User clicks "Save" in the {@link AckWindow}.
+	 */
+	private ServerConnection wrapper;
+	
+	/**
+	 * The {@link MainWindow}, this Adapter is connected to. It will be closed, after calling
+	 * this Adapter either way, except when the User clicks "Cancel" on the {@link AckWindow}.
+	 */
+	private MainWindow mw;
+	
+	/**
+	 * The Constructor for the Adapter. Here, the given values for the {@link MainWindow} 
+	 * and {@link ServerConnection} will be set to the Class-Variables.
+	 * @param mw	The {@link MainWindow}, this Adapter will be added to.
+	 * @param wrapper	The {@link ServerConnection} to the Server.
+	 * @since 1.0
+	 */
+	public MyAdapter(MainWindow mw, ServerConnection wrapper) {
+		this.mw = mw;
+		this.wrapper = wrapper;
+	}
+	
+    @Override
+    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+    	if (mw.getChanged())
+    		new AckWindow(wrapper, mw, "CLOSE", mw).show();
+    	else
+    		System.exit(0);
+    }
 }
