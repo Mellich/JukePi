@@ -206,7 +206,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	/**
 	 * The OptionsWindow, that will be opened, when the User clicked on Edit > Preferences.
 	 */
-	private OptionsWindow options;
+//	private OptionsWindow options;
 	
 	/**
 	 * The {@link DisplayGaplistsWindow}, that will show the saved Gaplists when opened.
@@ -268,7 +268,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		skipIcon = new ImageIcon(MainWindow.class.getResource("/resources/skip.png"));
 		skipIcon.setImage(skipIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		
-		options = new OptionsWindow(collector, adminPassword, playerPassword);
+	//	options = new OptionsWindow(collector, adminPassword, playerPassword);
 
 		wrapper.addDefaultNotificationListener(this);
 		wrapper.addGapListNotificationListener(this);
@@ -524,8 +524,10 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * @since 1.3
 	 */
 	private void vote(int index) {
-		if (index == -1)
+		if (index == -1) {
+			showFail("Please select a Track first!");
 			return;
+		}
 		wrapper.removeVote((String[] s)-> {});
 		wrapper.voteSong((String[] s) -> {	if (s[0].equals("true"))
 												showFail("Voted for the Song");
@@ -764,15 +766,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 		/*****************Edit Menu***********************/
 		JMenuItem menuOptions = new JMenuItem("Preferences");
-		//TODO delete this after testing
-		JMenuItem menuTexts = new JMenuItem("Edit Texts");
-		menuTexts.addActionListener((ActionEvent ae) -> {setTexts();});
-		/*Till here*/
-		menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
+	//	menuOptions.addActionListener((ActionEvent ae) -> {options.show();});
 
 		menuEdit.add(menuOptions);
-		//Delete this as well
-		menuEdit.add(menuTexts);
 		
 		/****************Track Menu*************************/
 		JMenuItem menuSkip = new JMenuItem("Skip");
@@ -990,6 +986,8 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 	 * at the Start of the Client.
 	 * @since 1.9
 	 */
+	@Deprecated
+	@SuppressWarnings(value = { "unused" })
 	private void setTexts() {
 		try {
 			int size = 0;
