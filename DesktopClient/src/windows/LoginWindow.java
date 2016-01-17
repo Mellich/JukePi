@@ -23,7 +23,7 @@ import connection.Collector;
  * @author Haeldeus
  * @version 1.0
  */
-public class LogIn extends Window {
+public class LoginWindow extends Window {
 	/**
 	 * The {@link Collector} that will send the Messages.
 	 */
@@ -62,7 +62,7 @@ public class LogIn extends Window {
 	 * @param frame The Frame, this Screen will be displaying.
 	 * @since 1.0
 	 */
-	public LogIn(Collector collector, JFrame frame) {
+	public LoginWindow(Collector collector, JFrame frame) {
 		this.collector = collector;
 		this.frame = frame;
 		lblFail = new JLabel("");

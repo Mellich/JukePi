@@ -10,7 +10,7 @@ import messages.Permission;
 import server.Server;
 import server.ServerFactory;
 import windows.DebugWindow;
-import windows.LogIn;
+import windows.LoginWindow;
 import windows.LowClientWindow;
 import windows.MainWindow;
 import windows.PasswordWindow;
@@ -46,9 +46,9 @@ public class Collector {
 	
 	/**
 	 * The Login-Screen, that will be shown, when starting the Client.
-	 * @see LogIn
+	 * @see LoginWindow
 	 */
-	private LogIn loginScreen;
+	private LoginWindow loginScreen;
 	
 	/**
 	 * The Main-Screen, that will be shown after logging in to a Server.
@@ -98,7 +98,7 @@ public class Collector {
 		wrapper = ServerConnectionFactory.createServerConnection(CONNECTIONCHECKINTERVALL,CURRENT_VERSION);
 	//	visibleScreen = new JFrame();
 	//	loginScreen = new LogIn(this, visibleScreen);
-		loginScreen = new LogIn(this, new JFrame());
+		loginScreen = new LoginWindow(this, new JFrame());
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Collector {
 		if (localServer != null)
 			localServer.shutDown();
 	//	visibleScreen.getContentPane().removeAll();
-		loginScreen = new LogIn(this, new JFrame());
+		loginScreen = new LoginWindow(this, new JFrame());
 		mainScreen = loginScreen;
 		System.out.println(mainScreen.getClass().toString());
 		mainScreen.show();

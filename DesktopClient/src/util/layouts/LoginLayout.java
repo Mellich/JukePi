@@ -15,13 +15,13 @@ public class LoginLayout implements LayoutManager{
 
 	/**
 	 * The String, that declares the TextField for the IP.
-	 * @see windows.LogIn#txtIp
+	 * @see windows.LoginWindow#txtIp
 	 */
 	public static final String IP_TEXT = "Ip_Text";
 	
 	/**
 	 * The String, that declares the TextField for the Port.
-	 * @see windows.LogIn#txtPort
+	 * @see windows.LoginWindow#txtPort
 	 */
 	public static final String PORT_TEXT = "Port_Text";
 	
