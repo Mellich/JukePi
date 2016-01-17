@@ -849,7 +849,9 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		
 	//	this.setTexts();
 		wrapper.getCurrentGapListName((String[] s) -> {lblGaplistName.setText("Gaplist - "+ s[0]);});
-		wrapper.getCurrentSong((String[] s) -> {lblPlayingTrack.setText(s[1]); currentURL = s[2];});
+		Song current = wrapper.getCurrentSong();
+		lblPlayingTrack.setText(current.getName());
+		currentURL = current.getURL();
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {	if (s[0].equals("true")) {
 																btnPlayPause.setToolTipText("Click here to Pause the Track.");
 																btnPlayPause.setIcon(pauseIcon);
@@ -921,7 +923,7 @@ public class MainWindow extends Window implements DefaultNotificationListener, P
 		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
-		this.currentURL = url;
+		this.currentURL = wrapper.getCurrentSong().getURL();
 	}
 
 	@Override
