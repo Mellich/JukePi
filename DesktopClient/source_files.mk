@@ -5,6 +5,7 @@ $(CLIENT_DIR)$(INPUT_DIR)/util/OptionsTableClickListener.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/PopUpMenu.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/ShowLabelThread.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/IO.java \
+$(CLIENT_DIR)$(INPUT_DIR)/util/JMultilineLabel.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/TextTransfer.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/TablePopUpMenu.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/TableRenderer.java \
@@ -20,12 +21,13 @@ $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetWishlistTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetSavedGaplistsTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/util/tasks/SetContentTask.java \
 $(CLIENT_DIR)$(INPUT_DIR)/listener/UDPListener.java \
+$(CLIENT_DIR)$(INPUT_DIR)/windows/AckWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/MainWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/NewListWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/LowClientWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/Window.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/DebugWindow.java \
-$(CLIENT_DIR)$(INPUT_DIR)/windows/LogIn.java \
+$(CLIENT_DIR)$(INPUT_DIR)/windows/LoginWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/DisplayGaplistsWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/SetPasswordWindow.java \
 $(CLIENT_DIR)$(INPUT_DIR)/windows/OptionsWindow.java \
@@ -40,6 +42,7 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/util/OptionsTableClickListener.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/PopUpMenu.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/ShowLabelThread.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/IO.class \
+$(CLIENT_DIR)$(OUTPUT_DIR)/util/JMultilineLabel.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/TextTransfer.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/TablePopUpMenu.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/TableRenderer.class \
@@ -55,12 +58,13 @@ $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetWishlistTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetSavedGaplistsTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/util/tasks/SetContentTask.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/listener/UDPListener.class \
+$(CLIENT_DIR)$(OUTPUT_DIR)/windows/AckWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/MainWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/NewListWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/LowClientWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/Window.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/DebugWindow.class \
-$(CLIENT_DIR)$(OUTPUT_DIR)/windows/LogIn.class \
+$(CLIENT_DIR)$(OUTPUT_DIR)/windows/LoginWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/DisplayGaplistsWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/SetPasswordWindow.class \
 $(CLIENT_DIR)$(OUTPUT_DIR)/windows/OptionsWindow.class \

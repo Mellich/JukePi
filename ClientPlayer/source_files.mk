@@ -4,6 +4,7 @@ $(PLAYER_DIR)$(INPUT_DIR)/utilities/ProcessCommunicator.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/Status.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/visuals/Visualizer.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/visuals/IdleViewer.java \
+$(PLAYER_DIR)$(INPUT_DIR)/clientplayer/visuals/DummyViewer.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/player/VLCPlayerFactory.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/player/VLCPlayer.java \
 $(PLAYER_DIR)$(INPUT_DIR)/clientplayer/player/PlayerFactory.java \
@@ -19,6 +20,7 @@ $(PLAYER_DIR)$(OUTPUT_DIR)/utilities/ProcessCommunicator.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/Status.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/Visualizer.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/IdleViewer.class \
+$(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/visuals/DummyViewer.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/player/VLCPlayerFactory.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/player/VLCPlayer.class \
 $(PLAYER_DIR)$(OUTPUT_DIR)/clientplayer/player/PlayerFactory.class \
