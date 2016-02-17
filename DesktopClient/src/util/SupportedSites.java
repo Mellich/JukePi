@@ -1,17 +1,58 @@
 package util;
 
 /**
- * A Class, which inherits all Homepages, that are supported by the youtube-dl Application.
+ * <p>A Class, which inherits all Homepages, that are supported by the youtube-dl Application.
  * This is a static list, that is prohibited in case the JukePi-Application cannot connect to
  * the Internet when trying to read out the supported Sites, that are given on the Homepage of
- * youtube-dl.
+ * youtube-dl.</p>
+ * 
+ * <h3>Provided Methods:</h3>
+ * <ul>
+ * 	<li><b>Public:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Protected:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Private:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * </ul>
+ * 
+ * <h3>Fields:</h3>
+ * <ul>
+ * 	<li><b>Public:</b>
+ * 		<ul>
+ * 			<li>{@link #supportedSites}:
+ * 				The Sites, that are supported by the "youtube-dl"-Application.</li>
+ * 		</ul>
+ * 	</li>
+ * 	<li><b>Protected:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Private:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * </ul>
  * @author Haeldeus
  * @version 1.0
  */
 public class SupportedSites {
 	
 	/**
-	 * The Homepages, that are supported by the youtube-dl Application.
+	 * <p style="margin-left: 10px"><em><b>supportedSites</b></em></p>
+	 * <p style="margin-left: 20px">{@code public static String[] supportedSites}</p>
+	 * <p style="margin-left: 20px">The Homepages, that are supported by the youtube-dl 
+	 * Application.</p>
 	 */
 	public static String[] supportedSites = {
 	    "1tv",
@@ -125,7 +166,10 @@ public class SupportedSites {
 	    "ComCarCoff",
 	    "ComedyCentral",
 	    "ComedyCentralShows: The Daily Show / The Colbert Report",
-	    "CondeNast: Condé Nast media group: Allure, Architectural Digest, Ars Technica, Bon Appétit, Brides, Condé Nast, Condé Nast Traveler, Details, Epicurious, GQ, Glamour, Golf Digest, SELF, Teen Vogue, The New Yorker, Vanity Fair, Vogue, W Magazine, WIRED",
+	    "CondeNast: Condé Nast media group: Allure, Architectural Digest, Ars Technica, "
+	    + "Bon Appétit, Brides, Condé Nast, Condé Nast Traveler, Details, Epicurious, GQ, "
+	    + "Glamour, Golf Digest, SELF, Teen Vogue, The New Yorker, Vanity Fair, Vogue, "
+	    + "W Magazine, WIRED",
 	    "Cracked",
 	    "Criterion",
 	    "CrooksAndLiars",
@@ -663,7 +707,8 @@ public class SupportedSites {
 	    "vimeo:likes: Vimeo user likes",
 	    "vimeo:review: Review pages on vimeo",
 	    "vimeo:user",
-	    "vimeo:watchlater: Vimeo watch later list, \"vimeowatchlater\" keyword (requires authentication)",
+	    "vimeo:watchlater: Vimeo watch later list, \"vimeowatchlater\" keyword (requires "
+	    + "authentication)",
 	    "Vimple: Vimple - one-click video hosting",
 	    "Vine",
 	    "vine:user",
@@ -696,7 +741,8 @@ public class SupportedSites {
 	    "WSJ: Wall Street Journal",
 	    "XBef",
 	    "XboxClips",
-	    "XFileShare: XFileShare based sites: GorillaVid.in, daclips.in, movpod.in, fastvideo.in, realvid.net, filehoot.com and vidto.me",
+	    "XFileShare: XFileShare based sites: GorillaVid.in, daclips.in, movpod.in, "
+	    + "fastvideo.in, realvid.net, filehoot.com and vidto.me",
 	    "XHamster",
 	    "XHamsterEmbed",
 	    "XMinus",
@@ -721,18 +767,23 @@ public class SupportedSites {
 	    "YourUpload",
 	    "youtube: YouTube.com",
 	    "youtube:channel: YouTube.com channels",
-	    "youtube:favorites: YouTube.com favourite videos, \":ytfav\" for short (requires authentication)",
-	    "youtube:history: Youtube watch history, \":ythistory\" for short (requires authentication)",
+	    "youtube:favorites: YouTube.com favourite videos, \":ytfav\" for short "
+	    + "(requires authentication)",
+	    "youtube:history: Youtube watch history, \":ythistory\" for short "
+	    + "(requires authentication)",
 	    "youtube:playlist: YouTube.com playlists",
-	    "youtube:recommended: YouTube.com recommended videos, \":ytrec\" for short (requires authentication)",
+	    "youtube:recommended: YouTube.com recommended videos, \":ytrec\" for short "
+	    + "(requires authentication)",
 	    "youtube:search: YouTube.com searches",
 	    "youtube:search:date: YouTube.com searches, newest videos first",
 	    "youtube:search_url: YouTube.com search URLs",
 	    "youtube:show: YouTube.com (multi-season) shows",
-	    "youtube:subscriptions: YouTube.com subscriptions feed, \"ytsubs\" keyword (requires authentication)",
+	    "youtube:subscriptions: YouTube.com subscriptions feed, \"ytsubs\" keyword "
+	    + "(requires authentication)",
 	    "youtube:user: YouTube.com user videos (URL or \"ytuser\" keyword)",
 	    "youtube:user:playlists: YouTube.com user playlists",
-	    "youtube:watchlater: Youtube watch later list, \":ytwatchlater\" for short (requires authentication)",
+	    "youtube:watchlater: Youtube watch later list, \":ytwatchlater\" for short "
+	    + "(requires authentication)",
 	    "Zapiks",
 	    "ZDF",
 	    "ZDFChannel",
