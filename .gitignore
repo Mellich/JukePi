@@ -3,6 +3,10 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# temporary files
+*~
+*.tmp
+
 # Package Files #
 *.jar
 *.war
@@ -20,6 +24,8 @@ Thumbs.db
 
 #bin directories 
 **/bin/**
+**/jar/**
+
 
 #android
 #*.apk

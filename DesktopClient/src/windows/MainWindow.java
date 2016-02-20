@@ -1362,8 +1362,14 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		});
 		
 		Song current = wrapper.getCurrentSong();
-		lblPlayingTrack.setText(current.getName());
-		currentURL = current.getURL();
+		if (current != null){
+			lblPlayingTrack.setText(current.getName());
+			currentURL = current.getURL();
+		}
+		else{
+			lblPlayingTrack.setText("Nichts du Nappel");
+		}
+
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {
 				if (s[0].equals("true")) {
 					btnPlayPause.setToolTipText("Click here to Pause the Track.");
