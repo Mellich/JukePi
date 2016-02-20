@@ -28,45 +28,152 @@ import javax.swing.table.JTableHeader;
 import connection.Collector;
 
 /**
- * The Class for the Options-Window.
+ * <p>The Class for the Options-Window.</p>
+ * 
+ * <h3>Provided Methods:</h3>
+ * <ul>
+ * 	<li><b>Public:</b>
+ * 		<ul>
+ * 			<li>{@link #OptionsWindow(Collector, String, String)}:
+ * 				The Constructor for this Window. Will set the Fields to the given Parameter 
+ * 				Values and creates a new {@link JFrame}, that will inherit this Window. Will 
+ * 				call {@link #readInWebpage()} afterwards.</li>
+ * 
+ * 			<li>{@link #close()}:
+ * 				Closes the Window by setting it disabled and invisible.</li>
+ * 
+ * 			<li>{@link #setActive(boolean)}:
+ * 				Sets the state of the Window, depending on the given {@code boolean}, either 
+ * 				enabled or disabled.</li>
+ * 
+ * 			<li>{@link #show()}:
+ * 				Sets the Window visible and enabled.</li>
+ * 
+ * 			<li>{@link #showFail(String)}:
+ * 				As there are no Messages to be displayed, this Method does nothing.</li>
+ * 		</ul>
+ * 	</li>
+ * 	<li><b>Protected:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Private:</b>
+ * 		<ul>
+ * 			<li>{@link #constructFrame()}:
+ * 				Constructs the Frame and adds the needed Components to it.</li>
+ * 
+ * 			<li>{@link #createTable()}:
+ * 				Creates the Table, that shows the supported Sites.</li>
+ * 
+ * 			<li>{@link #getLanguages()}:
+ * 				Grabs the Languages, that are saved as Files on the harddrive of the Client.
+ * 				</li>
+ * 
+ * 			<li>{@link #readInWebpage()}:
+ * 				Reads in the webpage, that shows all Sites, that are supported by youtube-dl 
+ * 				(http://rg3.github.io/youtube-dl/supportedsites.html).</li>
+ * 		</ul>
+ * 	</li>
+ * </ul>
+ * 
+ * <h3>Fields:</h3>
+ * <ul>
+ * 	<li><b>Public:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Protected:</b>
+ * 		<p style="margin-left: 25px">
+ * 			None
+ * 		</p>
+ * 	</li>
+ * 	<li><b>Private:</b>
+ * 		<ul>
+ * 			<li>{@link #adminPW}:
+ * 				The Password for connecting to the Server as an Admin as a {@code String} 
+ * 				Value.</li>
+ * 
+ * 			<li>{@link #frame}:
+ * 				The {@link JFrame}, that inherits this Window.</li>
+ * 
+ * 			<li>{@link #pane}:
+ * 				The {@link JScrollPane}, that contains the Table of supported Sites.</li>
+ * 
+ * 			<li>{@link #playerPW}:
+ * 				The Password for connecting to the Server as a Player as a {@code String} 
+ * 				Value.</li>
+ * 
+ * 			<li>{@link #supportedSites}:
+ * 				The Sites, that are supported by youtube-dl as an {@link ArrayList} of 
+ * 				{@code String} Values.</li>
+ * 		</ul>
+ * 	</li>
+ * </ul>
  * @author Haeldeus
  * @version 1.0
  */
 public class OptionsWindow extends Window{
 
 	/**
-	 * The Frame, that inherits the Window.
+	 * <p style="margin-left: 10px"><em><b>frame</b></em></p>
+	 * <p style="margin-left: 20px">{@code private JFrame frame}</p>
+	 * <p style="margin-left: 20px">The Frame, that inherits the Window.</p>
 	 */
 	private JFrame frame;
 	
 	/**
-	 * The Collector, that provides Methods to communicate with the Server.
+	 * <p style="margin-left: 10px"><em><b>collector</b></em></p>
+	 * <p style="margin-left: 20px">{@code private Collector collector}</p>
+	 * <p style="margin-left: 20px">The Collector, that provides Methods to communicate with 
+	 * the Server.</p>
 	 */
 //	private Collector collector;
 	
 	/**
-	 * The Password, that is needed to connect to the Server as an Admin.
+	 * <p style="margin-left: 10px"><em><b>adminPW</b></em></p>
+	 * <p style="margin-left: 20px">{@code private String adminPW}</p>
+	 * <p style="margin-left: 20px">The Password, that is needed to connect to the Server as 
+	 * an Admin.</p>
 	 */
 	private String adminPW;
 	
 	/**
-	 * The Password, that is needed to connect to the Server as a Player.
+	 * <p style="margin-left: 10px"><em><b>playerPW</b></em></p>
+	 * <p style="margin-left: 20px">{@code private String playerPW}</p>
+	 * <p style="margin-left: 20px">The Password, that is needed to connect to the Server as a 
+	 * Player.</p>
 	 */
 	private String playerPW;
 	
 	/**
-	 * An {@link ArrayList<String>}, that provides all Sites, that are supported by the 
-	 * youtube-dl Application.
+	 * <p style="margin-left: 10px"><em><b>supportedSites</b></em></p>
+	 * <p style="margin-left: 20px">{@code private ArrayList<String> supportedSites}</p>
+	 * <p style="margin-left: 20px">An {@link ArrayList<String>}, that provides all Sites, 
+	 * that are supported by the youtube-dl Application.</p>
+	 * @see ArrayList
 	 */
 	private ArrayList<String> supportedSites;
 	
+	/**
+	 * <p style="margin-left: 10px"><em><b>pane</b></em></p>
+	 * <p style="margin-left: 20px">{@code private JScrollPane pane}</p>
+	 * <p style="margin-left: 20px">The {@link JScrollPane}, that contains the Table for the 
+	 * supported Sites.</p>
+	 */
 	private JScrollPane pane;
 	
 	/**
-	 * The Constructor for the Window.
-	 * @param collector	The Collector, that provides Methods to communicate with the Server.
-	 * @param adminPW	The Password, that is needed to connect to the Server as an Admin.
-	 * @param playerPW	The Password, that is needed to connect to the Server as a Player.
+	 * <p style="margin-left: 10px"><em><b>OptionsWindow</b></em></p>
+	 * <p style="margin-left: 20px">{@code public OptionsWindow(Collector, String, String)}</p>
+	 * <p style="margin-left: 20px">The Constructor for the Window.</p>
+	 * @param collector	The {@link Collector}, that provides Methods to communicate with the 
+	 * 					Server.
+	 * @param adminPW	The Password, that is needed to connect to 
+	 * 					the Server as an Admin as a {@code String} Value.
+	 * @param playerPW	The Password, that is needed to connect to the Server as a Player as a 
+	 * 					{@code String} Value.
 	 * @since 1.0
 	 */
 	public OptionsWindow(Collector collector, String adminPW, String playerPW) {
@@ -78,27 +185,55 @@ public class OptionsWindow extends Window{
 		readInWebpage();
 	}
 	
+	/**
+	 * <p style="margin-left: 10px"><em><b>showFail</b></em></p>
+	 * <p style="margin-left: 20px">{@code public void showFail(String)}</p>
+	 * <p style="margin-left: 20px">Would show the given {@code String} on the Screen, but as 
+	 * there are no Messages to be displayed by this Window, this Method does nothing.</p>
+	 * @param text	The {@code String}, that would have been displayed
+	 * @since 1.0
+	 */
 	@Override
 	public void showFail(String text) {
 		//Nothing to do here
 	}
 
+	/**
+	 * <p style="margin-left: 10px"><em><b>show</b></em></p>
+	 * <p style="margin-left: 20px">{@code public void show()}</p>
+	 * <p style="margin-left: 20px">Constructs the {@link #frame} by calling {@link 
+	 * #constructFrame()} and setting it visible afterwards by calling {@link 
+	 * JFrame#setVisible(boolean)}</p>
+	 * @since 1.0
+	 */
 	@Override
 	public void show() {
 		constructFrame();
 		frame.setVisible(true);
 	}
 
+	/**
+	 * <p style="margin-left: 10px"><em><b>close</b></em></p>
+	 * <p style="margin-left: 20px">{@code public void close()}</p>
+	 * <p style="margin-left: 20px">Sets {@link #frame} invisible and disabled.</p>
+	 * @since 1.0
+	 * @see javax.swing.JFrame#setEnabled
+	 * @see javax.swing.JFrame#setVisible
+	 */
 	@Override
 	public void close() {
 		frame.setVisible(false);
+		frame.setEnabled(false);
 	}
 	
 	/**
-	 * Reads in the supported Sites from the Webpage, where they are listed. If no connection 
-	 * can be established, this Method will set the static 
-	 * {@link util.SupportedSites#supportedSites} as the supported Sites.
+	 * <p style="margin-left: 10px"><em><b>readInWebpage</b></em></p>
+	 * <p style="margin-left: 20px">{@code private void readInWebpage}</p>
+	 * <p style="margin-left: 20px">Reads in the supported Sites from the Webpage, where 
+	 * they are listed. If no connection can be established, this Method will set the static 
+	 * {@link util.SupportedSites#supportedSites} as the supported Sites.</p>
 	 * @see util.SupportedSites
+	 * @see <a href="http://rg3.github.io/youtube-dl/supportedsites.html">Supported Sites</a>
 	 * @since 1.0
 	 */
 	private void readInWebpage() {
@@ -111,12 +246,13 @@ public class OptionsWindow extends Window{
 	    try {
 	    	//TODO Worker Process
 	        url = new URL("http://rg3.github.io/youtube-dl/supportedsites.html");
-			final URLConnection conn = url.openConnection();                                                                                                                                                                                  
+			final URLConnection conn = url.openConnection();
 	        conn.connect();
 	        reachable = true;
 		} catch (IOException e) {
 			// No Internet-Connection possible
-			util.IO.println(this, "Couldn't connect to the Internet. Using static SupportedSites");
+			util.IO.println(this, "Couldn't connect to the Internet. Using static "
+					+ "SupportedSites");
 	        url = null;
 		}
 	    
@@ -150,7 +286,9 @@ public class OptionsWindow extends Window{
 	}
 	
 	/**
-	 * The Method to construct the Frame.
+	 * <p style="margin-left: 10px"><em><b>constructFrame</b></em></p>
+	 * <p style="margin-left: 20px">{@code private void constructFrame()}</p>
+	 * <p style="margin-left: 20px">The Method to construct the Frame.</p>
 	 * @since 1.0
 	 */
 	private void constructFrame() {
@@ -263,7 +401,10 @@ public class OptionsWindow extends Window{
 	}
 
 	/**
-	 * The Method that creates the Table, that contains all supported Homepages.
+	 * <p style="margin-left: 10px"><em><b>createTable</b></em></p>
+	 * <p style="margin-left: 20px">{@code private JTable createTable()}</p>
+	 * <p style="margin-left: 20px">The Method that creates the Table, that contains all 
+	 * supported Homepages.</p>
 	 * @return	The Table with the supported Homepages as Elements.
 	 * @since 1.0
 	 */
@@ -278,18 +419,29 @@ public class OptionsWindow extends Window{
 		}
 		
 		JTable table = new JTable(data, columns) {
+			
 			/**
-			 * The Serial Version ID.
+			 * <p style="margin-left: 10px"><em><b>serialVersionUID</b></em></p>
+			 * <p style="margin-left: 20px">{@code private static final long serialVersionUID}
+			 * </p>
+			 * <p style="margin-left: 20px">The Serial Version UID.</p>
 			 */
 			private static final long serialVersionUID = 1L;
 			
 			/**
-			 * The ToolTips for the TableHeaders.
+			 * <p style="margin-left: 10px"><em><b>columnToolTips</b></em></p>
+			 * <p style="margin-left: 20px">{@code private String[] columnToolTips}</p>
+			 * <p style="margin-left: 20px">The ToolTips for the TableHeaders.</p>
 			 */
-			private String [] columnToolTips = {"The Name of the Song", "The Votes for this Song"};
+			private String [] columnToolTips = {"The Name of the Song", 
+					"The Votes for this Song"};
 
 			/**
-			 * Returns the ToolTip for the Cell at the given Position of the Cursor.
+			 * <p style="margin-left: 10px"><em><b>getToolTipText</b></em></p>
+			 * <p style="margin-left: 20px">{@code public String getToolTipText(MouseEvent)}
+			 * </p>
+			 * <p style="margin-left: 20px">Returns the ToolTip for the Cell at the given 
+			 * Position of the Cursor.</p>
 			 * @param e	The MouseEvent.
 			 * @return	The ToolTip for the Cell at the Cursor's Position.
 			 */
@@ -305,10 +457,13 @@ public class OptionsWindow extends Window{
 			}
 			
 			/**
-			 * Returns, if the Cell at the given Position is editable.
+			 * <p style="margin-left: 10px"><em><b>isCellEditable</b></em></p>
+			 * <p style="margin-left: 20px">{@code public boolean isCellEditable(int, int)}</p>
+			 * <p style="margin-left: 20px">Returns, if the Cell at the given Position is 
+			 * editable.</p>
 			 * @param row	The row-index of the Cell.
 			 * @param column	The column-index of the Cell.
-			 * @return false by default, as these Cells shouldn't be editable.
+			 * @return {@code false} by default, as these Cells shouldn't be editable.
 			 */
 			public boolean isCellEditable(int row, int column){
 				if (column == 0)
@@ -317,6 +472,11 @@ public class OptionsWindow extends Window{
 					return true;
 			}
 	
+			/**
+			 * <p style="margin-left: 10px"><em><b>getColumnClass</b></em></p>
+			 * <p style="margin-left: 20px">{@code public Class<?> getColumnClass(int)}</p>
+			 * <p style="margin-left: 20px">Returns the Class, the given Column represents.</p>
+			 */
 			@Override
             public Class<?> getColumnClass(int column) {
 				switch (column) {
@@ -326,18 +486,29 @@ public class OptionsWindow extends Window{
             }
 			
 			/**
-			 * Creates a new TableHeader.
-			 * @return the new TableHeader.
+			 * <p style="margin-left: 10px"><em><b>createDefaultTableHeader</b></em></p>
+			 * <p style="margin-left: 20px">{@code protected JTableHeader 
+			 * createDefaultTableHeader()}</p>
+			 * <p style="margin-left: 20px">Creates a new TableHeader.</p>
+			 * @return The new TableHeader.
 			 */
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
+					
 					/**
-					 * The Serial Version ID.
+					 * <p style="margin-left: 10px"><em><b>serialVersionUID</b></em></p>
+					 * <p style="margin-left: 20px">{@code private static final long 
+					 * serialVersionUID}</p>
+					 * <p style="margin-left: 20px">The Serial Version UID.</p>
 					 */
 					private static final long serialVersionUID = 1L;
 
 					/**
-					 * Returns the ToolTip for the column at the given Cursor's Position.
+					 * <p style="margin-left: 10px"><em><b>getToolTipText</b></em></p>
+					 * <p style="margin-left: 20px">{@code public String 
+					 * getToolTipText(MouseEvent)}</p>
+					 * <p style="margin-left: 20px">Returns the ToolTip for the column at the 
+					 * given Cursor's Position.</p>
 					 * @param e	The MouseEvent.
 					 * @return the ToolTip for the column at the Position of the Cursor.
 					 */
@@ -354,8 +525,18 @@ public class OptionsWindow extends Window{
 		return table;
 	}
 
+	/**
+	 * <p style="margin-left: 10px"><em><b>getLanguages</b></em></p>
+	 * <p style="margin-left: 20px">{@code private String[] getLanguages()}</p>
+	 * <p style="margin-left: 20px">Grabs the Languages, that are saved on the harddrive of 
+	 * the Client.</p>
+	 * @return	All Languages, saved on the Harddrive of the Client as an Array of 
+	 * {@code String}s.
+	 * @since 1.0
+	 */
 	private String[] getLanguages() {
-		String workingDir = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String workingDir = MainWindow.class.getProtectionDomain().getCodeSource()
+				.getLocation().getPath();
 		System.out.println(workingDir);
 		File file = new File(workingDir + "\\data\\lang\\");
 		File[] languages = file.listFiles();
@@ -368,6 +549,15 @@ public class OptionsWindow extends Window{
 		return s;
 	}
 	
+	/**
+	 * <p style="margin-left: 10px"><em><b>setActive</b></em></p>
+	 * <p style="margin-left: 20px">{@code public void setActive(boolean)}</p>
+	 * <p style="margin-left: 20px">Sets the State of the Window to the given State. Active, 
+	 * if {@code state} is {@code true}, inactive if it is {@code false}.</p>
+	 * @param state	The new State of the Window; active, if {@code true}, inactive else.
+	 * @since 1.0
+	 * @see javax.swing.JFrame#setEnabled
+	 */
 	@Override
 	public void setActive(boolean state) {
 		frame.setEnabled(state);
