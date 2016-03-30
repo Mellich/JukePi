@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -108,7 +112,7 @@ public class VLCPlayer implements Runnable, Player {
 			}
 			playerProcess = playerBuilder.start();
 			if (playerProcess != null){
-				InetAddress localhost = InetAddress.getByName("localhost");
+				InetAddress localhost = InetAddress.getLoopbackAddress();
 				boolean success = false;
 				while (!success){
 					try{
@@ -126,7 +130,7 @@ public class VLCPlayer implements Runnable, Player {
 					    reader = new Thread(new ReaderThread(in));
 					    reader.start();
 					}catch (ConnectException e){
-						IO.printlnDebug(this, "Connection to VLC could not be established! Trying again...");
+						IO.printlnDebug(this, "Connection to VLC could not be established! "+localhost+":"+port+". Trying again...");
 						Thread.sleep(200);
 						//e.printStackTrace();
 					}

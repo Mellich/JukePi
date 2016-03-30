@@ -21,8 +21,10 @@ public class VLCPlayerFactory implements PlayerFactory {
 		usedCmd = new ArrayList<String>();
 		if (System.getProperty("os.name").equals("Linux")){
 			usedCmd.add(linuxURI);
-			usedCmd.add("--extraintf=\"rc\"");
-			usedCmd.add("--rc-host=\"localhost:"+PORT+"\"");
+			usedCmd.add("--extraintf");
+			usedCmd.add("rc");
+			usedCmd.add("--rc-host");
+			usedCmd.add("localhost:"+PORT);
 		}
 		else{
 			usedCmd.add(winURI);
