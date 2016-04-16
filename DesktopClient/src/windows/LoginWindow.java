@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -242,6 +243,9 @@ public class LoginWindow extends Window {
 		
 		lblFail = new JLabel("");
 		frame.getContentPane().add(lblFail, LoginLayout.FAIL_LABEL);
+		
+		JCheckBox chkbxYoutubeDl = new JCheckBox("Update Youtube-dl?");
+		frame.getContentPane().add(chkbxYoutubeDl, LoginLayout.UPDATE_YOUTUBEDL_CHECKBOX);
 		
 		JButton btnUDPConnect = new JButton("UDP Connect");
 		btnUDPConnect.setToolTipText("Scans your network for available Servers and "

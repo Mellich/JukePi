@@ -75,6 +75,8 @@ public class MainActivity extends Activity implements DefaultNotificationListene
     
     private boolean firstPressedSave;
     
+    private static long voteID;
+    
     @Override
     protected void onResume() {
     	super.onResume();
@@ -141,6 +143,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		backPressed = false;
+		voteID = -1;
 		ServerConnectionContainer.getServerConnection().addDefaultNotificationListener(this);
 	}
 
@@ -236,7 +239,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 		    } 
 		});
 		
-		/*if (ServerConnectionContainer.getServerConnection().getCurrentSong().isOwnVote() ) {
+		if (ServerConnectionContainer.getServerConnection().getCurrentSong().getTrackID() == voteID) {
 			Notification.Builder mBuilder =
 					new Notification.Builder(this)
 					.setSmallIcon(R.drawable.ic_launcher)
@@ -264,7 +267,7 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			// mId allows you to update the notification later on.
 			mNotificationManager.notify(1, mBuilder.build());
-		}*/
+		}
 	}
 
 	@Override
@@ -324,6 +327,10 @@ public class MainActivity extends Activity implements DefaultNotificationListene
 	public void changeToAdd() {
 		Intent intent = new Intent(this, AddActivity.class);
 		this.startActivity(intent);
+	}
+	
+	public static void setVote(long trackID) {
+		voteID = trackID;
 	}
 	
 	/**

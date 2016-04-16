@@ -44,6 +44,7 @@ public class ClickListener implements OnClickListener{
 		Toast.makeText(v.getContext(),
 			      "Voted for Track Number: " + pos, Toast.LENGTH_LONG)
 			      .show();
+		MainActivity.setVote(songs.get(pos).getTrackID());
 	}
 
 }

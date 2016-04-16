@@ -81,6 +81,9 @@ import java.util.HashMap;
  * 			<li>{@link #UDP_BUTTON}:
  * 				The {@code String}, that defines the UDP_Button.</li>
  * 
+ * 			<li>{@link #UPDATE_YOUTUBEDL_CHECKBOX}:
+ * 				The {@code String}, that defines the Update_Youtubedl_Checkbox.</li>
+ * 
  * 			<li>{@link #WELCOME_LABEL}:
  * 				The {@code String}, that defines the Welcome_Label.</li>
  * 		</ul>
@@ -179,6 +182,15 @@ public class LoginLayout implements LayoutManager{
 	public static final String INTERN_SERVER_BUTTON = "Intern_Server_Button";
 	
 	/**
+	 * <p style="margin-left: 10px"><em><b>UPDATE_YOUTUBEDL_CHECKBOX</b></em></p>
+	 * <p style="margin-left: 20px">{@code public static final String 
+	 * UPDATE_YOUTUBEDL_CHECKBOX}</p>
+	 * <p style="margin-left: 20px">The {@code String}, that declares the 
+	 * Update_Youtubedl_Checkbox.</p>
+	 */
+	public static final String UPDATE_YOUTUBEDL_CHECKBOX = "Update_Youtubedl_Checkbox";
+	
+	/**
 	 * <p style="margin-left: 10px"><em><b>components</b></em></p>
 	 * <p style="margin-left: 20px">{@code private HashMap<String, Component> components}</p>
 	 * <p style="margin-left: 20px">All {@link Component}s, that were added to this Layout as 
@@ -267,6 +279,11 @@ public class LoginLayout implements LayoutManager{
 		if (components.get(INTERN_SERVER_BUTTON) != null)
 			components.get(INTERN_SERVER_BUTTON).setBounds((int)(width*0.62), buttonY, 
 					(int)(width*0.34), buttonHeight);
+		
+		/***************************CheckBoxes***************************/
+		if (components.get(UPDATE_YOUTUBEDL_CHECKBOX) != null)
+			components.get(UPDATE_YOUTUBEDL_CHECKBOX).setBounds((int)(width*0.32), 
+					buttonY + buttonHeight + 20, (int)(width*0.6), buttonHeight);
 	}
 
 	/**
@@ -324,7 +341,8 @@ public class LoginLayout implements LayoutManager{
 		if (regex.equals(IP_TEXT) || regex.equals(PORT_TEXT) || regex.equals(WELCOME_LABEL) ||
 				regex.equals(IP_LABEL) || regex.equals(PORT_LABEL) || 
 				regex.equals(FAIL_LABEL) || regex.equals(CONNECT_BUTTON) ||
-				regex.equals(UDP_BUTTON) || regex.equals(INTERN_SERVER_BUTTON))
+				regex.equals(UDP_BUTTON) || regex.equals(INTERN_SERVER_BUTTON) ||
+				regex.equals(UPDATE_YOUTUBEDL_CHECKBOX))
 			return true;
 		else
 			return false;
@@ -390,6 +408,12 @@ public class LoginLayout implements LayoutManager{
 		if (components.get(INTERN_SERVER_BUTTON) != null)
 			if (components.get(INTERN_SERVER_BUTTON).equals(comp)) {
 				components.put(INTERN_SERVER_BUTTON, null);
+				return;
+			}
+		
+		if (components.get(UPDATE_YOUTUBEDL_CHECKBOX) != null)
+			if (components.get(UPDATE_YOUTUBEDL_CHECKBOX).equals(comp)) {
+				components.put(UPDATE_YOUTUBEDL_CHECKBOX, null);
 				return;
 			}
 	}
