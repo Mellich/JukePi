@@ -35,10 +35,10 @@ public class RawNotificationOutput implements DefaultNotificationListener,
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			ServerAddress sa;
-			System.out.print("IP-Adresse (leer lassen für UDP connect): ");
+			System.out.print("IP-Adresse (leer lassen fï¿½r UDP connect): ");
 			String ip = reader.readLine();
 			if (ip.toLowerCase().equals("")){
-				sa = server.udpScanning();
+				sa = server.udpScanning()[0];
 			}
 			else{
 				System.out.print("Port: ");

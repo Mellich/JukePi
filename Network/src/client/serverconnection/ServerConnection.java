@@ -489,7 +489,7 @@ public interface ServerConnection {
 	 * @throws UDPTimeoutException 	if no Server was found in time.
 	 * @since 1.0
 	 */
-	public ServerAddress udpScanning() throws UDPTimeoutException;
+	public ServerAddress[] udpScanning() throws UDPTimeoutException;
 	
 	/**
 	 * Returns the IP of the Server, the Client/Player is connected to.

@@ -43,13 +43,13 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			ServerAddress sa;
-			System.out.print("IP-Adresse (leer lassen für UDP connect): ");
+			System.out.print("IP-Adresse (leer lassen fï¿½r UDP connect): ");
 			String ip = reader.readLine();
 			if (ip.toLowerCase().equals("")){
-				sa = server.udpScanning();
+				sa = server.udpScanning()[0];
 			}
 			else{
-				System.out.print("Port (leer lassen für Standard): ");
+				System.out.print("Port (leer lassen fï¿½r Standard): ");
 				String port = reader.readLine();
 				if (ip.equals(""))
 					ip = "localhost";
@@ -62,7 +62,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 			if (server.connect(sa)){
 				System.out.println("Verbunden!");
 				server.setMeAsPlayer();
-				System.out.println("Drücke 'Enter', um Wiedergabeende zu simulieren.");
+				System.out.println("Drï¿½cke 'Enter', um Wiedergabeende zu simulieren.");
 				while(true){
 					String input = reader.readLine();
 					if (input.equals("close")){
@@ -109,7 +109,7 @@ public class PseudoPlayer implements DefaultNotificationListener, PauseResumeNot
 
 	@Override
 	public void onPauseResumeNotify(boolean isPlaying) {
-		System.out.println("Pause/Resume notify erhalten. Wiedergabe läuft: "+isPlaying);
+		System.out.println("Pause/Resume notify erhalten. Wiedergabe lï¿½uft: "+isPlaying);
 		
 	}
 

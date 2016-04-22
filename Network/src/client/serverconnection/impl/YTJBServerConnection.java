@@ -371,7 +371,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	}
 
 	@Override
-	public ServerAddress udpScanning() throws UDPTimeoutException {
+	public ServerAddress[] udpScanning() throws UDPTimeoutException {
 	    // Network-Group
 	    String NETWORK_GROUP = "230.0.0.1";
 	    // The Port of the Network-Group
@@ -380,7 +380,7 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	    // Coding of the Messages
 	    String TEXT_ENCODING = "UTF8";
 	    
-	    final int TIMEOUT = 15000;
+	    final int TIMEOUT = 5000;
 	   
 	    final MulticastSocket socket;
 	 
@@ -408,24 +408,31 @@ public class YTJBServerConnection implements ServerConnection, ServerConnectionN
 	      timeoutThread.start();
 	      
 	      sendUDPRequest(socket,socketAddress,NETWORK_GROUP_PORT);
-	      while(true){
+	      List<ServerAddress> addresses = new ArrayList<ServerAddress>();
+	      while(packet.getLength() > 0){
 		        // Waiting for Messages
 		  	    try {
 			        socket.receive(packet);
 			    } catch (IOException e) {
 				     //IO Exception occured while receiving data
 				    }
-		        if (packet.getLength() == 0)
+		        if (packet.getLength() == 0 && addresses.isEmpty())
 		        	throw new UDPTimeoutException();
 		        String message = new String(packet.getData(),0,packet.getLength(), TEXT_ENCODING);
 		        if (!message.equals("REQUEST")){
-					socket.leaveGroup(socketAddress);
-					socket.close();
-			        timeoutThread.interrupt();
 			        String[] values = message.split(MessageType.SEPERATOR);
-			        return new ServerAddress(values[0],Integer.parseInt(values[1]));
+			        if (values.length == 2){
+			        	boolean twice = false;
+			        	for (ServerAddress a : addresses){
+			        		if (a.getIPAddress().equals(values[0]) && a.getPort() == Integer.parseInt(values[1]))
+			        			twice = true;
+			        	}
+			        	if (!twice)
+			        		addresses.add(new ServerAddress(values[0],Integer.parseInt(values[1])));
+			        }
 		        }
 	      }   
+	      return (ServerAddress[]) addresses.toArray(new ServerAddress[0]);
 	     }catch (UDPTimeoutException e){
 		    	 throw new UDPTimeoutException();
 		     } catch (IOException e1) {
