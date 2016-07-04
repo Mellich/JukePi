@@ -1510,7 +1510,8 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		showFail("Playing next Track");
 		setNowPlaying(title);
 		setNextTrack();
-		this.currentURL = wrapper.getCurrentSong().getURL();
+	//	this.currentURL = wrapper.getCurrentSong().getURL(); //TODO Maybe this fixes the random freezes?
+		this.currentURL = url;
 	}
 
 	/**
