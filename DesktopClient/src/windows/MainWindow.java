@@ -494,14 +494,6 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 	private String[] gaplists;
 	
 	/**
-	 * <p style="margin-left: 10px"><em><b>title</b></em></p>
-	 * <p style="margin-left: 20px">{@code private String title}</p>
-	 * <p style="margin-left: 20px">The title of the Frame.</p>
-	 */
-	//TODO Check if necessary
-	private String title;
-	
-	/**
 	 * <p style="margin-left: 10px"><em><b>playIcon</b></em></p>
 	 * <p style="margin-left: 20px">{@code private ImageIcon playIcon}</p>
 	 * <p style="margin-left: 20px">The Icon, that will be displayed instead of "Play" as a 
@@ -727,7 +719,6 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 	 */
 	public void setIpAndPort(String ip, int port) {
 		frame.setTitle("JukePi - "+ip+":"+port);
-		title = "JukePi - "+ip+":"+port;
 	}
 	
 	/**
@@ -1054,8 +1045,6 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		gaplists = wrapper.getAvailableGapLists();
 		
 		/********************Frame itself********************/
-		frame = new JFrame();
-		frame.setTitle(title);
 		frame.setSize(new Dimension(620,700));
 		NewClientLayout layout = new NewClientLayout();
 		frame.getContentPane().setLayout(layout);
