@@ -1046,8 +1046,7 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		
 		/********************Frame itself********************/
 		frame.setSize(new Dimension(620,700));
-		NewClientLayout layout = new NewClientLayout();
-		frame.getContentPane().setLayout(layout);
+		frame.getContentPane().setLayout(new NewClientLayout());
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(617,695));
 		MyAdapter adapter = new MyAdapter(this, wrapper);
@@ -1331,10 +1330,8 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		components.put(NewClientLayout.MENU_BAR, menuBar);
 		frame.getContentPane().add(menuBar, NewClientLayout.MENU_BAR);
 		
-		/********************Creating OptionsWindow********************/
+		/********************Creating additional Windows********************/
 		gaplistsWindow = new DisplayGaplistsWindow(wrapper, this, gaplists);
-		
-		
 		
 		/********************Setting Texts and Server-Communication********************/
 		if (wishlist.length == 0) 

@@ -213,6 +213,7 @@ public class DisplayGaplistsWindow extends Window implements GapListNotification
 		frame = new JFrame();
 		lblFail = new JLabel();
 		this.wrapper = wrapper;
+		wrapper.addGapListNotificationListener(this);
 		this.mainWindow = mw;
 		this.gaplists = gaplists;
 	}
