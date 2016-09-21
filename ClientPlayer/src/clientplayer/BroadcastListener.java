@@ -25,8 +25,8 @@ public class BroadcastListener implements Runnable {
 		boolean serverNotFound = true;
 		while (serverNotFound){
 			try {
-				ServerAddress address = server.udpScanning();
-				if (server.connect(address)){
+				ServerAddress[] address = server.udpScanning();
+				if (server.connect(address[0])){
 					IO.printlnDebug(this, "Connected!");
 					server.addDefaultNotificationListener(starter);
 					server.addPermission(Permission.PLAYER, "player");
