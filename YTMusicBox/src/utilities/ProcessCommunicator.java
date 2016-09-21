@@ -67,13 +67,13 @@ public class ProcessCommunicator {
 		String result = null;
 		if ((new File(path+"youtube-dl.exe").exists() || new File(path+"youtube-dl").exists())){
 			IO.printlnDebug(null, "Using Youtube-dl: "+path+"youtube-dl");
-			Process parseProcess = new ProcessBuilder(path+"youtube-dl","-g", url).start();
+			Process parseProcess = new ProcessBuilder(path+"youtube-dl","-f mp4","-g", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 			result = parseInput.readLine();
 			parseInput.close();
 		}else if (System.getProperty("os.name").equals("Linux")){
 			IO.printlnDebug(null, "Using Youtube-dl: "+"youtube-dl");
-			Process parseProcess = new ProcessBuilder("youtube-dl","-g", url).start();
+			Process parseProcess = new ProcessBuilder("youtube-dl","-f mp4","-g", url).start();
 			BufferedReader parseInput = new BufferedReader(new InputStreamReader(parseProcess.getInputStream()));
 			result = parseInput.readLine();
 			parseInput.close();
