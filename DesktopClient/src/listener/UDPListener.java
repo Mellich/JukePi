@@ -120,7 +120,7 @@ public class UDPListener implements ActionListener{
 		new Thread(() -> {
 			client.ServerAddress sa;
 			try {
-				sa = serverConnection.udpScanning();
+				sa = serverConnection.udpScanning()[0];
 				collector.connect(sa.getIPAddress(), ""+sa.getPort());
 			} catch (Exception e) {
 				collector.showUDPFail("There are no Servers available in your network.");
