@@ -165,7 +165,7 @@ public class CommandHandler extends Thread {
 				!debuggingCommand(prompt, args) &&
 				!gaplistCommand(prompt, args)
 				)
-			new UnknownCommand(out,prompt,args.toString());
+			new UnknownCommand(out,prompt,args.toString()).handle();
 	}
 	
 	@Override

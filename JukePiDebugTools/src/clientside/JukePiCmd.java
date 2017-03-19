@@ -36,12 +36,13 @@ GapListNotificationListener {
 	static void help(){
 		System.out.println("Available commands:");
 		System.out.println("------------------------");
-		System.out.println("scan		-	makes a udp scan in the network");
-		System.out.println("admin [PW]	-	tries to get admin rights using PW as passwort");
-		System.out.println("pause		-	pause/resume playback");
-		System.out.println("skip		-	skip current track");
-		System.out.println("help		-	show this help");
-		System.out.println("close		- 	close this program");	
+		System.out.println("scan				-	makes a udp scan in the network");
+		System.out.println("admin PW			-	tries to get admin rights using PW as passwort");
+		System.out.println("pause				-	pause/resume playback");
+		System.out.println("skip				-	skip current track");
+		System.out.println("add (wl|gl) [b] URL	-	add a track URL to a list");
+		System.out.println("help				-	show this help");
+		System.out.println("close				- 	close this program");	
 	}
 	
 	static void pause(){
@@ -59,7 +60,7 @@ GapListNotificationListener {
 	}
 	
 	static void add(String list,String back, String url){
-		System.out.println(server.addToList(url, (list.equals("wl") ? true : false), (back.equals("b") ? true : false)));
+		System.out.println(server.addToList(url, (list.equals("wl") ? true : false), (back.equals("b") ? false : true)));
 	}
 	
 	public static void scan(BufferedReader reader) throws PermissionDeniedException, UDPTimeoutException{

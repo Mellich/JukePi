@@ -57,6 +57,7 @@ public class Connection extends Thread {
 				if (message == null || this.isInterrupted())		//if connection is lost, close connection. if not handled here
 					break;					//it would cause a NumberFormatException in the CommandHandler and the connection wouldn't close
 				try{
+					IO.printlnDebug(this, "New message: " + message);
 					CommandHandler newCommand = new CommandHandler(out,server,this,message);
 					newCommand.start();
 					lastRefresh = System.currentTimeMillis();

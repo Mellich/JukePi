@@ -16,8 +16,8 @@ public class UnknownCommand extends Command {
 
 	@Override
 	public boolean handle() {
-		notify(MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY,"");
-		IO.printlnDebug(this, "ERROR: Sended command could not be handled! No permissions? "+command);
+		response("" + MessageType.NOTIMPLEMENTEDCOMMANDNOTIFY);
+		IO.printlnDebug(this, "ERROR: Sent command could not be handled! No permissions? "+command);
 		return false;
 	}
 
