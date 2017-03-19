@@ -22,6 +22,7 @@ CLIENT_DIR = DesktopClient
 SERVER_DIR = YTMusicBox
 PLAYER_DIR = ClientPlayer
 NETWORK_DIR = Network
+CONSOLE_DIR = JukePiDebugTools
 
 MANIFEST = Manifest.txt
 
@@ -32,11 +33,12 @@ MANIFEST = Manifest.txt
 -include $(SERVER_DIR)/$(SOURCE_FILES)
 -include $(CLIENT_DIR)/$(SOURCE_FILES)
 -include $(PLAYER_DIR)/$(SOURCE_FILES)
+-include $(CONSOLE_DIR)/$(SOURCE_FILES)
 
 #
 # the default make target entry
 #
-all: Server.jar Player.jar Client.jar
+all: Server.jar Player.jar Client.jar Console.jar
 	@echo "compilation done."
 
 Network: $(NETWORK_CLASS_FILES)
@@ -44,6 +46,9 @@ Network: $(NETWORK_CLASS_FILES)
 
 Server: Network $(SERVER_CLASS_FILES)
 	@echo "server compilation done."
+	
+Console: Network $(CONSOLE_CLASS_FILES)
+	@echo "console compilation done."
 
 Player: Network $(PLAYER_CLASS_FILES) $(PLAYER_ARTWORK)
 	@echo "player compilation done."
@@ -83,6 +88,17 @@ Player.jar: Player
 	@$(EXE) $(PLAYER_DIR)$(JAR_DIR)/Player.jar	
 	@echo "Player created."
 	@echo ""
+	
+Console.jar: Console
+	@echo "Creating executable JAR file for the JukePi console"
+	@echo "Creating directory: $(CONSOLE_DIR)$(JAR_DIR)"
+	@$(MD) $(CONSOLE_DIR)$(JAR_DIR)
+	@echo "Packing JAR file..."
+	@jar cfm $(CONSOLE_DIR)$(JAR_DIR)/Console.jar $(CONSOLE_DIR)/$(MANIFEST) -C $(NETWORK_DIR)$(OUTPUT_DIR) . -C $(CONSOLE_DIR)$(OUTPUT_DIR) .
+	@echo "Making JAR file executable"
+	@$(EXE) $(CONSOLE_DIR)$(JAR_DIR)/Console.jar	
+	@echo "Console created."
+	@echo ""	
 	
 updatePlayer: Player.jar
 	@echo "uploading player to raspberry pi"
