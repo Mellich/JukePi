@@ -337,7 +337,7 @@ public class Collector {
 	 * @since 1.0
 	 * @see Window
 	 */
-	public void showFail(Window window,String text) {
+	public void showFail(Window window, String text) {
 		window.showFail(text);
 	}
 	

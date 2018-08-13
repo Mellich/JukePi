@@ -586,14 +586,6 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 	private DisplayGaplistsWindow gaplistsWindow;
 	
 	/**
-	 * <p style="margin-left: 10px"><em><b>currentURL</b></em></p>
-	 * <p style="margin-left: 20px">{@code private String currentURL}</p>
-	 * <p style="margin-left: 20px">The URL of the Song, that is currently played on the 
-	 * Server.</p>
-	 */
-	private String currentURL;
-	
-	/**
 	 * <p style="margin-left: 10px"><em><b>localServer</b></em></p>
 	 * <p style="margin-left: 20px">{@code private boolean localServer}</p>
 	 * <p style="margin-left: 20px">Determines, if a local Server is running with this 
@@ -1174,7 +1166,7 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 //			new JButton("<html><body>Seek<br>Backward</body></html>");
 		//TODO: Localization
 		final JButton btnSeekBackwards = new JButton(seekBackwardIcon);
-		btnSeekBackwards.setToolTipText("Click here to seek 30 seconds backward.");
+		btnSeekBackwards.setToolTipText("Click here to rewind 30 seconds.");
 		frame.getContentPane().add(btnSeekBackwards, NewClientLayout.SEEK_BACK_BUTTON);
 		components.put(NewClientLayout.SEEK_BACK_BUTTON, btnSeekBackwards);
 		
@@ -1188,7 +1180,7 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 	//		new JButton("<html><body>Seek<br>Forward</body></html>");
 		//TODO: Localization
 		final JButton btnSeekForward = new JButton(seekForwardIcon);
-		btnSeekForward.setToolTipText("Click here to seek 30 seconds forward.");
+		btnSeekForward.setToolTipText("Click here to fast forward 30 seconds.");
 		frame.getContentPane().add(btnSeekForward, NewClientLayout.SEEK_FORWARD_BUTTON);
 		components.put(NewClientLayout.SEEK_FORWARD_BUTTON, btnSeekForward);
 		
@@ -1274,7 +1266,7 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		menuSeekForward.addActionListener((ActionEvent ae) -> {seek(true);});
 		menuPlayPause.addActionListener((ActionEvent ae) -> {pressPause();});
 		menuCopyLink.addActionListener((ActionEvent ae) -> {
-				new util.TextTransfer().setClipboardContents(currentURL);
+				new util.TextTransfer().setClipboardContents(getCurrentURL());
 			});
 		
 		menuTrack.add(menuCopyLink);
@@ -1348,8 +1340,12 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		});
 		
 		Song current = wrapper.getCurrentSong();
-		lblPlayingTrack.setText(current.getName());
-		currentURL = current.getURL();
+		if (current != null) {
+			lblPlayingTrack.setText(current.getName());
+		}
+		else {
+			lblPlayingTrack.setText("NULL");
+		}
 		wrapper.getCurrentPlaybackStatus((String[] s) -> {
 				if (s[0].equals("true")) {
 					btnPlayPause.setToolTipText("Click here to Pause the Track.");
@@ -1396,6 +1392,14 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		/********************Finish Creating Client********************/
 		long end = System.currentTimeMillis();
 		util.IO.println(this, "Frame Constructed in " + (end-start) + " ms");
+	}
+
+	private String getCurrentURL() {
+		if (wrapper.getCurrentSong() != null) {
+			return wrapper.getCurrentSong().getURL();
+		}
+		else
+			return "ABC";
 	}
 
 	/**
@@ -1497,7 +1501,6 @@ PauseResumeNotificationListener, GapListNotificationListener, DebugNotificationL
 		setNowPlaying(title);
 		setNextTrack();
 	//	this.currentURL = wrapper.getCurrentSong().getURL(); //TODO Maybe this fixes the random freezes?
-		this.currentURL = url;
 	}
 
 	/**
